@@ -1,0 +1,19 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		// 启动页
+		{
+			"path": "pages/generalTable/index",
+			"style": {
+				"navigationBarTitleText": "通用页",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		}
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "统计",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#fff"
+	}
+}

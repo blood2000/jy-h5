@@ -1,0 +1,166 @@
+/**
+ * <view class="c-app-container">
+ *     <view class="c-app-container__box"></view>
+ * 	   <view class="c-app-container__box"></view>
+ * </view>
+ */
+.c-app-container{
+	background: #FFFFFF;
+	border-radius: 30rpx;
+	margin: 24rpx 30rpx;
+	padding: 40rpx 0;
+	overflow: hidden;
+	&__box{
+		margin: 0 24rpx;
+		padding: 40rpx 0;
+		&:not(:last-child){
+			border-bottom: 1rpx solid #F2F2F3;
+		}
+	}
+}
+
+/**
+ *  <view class="c-count-box">
+ *		<view class="count">
+			<text class="num">{{ num }}</text>
+			<text class="unit">{{ unit }}</text>
+		</view>
+ *		<view class="label">{{ label }}<text class="has-arrow"></text></view>
+ *	</view>
+ */
+.c-count-box{
+	font-family: PingFang SC;
+	text-align: center;
+	>.count{
+		>.num{
+			font-size: 36rpx;
+			font-weight: bold;
+			color: #333333;
+		}
+		>.unit{
+			font-size: 18rpx;
+			font-weight: 500;
+			color: #999999;
+			padding-left: 8rpx;
+		}
+	}
+	>.label{
+		font-size: 24rpx;
+		font-weight: 500;
+		color: #999999;
+		margin-top: 10rpx;
+		.has-arrow{
+			display: inline-block;
+			vertical-align: middle;
+			width: 9rpx;
+			height: 16rpx;
+			background: url('/static/icon_arrow.png') no-repeat;
+			background-size: 100% 100%;
+			margin-top: -5rpx;
+			margin-left: 10rpx;
+		}
+	}
+}
+
+/**
+ *  <view class="c-title-box ly-flex-pack-justify ly-flex-align-center">
+		<text class="text">{{ title }}</text>
+		<text class="button">查看更多</text>
+	</view>
+ */
+.c-title-box{
+	font-family: PingFang SC;
+	>.text{
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #333333;
+		padding-left: 34rpx;
+		position: relative;
+		&::before{
+			content: '';
+			width: 10rpx;
+			height: 42rpx;
+			background: #477AE4;
+			border-radius: 5rpx;
+			position: absolute;
+			top: 50%;
+			margin-top: -21rpx;
+			left: 0;
+		}
+	}
+	>.button{
+		font-size: 24rpx;
+		font-weight: 500;
+		color: #477AE4;
+		padding-right: 44rpx;
+		position: relative;
+		&::after{
+			content: '';
+			position: absolute;
+			right: 24rpx;
+			top: 8rpx;
+			width: 11rpx;
+			height: 19rpx;
+			background: url('/static/icon_arrow_blue.png') no-repeat;
+			background-size: 100% 100%;
+		}
+	}
+}
+
+/**
+ *  <view class="c-order-box ly-flex-pack-justify ly-flex-align-center">
+		<view class="c-order-box__label ly-flex-align-center">
+			<image class="order" src="../../../static/order_1.png"></image>
+			<text class="name">煤炭</text>
+		</view>
+		<text class="c-order-box__count">486单</text>
+	</view>
+	<view class="c-order-address">宝安机场—华林广场</view>
+ */
+.c-order-box{
+	font-family: PingFang SC;
+	margin-top: 40rpx;
+	&__label{
+		>.order{
+			width: 45rpx;
+			height: 36rpx;
+			margin-top: -2rpx;
+		}
+		>.name{
+			font-size: 28rpx;
+			font-weight: bold;
+			color: #333333;
+			margin-left: 20rpx;
+		}
+		// >.address{
+		// 	font-size: 24rpx;
+		// 	font-weight: 500;
+		// 	color: #333333;
+		// 	margin-left: 20rpx;
+		// }
+	}
+	&__count{
+		font-size: 28rpx;
+		font-weight: 500;
+		color: #999999;
+	}
+}
+.c-order-address{
+	font-size: 24rpx;
+	font-weight: 500;
+	color: #333333;
+	margin-left: 65rpx;
+	margin-top: 10rpx;
+}
+
+.text-left {
+	text-align: left;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-center {
+	text-align: center;
+}
