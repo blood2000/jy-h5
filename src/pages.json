@@ -9,7 +9,20 @@
         "navigationStyle": "custom",
         "enablePullDownRefresh": true
       }
-    }
+    },
+		
+		{
+			"path": "pages/building/v1/index",
+			"style": {
+				"navigationBarTitleText": "厂区管理",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#3A65FF",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		}
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
