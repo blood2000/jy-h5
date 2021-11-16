@@ -10,19 +10,31 @@
         "enablePullDownRefresh": true
       }
     },
-		
-		{
-			"path": "pages/building/v1/index",
-			"style": {
-				"navigationBarTitleText": "厂区管理",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#3A65FF",
-				"app-plus": {
-					"bounce": "none"
-				}
-			}
-		}
+
+    {
+      "path": "pages/building/v1/index",
+      "style": {
+        "navigationBarTitleText": "厂区管理",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/buildingType",
+      "style": {
+        "navigationBarTitleText": "添加场区分类",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
