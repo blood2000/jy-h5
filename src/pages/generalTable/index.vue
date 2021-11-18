@@ -7,7 +7,7 @@
 		<view class="search-form ly-flex ly-flex-align-center" v-if="dataModelDto.queryFields && dataModelDto.queryFields.length > 0" @touchmove.stop.prevent="">
 			<uni-forms ref="queryForm" style="width: calc(100% - 70upx)">
 				<!-- string -->
-				<uni-forms-item v-if="dataModelDto.queryFields[0].dataItemInfo.itemType === 'string'" class="uni-form-item uni-column" label=" " left-icon="search" icon-color="#999">
+				<uni-forms-item v-if="dataModelDto.queryFields[0].dataItemInfo.itemType === 'string' && !item.dynamic" class="uni-form-item uni-column" label=" " left-icon="search" icon-color="#999">
 					<uni-easyinput
 						type="text"
 						v-model="dataModelDto.queryFields[0].value"
@@ -27,65 +27,67 @@
 		<view v-show="showSearchMore" class="collapse-form" @touchmove.stop.prevent="">
 			<view class="content">
 				<view v-for="(item, index) in dataModelDto.queryFields" :key="index" v-show="index !== 0 || (index === 0 && item.dataItemInfo.itemType !== 'string')">
-					<!-- string -->
-					<view v-if="item.dataItemInfo.itemType === 'string'" class="form-frame">
-						<view class="title">{{item.dataItemInfo.itemCn}}</view>
-						<input class="text-right" v-model="item.value" :placeholder="'请输入'+item.dataItemInfo.itemCn" name="input" @confirm="hideKeyboard"></input>
-					</view>
-					<!-- number float float4 -->
-					<view v-else-if="item.dataItemInfo.itemType === 'number' || item.dataItemInfo.itemType === 'float' || item.dataItemInfo.itemType === 'float4'" class="form-frame">
-						<view class="title">{{item.dataItemInfo.itemCn}}</view>
-						<view class="ly-flex ly-flex-pack-justify ly-flex-align-center">
-							<input class="text-right" v-model="item.start" :placeholder="'请输入'+item.dataItemInfo.itemCn+'开始值'" name="input" @confirm="hideKeyboard"></input>
-							<span style="padding: 0 30upx;">至</span>
-							<input class="text-right" v-model="item.end" :placeholder="'请输入'+item.dataItemInfo.itemCn+'结束值'" name="input" @confirm="hideKeyboard"></input>
+					<view v-if="!item.dynamic">
+						<!-- string -->
+						<view v-if="item.dataItemInfo.itemType === 'string'" class="form-frame">
+							<view class="title">{{item.dataItemInfo.itemCn}}</view>
+							<input class="text-right" v-model="item.value" :placeholder="'请输入'+item.dataItemInfo.itemCn" name="input" @confirm="hideKeyboard"></input>
 						</view>
-					</view>
-					<!-- date -->
-					<view v-else-if="item.dataItemInfo.itemType === 'date'" class="form-frame">
-						<view class="title">{{item.dataItemInfo.itemCn}}</view>
-						<view class="ly-flex ly-flex-pack-justify ly-flex-align-center">
-							<picker class="time-picker-view text-right" mode="date" :value="item.startTime" start="1900-01-01" end="3000-01-01" @change="(e)=>bindDateChange(item, e, 'startTime')">
-								<view class="text-right" v-if="item.startTime">{{item.startTime}}</view>
-								<view class="placeholder" v-else style="padding-left: 0;">开始时间</view>
+						<!-- number float float4 -->
+						<view v-else-if="item.dataItemInfo.itemType === 'number' || item.dataItemInfo.itemType === 'float' || item.dataItemInfo.itemType === 'float4'" class="form-frame">
+							<view class="title">{{item.dataItemInfo.itemCn}}</view>
+							<view class="ly-flex ly-flex-pack-justify ly-flex-align-center">
+								<input class="text-right" v-model="item.start" :placeholder="'请输入'+item.dataItemInfo.itemCn+'开始值'" name="input" @confirm="hideKeyboard"></input>
+								<span style="padding: 0 20upx;">至</span>
+								<input class="text-right" v-model="item.end" :placeholder="'请输入'+item.dataItemInfo.itemCn+'结束值'" name="input" @confirm="hideKeyboard"></input>
+							</view>
+						</view>
+						<!-- date -->
+						<view v-else-if="item.dataItemInfo.itemType === 'date'" class="form-frame">
+							<view class="title">{{item.dataItemInfo.itemCn}}</view>
+							<view class="ly-flex ly-flex-pack-justify ly-flex-align-center">
+								<picker class="time-picker-view text-right" mode="date" :value="item.startTime" start="1900-01-01" end="3000-01-01" @change="(e)=>bindDateChange(item, e, 'startTime')">
+									<view class="text-right" v-if="item.startTime">{{item.startTime}}</view>
+									<view class="placeholder" v-else style="padding-left: 0;">开始时间</view>
+								</picker>
+								<span style="padding: 0 20upx;">至</span>
+								<picker class="time-picker-view text-right" mode="date" :value="item.endTime" start="1900-01-01" end="3000-01-01" @change="(e)=>bindDateChange(item, e, 'endTime')">
+									<view class="text-right" v-if="item.endTime">{{item.endTime}}</view>
+									<view class="placeholder" v-else style="padding-left: 0;">结束时间</view>
+								</picker>
+							</view>
+						</view>
+						<!-- timestamp -->
+						<view v-else-if="item.dataItemInfo.itemType === 'timestamp'" class="form-frame">
+							<view class="title">{{item.dataItemInfo.itemCn}}</view>
+							<view class="ly-flex ly-flex-pack-justify ly-flex-align-center">
+								<uni-datetime-picker
+									type="datetime"
+									v-model="item.startTime"
+									placeholder="开始时间"
+									@change="(e)=>bindDateTimeChange(item, e, 'startTime')"
+								/>
+								<span style="padding: 0 20upx;">至</span>
+								<uni-datetime-picker
+									type="datetime"
+									v-model="item.endTime"
+									placeholder="结束时间"
+									@change="(e)=>bindDateTimeChange(item, e, 'endTime')"
+								/>
+							</view>
+						</view>
+						<!-- enum custom -->
+						<view v-else-if="item.dataItemInfo.itemType === 'enum' || item.dataItemInfo.itemType === 'custom'" class="form-frame">
+							<view class="title">{{item.dataItemInfo.itemCn}}</view>
+							<picker
+							 :value="item.value"
+							 :range="item.itemOptions"
+							 range-key="dictLabel"
+							 @change="(e)=>PickerChange(item, e)">
+								<view v-if="item.value" class="picker text-right">{{ item.itemOptions[item.itemOptions.findIndex(res => res.dictValue===item.value)].dictLabel }}</view>
+								<view class="placeholder text-right" v-else>{{ '请选择'+item.dataItemInfo.itemCn }}</view>
 							</picker>
-							<span style="padding: 0 30upx;">至</span>
-							<picker class="time-picker-view text-right" mode="date" :value="item.endTime" start="1900-01-01" end="3000-01-01" @change="(e)=>bindDateChange(item, e, 'endTime')">
-								<view class="text-right" v-if="item.endTime">{{item.endTime}}</view>
-								<view class="placeholder" v-else style="padding-left: 0;">结束时间</view>
-							</picker>
 						</view>
-					</view>
-					<!-- timestamp -->
-					<view v-else-if="item.dataItemInfo.itemType === 'timestamp'" class="form-frame">
-						<view class="title">{{item.dataItemInfo.itemCn}}</view>
-						<view class="ly-flex ly-flex-pack-justify ly-flex-align-center">
-							<uni-datetime-picker
-								type="datetime"
-								v-model="item.startTime"
-								placeholder="开始时间"
-								@change="(e)=>bindDateTimeChange(item, e, 'startTime')"
-							/>
-							<span style="padding: 0 30upx;">至</span>
-							<uni-datetime-picker
-								type="datetime"
-								v-model="item.endTime"
-								placeholder="结束时间"
-								@change="(e)=>bindDateTimeChange(item, e, 'endTime')"
-							/>
-						</view>
-					</view>
-					<!-- enum custom -->
-					<view v-else-if="item.dataItemInfo.itemType === 'enum' || item.dataItemInfo.itemType === 'custom'" class="form-frame">
-						<view class="title">{{item.dataItemInfo.itemCn}}</view>
-						<picker
-						 :value="item.value"
-						 :range="item.itemOptions"
-						 range-key="dictLabel"
-						 @change="(e)=>PickerChange(item, e)">
-							<view v-if="item.value" class="picker text-right">{{ item.itemOptions[item.itemOptions.findIndex(res => res.dictValue===item.value)].dictLabel }}</view>
-							<view class="placeholder text-right" v-else>{{ '请选择'+item.dataItemInfo.itemCn }}</view>
-						</picker>
 					</view>
 				</view>
 			</view>
@@ -113,7 +115,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { deepClone } from '@/utils/ddc';
+import { deepClone, removePropertyOfNull } from '@/utils/ddc';
 import { getDataModel, searchDataModel, getCustomEnumById } from '@/config/service/general.js';
 import { getDicts } from '@/config/service/common.js';
 import WhiteHeader from '@/components/Header/WhiteHeader.vue';
@@ -228,6 +230,7 @@ export default {
 		},
 		/** 搜索按钮操作 */
 		handleQuery() {
+			uni.showLoading({mask: true});
 			this.dataModelDto.page.pageNum = 1;
 			this.dataList = [];
 			this.isEnd = false;
@@ -245,8 +248,11 @@ export default {
 		getList() {
 			this.status = 'loading';
 			this.loading = true;
-			searchDataModel(Object.assign({}, this.dataModelDto, { dataModelId: this.modelId }), this.headerInfo).then(res => {
+			// 
+			const obj = removePropertyOfNull(Object.assign({}, this.dataModelDto, { dataModelId: this.modelId }));
+			searchDataModel({isArrayQuery: JSON.stringify(obj)}, this.headerInfo).then(res => {
 				this.loading = false;
+				uni.hideLoading();
 				if (res.data) {
 					const { list, total } = res.data;
 					if (list.length === 0) {
@@ -260,7 +266,9 @@ export default {
 					this.total = total || 0;
 					this.dataList = [...this.dataList, ...list];
 				}
-			});
+			}).catch(() => {
+				uni.hideLoading();
+			});;
 		},
 		/** input搜索 */
 		handleConfirm() {
@@ -322,6 +330,9 @@ export default {
 	.uni-input-placeholder{
 		font-size: 28upx;
 		color: #999999;
+	}
+	::v-deep.uni-input-input{
+		font-size: 28upx;
 	}
 		
 	// 查询表单
