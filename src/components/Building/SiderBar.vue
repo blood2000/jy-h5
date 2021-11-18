@@ -18,20 +18,16 @@
 export default {
   data() {
     return {
-      siderList: [
-        { name: "磅房", num: 3, id: 0 },
-        { name: "仓库A区", num: 3, id: 1 },
-        { name: "仓库B区", num: 3, id: 2 },
-        { name: "堆场A区", num: 3, id: 3 },
-        { name: "场区入口", num: 3, id: 4 },
-        { name: "场区出口", num: 3, id: 5 },
-        
-      ],
       activeSider: 0,
     };
   },
 
-  components: {},
+  props: {
+    siderList: {
+      type: Array,
+      required: true,
+    },
+  },
 
   computed: {},
 
@@ -40,6 +36,7 @@ export default {
   methods: {
 
     changeSiderBar(index) {
+      this.$emit('changeBuilding', index);
       this.activeSider = index;
     },
   },

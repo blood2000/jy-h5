@@ -28,7 +28,19 @@
       "style": {
         "navigationBarTitleText": "添加场区分类",
         "navigationStyle": "custom",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/addBuilding",
+      "style": {
+        "navigationBarTitleText": "添加场区",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
         "navigationBarBackgroundColor": "#3A65FF",
         "app-plus": {
           "bounce": "none"

@@ -1,4 +1,4 @@
-<!--  -->
+<!-- 添加场区 -->
 <template>
   <div class="building-content">
     <HeaderBar :title="title" @back="back"></HeaderBar>
@@ -6,32 +6,15 @@
       <!-- 表单 -->
       <div class="building-input-box">
         <div class="building-input-item">
-          <view class="building-title1"
-            >场区分类 <span class="required">*</span>
-          </view>
-          <picker
-            mode="selector"
-            :range="buildingTypes"
-            :range-key="'name'"
-            @change="changeTypes"
-          >
-            <view class="building-picker-btn">
-              {{ buildingTypes[buildingTypeIndex].name }}
-              <uni-icons type="forward" size="14"></uni-icons>
-            </view>
-            <view class="no-choose" v-if="noChoose">请选择</view>
-          </picker>
-        </div>
-        <div class="building-input-item">
           <div class="building-title1">
-            场区名称 <span class="required">*</span>
+            设施名称 <span class="required">*</span>
           </div>
           <input
             class="my-input"
             maxlength="32"
             placeholder="请输入"
             type="text"
-            v-model="buildingMsg.name"
+            v-model="buildingMsg.buildingName"
             cursor-spacing="150"
           />
         </div>
@@ -41,6 +24,42 @@
         <div class="building-title1">位置信息</div>
         <div class="map-box">
           <Map :locationInfo="locationMsg"></Map>
+        </div>
+      </div>
+      <!-- 选择物料 -->
+      <MaterialPicker
+        v-if="buildingMsg.buildingType !== '0'"
+        :materialList="materialList"
+        @changeMaterialList="changeMaterialList"
+      ></MaterialPicker>
+
+      <!-- 物料相关 -->
+      <div class="building-input-box" v-if="buildingMsg.buildingType !== '0'">
+        <div class="building-input-item">
+          <div class="building-title1">
+            物料单位 <span class="required">*</span>
+          </div>
+          <input
+            class="my-input"
+            maxlength="9"
+            placeholder="请输入"
+            type="text"
+            v-model="buildingMsg.unit"
+            cursor-spacing="150"
+          />
+        </div>
+        <div class="building-input-item">
+          <div class="building-title1">
+            物料最大容积 <span class="required">*</span>
+          </div>
+          <input
+            class="my-input"
+            maxlength="16"
+            placeholder="请输入"
+            type="text"
+            v-model="buildingMsg.size"
+            cursor-spacing="150"
+          />
         </div>
       </div>
       <!-- 备注 -->
@@ -66,27 +85,32 @@
 import { mapState } from "vuex";
 import HeaderBar from "../../../components/Building/HeaderBar.vue";
 import Map from "../../../components/Building/Map.vue";
+import MaterialPicker from "../../../components/Building/MaterialPicker.vue";
 import mockData from "./config/mockData";
 export default {
   data() {
     return {
-      title: "添加场区分类",
+      title: "",
       buildingTypes: [],
       buildingTypeIndex: 0,
       noChoose: true,
       buildingMsg: {
         buildingType: "",
-        name: "",
+        buildingName: "",
         remark: "",
+        material: "",
+        unit: "",
+        size: "",
       },
       locationMsg: {
         latitude: "",
         longitude: "",
       },
+      materialList: [],
     };
   },
 
-  components: { HeaderBar, Map },
+  components: { HeaderBar, Map, MaterialPicker },
 
   computed: {
     ...mapState({
@@ -97,8 +121,19 @@ export default {
     }),
   },
 
+  onLoad(option) {
+    this.buildingMsg.buildingType = option.type;
+    if (option.type === "0") {
+      // 磅房
+      this.title = "添加设施（地磅类）";
+    } else {
+      this.title = "添加场区（仓储类）";
+    }
+  },
+
   onShow() {
     this.buildingTypes = mockData.buildingTypes;
+    this.materialList = mockData.materialList;
     this.getLocationInfo();
   },
 
@@ -108,11 +143,7 @@ export default {
         delta: 1,
       });
     },
-    changeTypes(e) {
-      this.buildingTypeIndex = e.detail.value;
-      this.noChoose = false;
-      this.buildingMsg.buildingType = this.buildingTypeIndex;
-    },
+
     // 获取地理位置
     getLocationInfo() {
       var that = this;
@@ -126,6 +157,10 @@ export default {
         },
       });
     },
+    //选择物料
+    changeMaterialList(list) {
+      this.materialList = JSON.parse(list)
+    },
   },
 };
 </script>
@@ -133,6 +168,7 @@ export default {
 .building-body {
   padding-bottom: 100rpx;
   margin-bottom: 0;
+  overflow-y: auto;
 }
 .building-body-box {
   padding: 20rpx 20rpx;
