@@ -27,11 +27,34 @@
         </div>
       </div>
       <!-- 选择物料 -->
-      <MaterialPicker
+      <!-- <MaterialPicker
         v-if="buildingMsg.buildingType !== '0'"
         :materialList="materialList"
         @changeMaterialList="changeMaterialList"
-      ></MaterialPicker>
+      ></MaterialPicker> -->
+
+      <div class="building-input-box" v-if="buildingMsg.buildingType !== '0'">
+        <div class="building-input-item">
+          <div class="building-title1">请选择存储的物料</div>
+          <div class="placeholder" @click="chooseMaterial">
+            请选择
+            <uni-icons type="forward" size="14"></uni-icons>
+          </div>
+        </div>
+        <!-- 显示框 -->
+        <div class="building-input-content">
+          <div
+            class="building-input-content-item"
+            v-for="(item, index) in choosedList"
+            :key="index"
+          >
+            {{ item.name }}
+            <span class="building-input-delete" @click="deleteItem(index)">
+              <uni-icons type="clear" color="red" size="14"></uni-icons>
+            </span>
+          </div>
+        </div>
+      </div>
 
       <!-- 物料相关 -->
       <div class="building-input-box" v-if="buildingMsg.buildingType !== '0'">
@@ -106,7 +129,8 @@ export default {
         latitude: "",
         longitude: "",
       },
-      materialList: [],
+      // materialList: [],
+      choosedList: [],
     };
   },
 
@@ -118,6 +142,7 @@ export default {
       isAndroid: (state) => state.header.isAndroid,
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
+      materialList: (state) => state.building.materialList,
     }),
   },
 
@@ -133,7 +158,8 @@ export default {
 
   onShow() {
     this.buildingTypes = mockData.buildingTypes;
-    this.materialList = mockData.materialList;
+    this.getChoosedList();
+    // this.handleMaterialList();
     this.getLocationInfo();
   },
 
@@ -143,7 +169,11 @@ export default {
         delta: 1,
       });
     },
-
+    // handleMaterialList() {
+    //   this.materialList = mockData.materialList;
+    //   this.$store.commit("getMaterialList", this.materialList);
+    //   this.getChoosedList();
+    // },
     // 获取地理位置
     getLocationInfo() {
       var that = this;
@@ -159,7 +189,39 @@ export default {
     },
     //选择物料
     changeMaterialList(list) {
-      this.materialList = JSON.parse(list)
+      this.materialList = JSON.parse(list);
+    },
+    chooseMaterial() {
+      uni.navigateTo({
+        url: "./materialList",
+      });
+    },
+    //获取已选物料列表
+    getChoosedList() {
+      let choosedList = [];
+      this.materialList.map((item) => {
+        item.list.map(itm => {
+          if (itm.checked) {
+          choosedList.push(itm);
+        }
+        })
+      });
+      this.choosedList = choosedList;
+      // this.$store.commit("getChoosedMaterial", this.choosedList);
+    },
+     // 删除已选物料
+    deleteItem(index) {
+      let delType = this.choosedList[index].type;
+      this.materialList.map(item => {
+        item.list.map(itm => {
+          if (itm.type === delType) {
+            this.$set(itm, 'checked', false);
+          }
+        })
+      })
+      
+      this.getChoosedList();
+      this.$store.commit("getMaterialList", this.materialList);
     },
   },
 };

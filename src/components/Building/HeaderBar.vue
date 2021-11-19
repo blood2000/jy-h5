@@ -7,15 +7,19 @@
     ></view>
     <uni-nav-bar
       left-icon="arrowleft"
-      color="#ffffff"
+      color="#333333"
       :title="title"
-      backgroundColor="#3A65FF"
+      
+      backgroundColor="#ffffff"
       @clickLeft="back"
-    ></uni-nav-bar>
+    >
+      <view class="nav-right" slot="right" @click="jump"> {{rightText}} </view>
+    </uni-nav-bar>
   </div>
 </template>
 
 <script>
+//#3A65FF
 import { mapState } from "vuex";
 export default {
   data() {
@@ -26,6 +30,10 @@ export default {
     title: {
       type: String,
       default: "",
+    },
+    rightText: {
+      type: String,
+      default: '',
     },
   },
 
@@ -38,6 +46,9 @@ export default {
     back() {
       this.$emit("back");
     },
+    jump() {
+      this.$emit('jump');
+    },
   },
 };
 </script>
@@ -45,4 +56,18 @@ export default {
 // .status-bar {
 //   background: transparent;
 // }
+.nav-right {
+  position: absolute;
+  top: 50%;
+  right: 20rpx;
+  font-size: 24rpx;
+  color: #3A65FF;
+  transform: translateY(-50%);
+}
+
+</style>
+<style>
+>>> .uni-navbar--border {
+  border-bottom: none;
+}
 </style>

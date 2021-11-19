@@ -4,27 +4,27 @@
 }
 
 .me-text-beyond {
-	/*文本内容超宽度省略号显示 单行*/
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	width: 100%;
+  /*文本内容超宽度省略号显示 单行*/
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .building-bottom-line::after {
   position: absolute;
-  content: '';
+  content: "";
   width: 100%;
   height: 1px;
   left: 0;
   bottom: 0;
   background-image: linear-gradient(to bottom, #333, transparent);
-  transform: scaleY(.5);
+  transform: scaleY(0.5);
 }
 
 .status-bar {
-	width: 100%;
-	background: #3A65FF;
+  width: 100%;
+  background: #3a65ff;
 }
 
 .building-title1 {
@@ -32,7 +32,10 @@
   font-weight: bold;
 }
 
-
+.building-title2 {
+  font-size: 26rpx;
+  color: #333;
+}
 
 .required {
   padding-left: 10rpx;
@@ -41,37 +44,42 @@
 }
 
 .no-choose {
-	position: absolute;
-	top: 0;
-	right: 0;
-	min-width: 180rpx;
-	height: 80rpx;
-	line-height: 80rpx;
-	text-align: right;
-	background: #fff;
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 180rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: right;
+  background: #fff;
   color: #878787;
 }
 
 .my-input {
-	/* min-width: 240rpx; */
-	text-align: right;
-	font-size: 28rpx;
-	height: 80rpx;
-	/* padding-right: 10rpx; */
+  /* min-width: 240rpx; */
+  text-align: right;
+  font-size: 28rpx;
+  height: 80rpx;
+  /* padding-right: 10rpx; */
 }
 
 .placeholder {
   color: #878787;
 }
+
+.building-date {
+	/* min-width: 170rpx; */
+	padding: 0 10rpx;
+}
 /* 页面容器 */
 .building-content {
-	box-sizing: border-box;
-	height: 100%;
-	background: #f5f5f5;
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	overflow: hidden;
+  box-sizing: border-box;
+  height: 100%;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
 }
 
 .building-main {
@@ -86,7 +94,7 @@
     width: 120rpx;
     height: 100%;
     padding: 20rpx 0 90rpx;
-    background: #fff;
+    background: #f5f5f5;
     border-right: 2rpx solid #999;
     &-add {
       position: absolute;
@@ -94,7 +102,6 @@
       height: 60rpx;
       left: 30rpx;
       bottom: 20rpx;
-      
     }
   }
   &-content {
@@ -120,8 +127,8 @@
 .building-box-left {
   line-height: 80rpx;
   overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .building-box-right {
@@ -137,12 +144,12 @@
   text-align: center;
   line-height: 60rpx;
   color: #fff;
-  background: #3A65FF;
+  background: #3a65ff;
   border-radius: 10rpx;
 }
 
 .building-default {
-  color: #3A65FF;
+  color: #3a65ff;
   background: #fff;
   border: 1px solid #ddd;
   line-height: 58rpx;
@@ -151,6 +158,7 @@
 
 .building-item-box {
   box-sizing: border-box;
+  position: relative;
   width: 40%;
   height: 200rpx;
   border: 2rpx solid #999;
@@ -169,6 +177,23 @@
   margin-right: 0;
 }
 
+.building-item-ascheck {
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 20rpx;
+  right: 20rpx;
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 25rpx;
+  border: 4rpx solid #999;
+  line-height: 42rpx;
+  text-align: center;
+}
+
+.checked {
+  border: 4rpx solid #3a65ff;
+  font-weight: bold;
+}
 
 // 表单项
 .building-body {
@@ -184,32 +209,38 @@
   box-sizing: border-box;
   width: 94%;
   padding: 10rpx 20rpx;
-  margin: 0 auto 20rpx;
+  margin: 0 auto 30rpx;
   background: #fff;
   border-radius: 12rpx;
+  box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.2);
 }
-
-
+.building-body-item,
 .building-input-item {
   position: relative;
   height: 80rpx;
   line-height: 80rpx;
-	box-sizing: border-box;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-  
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &-name {
+    font-weight: bold;
+  }
+  &-icon {
+    width: 120rpx;
+    text-align: right;
+  }
 }
 
 .building-input-item::after {
   position: absolute;
-  content: '';
+  content: "";
   width: 100%;
   height: 1px;
   left: 0;
   bottom: 0;
   background-image: linear-gradient(to bottom, #999, transparent);
-  transform: scaleY(.5);
+  transform: scaleY(0.5);
 }
 
 .building-input-item:last-child::after {
@@ -217,8 +248,8 @@
 }
 
 .building-picker-btn {
-	min-width: 240rpx;
-	text-align: right;
+  min-width: 240rpx;
+  text-align: right;
 }
 
 .map-box {
@@ -234,13 +265,13 @@
 }
 
 .building-remark {
-	box-sizing: border-box;
-	padding: 20rpx;
-	height: 100%;
-	border-radius: 10rpx;
-	background: #f5f5f5;
-	font-size: 28rpx;
-	width: 100%;
+  box-sizing: border-box;
+  padding: 20rpx;
+  height: 100%;
+  border-radius: 10rpx;
+  background: #f5f5f5;
+  font-size: 28rpx;
+  width: 100%;
 }
 
 .building-btn-box {
@@ -262,10 +293,9 @@
   line-height: 80rpx;
   color: #fff;
   font-size: 32rpx;
-  background: #3A65FF;
+  background: #3a65ff;
   border-radius: 10rpx;
 }
-
 
 // 模态
 .building-modal {
@@ -274,7 +304,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,.4);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 100;
   display: flex;
   justify-content: center;
@@ -295,7 +325,7 @@
       height: 80rpx;
       line-height: 80rpx;
       text-align: center;
-      background: #3A65FF;
+      background: #3a65ff;
       color: #fff;
     }
     &-content {
@@ -318,7 +348,7 @@
     text-align: center;
     border-radius: 10rpx;
     color: #fff;
-    background: #3A65FF;
+    background: #3a65ff;
     .building-input-delete {
       position: absolute;
       top: -4px;
@@ -334,4 +364,130 @@
   .building-input-content-item:nth-child(4n) {
     margin-right: 0;
   }
+}
+
+// 物料类别
+.search-box {
+  height: 90rpx;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  .search-input-box {
+    position: relative;
+    box-sizing: border-box;
+    width: 94%;
+    height: 68rpx;
+    padding: 0 20rpx;
+    background: #fff;
+    border: 1rpx solid #999;
+    border-radius: 34rpx;
+    font-size: 28rpx;
+    color: #7f7f7f;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .search-input {
+    width: 100%;
+    font-size: 28rpx;
+    padding-left: 50rpx;
+    background: url("../../static/building/search.png") no-repeat;
+    background-position: 0 center;
+    background-size: contain;
+  }
+}
+
+.building-body-title {
+  padding: 0 30rpx;
+  margin-bottom: 20rpx;
+}
+
+// 场区申请审核
+.building-tab-box {
+  width: 90%;
+  height: 90rpx;
+  margin: 0 auto 30rpx;
+  border-radius: 45rpx;
+  background: #3a65ff;
+  color: #fff;
+  font-size: 28rpx;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+}
+
+.building-tab-item {
+  box-sizing: border-box;
+  padding: 0 20rpx;
+  width: 33%;
+  line-height: 90rpx;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tab-active {
+  background: #3356d6;
+}
+
+.building-card-title {
+  font-size: 32rpx;
+}
+
+.building-card-title::before {
+  content: "";
+  position: absolute;
+  width: 10rpx;
+  height: 40rpx;
+  top: 20rpx;
+  left: -20rpx;
+  background: #3a65ff;
+  border-radius: 5rpx;
+}
+
+.building-body-floor {
+  padding: 0 0 10rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &-item {
+    max-width: 33%;
+    .building-name {
+      font-size: 24rpx;
+      margin-bottom: 6rpx;
+    }
+    .building-value {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 30rpx;
+      font-weight: bold;
+      span {
+        padding-left: 10rpx;
+      }
+    }
+  }
+}
+
+
+.building-cancel {
+  background: #fff;
+  border: 1rpx solid #ddd;
+  color: #333;
+  // margin-right: 20rpx;
+}
+
+.building-danger {
+  background: red;
+  color: #fff;
+  // margin-right: 20rpx;
+}
+
+.building-primary {
+  background: #3a65ff;
+  color: #fff;
+  flex: 1;
+  
 }

@@ -46,6 +46,54 @@
           "bounce": "none"
         }
       }
+    },
+    {
+      "path": "pages/building/v1/materialList",
+      "style": {
+        "navigationBarTitleText": "物料类别",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/chooseMaterial",
+      "style": {
+        "navigationBarTitleText": "选择物料",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/buildingCheck",
+      "style": {
+        "navigationBarTitleText": "场区申请审核",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/check",
+      "style": {
+        "navigationBarTitleText": "申请审核",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
     }
   ],
   "globalStyle": {

@@ -31,12 +31,14 @@ export default {
 
   computed: {},
 
-  onShow() {},
+  onShow() {
+    
+  },
 
   methods: {
 
     changeSiderBar(index) {
-      this.$emit('changeBuilding', index);
+      this.$emit('changeSiderBar', index);
       this.activeSider = index;
     },
   },

@@ -18,7 +18,7 @@
     <div class="building-main">
       <div class="building-main-side">
         <!-- 菜单栏 -->
-        <SiderBar :siderList="buildingList" @changeBuilding="changeBuilding" />
+        <SiderBar :siderList="buildingList" @changeSiderBar="changeBuilding" />
         <div class="building-main-side-add" @click="toAddBuildingType">
           <uni-icons type="plus-filled" color="#3A65FF" size="30"></uni-icons>
         </div>
@@ -30,7 +30,7 @@
             共{{ activeBuilding.num }}条记录
           </div>
           <div class="building-box-right">
-            <div class="building-as-btn building-default">编辑分类</div>
+            <div class="building-as-btn building-default" @click="buildingManage">编辑分类</div>
             <div class="building-as-btn" @click="addBuilding">添加场区</div>
           </div>
         </div>
@@ -76,6 +76,7 @@ export default {
   },
   async onLoad() {
     await this.$onLaunched;
+    this.$store.commit("getMaterialList", mockData.materialList);
   },
   onShow() {
     this.getBuildingList();
@@ -106,7 +107,7 @@ export default {
     },
 
     changeBuilding(index) {
-      console.log(index), (this.activeIndex = index);
+      this.activeIndex = index;
       this.renderBuilding();
     },
 
@@ -120,8 +121,14 @@ export default {
     // 添加场区
     addBuilding() {
       uni.navigateTo({
-          url: "./addBuilding?type=" + this.activeIndex,
-        });
+        url: "./addBuilding?type=" + this.activeIndex,
+      });
+    },
+    // 场区申请审核
+    buildingManage() {
+      uni.navigateTo({
+        url: './buildingCheck',
+      });
     },
   },
 };

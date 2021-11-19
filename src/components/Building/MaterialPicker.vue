@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="building-input-item">
-      <div class="building-title1">请选择存储的物料物料</div>
+      <div class="building-title1">请选择存储的物料</div>
       <div class="placeholder" @click="chooseMaterial">
         请选择
         <uni-icons type="forward" size="14"></uni-icons>
