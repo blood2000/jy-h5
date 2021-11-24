@@ -185,7 +185,7 @@ export default {
 	methods: {
 		/** 获取模型数据 */
 		getData() {
-			getDataModel(this.modelId, this.headerInfo).then(res => {
+			getDataModel(this.modelId, this.headerInfo).then(async res => {
 				if (res.data && res.data.dataModelDto) {
 					const dataModelDto = res.data.dataModelDto;
 					uni.setNavigationBarTitle({
@@ -194,26 +194,21 @@ export default {
 					this.barTitle = res.data.name;
 					// 如果是枚举类型，要请求字典
 					if (dataModelDto.queryFields) {
-						dataModelDto.queryFields.forEach((el, i) => {
+						for (let i = 0; i < dataModelDto.queryFields.length; i++) {
+							const el = dataModelDto.queryFields[i];
 							if (el.dataItemInfo.itemKey && el.dataItemInfo.itemKey !== '') {
 								if (el.dataItemInfo.itemType === 'enum') {
-									getDicts(el.dataItemInfo.itemKey, this.headerInfo).then(value => {
+									await getDicts(el.dataItemInfo.itemKey, this.headerInfo).then(value => {
 										dataModelDto.queryFields[i].itemOptions = value.data;
-										dataModelDto.queryFields[i].pickerOptions = value.data.map(el => {
-											return el.dictLabel;
-										});
 									});
 								}
 								if (el.dataItemInfo.itemType === 'custom') {
-									getCustomEnumById(el.dataItemInfo.id, this.headerInfo).then(value => {
+									await getCustomEnumById(el.dataItemInfo.id, this.headerInfo).then(value => {
 										dataModelDto.queryFields[i].itemOptions = value.data;
-										dataModelDto.queryFields[i].pickerOptions = value.data.map(el => {
-											return el.dictLabel;
-										});
 									});
 								}
 							}
-						});
+						};
 					}
 					// 缓存数据
 					this.$nextTick(() => {
@@ -221,10 +216,8 @@ export default {
 						this.queryFields = queryFields || [];
 						this.tableFields = tableFields || [];
 						this.dataModelDto = deepClone(dataModelDto);
-					});
-					setTimeout(() => {
 						this.resetQuery();
-					}, 300);
+					});
 				}
 			});
 		},
