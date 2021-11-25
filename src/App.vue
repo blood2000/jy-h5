@@ -43,4 +43,10 @@
 		height: 100%;
 		/* overflow: hidden; */
 	}
+	/* uni-swipe-action */
+	.uni-swipe_button{
+		padding: 0 24upx !important;
+		font-size: 32upx !important;
+		font-weight: bold;
+	}
 </style>

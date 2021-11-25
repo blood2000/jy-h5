@@ -62,9 +62,33 @@
 	  }
 	},
 	{
+	  "path": "pages/capacity/vehicle/add",
+	  "style": {
+	    "navigationBarTitleText": "新增车辆",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": false,
+	    "navigationBarBackgroundColor": "#ffffff",
+		"app-plus": {
+		  "bounce": "none"
+		}
+	  }
+	},
+	{
 	  "path": "pages/capacity/driver/index",
 	  "style": {
 	    "navigationBarTitleText": "司机管理",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": false,
+	    "navigationBarBackgroundColor": "#ffffff",
+		"app-plus": {
+		  "bounce": "none"
+		}
+	  }
+	},
+	{
+	  "path": "pages/capacity/driver/add",
+	  "style": {
+	    "navigationBarTitleText": "新增司机",
 	    "navigationStyle": "custom",
 	    "enablePullDownRefresh": false,
 	    "navigationBarBackgroundColor": "#ffffff",

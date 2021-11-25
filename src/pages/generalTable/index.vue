@@ -261,7 +261,7 @@ export default {
 				}
 			}).catch(() => {
 				uni.hideLoading();
-			});;
+			});
 		},
 		/** input搜索 */
 		handleConfirm() {
