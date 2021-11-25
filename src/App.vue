@@ -33,6 +33,7 @@
 <style lang='scss'>
 	@import "colorui/main.css";
 	@import "colorui/icon.css";
+	@import "uview-ui/index.scss";
 	/*每个页面公共css */
 	uni-page-wrapper{
 		background: #F3F3F3;

@@ -18,5 +18,7 @@ module.exports = {
             }
         },
         disableHostCheck: true
-    }
+    },
+	// uview
+	transpileDependencies: ['uview-ui']
 }

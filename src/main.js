@@ -16,6 +16,10 @@ Vue.use(VueClipboard)
 import {VueJsonp} from 'vue-jsonp'
 Vue.use(VueJsonp)
 
+// uview
+import uView from "uview-ui";
+Vue.use(uView);
+
 Vue.prototype.$onLaunched = new Promise(resolve => {
 	Vue.prototype.$isResolve = resolve;
 })

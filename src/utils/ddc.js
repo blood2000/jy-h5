@@ -105,4 +105,20 @@ export function selectDictLabel(datas, value) {
     }
   });
   return actions.join('');
+}
+
+export function removePropertyOfNull(obj){
+  Object.keys(obj).forEach(item=>{
+    if(!obj[item] && obj[item]!=0 && typeof(obj[item]) !== 'boolean' ) delete obj[item]
+      
+    if(Object.prototype.toString.call(obj[item]) === '[object Object]'){
+      removePropertyOfNull(obj[item])
+    }
+    if(Array.isArray(obj[item])){
+      obj[item].forEach(e=>{
+        removePropertyOfNull(e)
+      })
+    }
+  })
+  return obj;
 }
