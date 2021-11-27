@@ -7,7 +7,7 @@
 		<view class="search-form ly-flex ly-flex-align-center" v-if="dataModelDto.queryFields && dataModelDto.queryFields.length > 0" @touchmove.stop.prevent="">
 			<uni-forms ref="queryForm" style="width: calc(100% - 70upx)">
 				<!-- string -->
-				<uni-forms-item v-if="dataModelDto.queryFields[0].dataItemInfo.itemType === 'string' && !item.dynamic" class="uni-form-item uni-column" label=" " left-icon="search" icon-color="#999">
+				<uni-forms-item v-if="dataModelDto.queryFields[0].dataItemInfo.itemType === 'string' && !dataModelDto.queryFields[0].dynamic" class="uni-form-item uni-column" label=" " left-icon="search" icon-color="#999">
 					<uni-easyinput
 						type="text"
 						v-model="dataModelDto.queryFields[0].value"

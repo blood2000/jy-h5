@@ -32,8 +32,14 @@
 					 :range="licenseColorOptions"
 					 range-key="dictLabel"
 					 @change="(e)=>pickerChange(licenseColorOptions, 'vehicleLicenseColorCode', e)">
-						<view v-if="form.vehicleLicenseColorCode" class="picker-input text-right">{{ licenseColorOptions[licenseColorOptions.findIndex(res => res.dictValue===form.vehicleLicenseColorCode)].dictLabel }}</view>
-						<view class="picker-placeholder text-right" v-else>请选择车牌颜色</view>
+						<view v-if="form.vehicleLicenseColorCode" class="picker-input text-right">
+							{{ licenseColorOptions[licenseColorOptions.findIndex(res => res.dictValue===form.vehicleLicenseColorCode)].dictLabel }}
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
+						<view class="picker-placeholder text-right" v-else>
+							请选择车牌颜色
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleTypeCode" label="车型">
@@ -42,8 +48,14 @@
 					 :range="vehicleTypeOptions"
 					 range-key="dictLabel"
 					 @change="(e)=>pickerChange(vehicleTypeOptions, 'vehicleTypeCode', e)">
-						<view v-if="form.vehicleTypeCode" class="picker-input text-right">{{ vehicleTypeOptions[vehicleTypeOptions.findIndex(res => res.dictValue===form.vehicleTypeCode)].dictLabel }}</view>
-						<view class="picker-placeholder text-right" v-else>请选择车型</view>
+						<view v-if="form.vehicleTypeCode" class="picker-input text-right">
+							{{ vehicleTypeOptions[vehicleTypeOptions.findIndex(res => res.dictValue===form.vehicleTypeCode)].dictLabel }}
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
+						<view class="picker-placeholder text-right" v-else>
+							请选择车型
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
 					</picker>
 				</uni-forms-item>
 			</view>
