@@ -67,6 +67,11 @@
 				</uni-forms-item>
 			</view>
 		</uni-forms>
+		
+		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
+			<view class="reset" @click="handleCancle">取消</view>
+			<view class="submit" @click="handleSubmit">确认创建</view>
+		</view>
 	</view>
 </template>
 
@@ -148,10 +153,20 @@
 					this.$set(this.form, 'licenseNumber', this.form.licenseNumber.slice(0, this.form.licenseNumber.length - 1))
 				}
 			},
+			// 取消
+			handleCancle() {
+				
+			},
+			// 确认创建
+			handleSubmit() {
+				
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	
+	.u-page{
+		padding-bottom: 154upx;
+	}
 </style>
