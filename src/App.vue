@@ -49,4 +49,11 @@
 		font-size: 32upx !important;
 		font-weight: bold;
 	}
+	/* u-navbar */
+	.u-navbar__content__title{
+		font-size: 36upx !important;
+		font-family: PingFang SC;
+		font-weight: bold;
+		color: #333333;
+	}
 </style>

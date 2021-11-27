@@ -1,0 +1,42 @@
+/*表单卡片css*/
+.ly-form-card{
+	margin: 24upx;
+	background: #FFFFFF;
+	border-radius: 20upx;
+	padding: 0 30upx;
+	.uni-forms-item.border-bottom{
+		border-bottom: 1upx solid #EBEBEB;
+	}
+	.uni-forms-item__inner{
+		padding: 20upx 0 !important;
+	}
+	.label-text{
+		font-size: 32upx !important;
+		font-family: PingFang SC;
+		font-weight: bold;
+	}
+	.is-required{
+		font-size: 30upx;
+		font-family: PingFang SC;
+		font-weight: 500;
+		color: #E51F39;
+		padding-left: 10upx;
+		margin-top: 6upx;
+	}
+	.uni-input-form, .uni-input-wrapper{
+		text-align: right;
+	}
+	.uni-input-placeholder, .picker-placeholder{
+		font-size: 28upx;
+		font-family: PingFang SC;
+		font-weight: 500;
+		color: #999999;
+	}
+	.uni-easyinput__content-input{
+		padding: 0 !important;
+	}
+	.picker-input, .picker-placeholder{
+		height: 72upx;
+		line-height: 72upx;
+	}
+}

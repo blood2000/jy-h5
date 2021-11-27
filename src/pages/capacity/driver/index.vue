@@ -145,7 +145,7 @@
 			// 编辑
 			handleUpdate(row) {
 				uni.navigateTo({
-				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization
+				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization+'&code='+row.code
 				});
 			},
 			// 删除
