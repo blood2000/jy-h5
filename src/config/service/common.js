@@ -8,3 +8,12 @@ export function getDicts(dictType, config) {
 	headers: config
   });
 }
+
+export function getProvinceList(data, config) {
+  return uniRequest({
+    url: '/system/province/list',
+    method: 'get',
+	data: data,
+	headers: config
+  });
+}
