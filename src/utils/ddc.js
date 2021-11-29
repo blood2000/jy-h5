@@ -121,4 +121,26 @@ export function removePropertyOfNull(obj){
     }
   })
   return obj;
+}
+
+/**
+ * 判断是否长期
+ */
+export function isPeriodAlways(date) {
+  if (date.indexOf('长期') !== -1 || date.startsWith('9999')) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * 校验日期格式yyyy-mm-dd
+ */
+export function isPeriodFormate(date) {
+  if (date.match(/^(\d{4})(-)(\d{2})(-)(\d{2})$/)) {
+    return date;
+  } else {
+    return '';
+  }
 }

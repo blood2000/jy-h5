@@ -8,6 +8,7 @@
 			placeholder
 		></u-navbar>
 		
+		<div class="notify-msg">提交S认证并通过后，该车辆可以承接无车承运开票运单</div>
 		<uni-forms :modelValue="form" label-width="160">
 			<view class="ly-form-card">
 				<uni-forms-item required name="chassisNumber" label="车辆识别码" class="border-bottom">
@@ -98,18 +99,57 @@
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="请上传行驶证">
-					
+				<uni-forms-item required label="请上传行驶证" label-position="top">
+					<view class="upload-msg">上传行驶证照片，图片大小不能超过3M</view>
+					<uni-row class="demo-uni-row mb20" :gutter="32">
+					    <uni-col :span="12">
+					        <UploadSingleImage
+								v-model="form.vehicleLicenseImg"
+								label="上传行驶证"
+								image-type="vehicle-license"
+								side="front"
+								icon-type="vehicle"
+								@fillForm="fillForm"
+							/>
+					    </uni-col>
+					    <uni-col :span="12">
+					        <UploadSingleImage
+								v-model="form.vehicleLicenseSecondImg"
+								label="上传行驶证副页"
+								image-type="vehicle-license"
+								side="back"
+								icon-type="vehicle_back"
+								@fillForm="fillForm"
+							/>
+					    </uni-col>
+					</uni-row>
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="道路运输许可证">
-					
+				<uni-forms-item required label="道路运输许可证" label-position="top">
+					<view class="upload-msg">上传道路运输许可证，图片大小不能超过3M</view>
+					<uni-row class="demo-uni-row mb20" :gutter="32">
+					    <uni-col :span="12">
+					        <UploadSingleImage
+								v-model="form.roadTransportCertificateImg"
+								label="上传道路运输许可证"
+								icon-type="transport"
+							/>
+					    </uni-col>
+					</uni-row>
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="车头正面照">
-					
+				<uni-forms-item required label="车头正面照" label-position="top">
+					<view class="upload-msg">上传车头正面照，图片大小不能超过3M</view>
+					<uni-row class="demo-uni-row mb20" :gutter="32">
+					    <uni-col :span="12">
+							<UploadSingleImage
+								v-model="form.vehicleImage"
+								label="上传车头正面照"
+							/>
+					    </uni-col>
+					</uni-row>
 				</uni-forms-item>
 			</view>
 		</uni-forms>
@@ -124,7 +164,11 @@
 <script>
 	import { mapState } from 'vuex';
 	import { getDicts } from '@/config/service/common.js';
+	import UploadSingleImage from '@/components/uploadSingleImage/uploadSingleImage.vue';
 	export default {
+		components: {
+			UploadSingleImage
+		},
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
@@ -143,6 +187,8 @@
 				vehicleWidthOptions: [],
 				// 轴数字典
 				axisTypeOptions: [],
+				// 车型字典
+				vehicleTypeOptions: [],
 			}
 		},
 		onLoad(options){
@@ -177,6 +223,10 @@
 				getDicts('axis_type', this.headerInfo).then(response => {
 					this.axisTypeOptions = response.data;
 				});
+				// 车辆类型
+				getDicts('vehicleClassification', this.headerInfo).then(response => {
+					this.vehicleTypeOptions = response.data;
+				});
 			},
 			// picker选中
 			pickerChange(arr, key, e) {
@@ -188,7 +238,72 @@
 			},
 			// 确认创建
 			handleSubmit() {
-				
+				console.log(this.form)
+			},
+			/** 图片识别后回填 */
+			fillForm(type, data, side) {
+			  switch (type) {
+				// 行驶证
+				case 'vehicle-license':
+				  // 正面
+				  if (side === 'front') {
+					// 车牌号码
+					if (data.number) {
+					  this.$set(this.form, 'licenseNumber', data.number);
+					} else {
+					  this.$set(this.form, 'licenseNumber', '');
+					}
+					// 车辆类型 vehicleTypeCode
+					if (data.vehicle_type) {
+					  // form
+					  this.$set(this.form, 'vehicleTypeCode', this.getVehicleTypeKey(data.vehicle_type));
+					} else {
+					  this.$set(this.form, 'vehicleTypeCode', '');
+					}
+					// 车辆识别码 chassisNumber
+					if (data.vin) {
+					  this.$set(this.form, 'chassisNumber', data.vin);
+					} else {
+					  this.$set(this.form, 'chassisNumber', '');
+					}
+					// 发动机号 engineNumber
+					if (data.engine_no) {
+					  this.$set(this.form, 'engineNumber', data.engine_no);
+					} else {
+					  this.$set(this.form, 'engineNumber', '');
+					}
+				  }
+				  // 副页
+				  if (side === 'back') {
+					// 车辆总重量 vehicleTotalWeight
+					if (data.gross_mass) {
+					  var num = data.gross_mass.indexOf('kg');
+					  var value = data.gross_mass.substr(0, num);
+					  this.$set(this.form, 'vehicleTotalWeight', (value / 1000).toFixed(3));
+					} else {
+					  this.$set(this.form, 'vehicleTotalWeight', '0');
+					}
+					// 车辆可载重量 vehicleLoadWeight
+					if (data.unladen_mass) {
+					  num = data.unladen_mass.indexOf('kg');
+					  value = data.unladen_mass.substr(0, num);
+					  this.$set(this.form, 'vehicleLoadWeight', (value / 1000).toFixed(3));
+					}
+				  }
+				  break;
+				default:
+				  break;
+			  }
+			},
+			// 根据车牌类型的value值获取对应的key
+			getVehicleTypeKey(value) {
+			  let key = null;
+			  this.vehicleTypeOptions.forEach(el => {
+				if (value === el.dictLabel) {
+				  key = el.dictValue;
+				}
+			  });
+			  return key || 'X99';
 			}
 		}
 	}
@@ -197,5 +312,15 @@
 <style lang="scss" scoped>
 	.u-page{
 		padding-bottom: 154upx;
+		.notify-msg{
+			height: 66upx;
+			line-height: 66upx;
+			background: #FDF2F1;
+			font-size: 24upx;
+			font-family: PingFang SC;
+			font-weight: bold;
+			color: #E55E50;
+			padding: 0 24upx;
+		}
 	}
 </style>
