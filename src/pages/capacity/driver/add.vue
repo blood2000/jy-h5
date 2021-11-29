@@ -52,14 +52,17 @@
 					</view>
 				</uni-forms-item>
 				<uni-forms-item name="isChyDriver" label="同步提交S认证">
-					
+					<view class="text-right">
+						<image class="icon-check" v-if="form.isChyDriver === 1" src="~@/static/capacity/check.png" @click="form.isChyDriver = 0"></image>
+						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="form.isChyDriver = 1"></image>
+					</view>
 				</uni-forms-item>
 			</view>
 		</uni-forms>
 		
 		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
 			<view class="reset" @click="handleCancle">取消</view>
-			<view class="submit" @click="handleSubmit">确认创建</view>
+			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
 	</view>
 </template>
