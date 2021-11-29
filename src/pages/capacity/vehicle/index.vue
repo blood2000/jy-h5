@@ -27,6 +27,9 @@
 									<text class="mr40">司机：小七</text>
 									<text>调度者：大白</text>
 								</view>
+								<view class="text">
+									<text>车型：普通重型半挂车</text>
+								</view>
 							</view>
 						</view>
 				    </uni-swipe-action-item>
@@ -187,7 +190,8 @@
 				>.img-box{
 					width: 156upx;
 					height: 132upx;
-					background: #F7F7F7;
+					background: #F7F7F7 url('~@/static/capacity/car_bg.png') no-repeat;
+					background-size: 100% 100%;
 					border-radius: 10upx;
 					overflow: hidden;
 					margin-right: 18upx;
@@ -199,7 +203,7 @@
 						font-weight: bold;
 						color: #333333;
 						line-height: 42upx;
-						margin-bottom: 14upx;
+						margin-bottom: 8upx;
 						>image{
 							width: 102upx;
 							height: 32upx;
