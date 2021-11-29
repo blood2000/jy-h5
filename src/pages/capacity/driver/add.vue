@@ -27,7 +27,7 @@
 					 :range="isFreezeOptions"
 					 range-key="dictLabel"
 					 @change="(e)=>pickerChange(isFreezeOptions, 'isDriverFreeze', e)">
-						<view v-if="form.isDriverFreeze" class="picker-input text-right">
+						<view v-if="form.isDriverFreeze || form.isDriverFreeze === 0" class="picker-input text-right">
 							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isDriverFreeze)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>

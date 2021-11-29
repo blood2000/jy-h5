@@ -69,7 +69,7 @@
 					 :range="isOptions"
 					 range-key="dictLabel"
 					 @change="(e)=>pickerChange(isOptions, 'identificationEffective', e)">
-						<view v-if="form.identificationEffective" class="picker-input text-right">
+						<view v-if="form.identificationEffective || form.identificationEffective === 0" class="picker-input text-right">
 							{{ isOptions[isOptions.findIndex(res => res.dictValue===form.identificationEffective)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -157,7 +157,7 @@
 					 :range="isOptions"
 					 range-key="dictLabel"
 					 @change="(e)=>pickerChange(isOptions, 'validPeriodAlways', e)">
-						<view v-if="form.validPeriodAlways" class="picker-input text-right">
+						<view v-if="form.validPeriodAlways || form.validPeriodAlways === 0" class="picker-input text-right">
 							{{ isOptions[isOptions.findIndex(res => res.dictValue===form.validPeriodAlways)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>

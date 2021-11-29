@@ -77,7 +77,7 @@
 					 :range="isFreezeOptions"
 					 range-key="dictLabel"
 					 @change="(e)=>pickerChange(isFreezeOptions, 'isVehicleFreeze', e)">
-						<view v-if="form.isVehicleFreeze" class="picker-input text-right">
+						<view v-if="form.isVehicleFreeze || form.isVehicleFreeze === 0" class="picker-input text-right">
 							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isVehicleFreeze)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -126,7 +126,9 @@
 				// 车型字典
 				vehicleTypeOptions: [],
 				// 车牌颜色字典
-				licenseColorOptions: [],
+				licenseColorOptions: [
+					{ dictLabel: '黄色', dictValue: '1' }
+				],
 				// 状态字典
 				isFreezeOptions: [
 					{ dictLabel: '正常', dictValue: 0 },
