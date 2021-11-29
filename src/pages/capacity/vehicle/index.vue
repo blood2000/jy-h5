@@ -19,7 +19,10 @@
 								
 							</view>
 							<view class="info-box ly-flex-1">
-								<view class="platenumber">闽A12345</view>
+								<view class="platenumber">
+									闽A12345
+									<image src="~@/static/capacity/srz.png"></image>
+								</view>
 								<view class="text">
 									<text class="mr40">司机：小七</text>
 									<text>调度者：大白</text>
@@ -197,6 +200,13 @@
 						color: #333333;
 						line-height: 42upx;
 						margin-bottom: 14upx;
+						>image{
+							width: 102upx;
+							height: 32upx;
+							vertical-align: middle;
+							margin-top: -8upx;
+							margin-left: 20upx;
+						}
 					}
 					>.text{
 						font-size: 28upx;

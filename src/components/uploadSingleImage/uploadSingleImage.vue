@@ -1,7 +1,8 @@
 <template>
-	<view class="upload-msg-box">
-		<view class="img-box ly-flex ly-flex-align-center ly-flex-pack-center" @click="handleUpload">
+	<view class="upload-msg-box" @click="handleUpload">
+		<view class="img-box ly-flex ly-flex-align-center ly-flex-pack-center">
 			<img v-if="codeValue && codeValue !== ''" :src="pathValue" />
+			<img v-else :src="require('@/static/capacity/' + iconType + '.png')" />
 		</view>
 		<view class="label">{{label}}</view>
 	</view>
@@ -152,7 +153,9 @@
 		padding: 20upx;
 		>.img-box{
 			height: 150upx;
-			background: rgba(0,0,0,0.05);
+			background: url('~@/static/capacity/border.png') no-repeat;
+			background-size: 100% 100%;
+			padding: 4upx 8upx;
 			>img{
 				max-width: 100%;
 				max-height: 100%;

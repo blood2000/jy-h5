@@ -147,6 +147,7 @@
 							<UploadSingleImage
 								v-model="form.vehicleImage"
 								label="上传车头正面照"
+								icon-type="vehicle_head"
 							/>
 					    </uni-col>
 					</uni-row>
@@ -165,6 +166,7 @@
 	import { mapState } from 'vuex';
 	import { getDicts } from '@/config/service/common.js';
 	import UploadSingleImage from '@/components/uploadSingleImage/uploadSingleImage.vue';
+	import { addInfo, updateInfo } from '@/config/service/capacity/vehicle.js';
 	export default {
 		components: {
 			UploadSingleImage

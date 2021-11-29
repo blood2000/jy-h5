@@ -227,6 +227,7 @@
 	import { getDicts, getProvinceList } from '@/config/service/common.js';
 	import UploadSingleImage from '@/components/uploadSingleImage/uploadSingleImage.vue';
 	import { isPeriodAlways, isPeriodFormate } from '@/utils/ddc.js';
+	import { addInfo, updateInfo } from '@/config/service/capacity/driver.js';
 	export default {
 		components: {
 			UploadSingleImage

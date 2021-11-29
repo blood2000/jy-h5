@@ -15,13 +15,12 @@
 				<uni-swipe-action>
 					<uni-swipe-action-item :right-options="options2" @click="checked=>swipeActionClick(checked, item)">
 				        <view class="card-content ly-flex">
-				        	<view class="img-box">
-				        		
-				        	</view>
+				        	<view class="img-box"></view>
 				        	<view class="info-box ly-flex-1">
 				        		<view class="platenumber">
 									杨小七
 									<text>13700000000</text>
+									<image src="~@/static/capacity/srz.png"></image>
 								</view>
 				        		<view class="text">
 				        			<text class="mr40">车牌号：闽A54772</text>
@@ -187,7 +186,8 @@
 				>.img-box{
 					width: 102upx;
 					height: 102upx;
-					background: #F7F7F7;
+					background: url('~@/static/capacity/driver_avatar.png') no-repeat;
+					background-size: 100% 100%;
 					border-radius: 50%;
 					overflow: hidden;
 					margin-right: 34upx;
@@ -205,6 +205,13 @@
 							font-weight: 500;
 							color: #999999;
 							margin-left: 12upx;
+						}
+						>image{
+							width: 102upx;
+							height: 32upx;
+							vertical-align: middle;
+							margin-top: -8upx;
+							margin-left: 20upx;
 						}
 					}
 					>.text{

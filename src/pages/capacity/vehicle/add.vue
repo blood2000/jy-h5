@@ -72,9 +72,28 @@
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item required name="isVehicleFreeze" label="状态" class="border-bottom">
-					
+					<picker
+					 :value="form.isVehicleFreeze"
+					 :range="isFreezeOptions"
+					 range-key="dictLabel"
+					 @change="(e)=>pickerChange(isFreezeOptions, 'isVehicleFreeze', e)">
+						<view v-if="form.isVehicleFreeze" class="picker-input text-right">
+							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isVehicleFreeze)].dictLabel }}
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
+						<view class="picker-placeholder text-right" v-else>
+							请选择账号状态
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
+					</picker>
 				</uni-forms-item>
-				<uni-forms-item required name="isChyVehicle" label="同步提交S认证">
+				<uni-forms-item name="teamCode" label="调度者" class="border-bottom">
+					<view class="picker-placeholder text-right">
+						请选择调度者
+						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+					</view>
+				</uni-forms-item>
+				<uni-forms-item name="isChyVehicle" label="同步提交S认证">
 					
 				</uni-forms-item>
 			</view>
@@ -99,11 +118,20 @@
 		},
 		data() {
 			return {
-				form: {},
+				form: {
+					vehicleLicenseColorCode: '1', // 车牌颜色默认为黄色
+					isVehicleFreeze: 0,
+					isChyVehicle: 0
+				},
 				// 车型字典
 				vehicleTypeOptions: [],
 				// 车牌颜色字典
 				licenseColorOptions: [],
+				// 状态字典
+				isFreezeOptions: [
+					{ dictLabel: '正常', dictValue: 0 },
+					{ dictLabel: '冻结', dictValue: 1 }
+				],
 				// 车牌键盘
 				carBoardShow: false
 			}
@@ -171,7 +199,14 @@
 			},
 			// 确认创建
 			handleSubmit() {
-				
+				if (this.form.isChyVehicle === 1) {
+					// 认证
+					uni.navigateTo({
+					    url: '/pages/capacity/vehicle/auth?token='+this.headerInfo.Authorization
+					});
+				} else {
+					// 创建
+				}
 			}
 		}
 	}
