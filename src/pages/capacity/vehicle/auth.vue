@@ -156,7 +156,7 @@
 		</uni-forms>
 		
 		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
-			<view class="reset" @click="handleCancle">取消</view>
+			<view class="reset" @click="navigateBack">取消</view>
 			<view class="submit" @click="handleSubmit">提交认证</view>
 		</view>
 	</view>
@@ -167,6 +167,8 @@
 	import { getDicts } from '@/config/service/common.js';
 	import UploadSingleImage from '@/components/uploadSingleImage/uploadSingleImage.vue';
 	import { addInfo, updateInfo } from '@/config/service/capacity/vehicle.js';
+	import { addTenantRel } from '@/config/service/capacity/rel';
+	import { removePropertyOfNull } from '@/utils/ddc';
 	export default {
 		components: {
 			UploadSingleImage
@@ -197,6 +199,7 @@
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': options.token
 			});
+			this.form = JSON.parse(options.info);
 			this.getDictsList();
 		},
 		methods: {
@@ -234,13 +237,55 @@
 			pickerChange(arr, key, e) {
 				this.$set(this.form, key, arr[e.detail.value].dictValue);
 			},
-			// 取消
-			handleCancle() {
-				
-			},
 			// 确认创建
 			handleSubmit() {
-				console.log(this.form)
+				uni.showLoading({
+					title: '保存中...',
+					mask: true
+				})
+				const driver = removePropertyOfNull(Object.assign({}, this.form));
+				if (this.form.id) {
+					// 编辑
+					// ...调度者
+					updateInfo(driver, this.headerInfo).then(res => {
+					  // 添加租户和车辆的关系
+					  const params = {
+						vehicleCode: driver.code,
+						isChyVehicle: driver.isChyVehicle,
+						isVehicleFreeze: driver.isVehicleFreeze
+					  };
+					  this.setRel(params);
+					}).catch(e => {
+					  uni.hideLoading();
+					});
+				} else {
+					// 新增
+					addInfo(Object.assign({}, driver, { fromSource: 2 }), this.headerInfo).then(res => {
+					  // 添加租户和车辆的关系
+					  const params = {
+						vehicleCode: res.data.code,
+						isChyVehicle: driver.isChyVehicle
+					  };
+					  this.setRel(params);
+					}).catch(e => {
+					  uni.hideLoading();
+					});
+				}
+			},
+			/** 绑定车辆与租户关系 */
+			setRel(params) {
+				addTenantRel(params, this.headerInfo).then(result => {
+					uni.hideLoading();
+					uni.showToast({
+						title: '保存成功',
+						icon: 'none'
+					});
+					uni.redirectTo({
+					    url: '/pages/capacity/vehicle/index?token='+this.headerInfo.Authorization
+					});
+				}).catch(e => {
+					uni.hideLoading();
+				});
 			},
 			/** 图片识别后回填 */
 			fillForm(type, data, side) {

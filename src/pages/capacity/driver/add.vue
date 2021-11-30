@@ -45,7 +45,7 @@
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
 				</uni-forms-item>
-				<uni-forms-item name="teamCode" label="调度者" class="border-bottom">
+				<uni-forms-item name="teamCodes" label="调度者" class="border-bottom">
 					<view class="picker-placeholder text-right">
 						请选择调度者
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
@@ -61,7 +61,7 @@
 		</uni-forms>
 		
 		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
-			<view class="reset" @click="handleCancle">取消</view>
+			<view class="reset" @click="navigateBack">取消</view>
 			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
 	</view>
@@ -70,6 +70,8 @@
 <script>
 	import { mapState } from 'vuex';
 	import { getInfo, addInfo, updateInfo } from '@/config/service/capacity/driver.js';
+	import { addTenantRel } from '@/config/service/capacity/rel';
+	import { removePropertyOfNull } from '@/utils/ddc';
 	export default {
 		computed: {
 			...mapState({
@@ -113,21 +115,74 @@
 			pickerChange(arr, key, e) {
 				this.$set(this.form, key, arr[e.detail.value].dictValue);
 			},
-			// 取消
-			handleCancle() {
-				
-			},
 			// 确认创建
 			handleSubmit() {
 				if (this.form.isChyDriver === 1) {
 					// 认证
 					uni.navigateTo({
-					    url: '/pages/capacity/driver/auth?token='+this.headerInfo.Authorization
+					    url: '/pages/capacity/driver/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)
 					});
 				} else {
-					// 创建
+					// ...车辆
+					// ...调度者
+					uni.showLoading({
+						title: '保存中...',
+						mask: true
+					})
+					const driver = removePropertyOfNull(Object.assign({}, this.form));
+					if (this.form.id) {
+						// 编辑
+						updateInfo(driver, this.headerInfo).then(res => {
+							// 更新租户和司机的关系
+							const vehicleInfoUpdateBos = driver.vehicleInfoList.map(el => {
+								return {
+									vehicleCode: el.code,
+									isChyVehicle: el.isChyVehicle,
+									isVehicleFreeze: el.isVehicleFreeze
+								};
+							});
+							const params = {
+								driverCode: driver.code,
+								isChyDriver: driver.isChyDriver,
+								isDriverFreeze: driver.isDriverFreeze,
+								vehicleInfoUpdateBos: vehicleInfoUpdateBos
+							};
+							this.setRel(params);
+						}).catch(e => {
+							uni.hideLoading();
+						});
+					} else {
+						// 新增
+						addInfo(Object.assign({}, driver, { fromSource: 2 }), this.headerInfo).then(res => {
+							// 添加租户和司机的关系
+							const params = {
+								driverCode: res.data.code,
+								vehicleCode: res.data.vehicleInfo?res.data.vehicleInfo.code:undefined,
+								isChyDriver: driver.isChyDriver,
+								isChyVehicle: res.data.vehicleInfo?driver.vehicleInfo.isChyVehicle:undefined
+							};
+							this.setRel(params);
+						}).catch(e => {
+							uni.hideLoading();
+						});
+					}
 				}
-			}
+			},
+			/** 绑定司机和租户的关系 */
+			setRel(params) {
+				addTenantRel(params, this.headerInfo).then(result => {
+					uni.hideLoading();
+					uni.showToast({
+						title: '保存成功',
+						icon: 'none'
+					});
+					uni.redirectTo({
+					    url: '/pages/capacity/driver/index?token='+this.headerInfo.Authorization
+					});
+				}).catch(e => {
+					uni.hideLoading();
+				});
+			},
 		}
 	}
 </script>

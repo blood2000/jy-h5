@@ -87,7 +87,7 @@
 						</view>
 					</picker>
 				</uni-forms-item>
-				<uni-forms-item name="teamCode" label="调度者" class="border-bottom">
+				<uni-forms-item name="teamCodes" label="调度者" class="border-bottom">
 					<view class="picker-placeholder text-right">
 						请选择调度者
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
@@ -103,7 +103,7 @@
 		</uni-forms>
 		
 		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
-			<view class="reset" @click="handleCancle">取消</view>
+			<view class="reset" @click="navigateBack">取消</view>
 			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
 	</view>
@@ -113,6 +113,8 @@
 	import { mapState } from 'vuex';
 	import { getInfo, addInfo, updateInfo } from '@/config/service/capacity/vehicle.js';
 	import { getDicts } from '@/config/service/common.js';
+	import { addTenantRel } from '@/config/service/capacity/rel';
+	import { removePropertyOfNull } from '@/utils/ddc';
 	export default {
 		computed: {
 			...mapState({
@@ -198,21 +200,63 @@
 					this.$set(this.form, 'licenseNumber', this.form.licenseNumber.slice(0, this.form.licenseNumber.length - 1))
 				}
 			},
-			// 取消
-			handleCancle() {
-				
-			},
 			// 确认创建
 			handleSubmit() {
 				if (this.form.isChyVehicle === 1) {
 					// 认证
 					uni.navigateTo({
-					    url: '/pages/capacity/vehicle/auth?token='+this.headerInfo.Authorization
+					    url: '/pages/capacity/vehicle/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)
 					});
 				} else {
-					// 创建
+					uni.showLoading({
+						title: '保存中...',
+						mask: true
+					})
+					const driver = removePropertyOfNull(Object.assign({}, this.form));
+					if (this.form.id) {
+						// 编辑
+						// ...调度者
+						updateInfo(driver, this.headerInfo).then(res => {
+						  // 添加租户和车辆的关系
+						  const params = {
+							vehicleCode: driver.code,
+							isChyVehicle: driver.isChyVehicle,
+							isVehicleFreeze: driver.isVehicleFreeze
+						  };
+						  this.setRel(params);
+						}).catch(e => {
+						  uni.hideLoading();
+						});
+					} else {
+						// 新增
+						addInfo(Object.assign({}, driver, { fromSource: 2 }), this.headerInfo).then(res => {
+						  // 添加租户和车辆的关系
+						  const params = {
+							vehicleCode: res.data.code,
+							isChyVehicle: driver.isChyVehicle
+						  };
+						  this.setRel(params);
+						}).catch(e => {
+						  uni.hideLoading();
+						});
+					}
 				}
-			}
+			},
+			/** 绑定车辆与租户关系 */
+			setRel(params) {
+				addTenantRel(params, this.headerInfo).then(result => {
+					uni.hideLoading();
+					uni.showToast({
+						title: '保存成功',
+						icon: 'none'
+					});
+					uni.redirectTo({
+					    url: '/pages/capacity/vehicle/index?token='+this.headerInfo.Authorization
+					});
+				}).catch(e => {
+					uni.hideLoading();
+				});
+			},
 		}
 	}
 </script>
