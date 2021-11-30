@@ -9,7 +9,7 @@
 		></u-navbar>
 		
 		<div class="notify-msg">提交S认证并通过后，该车辆可以承接无车承运开票运单</div>
-		<uni-forms :modelValue="form" label-width="160">
+		<uni-forms ref="form" :modelValue="form" label-width="160">
 			<view class="ly-form-card">
 				<uni-forms-item required label="请上传身份证件" label-position="top">
 					<view class="upload-msg">上传身份证照片，图片大小不能超过3M</view>
@@ -230,6 +230,7 @@
 	import { addInfo, updateInfo } from '@/config/service/capacity/driver.js';
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
+	import { idCardReg } from '@/utils/validate.js';
 	export default {
 		components: {
 			UploadSingleImage
@@ -309,8 +310,10 @@
 			},
 			// 确认创建
 			handleSubmit() {
+				// 手动校验
+				if (this.noValidate()) return;
 				uni.showLoading({
-					title: '保存中...',
+					title: '保存中',
 					mask: true
 				})
 				const driver = removePropertyOfNull(Object.assign({}, this.form));
@@ -366,18 +369,89 @@
 					uni.hideLoading();
 				});
 			},
+			// 校验
+			noValidate() {
+				if (!this.form.identificationImage || !this.form.identificationBackImage) {
+					uni.showToast({
+						title: '请上传身份证件',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.identificationNumber) {
+					uni.showToast({
+						title: '身份证号不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!idCardReg.test(this.form.identificationNumber)) {
+					uni.showToast({
+						title: '身份证号格式错误',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (
+					!this.form.identificationBeginTime ||
+					(this.form.identificationEffective !== 1 && !this.form.identificationEndTime)
+				) {
+					uni.showToast({
+						title: '身份证有效期不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.driverLicenseImage) {
+					uni.showToast({
+						title: '请上传驾驶证件',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.peopleImage) {
+					uni.showToast({
+						title: '请上传司机照片',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.issuingOrganizations) {
+					uni.showToast({
+						title: '驾驶证发证机关不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (
+					!this.form.validPeriodFrom ||
+					(this.form.validPeriodAlways !== 1 && !this.form.validPeriodTo)
+				) {
+					uni.showToast({
+						title: '驾驶证有效期不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.workLicenseImage) {
+					uni.showToast({
+						title: '请上传从业资格证',
+						icon: 'none'
+					});
+					return true;
+				}
+			},
 			/** 图片识别后回填 */
 			fillForm(type, data, side) {
 			  switch (type) {
 				// 身份证
 				case 'id-card':
 				  if (side === 'front') {
-					  console.log(data)
-					if (data.name) {
-					  this.$set(this.form, 'name', data.name);
-					} else {
-					  this.$set(this.form, 'name', '');
-					}
+					// if (data.name) {
+					//   this.$set(this.form, 'name', data.name);
+					// } else {
+					//   this.$set(this.form, 'name', '');
+					// }
 					if (data.number) {
 					  this.$set(this.form, 'identificationNumber', data.number);
 					} else {

@@ -8,7 +8,7 @@
 			placeholder
 		></u-navbar>
 		
-		<uni-forms :modelValue="form" label-width="150">
+		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
 				<uni-forms-item required label="车牌号" name="licenseNumber">
 					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.licenseNumber" placeholder="请输入车牌号" @focus="handlecarBoard" />
@@ -115,6 +115,7 @@
 	import { getDicts } from '@/config/service/common.js';
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
+	import { plateNoReg } from '@/utils/validate.js';
 	export default {
 		computed: {
 			...mapState({
@@ -202,14 +203,16 @@
 			},
 			// 确认创建
 			handleSubmit() {
+				// 手动校验
+				if (this.noValidate()) return;
 				if (this.form.isChyVehicle === 1) {
 					// 认证
 					uni.navigateTo({
-					    url: '/pages/capacity/vehicle/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)
+						url: '/pages/capacity/vehicle/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)
 					});
 				} else {
 					uni.showLoading({
-						title: '保存中...',
+						title: '保存中',
 						mask: true
 					})
 					const driver = removePropertyOfNull(Object.assign({}, this.form));
@@ -257,6 +260,51 @@
 					uni.hideLoading();
 				});
 			},
+			// 校验
+			noValidate() {
+				if (!this.form.licenseNumber) {
+					uni.showToast({
+						title: '车牌号不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!plateNoReg.test(this.form.licenseNumber)) {
+					uni.showToast({
+						title: '车牌号格式错误',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleTypeCode) {
+					uni.showToast({
+						title: '车型不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleTotalWeight || parseFloat(this.form.vehicleTotalWeight)==0) {
+					uni.showToast({
+						title: '车辆总重量(皮重)不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleLoadWeight || parseFloat(this.form.vehicleLoadWeight)==0) {
+					uni.showToast({
+						title: '车辆可载重量不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleRemainingLoadVolume) {
+					uni.showToast({
+						title: '车辆可载立方不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+			}
 		}
 	}
 </script>

@@ -9,10 +9,10 @@
 		></u-navbar>
 		
 		<div class="notify-msg">提交S认证并通过后，该车辆可以承接无车承运开票运单</div>
-		<uni-forms :modelValue="form" label-width="160">
+		<uni-forms ref="form" :modelValue="form" label-width="160">
 			<view class="ly-form-card">
 				<uni-forms-item required name="chassisNumber" label="车辆识别码" class="border-bottom">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.chassisNumber" placeholder="请输入车辆识别码" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.chassisNumber" placeholder="支持自动识别" />
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleEnergyType" label="车辆能源类型" class="border-bottom">
 					<picker
@@ -239,8 +239,10 @@
 			},
 			// 确认创建
 			handleSubmit() {
+				// 手动校验
+				if (this.noValidate()) return;
 				uni.showLoading({
-					title: '保存中...',
+					title: '保存中',
 					mask: true
 				})
 				const driver = removePropertyOfNull(Object.assign({}, this.form));
@@ -287,6 +289,51 @@
 					uni.hideLoading();
 				});
 			},
+			// 校验
+			noValidate() {
+				if (!this.form.chassisNumber) {
+					uni.showToast({
+						title: '车辆识别码不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleEnergyType) {
+					uni.showToast({
+						title: '车辆能源类型不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleLicenseImg) {
+					uni.showToast({
+						title: '请上传行驶证',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleLicenseSecondImg) {
+					uni.showToast({
+						title: '请上传行驶证副页',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.roadTransportCertificateImg) {
+					uni.showToast({
+						title: '请上传道路运输许可证',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleImage) {
+					uni.showToast({
+						title: '请上传车头正面照',
+						icon: 'none'
+					});
+					return true;
+				}
+			},
 			/** 图片识别后回填 */
 			fillForm(type, data, side) {
 			  switch (type) {
@@ -295,18 +342,18 @@
 				  // 正面
 				  if (side === 'front') {
 					// 车牌号码
-					if (data.number) {
-					  this.$set(this.form, 'licenseNumber', data.number);
-					} else {
-					  this.$set(this.form, 'licenseNumber', '');
-					}
+					// if (data.number) {
+					//   this.$set(this.form, 'licenseNumber', data.number);
+					// } else {
+					//   this.$set(this.form, 'licenseNumber', '');
+					// }
 					// 车辆类型 vehicleTypeCode
-					if (data.vehicle_type) {
-					  // form
-					  this.$set(this.form, 'vehicleTypeCode', this.getVehicleTypeKey(data.vehicle_type));
-					} else {
-					  this.$set(this.form, 'vehicleTypeCode', '');
-					}
+					// if (data.vehicle_type) {
+					//   // form
+					//   this.$set(this.form, 'vehicleTypeCode', this.getVehicleTypeKey(data.vehicle_type));
+					// } else {
+					//   this.$set(this.form, 'vehicleTypeCode', '');
+					// }
 					// 车辆识别码 chassisNumber
 					if (data.vin) {
 					  this.$set(this.form, 'chassisNumber', data.vin);
@@ -323,19 +370,19 @@
 				  // 副页
 				  if (side === 'back') {
 					// 车辆总重量 vehicleTotalWeight
-					if (data.gross_mass) {
-					  var num = data.gross_mass.indexOf('kg');
-					  var value = data.gross_mass.substr(0, num);
-					  this.$set(this.form, 'vehicleTotalWeight', (value / 1000).toFixed(3));
-					} else {
-					  this.$set(this.form, 'vehicleTotalWeight', '0');
-					}
-					// 车辆可载重量 vehicleLoadWeight
-					if (data.unladen_mass) {
-					  num = data.unladen_mass.indexOf('kg');
-					  value = data.unladen_mass.substr(0, num);
-					  this.$set(this.form, 'vehicleLoadWeight', (value / 1000).toFixed(3));
-					}
+					// if (data.gross_mass) {
+					//   var num = data.gross_mass.indexOf('kg');
+					//   var value = data.gross_mass.substr(0, num);
+					//   this.$set(this.form, 'vehicleTotalWeight', (value / 1000).toFixed(3));
+					// } else {
+					//   this.$set(this.form, 'vehicleTotalWeight', '0');
+					// }
+					// // 车辆可载重量 vehicleLoadWeight
+					// if (data.unladen_mass) {
+					//   num = data.unladen_mass.indexOf('kg');
+					//   value = data.unladen_mass.substr(0, num);
+					//   this.$set(this.form, 'vehicleLoadWeight', (value / 1000).toFixed(3));
+					// }
 				  }
 				  break;
 				default:

@@ -8,7 +8,7 @@
 			placeholder
 		></u-navbar>
 		
-		<uni-forms :modelValue="form" label-width="150">
+		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
 				<uni-forms-item required name="name" label="司机姓名" class="border-bottom">
 					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.name" placeholder="请输入司机姓名" />
@@ -72,6 +72,7 @@
 	import { getInfo, addInfo, updateInfo } from '@/config/service/capacity/driver.js';
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
+	import { phoneReg } from '@/utils/validate.js';
 	export default {
 		computed: {
 			...mapState({
@@ -117,16 +118,18 @@
 			},
 			// 确认创建
 			handleSubmit() {
+				// 手动校验
+				if (this.noValidate()) return;
 				if (this.form.isChyDriver === 1) {
 					// 认证
 					uni.navigateTo({
-					    url: '/pages/capacity/driver/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)
+						url: '/pages/capacity/driver/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)
 					});
 				} else {
 					// ...车辆
 					// ...调度者
 					uni.showLoading({
-						title: '保存中...',
+						title: '保存中',
 						mask: true
 					})
 					const driver = removePropertyOfNull(Object.assign({}, this.form));
@@ -183,6 +186,30 @@
 					uni.hideLoading();
 				});
 			},
+			// 校验
+			noValidate() {
+				if (!this.form.name) {
+					uni.showToast({
+						title: '司机姓名不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.telphone) {
+					uni.showToast({
+						title: '司机手机号不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!phoneReg.test(this.form.telphone)) {
+					uni.showToast({
+						title: '司机手机号格式错误',
+						icon: 'none'
+					});
+					return true;
+				}
+			}
 		}
 	}
 </script>

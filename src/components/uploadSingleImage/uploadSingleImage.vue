@@ -73,7 +73,8 @@
 					success:(res)=> {
 						const car_lic = res.tempFilePaths[0];
 						uni.showLoading({
-							title: '上传中...'
+							title: '上传中',
+							mask: true
 						});
 						uni.uploadFile({
 							url: urlFile, //仅为示例，非真实的接口地址
