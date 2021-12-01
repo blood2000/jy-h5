@@ -47,3 +47,14 @@ export function delInfo(vehicleCodes, config) {
 	headers: config
   });
 }
+
+// 根据车牌号查询车辆
+export function selectInfo(licenseNumber) {
+  return uniRequest({
+    url: '/jyz/vehicle/selectVehicleInfoByVehicleInfoQueryBo',
+    method: 'get',
+    data: {
+      licenseNumber
+    }
+  });
+}

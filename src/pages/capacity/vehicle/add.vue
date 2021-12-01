@@ -11,7 +11,7 @@
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
 				<uni-forms-item required label="车牌号" name="licenseNumber">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.licenseNumber" placeholder="请输入车牌号" @focus="handlecarBoard" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.licenseNumber" :disabled="disabled" placeholder="请输入车牌号" @focus="handlecarBoard" />
 					<u-keyboard
 						ref="uKeyboard"
 						mode="car"
@@ -31,6 +31,7 @@
 					 :value="form.vehicleLicenseColorCode"
 					 :range="licenseColorOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(licenseColorOptions, 'vehicleLicenseColorCode', e)">
 						<view v-if="form.vehicleLicenseColorCode" class="picker-input text-right">
 							{{ licenseColorOptions[licenseColorOptions.findIndex(res => res.dictValue===form.vehicleLicenseColorCode)].dictLabel }}
@@ -47,6 +48,7 @@
 					 :value="form.vehicleTypeCode"
 					 :range="vehicleTypeOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(vehicleTypeOptions, 'vehicleTypeCode', e)">
 						<view v-if="form.vehicleTypeCode" class="picker-input text-right">
 							{{ vehicleTypeOptions[vehicleTypeOptions.findIndex(res => res.dictValue===form.vehicleTypeCode)].dictLabel }}
@@ -61,13 +63,13 @@
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item required name="vehicleTotalWeight" label="车辆总重量(皮重)" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleTotalWeight" placeholder="请输入车辆总重量(皮重)" />
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleTotalWeight" :disabled="disabled" placeholder="请输入车辆总重量(皮重)" />
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleLoadWeight" label="车辆可载重量" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleLoadWeight" placeholder="请输入车辆可载重量" />
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleLoadWeight" :disabled="disabled" placeholder="请输入车辆可载重量" />
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleRemainingLoadVolume" label="车辆可载立方">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleRemainingLoadVolume" placeholder="请输入车辆可载立方" />
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleRemainingLoadVolume" :disabled="disabled" placeholder="请输入车辆可载立方" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -76,6 +78,7 @@
 					 :value="form.isVehicleFreeze"
 					 :range="isFreezeOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(isFreezeOptions, 'isVehicleFreeze', e)">
 						<view v-if="form.isVehicleFreeze || form.isVehicleFreeze === 0" class="picker-input text-right">
 							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isVehicleFreeze)].dictLabel }}
@@ -95,8 +98,8 @@
 				</uni-forms-item>
 				<uni-forms-item name="isChyVehicle" label="同步提交S认证">
 					<view class="text-right">
-						<image class="icon-check" v-if="form.isChyVehicle === 1" src="~@/static/capacity/check.png" @click="form.isChyVehicle = 0"></image>
-						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="form.isChyVehicle = 1"></image>
+						<image class="icon-check" v-if="form.isChyVehicle === 1" src="~@/static/capacity/check.png" @click="disabled?'':form.isChyVehicle = 0"></image>
+						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="disabled?'':form.isChyVehicle = 1"></image>
 					</view>
 				</uni-forms-item>
 			</view>
@@ -113,7 +116,7 @@
 
 <script>
 	import { mapState } from 'vuex';
-	import { getInfo, addInfo, updateInfo } from '@/config/service/capacity/vehicle.js';
+	import { getInfo, addInfo, updateInfo, selectInfo } from '@/config/service/capacity/vehicle.js';
 	import { getDicts } from '@/config/service/common.js';
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
@@ -126,7 +129,14 @@
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
-			})
+			}),
+			disabled() {
+			  if (this.form.id) {
+				return true;
+			  } else {
+				return false;
+			  }
+			}
 		},
 		data() {
 			return {

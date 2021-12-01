@@ -47,3 +47,14 @@ export function delInfo(driverCodes, config) {
 	headers: config
   });
 }
+
+// 根据手机号查询司机
+export function selectInfo(telphone) {
+  return uniRequest({
+    url: '/jyz/driver/selectDriverInfoByDriverInfoQueryBo',
+    method: 'get',
+    data: {
+      telphone
+    }
+  });
+}

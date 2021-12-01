@@ -21,6 +21,7 @@
 								image-type="id-card"
 								side="front"
 								icon-type="idcard"
+								:disabled="disabled"
 								@fillForm="fillForm"
 							/>
 					    </uni-col>
@@ -31,16 +32,17 @@
 								image-type="id-card"
 								side="back"
 								icon-type="idcard_back"
+								:disabled="disabled"
 								@fillForm="fillForm"
 							/>
 						</uni-col>
 					</uni-row>
 				</uni-forms-item>
 				<uni-forms-item required name="identificationNumber" label="身份证号" class="border-bottom">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.identificationNumber" placeholder="支持自动识别" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.identificationNumber" :disabled="disabled" placeholder="支持自动识别" />
 				</uni-forms-item>
 				<uni-forms-item required name="identificationBeginTime" label="生效日期" class="border-bottom">
-					<picker mode="date" :value="form.identificationBeginTime" :start="startDate" :end="form.identificationEndTime" @change="(e)=>bindDateChange('identificationBeginTime', e)">
+					<picker mode="date" :value="form.identificationBeginTime" :start="startDate" :end="form.identificationEndTime" :disabled="disabled" @change="(e)=>bindDateChange('identificationBeginTime', e)">
 						<view v-if="form.identificationBeginTime" class="uni-input picker-input text-right">
 							{{form.identificationBeginTime}}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
@@ -52,7 +54,7 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item :required="form.identificationEffective !== 1" name="identificationEndTime" label="失效日期" class="border-bottom">
-					<picker mode="date" :value="form.identificationEndTime" :start="form.identificationBeginTime" :end="endDate" @change="(e)=>bindDateChange('identificationEndTime', e)">
+					<picker mode="date" :value="form.identificationEndTime" :start="form.identificationBeginTime" :end="endDate" :disabled="disabled" @change="(e)=>bindDateChange('identificationEndTime', e)">
 						<view v-if="form.identificationEndTime" class="uni-input picker-input text-right">
 							{{form.identificationEndTime}}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
@@ -68,6 +70,7 @@
 					 :value="form.identificationEffective"
 					 :range="isOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(isOptions, 'identificationEffective', e)">
 						<view v-if="form.identificationEffective || form.identificationEffective === 0" class="picker-input text-right">
 							{{ isOptions[isOptions.findIndex(res => res.dictValue===form.identificationEffective)].dictLabel }}
@@ -80,7 +83,7 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="homeAddress" label="所在区域">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.homeAddress" placeholder="支持自动识别" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.homeAddress" :disabled="disabled" placeholder="支持自动识别" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -93,7 +96,8 @@
 								label="上传驾驶证内页"
 								image-type="driver-license"
 								icon-type="driver"
-								fillForm="fillForm"
+								:disabled="disabled"
+								@fillForm="fillForm"
 							/>
 					    </uni-col>
 						<uni-col :span="12">
@@ -101,21 +105,23 @@
 								v-model="form.peopleImage"
 								label="上传司机照片"
 								icon-type="driver_head"
+								:disabled="disabled"
 							/>
 						</uni-col>
 					</uni-row>
 				</uni-forms-item>
 				<uni-forms-item name="driverLicense" label="驾驶证号" class="border-bottom">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.driverLicense" placeholder="支持自动识别" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.driverLicense" :disabled="disabled" placeholder="支持自动识别" />
 				</uni-forms-item>
 				<uni-forms-item required name="issuingOrganizations" label="驾驶证发证机关" class="border-bottom">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.issuingOrganizations" placeholder="支持自动识别" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.issuingOrganizations" :disabled="disabled" placeholder="支持自动识别" />
 				</uni-forms-item>
 				<uni-forms-item name="driverLicenseType" label="驾驶证类型" class="border-bottom">
 					<picker
 					 :value="form.driverLicenseType"
 					 :range="driverLicenseTypeOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(driverLicenseTypeOptions, 'driverLicenseType', e)">
 						<view v-if="form.driverLicenseType" class="picker-input text-right">
 							{{ driverLicenseTypeOptions[driverLicenseTypeOptions.findIndex(res => res.dictValue===form.driverLicenseType)].dictLabel }}
@@ -128,7 +134,7 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item required name="validPeriodFrom" label="生效日期" class="border-bottom">
-					<picker mode="date" :value="form.validPeriodFrom" :start="startDate" :end="form.validPeriodTo" @change="(e)=>bindDateChange('validPeriodFrom', e)">
+					<picker mode="date" :value="form.validPeriodFrom" :start="startDate" :end="form.validPeriodTo" :disabled="disabled" @change="(e)=>bindDateChange('validPeriodFrom', e)">
 						<view v-if="form.validPeriodFrom" class="uni-input picker-input text-right">
 							{{form.validPeriodFrom}}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
@@ -140,7 +146,7 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item :required="form.validPeriodAlways !== 1" name="validPeriodTo" label="失效日期" class="border-bottom">
-					<picker mode="date" :value="form.validPeriodTo" :start="form.validPeriodFrom" :end="endDate" @change="(e)=>bindDateChange('validPeriodTo', e)">
+					<picker mode="date" :value="form.validPeriodTo" :start="form.validPeriodFrom" :end="endDate" :disabled="disabled" @change="(e)=>bindDateChange('validPeriodTo', e)">
 						<view v-if="form.validPeriodTo" class="uni-input picker-input text-right">
 							{{form.validPeriodTo}}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
@@ -156,6 +162,7 @@
 					 :value="form.validPeriodAlways"
 					 :range="isOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(isOptions, 'validPeriodAlways', e)">
 						<view v-if="form.validPeriodAlways || form.validPeriodAlways === 0" class="picker-input text-right">
 							{{ isOptions[isOptions.findIndex(res => res.dictValue===form.validPeriodAlways)].dictLabel }}
@@ -177,15 +184,16 @@
 								v-model="form.workLicenseImage"
 								label="上传从业资格证"
 								icon-type="work"
+								:disabled="disabled"
 							/>
 					    </uni-col>
 					</uni-row>
 				</uni-forms-item>
 				<uni-forms-item name="workLicense" label="从业资格证" class="border-bottom">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.workLicense" placeholder="请输入从业资格证" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.workLicense" :disabled="disabled" placeholder="请输入从业资格证" />
 				</uni-forms-item>
 				<uni-forms-item name="workLicenseDueDate" label="到期日期" class="border-bottom">
-					<picker mode="date" :value="form.workLicenseDueDate" :start="startDate" :end="endDate" @change="(e)=>bindDateChange('workLicenseDueDate', e)">
+					<picker mode="date" :value="form.workLicenseDueDate" :start="startDate" :end="endDate" :disabled="disabled" @change="(e)=>bindDateChange('workLicenseDueDate', e)">
 						<view v-if="form.workLicenseDueDate" class="uni-input picker-input text-right">
 							{{form.workLicenseDueDate}}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
@@ -201,6 +209,7 @@
 					 :value="form.workLicenseProvinceCode"
 					 :range="provinceCodeOptions"
 					 range-key="provinceName"
+					 :disabled="disabled"
 					 @change="(e)=>pickerProvinceChange(provinceCodeOptions, 'workLicenseProvinceCode', e)">
 						<view v-if="form.workLicenseProvinceCode" class="picker-input text-right">
 							{{ provinceCodeOptions[provinceCodeOptions.findIndex(res => res.provinceCode===form.workLicenseProvinceCode)].provinceName }}
@@ -244,6 +253,13 @@
 			},
 			endDate() {
 				return this.getDate('end');
+			},
+			disabled() {
+			  if (this.form.id) {
+				return true;
+			  } else {
+				return false;
+			  }
 			}
 		},
 		data() {

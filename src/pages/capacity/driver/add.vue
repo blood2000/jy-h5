@@ -10,22 +10,23 @@
 		
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
-				<uni-forms-item required name="name" label="司机姓名" class="border-bottom">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.name" placeholder="请输入司机姓名" />
+				<uni-forms-item required name="telphone" label="司机手机号" class="border-bottom">
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.telphone" :disabled="disabled" placeholder="请输入司机手机号" />
 				</uni-forms-item>
-				<uni-forms-item required name="telphone" label="司机手机号">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.telphone" placeholder="请输入司机手机号" />
+				<uni-forms-item required name="name" label="司机姓名">
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.name" :disabled="disabled" placeholder="请输入司机姓名" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item name="password" label="账号密码" class="border-bottom">
-					<uni-easyinput type="password" :inputBorder="false" :clearable="false" v-model="form.password" :placeholder="form.id?'密码未修改可不填写':'初始密码abcd1234@'" />
+					<uni-easyinput type="password" :inputBorder="false" :clearable="false" v-model="form.password" :disabled="disabled" :placeholder="form.id?'密码未修改可不填写':'初始密码abcd1234@'" />
 				</uni-forms-item>
 				<uni-forms-item required name="isDriverFreeze" label="账号状态">
 					<picker
 					 :value="form.isDriverFreeze"
 					 :range="isFreezeOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(isFreezeOptions, 'isDriverFreeze', e)">
 						<view v-if="form.isDriverFreeze || form.isDriverFreeze === 0" class="picker-input text-right">
 							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isDriverFreeze)].dictLabel }}
@@ -53,8 +54,8 @@
 				</uni-forms-item>
 				<uni-forms-item name="isChyDriver" label="同步提交S认证">
 					<view class="text-right">
-						<image class="icon-check" v-if="form.isChyDriver === 1" src="~@/static/capacity/check.png" @click="form.isChyDriver = 0"></image>
-						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="form.isChyDriver = 1"></image>
+						<image class="icon-check" v-if="form.isChyDriver === 1" src="~@/static/capacity/check.png" @click="disabled?'':form.isChyDriver = 0"></image>
+						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="disabled?'':form.isChyDriver = 1"></image>
 					</view>
 				</uni-forms-item>
 			</view>
@@ -72,7 +73,7 @@
 
 <script>
 	import { mapState } from 'vuex';
-	import { getInfo, addInfo, updateInfo } from '@/config/service/capacity/driver.js';
+	import { getInfo, addInfo, updateInfo, selectInfo } from '@/config/service/capacity/driver.js';
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { phoneReg } from '@/utils/validate.js';
@@ -86,7 +87,14 @@
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
-			})
+			}),
+			disabled() {
+			  if (this.form.id) {
+				return true;
+			  } else {
+				return false;
+			  }
+			}
 		},
 		data() {
 			return {
