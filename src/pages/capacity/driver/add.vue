@@ -40,7 +40,7 @@
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item v-if="!form.code" name="licenseNumber" label="车辆" class="border-bottom">
+				<uni-forms-item name="licenseNumber" label="车辆" class="border-bottom">
 					<view class="picker-placeholder text-right" @click="handleOpenVehicleList">
 						请选择车辆
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
