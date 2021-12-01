@@ -11,7 +11,7 @@
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
 				<uni-forms-item required name="telphone" label="司机手机号" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.telphone" :disabled="disabled" placeholder="请输入司机手机号" />
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.telphone" placeholder="请输入司机手机号" @blur="getUserAlreadyExist" />
 				</uni-forms-item>
 				<uni-forms-item required name="name" label="司机姓名">
 					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.name" :disabled="disabled" placeholder="请输入司机姓名" />
@@ -54,8 +54,8 @@
 				</uni-forms-item>
 				<uni-forms-item name="isChyDriver" label="同步提交S认证">
 					<view class="text-right">
-						<image class="icon-check" v-if="form.isChyDriver === 1" src="~@/static/capacity/check.png" @click="disabled?'':form.isChyDriver = 0"></image>
-						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="disabled?'':form.isChyDriver = 1"></image>
+						<image class="icon-check" :class="disabled?'disabled':''" v-if="form.isChyDriver === 1" src="~@/static/capacity/check.png" @click="disabled?'':form.isChyDriver = 0"></image>
+						<image class="icon-check" :class="disabled?'disabled':''" v-else src="~@/static/capacity/check_none.png" @click="disabled?'':form.isChyDriver = 1"></image>
 					</view>
 				</uni-forms-item>
 			</view>
@@ -130,8 +130,11 @@
 			// 获取详情
 			getInfoData(code) {
 				getInfo(code, this.headerInfo).then(res => {
-					this.form = res.data;
+					this.setForm(res.data);
 				});
+			},
+			setForm(data) {
+				this.form = data;
 			},
 			// picker选中
 			pickerChange(arr, key, e) {
@@ -206,6 +209,33 @@
 				}).catch(e => {
 					uni.hideLoading();
 				});
+			},
+			/** 手机号码不能重复 */
+			getUserAlreadyExist() {
+			  if (this.form.telphone) {
+				selectInfo(this.form.telphone, this.headerInfo).then(res => {
+				  if (res.data) {
+					// 已存在
+					uni.showToast({
+						title: '该司机信息已存在，将为您展示该司机详细信息',
+						icon: 'none',
+						duration: 2000
+					});
+					this.setForm(res.data);
+				  } else {
+					// 不存在
+					this.resetIdAndCode();
+				  }
+				});
+			  } else {
+				// 清空
+				this.resetIdAndCode();
+			  }
+			},
+			resetIdAndCode() {
+			  this.form.id = null;
+			  this.form.code = null;
+			  // ...重置车辆
 			},
 			// 校验
 			noValidate() {

@@ -49,12 +49,13 @@ export function delInfo(driverCodes, config) {
 }
 
 // 根据手机号查询司机
-export function selectInfo(telphone) {
+export function selectInfo(telphone, config) {
   return uniRequest({
     url: '/jyz/driver/selectDriverInfoByDriverInfoQueryBo',
     method: 'get',
     data: {
       telphone
-    }
+    },
+	headers: config
   });
 }

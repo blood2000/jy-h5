@@ -21,7 +21,7 @@
 					 range-key="dictLabel"
 					 :disabled="disabled"
 					 @change="(e)=>pickerChange(energyTypesOptions, 'vehicleEnergyType', e)">
-						<view v-if="form.vehicleEnergyType" class="picker-input text-right">
+						<view v-if="form.vehicleEnergyType && energyTypesOptions.length>0" class="picker-input text-right">
 							{{ energyTypesOptions[energyTypesOptions.findIndex(res => res.dictValue===form.vehicleEnergyType)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -38,7 +38,7 @@
 					 range-key="dictLabel"
 					 :disabled="disabled"
 					 @change="(e)=>pickerChange(vehicleLengthOptions, 'vehicleLength', e)">
-						<view v-if="form.vehicleLength" class="picker-input text-right">
+						<view v-if="form.vehicleLength && vehicleLengthOptions.length>0" class="picker-input text-right">
 							{{ vehicleLengthOptions[vehicleLengthOptions.findIndex(res => res.dictValue===form.vehicleLength)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -55,7 +55,7 @@
 					 range-key="dictLabel"
 					 :disabled="disabled"
 					 @change="(e)=>pickerChange(vehicleWidthOptions, 'vehicleWidth', e)">
-						<view v-if="form.vehicleWidth" class="picker-input text-right">
+						<view v-if="form.vehicleWidth && vehicleWidthOptions.length>0" class="picker-input text-right">
 							{{ vehicleWidthOptions[vehicleWidthOptions.findIndex(res => res.dictValue===form.vehicleWidth)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -75,7 +75,7 @@
 					 range-key="dictLabel"
 					 :disabled="disabled"
 					 @change="(e)=>pickerChange(carBodyColorOptions, 'vehicleColorCode', e)">
-						<view v-if="form.vehicleColorCode" class="picker-input text-right">
+						<view v-if="form.vehicleColorCode && carBodyColorOptions.length>0" class="picker-input text-right">
 							{{ carBodyColorOptions[carBodyColorOptions.findIndex(res => res.dictValue===form.vehicleColorCode)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -92,7 +92,7 @@
 					 range-key="dictLabel"
 					 :disabled="disabled"
 					 @change="(e)=>pickerChange(axisTypeOptions, 'axesNumber', e)">
-						<view v-if="form.axesNumber" class="picker-input text-right">
+						<view v-if="form.axesNumber && axisTypeOptions.length>0" class="picker-input text-right">
 							{{ axisTypeOptions[axisTypeOptions.findIndex(res => res.dictValue===form.axesNumber)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>

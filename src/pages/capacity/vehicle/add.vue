@@ -11,7 +11,7 @@
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
 				<uni-forms-item required label="车牌号" name="licenseNumber">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.licenseNumber" :disabled="disabled" placeholder="请输入车牌号" @focus="handlecarBoard" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.licenseNumber" placeholder="请输入车牌号" @focus="handlecarBoard" />
 					<u-keyboard
 						ref="uKeyboard"
 						mode="car"
@@ -33,7 +33,7 @@
 					 range-key="dictLabel"
 					 :disabled="disabled"
 					 @change="(e)=>pickerChange(licenseColorOptions, 'vehicleLicenseColorCode', e)">
-						<view v-if="form.vehicleLicenseColorCode" class="picker-input text-right">
+						<view v-if="form.vehicleLicenseColorCode && licenseColorOptions.length>0" class="picker-input text-right">
 							{{ licenseColorOptions[licenseColorOptions.findIndex(res => res.dictValue===form.vehicleLicenseColorCode)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -50,7 +50,7 @@
 					 range-key="dictLabel"
 					 :disabled="disabled"
 					 @change="(e)=>pickerChange(vehicleTypeOptions, 'vehicleTypeCode', e)">
-						<view v-if="form.vehicleTypeCode" class="picker-input text-right">
+						<view v-if="form.vehicleTypeCode && vehicleTypeOptions.length>0" class="picker-input text-right">
 							{{ vehicleTypeOptions[vehicleTypeOptions.findIndex(res => res.dictValue===form.vehicleTypeCode)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -98,8 +98,8 @@
 				</uni-forms-item>
 				<uni-forms-item name="isChyVehicle" label="同步提交S认证">
 					<view class="text-right">
-						<image class="icon-check" v-if="form.isChyVehicle === 1" src="~@/static/capacity/check.png" @click="disabled?'':form.isChyVehicle = 0"></image>
-						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="disabled?'':form.isChyVehicle = 1"></image>
+						<image class="icon-check" :class="disabled?'disabled':''" v-if="form.isChyVehicle === 1" src="~@/static/capacity/check.png" @click="disabled?'':form.isChyVehicle = 0"></image>
+						<image class="icon-check" :class="disabled?'disabled':''" v-else src="~@/static/capacity/check_none.png" @click="disabled?'':form.isChyVehicle = 1"></image>
 					</view>
 				</uni-forms-item>
 			</view>
@@ -190,8 +190,11 @@
 			// 获取详情
 			getInfoData(code) {
 				getInfo(code, this.headerInfo).then(res => {
-					this.form = res.data;
+					this.setForm(res.data);
 				});
+			},
+			setForm(data) {
+				this.form = data;
 			},
 			// picker选中
 			pickerChange(arr, key, e) {
@@ -207,12 +210,15 @@
 			},
 			carBoardClose() {
 				this.carBoardShow = false;
+				this.getUserAlreadyExist();
 			},
 			carBoardConfirm() {
 				this.carBoardShow = false;
+				this.getUserAlreadyExist();
 			},
 			carBoardCancel() {
 				this.carBoardShow = false;
+				this.getUserAlreadyExist();
 			},
 			carBoardBackspace() {
 				if (this.form.licenseNumber && this.form.licenseNumber !== '') {
@@ -277,6 +283,32 @@
 				}).catch(e => {
 					uni.hideLoading();
 				});
+			},
+			/** 车牌号码不能重复 */
+			getUserAlreadyExist() {
+			  if (this.form.licenseNumber) {
+				selectInfo(this.form.licenseNumber, this.headerInfo).then(res => {
+				  if (res.data) {
+					// 已存在
+					uni.showToast({
+						title: '该车辆信息已存在，将为您展示该车辆详细信息',
+						icon: 'none',
+						duration: 2000
+					});
+					this.setForm(res.data);
+				  } else {
+					// 不存在
+					this.resetIdAndCode();
+				  }
+				});
+			  } else {
+				// 清空
+				this.resetIdAndCode();
+			  }
+			},
+			resetIdAndCode() {
+			  this.form.id = null;
+			  this.form.code = null;
 			},
 			// 校验
 			noValidate() {
