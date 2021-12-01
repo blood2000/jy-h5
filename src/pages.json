@@ -74,18 +74,6 @@
 	  }
 	},
 	{
-	  "path": "pages/capacity/vehicle/auth",
-	  "style": {
-	    "navigationBarTitleText": "提交S认证",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false,
-	    "navigationBarBackgroundColor": "#ffffff",
-		"app-plus": {
-		  "bounce": "none"
-		}
-	  }
-	},
-	{
 	  "path": "pages/capacity/driver/index",
 	  "style": {
 	    "navigationBarTitleText": "司机管理",
@@ -110,15 +98,51 @@
 	  }
 	},
 	{
-	  "path": "pages/capacity/driver/auth",
+	  "path": "pages/material/index",
 	  "style": {
-	    "navigationBarTitleText": "提交S认证",
+	    "navigationBarTitleText": "物料管理",
 	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false,
-	    "navigationBarBackgroundColor": "#ffffff",
+	    "enablePullDownRefresh": true,
+	    "navigationBarBackgroundColor":"#ffffff",
 		"app-plus": {
 		  "bounce": "none"
 		}
+	  }
+	},
+	{
+	  "path": "pages/material/materialCategory",
+	  "style": {
+	    "navigationBarTitleText": "物料管理",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": true,
+	    "navigationBarBackgroundColor":"#ffffff",
+	  		"app-plus": {
+	  		  "bounce": "none"
+	  		}
+	  }
+	},
+	{
+	  "path": "pages/transportPlan/index",
+	  "style": {
+	    "navigationBarTitleText": "运输计划",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": true,
+	    "navigationBarBackgroundColor": "#ffffff",
+	  		"app-plus": {
+	  		  "bounce": "none"
+	  		}
+	  }
+	},
+	{
+	  "path": "pages/transportPlan/add",
+	  "style": {
+	    "navigationBarTitleText": "创建收货计划",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": false,
+	    "navigationBarBackgroundColor": "#ffffff",
+	  		"app-plus": {
+	  		  "bounce": "none"
+	  		}
 	  }
 	}
   ],
