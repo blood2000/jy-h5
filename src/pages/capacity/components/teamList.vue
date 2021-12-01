@@ -14,12 +14,20 @@
 					@input="handleInput"
 				/>
 			</view>
-			<view class="list-box">
+			<view class="list-box" v-if="dataList.length > 0">
 				<!-- 列表项 -->
-				<view v-for="(item, index) in listData" :key="index" class="list-box-item ly-flex ly-flex-pack-justify">
-					大白的车队
-					<text>调度者：大白</text>
+				<view v-for="(item, index) in dataList" :key="index" class="list-box-item ly-flex ly-flex-pack-justify">
+					<view class="name g-single-row">
+						<!-- <image class="icon-check" src="~@/static/capacity/check.png"></image> -->
+						<image class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck"></image>
+						{{ item.name }}
+					</view>
+					<view class="leader g-single-row">调度者：{{ item.teamLeaderName }}</view>
 				</view>
+			</view>
+			<view class="list-box" v-else>
+				<!-- 无数据 -->
+				<NonePage></NonePage>
 			</view>
 			<view class="button" @click="submit">确认</view>
 		</view>
@@ -27,13 +35,24 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex';
+	import { listInfo } from '@/config/service/capacity/team.js';
+	import NonePage from '@/components/NonePage/NonePage.vue';
 	export default {
 		name: 'TeamList',
+		components: {
+			NonePage
+		},
 		props: {
 			show: {
 				type: Boolean,
 				default: false
 			}
+		},
+		computed: {
+			...mapState({
+				headerInfo: state => state.header.headerInfo
+			})
 		},
 		data() {
 			return {
@@ -42,7 +61,7 @@
 					pageSize: 10,
 					userName: undefined
 				},
-				listData: []
+				dataList: []
 			}
 		},
 		watch: {
@@ -66,13 +85,16 @@
 			submit() {
 				this.close();
 			},
-			getList() {
-				this.listData = [{},{},{},{},{},{},{},{},{},{},{}]
+			async getList() {
+				this.loading = true;
+				const data = await listInfo(this.queryParams, this.headerInfo);
+				this.loading = false;
+				this.dataList = [...this.dataList, ...data.list];
 			},
 			/** 搜索按钮操作 */
 			handleQuery() {
 				this.queryParams.pageNum = 1;
-				this.listData = [];
+				this.dataList = [];
 				this.getList();
 			},
 			/** input搜索 */
@@ -89,6 +111,10 @@
 				if (this.queryParams.userName === '') {
 					this.handleQuery();
 				}
+			},
+			/** 选中 */
+			handleCheck() {
+				
 			}
 		}
 	}
@@ -129,11 +155,23 @@
 				font-family: PingFang SC;
 				font-weight: bold;
 				color: #333333;
-				>text{
+				>.name{
+					width: 60%;
+				}
+				>.leader{
+					width: 40%;
 					font-size: 28upx;
 					font-family: PingFang SC;
 					font-weight: 400;
 					color: #999999;
+					text-align: right;
+				}
+				.icon-check{
+					width: 50upx;
+					height: 60upx;
+					vertical-align: middle;
+					margin: -6upx 14upx 0 0;
+					padding: 10upx 10upx 10upx 0;
 				}
 			}
 		}

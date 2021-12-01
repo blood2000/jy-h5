@@ -121,7 +121,6 @@
 				if(data.list.length < this.queryParams.pageSize){
 					this.status = 'noMore';
 				}
-				this.total = data.total;
 				this.dataList = [...this.dataList, ...data.list];
 			},
 			swipeActionClick(data, row) {
