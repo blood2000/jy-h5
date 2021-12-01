@@ -12,15 +12,16 @@
 		<uni-forms ref="form" :modelValue="form" label-width="160">
 			<view class="ly-form-card">
 				<uni-forms-item required name="chassisNumber" label="车辆识别码" class="border-bottom">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.chassisNumber" placeholder="支持自动识别" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.chassisNumber" :disabled="disabled" placeholder="支持自动识别" />
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleEnergyType" label="车辆能源类型" class="border-bottom">
 					<picker
 					 :value="form.vehicleEnergyType"
 					 :range="energyTypesOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(energyTypesOptions, 'vehicleEnergyType', e)">
-						<view v-if="form.vehicleEnergyType" class="picker-input text-right">
+						<view v-if="form.vehicleEnergyType && energyTypesOptions.length>0" class="picker-input text-right">
 							{{ energyTypesOptions[energyTypesOptions.findIndex(res => res.dictValue===form.vehicleEnergyType)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -35,8 +36,9 @@
 					 :value="form.vehicleLength"
 					 :range="vehicleLengthOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(vehicleLengthOptions, 'vehicleLength', e)">
-						<view v-if="form.vehicleLength" class="picker-input text-right">
+						<view v-if="form.vehicleLength && vehicleLengthOptions.length>0" class="picker-input text-right">
 							{{ vehicleLengthOptions[vehicleLengthOptions.findIndex(res => res.dictValue===form.vehicleLength)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -51,8 +53,9 @@
 					 :value="form.vehicleWidth"
 					 :range="vehicleWidthOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(vehicleWidthOptions, 'vehicleWidth', e)">
-						<view v-if="form.vehicleWidth" class="picker-input text-right">
+						<view v-if="form.vehicleWidth && vehicleWidthOptions.length>0" class="picker-input text-right">
 							{{ vehicleWidthOptions[vehicleWidthOptions.findIndex(res => res.dictValue===form.vehicleWidth)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -63,15 +66,16 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="roadTransportCertificateNumber" label="道路运输许可证号" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.roadTransportCertificateNumber" placeholder="请输入道路运输许可证号" />
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.roadTransportCertificateNumber" :disabled="disabled" placeholder="请输入道路运输许可证号" />
 				</uni-forms-item>
 				<uni-forms-item name="vehicleColorCode" label="车身颜色" class="border-bottom">
 					<picker
 					 :value="form.vehicleColorCode"
 					 :range="carBodyColorOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(carBodyColorOptions, 'vehicleColorCode', e)">
-						<view v-if="form.vehicleColorCode" class="picker-input text-right">
+						<view v-if="form.vehicleColorCode && carBodyColorOptions.length>0" class="picker-input text-right">
 							{{ carBodyColorOptions[carBodyColorOptions.findIndex(res => res.dictValue===form.vehicleColorCode)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -86,8 +90,9 @@
 					 :value="form.axesNumber"
 					 :range="axisTypeOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(axisTypeOptions, 'axesNumber', e)">
-						<view v-if="form.axesNumber" class="picker-input text-right">
+						<view v-if="form.axesNumber && axisTypeOptions.length>0" class="picker-input text-right">
 							{{ axisTypeOptions[axisTypeOptions.findIndex(res => res.dictValue===form.axesNumber)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -109,6 +114,7 @@
 								image-type="vehicle-license"
 								side="front"
 								icon-type="vehicle"
+								:disabled="disabled"
 								@fillForm="fillForm"
 							/>
 					    </uni-col>
@@ -119,6 +125,7 @@
 								image-type="vehicle-license"
 								side="back"
 								icon-type="vehicle_back"
+								:disabled="disabled"
 								@fillForm="fillForm"
 							/>
 					    </uni-col>
@@ -134,6 +141,7 @@
 								v-model="form.roadTransportCertificateImg"
 								label="上传道路运输许可证"
 								icon-type="transport"
+								:disabled="disabled"
 							/>
 					    </uni-col>
 					</uni-row>
@@ -148,6 +156,7 @@
 								v-model="form.vehicleImage"
 								label="上传车头正面照"
 								icon-type="vehicle_head"
+								:disabled="disabled"
 							/>
 					    </uni-col>
 					</uni-row>
@@ -176,7 +185,14 @@
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
-			})
+			}),
+			disabled() {
+			  if (this.form.id) {
+				return true;
+			  } else {
+				return false;
+			  }
+			}
 		},
 		data() {
 			return {

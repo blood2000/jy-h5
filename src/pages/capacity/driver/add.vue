@@ -10,22 +10,23 @@
 		
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
-				<uni-forms-item required name="name" label="司机姓名" class="border-bottom">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.name" placeholder="请输入司机姓名" />
+				<uni-forms-item required name="telphone" label="司机手机号" class="border-bottom">
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.telphone" placeholder="请输入司机手机号" @blur="getUserAlreadyExist" />
 				</uni-forms-item>
-				<uni-forms-item required name="telphone" label="司机手机号">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.telphone" placeholder="请输入司机手机号" />
+				<uni-forms-item required name="name" label="司机姓名">
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.name" :disabled="disabled" placeholder="请输入司机姓名" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item name="password" label="账号密码" class="border-bottom">
-					<uni-easyinput type="password" :inputBorder="false" :clearable="false" v-model="form.password" :placeholder="form.id?'密码未修改可不填写':'初始密码abcd1234@'" />
+					<uni-easyinput type="password" :inputBorder="false" :clearable="false" v-model="form.password" :disabled="disabled" :placeholder="form.id?'密码未修改可不填写':'初始密码abcd1234@'" />
 				</uni-forms-item>
 				<uni-forms-item required name="isDriverFreeze" label="账号状态">
 					<picker
 					 :value="form.isDriverFreeze"
 					 :range="isFreezeOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(isFreezeOptions, 'isDriverFreeze', e)">
 						<view v-if="form.isDriverFreeze || form.isDriverFreeze === 0" class="picker-input text-right">
 							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isDriverFreeze)].dictLabel }}
@@ -40,21 +41,21 @@
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item name="licenseNumber" label="车辆" class="border-bottom">
-					<view class="picker-placeholder text-right">
+					<view class="picker-placeholder text-right" @click="handleOpenVehicleList">
 						请选择车辆
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
 				</uni-forms-item>
 				<uni-forms-item name="teamCodes" label="调度者" class="border-bottom">
-					<view class="picker-placeholder text-right">
+					<view class="picker-placeholder text-right" @click="handleOpenTeamList">
 						请选择调度者
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
 				</uni-forms-item>
 				<uni-forms-item name="isChyDriver" label="同步提交S认证">
 					<view class="text-right">
-						<image class="icon-check" v-if="form.isChyDriver === 1" src="~@/static/capacity/check.png" @click="form.isChyDriver = 0"></image>
-						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="form.isChyDriver = 1"></image>
+						<image class="icon-check" :class="disabled?'disabled':''" v-if="form.isChyDriver === 1" src="~@/static/capacity/check.png" @click="disabled?'':form.isChyDriver = 0"></image>
+						<image class="icon-check" :class="disabled?'disabled':''" v-else src="~@/static/capacity/check_none.png" @click="disabled?'':form.isChyDriver = 1"></image>
 					</view>
 				</uni-forms-item>
 			</view>
@@ -64,20 +65,36 @@
 			<view class="reset" @click="navigateBack">取消</view>
 			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
+		
+		<TeamList ref="teamListRef" :show="teamListShow" @close="handleCloseTeamList" />
+		<VehicleList ref="VehicleListRef" :show="vehicleListShow" @close="handleCloseVehicleList" />
 	</view>
 </template>
 
 <script>
 	import { mapState } from 'vuex';
-	import { getInfo, addInfo, updateInfo } from '@/config/service/capacity/driver.js';
+	import { getInfo, addInfo, updateInfo, selectInfo } from '@/config/service/capacity/driver.js';
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { phoneReg } from '@/utils/validate.js';
+	import TeamList from '@/pages/capacity/components/teamList.vue'
+	import VehicleList from '@/pages/capacity/components/vehicleList.vue'
 	export default {
+		components: {
+			TeamList,
+			VehicleList
+		},
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
-			})
+			}),
+			disabled() {
+			  if (this.form.id) {
+				return true;
+			  } else {
+				return false;
+			  }
+			}
 		},
 		data() {
 			return {
@@ -90,7 +107,11 @@
 				isFreezeOptions: [
 					{ dictLabel: '正常', dictValue: 0 },
 					{ dictLabel: '冻结', dictValue: 1 }
-				]
+				],
+				// 选择调度列表
+				teamListShow: false,
+				// 选择车辆列表
+				vehicleListShow: false
 			}
 		},
 		onLoad(options){
@@ -109,8 +130,11 @@
 			// 获取详情
 			getInfoData(code) {
 				getInfo(code, this.headerInfo).then(res => {
-					this.form = res.data;
+					this.setForm(res.data);
 				});
+			},
+			setForm(data) {
+				this.form = data;
 			},
 			// picker选中
 			pickerChange(arr, key, e) {
@@ -186,6 +210,33 @@
 					uni.hideLoading();
 				});
 			},
+			/** 手机号码不能重复 */
+			getUserAlreadyExist() {
+			  if (this.form.telphone) {
+				selectInfo(this.form.telphone, this.headerInfo).then(res => {
+				  if (res.data) {
+					// 已存在
+					uni.showToast({
+						title: '该司机信息已存在，将为您展示该司机详细信息',
+						icon: 'none',
+						duration: 2000
+					});
+					this.setForm(res.data);
+				  } else {
+					// 不存在
+					this.resetIdAndCode();
+				  }
+				});
+			  } else {
+				// 清空
+				this.resetIdAndCode();
+			  }
+			},
+			resetIdAndCode() {
+			  this.form.id = null;
+			  this.form.code = null;
+			  // ...重置车辆
+			},
 			// 校验
 			noValidate() {
 				if (!this.form.name) {
@@ -209,6 +260,22 @@
 					});
 					return true;
 				}
+			},
+			// 打开调度列表
+			handleOpenTeamList() {
+				this.teamListShow = true;
+			},
+			// 取消调度列表
+			handleCloseTeamList() {
+				this.teamListShow = false;
+			},
+			// 打开车辆列表
+			handleOpenVehicleList() {
+				this.vehicleListShow = true;
+			},
+			// 取消车辆列表
+			handleCloseVehicleList() {
+				this.vehicleListShow = false;
 			}
 		}
 	}

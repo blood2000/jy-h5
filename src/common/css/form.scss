@@ -29,7 +29,7 @@
 	.uni-input-placeholder, .picker-placeholder{
 		font-size: 28upx;
 		font-family: PingFang SC;
-		font-weight: 500;
+		// font-weight: 500;
 		color: #999999;
 	}
 	.uni-input-input, .picker-input{
@@ -56,10 +56,25 @@
 		height: 50upx;
 		margin: 10upx 0 0;
 		padding: 6upx;
+		&.disabled{
+			-webkit-filter: grayscale(100%);
+			filter: grayscale(100%);
+			opacity: 0.5;
+		}
 	}
 	.uni-error-message{
 		width: 100%;
 		text-align: right !important;
+	}
+	.uni-easyinput__content.is-disabled{
+		background: transparent !important;
+		border-color: transparent !important;
+		.uni-input-input{
+			color: #999999;
+		}
+	}
+	.uni-input-input[disabled=disabled], uni-picker[disabled=true] .picker-input{
+		color: #999999;
 	}
 	.mb20{
 		margin-bottom: 20upx;

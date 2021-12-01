@@ -36,6 +36,10 @@
 			iconType: {
 				type: String,
 				default: 'default'
+			},
+			disabled: {
+				type: Boolean,
+				default: false
 			}
 		},
 		computed: {
@@ -65,6 +69,17 @@
 		methods: {
 			handleUpload() {
 				const that = this;
+				if (this.disabled) {
+					if (this.pathValue) {
+						// 图片预览
+						const urls = [];
+						urls.push(this.pathValue);
+						uni.previewImage({
+							urls: urls
+						})
+					}
+					return;
+				}
 				const urlFile = process.env.VUE_APP_BASE_API + uploadImgApi
 				uni.chooseImage({
 					count: 1,

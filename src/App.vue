@@ -56,4 +56,11 @@
 		font-weight: bold;
 		color: #333333;
 	}
+	/* u-popup */
+	.u-popup__content__close--top-right{
+		top: 34upx !important;
+		.u-icon__icon{
+			font-size: 36upx !important;
+		}
+	}
 </style>

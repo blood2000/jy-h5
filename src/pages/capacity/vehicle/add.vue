@@ -31,8 +31,9 @@
 					 :value="form.vehicleLicenseColorCode"
 					 :range="licenseColorOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(licenseColorOptions, 'vehicleLicenseColorCode', e)">
-						<view v-if="form.vehicleLicenseColorCode" class="picker-input text-right">
+						<view v-if="form.vehicleLicenseColorCode && licenseColorOptions.length>0" class="picker-input text-right">
 							{{ licenseColorOptions[licenseColorOptions.findIndex(res => res.dictValue===form.vehicleLicenseColorCode)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -47,8 +48,9 @@
 					 :value="form.vehicleTypeCode"
 					 :range="vehicleTypeOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(vehicleTypeOptions, 'vehicleTypeCode', e)">
-						<view v-if="form.vehicleTypeCode" class="picker-input text-right">
+						<view v-if="form.vehicleTypeCode && vehicleTypeOptions.length>0" class="picker-input text-right">
 							{{ vehicleTypeOptions[vehicleTypeOptions.findIndex(res => res.dictValue===form.vehicleTypeCode)].dictLabel }}
 							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 						</view>
@@ -61,13 +63,13 @@
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item required name="vehicleTotalWeight" label="车辆总重量(皮重)" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleTotalWeight" placeholder="请输入车辆总重量(皮重)" />
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleTotalWeight" :disabled="disabled" placeholder="请输入车辆总重量(皮重)" />
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleLoadWeight" label="车辆可载重量" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleLoadWeight" placeholder="请输入车辆可载重量" />
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleLoadWeight" :disabled="disabled" placeholder="请输入车辆可载重量" />
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleRemainingLoadVolume" label="车辆可载立方">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleRemainingLoadVolume" placeholder="请输入车辆可载立方" />
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleRemainingLoadVolume" :disabled="disabled" placeholder="请输入车辆可载立方" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -76,6 +78,7 @@
 					 :value="form.isVehicleFreeze"
 					 :range="isFreezeOptions"
 					 range-key="dictLabel"
+					 :disabled="disabled"
 					 @change="(e)=>pickerChange(isFreezeOptions, 'isVehicleFreeze', e)">
 						<view v-if="form.isVehicleFreeze || form.isVehicleFreeze === 0" class="picker-input text-right">
 							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isVehicleFreeze)].dictLabel }}
@@ -88,15 +91,15 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="teamCodes" label="调度者" class="border-bottom">
-					<view class="picker-placeholder text-right">
+					<view class="picker-placeholder text-right" @click="handleOpenTeamList">
 						请选择调度者
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
 				</uni-forms-item>
 				<uni-forms-item name="isChyVehicle" label="同步提交S认证">
 					<view class="text-right">
-						<image class="icon-check" v-if="form.isChyVehicle === 1" src="~@/static/capacity/check.png" @click="form.isChyVehicle = 0"></image>
-						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="form.isChyVehicle = 1"></image>
+						<image class="icon-check" :class="disabled?'disabled':''" v-if="form.isChyVehicle === 1" src="~@/static/capacity/check.png" @click="disabled?'':form.isChyVehicle = 0"></image>
+						<image class="icon-check" :class="disabled?'disabled':''" v-else src="~@/static/capacity/check_none.png" @click="disabled?'':form.isChyVehicle = 1"></image>
 					</view>
 				</uni-forms-item>
 			</view>
@@ -106,21 +109,34 @@
 			<view class="reset" @click="navigateBack">取消</view>
 			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
+		
+		<TeamList ref="teamListRef" :show="teamListShow" @close="handleCloseTeamList" />
 	</view>
 </template>
 
 <script>
 	import { mapState } from 'vuex';
-	import { getInfo, addInfo, updateInfo } from '@/config/service/capacity/vehicle.js';
+	import { getInfo, addInfo, updateInfo, selectInfo } from '@/config/service/capacity/vehicle.js';
 	import { getDicts } from '@/config/service/common.js';
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { plateNoReg } from '@/utils/validate.js';
+	import TeamList from '@/pages/capacity/components/teamList.vue';
 	export default {
+		components: {
+			TeamList
+		},
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
-			})
+			}),
+			disabled() {
+			  if (this.form.id) {
+				return true;
+			  } else {
+				return false;
+			  }
+			}
 		},
 		data() {
 			return {
@@ -141,7 +157,9 @@
 					{ dictLabel: '冻结', dictValue: 1 }
 				],
 				// 车牌键盘
-				carBoardShow: false
+				carBoardShow: false,
+				// 选择调度列表
+				teamListShow: false
 			}
 		},
 		onLoad(options){
@@ -172,8 +190,11 @@
 			// 获取详情
 			getInfoData(code) {
 				getInfo(code, this.headerInfo).then(res => {
-					this.form = res.data;
+					this.setForm(res.data);
 				});
+			},
+			setForm(data) {
+				this.form = data;
 			},
 			// picker选中
 			pickerChange(arr, key, e) {
@@ -189,12 +210,15 @@
 			},
 			carBoardClose() {
 				this.carBoardShow = false;
+				this.getUserAlreadyExist();
 			},
 			carBoardConfirm() {
 				this.carBoardShow = false;
+				this.getUserAlreadyExist();
 			},
 			carBoardCancel() {
 				this.carBoardShow = false;
+				this.getUserAlreadyExist();
 			},
 			carBoardBackspace() {
 				if (this.form.licenseNumber && this.form.licenseNumber !== '') {
@@ -260,6 +284,32 @@
 					uni.hideLoading();
 				});
 			},
+			/** 车牌号码不能重复 */
+			getUserAlreadyExist() {
+			  if (this.form.licenseNumber) {
+				selectInfo(this.form.licenseNumber, this.headerInfo).then(res => {
+				  if (res.data) {
+					// 已存在
+					uni.showToast({
+						title: '该车辆信息已存在，将为您展示该车辆详细信息',
+						icon: 'none',
+						duration: 2000
+					});
+					this.setForm(res.data);
+				  } else {
+					// 不存在
+					this.resetIdAndCode();
+				  }
+				});
+			  } else {
+				// 清空
+				this.resetIdAndCode();
+			  }
+			},
+			resetIdAndCode() {
+			  this.form.id = null;
+			  this.form.code = null;
+			},
 			// 校验
 			noValidate() {
 				if (!this.form.licenseNumber) {
@@ -304,6 +354,14 @@
 					});
 					return true;
 				}
+			},
+			// 打开调度列表
+			handleOpenTeamList() {
+				this.teamListShow = true;
+			},
+			// 取消调度列表
+			handleCloseTeamList() {
+				this.teamListShow = false;
 			}
 		}
 	}
