@@ -11,9 +11,16 @@
 				发货
 			</view>
 		</view>
-		<view v-for="item,index in cardList">
-			<TransportCard v-model="cardList[index]" @share='share()'></TransportCard>
-		</view>
+		<template v-if="cardList && cardList.length > 0">
+			<view v-for="(item,index) in cardList" :key="index">
+				<TransportCard v-model="cardList[index]" @share='share()'></TransportCard>
+			</view>
+		</template>
+
+		<NonePage v-else></NonePage>
+
+		<uni-load-more v-if="cardList && cardList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
+
 		<u-overlay :show="show" @click="show = false">
 			<view class="qrcode ly-flex-v ly-flex-align-center">
 				<view class="title">
@@ -37,6 +44,7 @@
 
 <script>
 	import TransportCard from './components/TransportCard.vue'
+	import { orderPlanInfoList as getList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoUpdateStatus, teamSelectTeamListByCodes } from '@/config/service/transportPlan/transportationPlan.js'
 	export default {
 		components: {
 			TransportCard
@@ -46,39 +54,74 @@
 				// 二维码展示
 				show: false,
 				// 运输计划列表
-				cardList: [{
-						name: 'XXX收货计划',
-						receiveType: 1
-					},
-					{
-						name: 'XXX发货计划',
-						receiveType: 2
-					},
-					{
-						name: 'XXX发货计划',
-						receiveType: 2
-					},
-					{
-						name: 'XXX发货计划',
-						receiveType: 2
-					},
-					{
-						name: 'XXX发货计划',
-						receiveType: 2
-					},
-					{
-						name: 'XXX发货计划',
-						receiveType: 2
-					}
-				]
+				cardList: [],
+				// 是否无数据了
+				isEnd: false,
+				status: 'more',
+				contentText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '没有更多了'
+				},
+
+
+				loading: false,
+				queryParams: { // 请求参数
+					pageNum: 1,
+					pageSize: 10,
+				},
 			}
 		},
-		onPullDownRefresh() {
-			setTimeout(() => {
-				uni.stopPullDownRefresh();
-			}, 1000)
+
+		computed:{
+			_queryParams(){
+				return this.queryParams
+			}
 		},
+
+		onPullDownRefresh() {
+			// console.log('下拉刷新');
+			uni.stopPullDownRefresh();
+		},
+
+		// 触底加载
+		onReachBottom() {
+			if(!this.isEnd) {
+				this.status = 'more';
+				this.queryParams.pageNum++;
+				this.getList();
+			}
+		},
+		
+		onShow(){
+			this.getList()
+		},
+
 		methods: {
+			// s= 请求列表数据(固定字段名)
+			getList() {
+				this.status = 'loading';
+				uni.showLoading();
+				this.loading = true;
+				getList(this._queryParams).then(async res => {
+					console.log(res);
+					this.loading = false;
+					uni.hideLoading();
+					if (res.data.list.length === 0) {
+						this.isEnd = true;
+						this.status = 'noMore';
+						return;
+					}
+					if(res.data.list.length < this._queryParams.pageSize){
+						this.status = 'noMore';
+					}
+
+					this.total = res.data.total || 0;
+					this.cardList = [...this.cardList, ...res.data.list];
+				}).catch(() => { this.loading = false; });
+			},
+			// e=
+
 			navigateBack() {
 				uni.navigateBack({
 					delta: 1

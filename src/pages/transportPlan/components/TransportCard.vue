@@ -17,25 +17,27 @@
 							<view class="miniavatar">
 								收
 							</view>
-							五福洗煤
+							{{ _cardList.scompanyName }}
 						</view>
 						<view class="ly-flex deliver">
 							<view class="miniavatar">
 								发
 							</view>
-							五福洗煤大厂
+							{{ _cardList.fcompanyName }}
 						</view>
 					</view>
 					<view class="ly-flex mb10">
 						<view class="source">
-							货源：原煤
+							货源：{{ _cardList.orderName }}
 						</view>
 						<view class="company">
-							运输公司：自营
+							运输公司：{{ _cardList.transName }}
 						</view>
 					</view>
 					<view class="total">
-						总量：999/999吨
+						总量：
+						<text v-if="_cardList.weightType === 1">不限</text> 
+						<text v-else>{{ _cardList.weight }} 吨</text> 
 					</view>
 				</view>
 			</view>
@@ -62,6 +64,7 @@
 		computed: {
 			_cardList: {
 				get() {
+					console.log(this.value);
 					return this.value
 				},
 				set(val) {

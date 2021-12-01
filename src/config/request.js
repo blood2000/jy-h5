@@ -1,9 +1,19 @@
 import uniRequest from "uni-request";
 import store from '../store';
 
+const headers = store.state.header.headerInfo
+
 // 全局配置
 uniRequest.defaults.baseURL = process.env.VUE_APP_BASE_API;
 uniRequest.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+
+// 初始化头部
+uniRequest.defaults.headers['Produce-Code'] = headers['Produce-Code'] 
+uniRequest.defaults.headers['App-Code'] = headers['App-Code']
+uniRequest.defaults.headers['App-Type'] = headers['App-Type']
+uniRequest.defaults.headers['App-Version'] = headers['App-Version']
+uniRequest.defaults.headers['Terminal-Type'] = headers['Terminal-Type']
+uniRequest.defaults.headers['Authorization'] = uni.getStorageSync('token') || '';
 
 // 请求拦截
 uniRequest.interceptors.request.use(
