@@ -8,7 +8,7 @@
 			placeholder
 		></u-navbar>
 		
-		<uni-forms :modelValue="form" label-width="150">
+		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
 				<uni-forms-item required label="车牌号" name="licenseNumber">
 					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.licenseNumber" placeholder="请输入车牌号" @focus="handlecarBoard" />
@@ -32,8 +32,14 @@
 					 :range="licenseColorOptions"
 					 range-key="dictLabel"
 					 @change="(e)=>pickerChange(licenseColorOptions, 'vehicleLicenseColorCode', e)">
-						<view v-if="form.vehicleLicenseColorCode" class="picker-input text-right">{{ licenseColorOptions[licenseColorOptions.findIndex(res => res.dictValue===form.vehicleLicenseColorCode)].dictLabel }}</view>
-						<view class="picker-placeholder text-right" v-else>请选择车牌颜色</view>
+						<view v-if="form.vehicleLicenseColorCode" class="picker-input text-right">
+							{{ licenseColorOptions[licenseColorOptions.findIndex(res => res.dictValue===form.vehicleLicenseColorCode)].dictLabel }}
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
+						<view class="picker-placeholder text-right" v-else>
+							请选择车牌颜色
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleTypeCode" label="车型">
@@ -42,8 +48,14 @@
 					 :range="vehicleTypeOptions"
 					 range-key="dictLabel"
 					 @change="(e)=>pickerChange(vehicleTypeOptions, 'vehicleTypeCode', e)">
-						<view v-if="form.vehicleTypeCode" class="picker-input text-right">{{ vehicleTypeOptions[vehicleTypeOptions.findIndex(res => res.dictValue===form.vehicleTypeCode)].dictLabel }}</view>
-						<view class="picker-placeholder text-right" v-else>请选择车型</view>
+						<view v-if="form.vehicleTypeCode" class="picker-input text-right">
+							{{ vehicleTypeOptions[vehicleTypeOptions.findIndex(res => res.dictValue===form.vehicleTypeCode)].dictLabel }}
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
+						<view class="picker-placeholder text-right" v-else>
+							请选择车型
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
 					</picker>
 				</uni-forms-item>
 			</view>
@@ -60,17 +72,39 @@
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item required name="isVehicleFreeze" label="状态" class="border-bottom">
-					
+					<picker
+					 :value="form.isVehicleFreeze"
+					 :range="isFreezeOptions"
+					 range-key="dictLabel"
+					 @change="(e)=>pickerChange(isFreezeOptions, 'isVehicleFreeze', e)">
+						<view v-if="form.isVehicleFreeze || form.isVehicleFreeze === 0" class="picker-input text-right">
+							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isVehicleFreeze)].dictLabel }}
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
+						<view class="picker-placeholder text-right" v-else>
+							请选择账号状态
+							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+						</view>
+					</picker>
 				</uni-forms-item>
-				<uni-forms-item required name="isChyVehicle" label="同步提交S认证">
-					
+				<uni-forms-item name="teamCodes" label="调度者" class="border-bottom">
+					<view class="picker-placeholder text-right">
+						请选择调度者
+						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+					</view>
+				</uni-forms-item>
+				<uni-forms-item name="isChyVehicle" label="同步提交S认证">
+					<view class="text-right">
+						<image class="icon-check" v-if="form.isChyVehicle === 1" src="~@/static/capacity/check.png" @click="form.isChyVehicle = 0"></image>
+						<image class="icon-check" v-else src="~@/static/capacity/check_none.png" @click="form.isChyVehicle = 1"></image>
+					</view>
 				</uni-forms-item>
 			</view>
 		</uni-forms>
 		
 		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
-			<view class="reset" @click="handleCancle">取消</view>
-			<view class="submit" @click="handleSubmit">确认创建</view>
+			<view class="reset" @click="navigateBack">取消</view>
+			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
 	</view>
 </template>
@@ -79,6 +113,9 @@
 	import { mapState } from 'vuex';
 	import { getInfo, addInfo, updateInfo } from '@/config/service/capacity/vehicle.js';
 	import { getDicts } from '@/config/service/common.js';
+	import { addTenantRel } from '@/config/service/capacity/rel';
+	import { removePropertyOfNull } from '@/utils/ddc';
+	import { plateNoReg } from '@/utils/validate.js';
 	export default {
 		computed: {
 			...mapState({
@@ -87,11 +124,22 @@
 		},
 		data() {
 			return {
-				form: {},
+				form: {
+					vehicleLicenseColorCode: '1', // 车牌颜色默认为黄色
+					isVehicleFreeze: 0,
+					isChyVehicle: 0
+				},
 				// 车型字典
 				vehicleTypeOptions: [],
 				// 车牌颜色字典
-				licenseColorOptions: [],
+				licenseColorOptions: [
+					{ dictLabel: '黄色', dictValue: '1' }
+				],
+				// 状态字典
+				isFreezeOptions: [
+					{ dictLabel: '正常', dictValue: 0 },
+					{ dictLabel: '冻结', dictValue: 1 }
+				],
 				// 车牌键盘
 				carBoardShow: false
 			}
@@ -153,13 +201,109 @@
 					this.$set(this.form, 'licenseNumber', this.form.licenseNumber.slice(0, this.form.licenseNumber.length - 1))
 				}
 			},
-			// 取消
-			handleCancle() {
-				
-			},
 			// 确认创建
 			handleSubmit() {
-				
+				// 手动校验
+				if (this.noValidate()) return;
+				if (this.form.isChyVehicle === 1) {
+					// 认证
+					uni.navigateTo({
+						url: '/pages/capacity/vehicle/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)
+					});
+				} else {
+					uni.showLoading({
+						title: '保存中',
+						mask: true
+					})
+					const driver = removePropertyOfNull(Object.assign({}, this.form));
+					if (this.form.id) {
+						// 编辑
+						// ...调度者
+						updateInfo(driver, this.headerInfo).then(res => {
+						  // 添加租户和车辆的关系
+						  const params = {
+							vehicleCode: driver.code,
+							isChyVehicle: driver.isChyVehicle,
+							isVehicleFreeze: driver.isVehicleFreeze
+						  };
+						  this.setRel(params);
+						}).catch(e => {
+						  uni.hideLoading();
+						});
+					} else {
+						// 新增
+						addInfo(Object.assign({}, driver, { fromSource: 2 }), this.headerInfo).then(res => {
+						  // 添加租户和车辆的关系
+						  const params = {
+							vehicleCode: res.data.code,
+							isChyVehicle: driver.isChyVehicle
+						  };
+						  this.setRel(params);
+						}).catch(e => {
+						  uni.hideLoading();
+						});
+					}
+				}
+			},
+			/** 绑定车辆与租户关系 */
+			setRel(params) {
+				addTenantRel(params, this.headerInfo).then(result => {
+					uni.hideLoading();
+					uni.showToast({
+						title: '保存成功',
+						icon: 'none'
+					});
+					uni.redirectTo({
+					    url: '/pages/capacity/vehicle/index?token='+this.headerInfo.Authorization
+					});
+				}).catch(e => {
+					uni.hideLoading();
+				});
+			},
+			// 校验
+			noValidate() {
+				if (!this.form.licenseNumber) {
+					uni.showToast({
+						title: '车牌号不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!plateNoReg.test(this.form.licenseNumber)) {
+					uni.showToast({
+						title: '车牌号格式错误',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleTypeCode) {
+					uni.showToast({
+						title: '车型不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleTotalWeight || parseFloat(this.form.vehicleTotalWeight)==0) {
+					uni.showToast({
+						title: '车辆总重量(皮重)不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleLoadWeight || parseFloat(this.form.vehicleLoadWeight)==0) {
+					uni.showToast({
+						title: '车辆可载重量不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
+				if (!this.form.vehicleRemainingLoadVolume) {
+					uni.showToast({
+						title: '车辆可载立方不能为空',
+						icon: 'none'
+					});
+					return true;
+				}
 			}
 		}
 	}

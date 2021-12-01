@@ -32,12 +32,37 @@
 		font-weight: 500;
 		color: #999999;
 	}
+	.uni-input-input, .picker-input{
+		font-size: 28upx;
+		font-family: PingFang SC;
+	}
 	.uni-easyinput__content-input{
 		padding: 0 !important;
 	}
 	.picker-input, .picker-placeholder{
 		height: 72upx;
 		line-height: 72upx;
+	}
+	.upload-msg{
+		font-size: 24upx;
+		font-family: PingFang SC;
+		font-weight: 400;
+		color: #979899;
+		margin-bottom: 38upx;
+		margin-top: -6upx;
+	}
+	.icon-check{
+		width: 50upx;
+		height: 50upx;
+		margin: 10upx 0 0;
+		padding: 6upx;
+	}
+	.uni-error-message{
+		width: 100%;
+		text-align: right !important;
+	}
+	.mb20{
+		margin-bottom: 20upx;
 	}
 }
 

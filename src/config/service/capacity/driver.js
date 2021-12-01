@@ -24,9 +24,9 @@ export function addInfo(data, config) {
 export function updateInfo(data, config) {
   return uniRequest({
     url: '/assets/driver/updateJyzDriver',
-    method: 'put',
+    method: 'PUT',
     data: data,
-	headers: config
+	headers: Object.assign({}, config, {'Content-Type':'application/json'})
   });
 }
 
@@ -44,19 +44,6 @@ export function delInfo(driverCodes, config) {
   return uniRequest({
     url: '/jyz/driver/' + driverCodes,
     method: 'delete',
-	headers: config
-  });
-}
-
-// 冻结解冻司机
-export function updateStatus(driverCode, isDriverFreeze, config) {
-  return uniRequest({
-    url: '/jyz/driver/updateDriverStatus',
-    method: 'get',
-    data: {
-      driverCode,
-      isDriverFreeze
-    },
 	headers: config
   });
 }

@@ -19,10 +19,16 @@
 								
 							</view>
 							<view class="info-box ly-flex-1">
-								<view class="platenumber">闽A12345</view>
+								<view class="platenumber">
+									{{ item.licenseNumber }}
+									<image v-if="item.authStatus === 3" src="~@/static/capacity/srz.png"></image>
+								</view>
+								<view class="text g-single-row">
+									<text class="mr40" v-if="item.driverName">司机：{{ item.driverName }}</text>
+									<text v-if="item.teamLeaderName">调度者：{{ item.teamLeaderName }}</text>
+								</view>
 								<view class="text">
-									<text class="mr40">司机：小七</text>
-									<text>调度者：大白</text>
+									<text>车型：{{ selectDictLabel(vehicleTypeOptions, item.vehicleTypeCode) }}</text>
 								</view>
 							</view>
 						</view>
@@ -41,6 +47,8 @@
 	import { mapState } from 'vuex';
 	import NonePage from '@/components/NonePage/NonePage.vue';
 	import { listInfo, delInfo } from '@/config/service/capacity/vehicle.js';
+	import { getDicts } from '@/config/service/common.js';
+	import { selectDictLabel } from '@/utils/ddc.js';
 	export default {
 		components: {
 			NonePage
@@ -76,12 +84,15 @@
 						backgroundColor: '#EF5242'
 					}
 				}],
+				// 车型字典
+				vehicleTypeOptions: []
 			}
 		},
 		onLoad(options){
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': options.token
 			});
+			this.getDictsList();
 			this.getList();
 		},
 		onPullDownRefresh() {
@@ -99,29 +110,35 @@
 			navigateBack() {
 				uni.navigateBack();
 			},
+			/** 查询字典 */
+			getDictsList() {
+				// 车辆类型
+				getDicts('vehicleClassification', this.headerInfo).then(response => {
+					this.vehicleTypeOptions = response.data;
+				});
+			},
 			handleQuery() {
 			  this.queryParams.pageNum = 1;
 			  this.dataList = [];
 			  this.getList();
 			},
 			async getList() {
-				this.dataList = [{}];
-				// this.status = 'loading';
-				// uni.showLoading();
-				// this.loading = true;
-				// const { data } = await listInfo(this.queryParams, this.headerInfo);
-				// uni.hideLoading();
-				// this.loading = false;
-				// if (data.list.length === 0) {
-				// 	this.isEnd = true;
-				// 	this.status = 'noMore';
-				// 	return;
-				// }
-				// if(data.list.length < this.queryParams.pageSize){
-				// 	this.status = 'noMore';
-				// }
-				// this.total = data.total;
-				// this.dataList = [...this.dataList, ...data.list];
+				this.status = 'loading';
+				uni.showLoading();
+				this.loading = true;
+				const { data } = await listInfo(this.queryParams, this.headerInfo);
+				uni.hideLoading();
+				this.loading = false;
+				if (data.list.length === 0) {
+					this.isEnd = true;
+					this.status = 'noMore';
+					return;
+				}
+				if(data.list.length < this.queryParams.pageSize){
+					this.status = 'noMore';
+				}
+				this.total = data.total;
+				this.dataList = [...this.dataList, ...data.list];
 			},
 			swipeActionClick(data, row) {
 				// 编辑
@@ -149,7 +166,7 @@
 			handleDelete(row) {
 				uni.showModal({
 					title: '温馨提示',
-					content: '确定要删除吗？',
+					content: '确定要删除"'+ row.licenseNumber +'"吗？',
 					success: async res => {
 						if (res.confirm) {
 							await delInfo(row.code, this.headerInfo);
@@ -184,19 +201,28 @@
 				>.img-box{
 					width: 156upx;
 					height: 132upx;
-					background: #F7F7F7;
+					background: #F7F7F7 url('~@/static/capacity/car_bg.png') no-repeat;
+					background-size: 100% 100%;
 					border-radius: 10upx;
 					overflow: hidden;
 					margin-right: 18upx;
 				}
 				>.info-box{
+					width: calc(100% - 174upx);
 					>.platenumber{
 						font-size: 32upx;
 						font-family: PingFang SC;
 						font-weight: bold;
 						color: #333333;
 						line-height: 42upx;
-						margin-bottom: 14upx;
+						margin-bottom: 8upx;
+						>image{
+							width: 102upx;
+							height: 32upx;
+							vertical-align: middle;
+							margin-top: -8upx;
+							margin-left: 20upx;
+						}
 					}
 					>.text{
 						font-size: 28upx;

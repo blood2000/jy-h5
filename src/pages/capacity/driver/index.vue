@@ -15,17 +15,16 @@
 				<uni-swipe-action>
 					<uni-swipe-action-item :right-options="options2" @click="checked=>swipeActionClick(checked, item)">
 				        <view class="card-content ly-flex">
-				        	<view class="img-box">
-				        		
-				        	</view>
+				        	<view class="img-box"></view>
 				        	<view class="info-box ly-flex-1">
 				        		<view class="platenumber">
-									杨小七
-									<text>13700000000</text>
+									{{ item.name }}
+									<text>{{ item.telphone }}</text>
+									<image v-if="item.authStatus === 3" src="~@/static/capacity/srz.png"></image>
 								</view>
-				        		<view class="text">
-				        			<text class="mr40">车牌号：闽A54772</text>
-				        			<text>调度者：大白</text>
+				        		<view class="text g-single-row">
+				        			<text v-if="item.driverLicenseNumber" class="mr40">车牌号：{{ item.driverLicenseNumber }}</text>
+				        			<text>调度组：{{ item.teamCount }}</text>
 				        		</view>
 				        	</view>
 				        </view>
@@ -108,23 +107,22 @@
 			  this.getList();
 			},
 			async getList() {
-				this.dataList = [{}];
-				// this.status = 'loading';
-				// uni.showLoading();
-				// this.loading = true;
-				// const data = await listInfo(this.queryParams, this.headerInfo);
-				// uni.hideLoading();
-				// this.loading = false;
-				// if (data.list.length === 0) {
-				// 	this.isEnd = true;
-				// 	this.status = 'noMore';
-				// 	return;
-				// }
-				// if(data.list.length < this.queryParams.pageSize){
-				// 	this.status = 'noMore';
-				// }
-				// this.total = data.total;
-				// this.dataList = [...this.dataList, ...data.list];
+				this.status = 'loading';
+				uni.showLoading();
+				this.loading = true;
+				const data = await listInfo(this.queryParams, this.headerInfo);
+				uni.hideLoading();
+				this.loading = false;
+				if (data.list.length === 0) {
+					this.isEnd = true;
+					this.status = 'noMore';
+					return;
+				}
+				if(data.list.length < this.queryParams.pageSize){
+					this.status = 'noMore';
+				}
+				this.total = data.total;
+				this.dataList = [...this.dataList, ...data.list];
 			},
 			swipeActionClick(data, row) {
 				// 编辑
@@ -152,7 +150,7 @@
 			handleDelete(row) {
 				uni.showModal({
 					title: '温馨提示',
-					content: '确定要删除吗？',
+					content: '确定要删除"'+ row.name +'"吗？',
 					success: async res => {
 						if (res.confirm) {
 							await delInfo(row.code, this.headerInfo);
@@ -187,12 +185,14 @@
 				>.img-box{
 					width: 102upx;
 					height: 102upx;
-					background: #F7F7F7;
+					background: url('~@/static/capacity/driver_avatar.png') no-repeat;
+					background-size: 100% 100%;
 					border-radius: 50%;
 					overflow: hidden;
 					margin-right: 34upx;
 				}
 				>.info-box{
+					width: calc(100% - 136upx);
 					>.platenumber{
 						font-size: 32upx;
 						font-family: PingFang SC;
@@ -205,6 +205,13 @@
 							font-weight: 500;
 							color: #999999;
 							margin-left: 12upx;
+						}
+						>image{
+							width: 102upx;
+							height: 32upx;
+							vertical-align: middle;
+							margin-top: -8upx;
+							margin-left: 20upx;
 						}
 					}
 					>.text{

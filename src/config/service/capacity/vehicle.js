@@ -24,9 +24,9 @@ export function addInfo(data, config) {
 export function updateInfo(data, config) {
   return uniRequest({
     url: '/assets/vehicle/editJyzVehicle',
-    method: 'put',
+    method: 'PUT',
     data: data,
-	headers: config
+    headers: Object.assign({}, config, {'Content-Type':'application/json'})
   });
 }
 
@@ -44,19 +44,6 @@ export function delInfo(vehicleCodes, config) {
   return uniRequest({
     url: '/jyz/vehicle/' + vehicleCodes,
     method: 'delete',
-	headers: config
-  });
-}
-
-// 冻结解冻车辆
-export function updateStatus(vehicleCode, isVehicleFreeze, config) {
-  return uniRequest({
-    url: '/jyz/vehicle/updateVehicleStatus',
-    method: 'get',
-    data: {
-      vehicleCode,
-      isVehicleFreeze
-    },
 	headers: config
   });
 }
