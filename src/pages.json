@@ -96,6 +96,54 @@
 		  "bounce": "none"
 		}
 	  }
+	},
+	{
+	  "path": "pages/material/index",
+	  "style": {
+	    "navigationBarTitleText": "物料管理",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": true,
+	    "navigationBarBackgroundColor":"#ffffff",
+		"app-plus": {
+		  "bounce": "none"
+		}
+	  }
+	},
+	{
+	  "path": "pages/material/materialCategory",
+	  "style": {
+	    "navigationBarTitleText": "物料管理",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": true,
+	    "navigationBarBackgroundColor":"#ffffff",
+	  		"app-plus": {
+	  		  "bounce": "none"
+	  		}
+	  }
+	},
+	{
+	  "path": "pages/transportPlan/index",
+	  "style": {
+	    "navigationBarTitleText": "运输计划",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": true,
+	    "navigationBarBackgroundColor": "#ffffff",
+	  		"app-plus": {
+	  		  "bounce": "none"
+	  		}
+	  }
+	},
+	{
+	  "path": "pages/transportPlan/add",
+	  "style": {
+	    "navigationBarTitleText": "创建收货计划",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": false,
+	    "navigationBarBackgroundColor": "#ffffff",
+	  		"app-plus": {
+	  		  "bounce": "none"
+	  		}
+	  }
 	}
   ],
   "globalStyle": {
