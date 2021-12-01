@@ -88,7 +88,7 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="teamCodes" label="调度者" class="border-bottom">
-					<view class="picker-placeholder text-right">
+					<view class="picker-placeholder text-right" @click="handleOpenTeamList">
 						请选择调度者
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
@@ -106,6 +106,8 @@
 			<view class="reset" @click="navigateBack">取消</view>
 			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
+		
+		<TeamList ref="teamListRef" :show="teamListShow" @close="handleCloseTeamList" />
 	</view>
 </template>
 
@@ -116,7 +118,11 @@
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { plateNoReg } from '@/utils/validate.js';
+	import TeamList from '@/pages/capacity/components/teamList.vue';
 	export default {
+		components: {
+			TeamList
+		},
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
@@ -141,7 +147,9 @@
 					{ dictLabel: '冻结', dictValue: 1 }
 				],
 				// 车牌键盘
-				carBoardShow: false
+				carBoardShow: false,
+				// 选择调度列表
+				teamListShow: false
 			}
 		},
 		onLoad(options){
@@ -304,6 +312,14 @@
 					});
 					return true;
 				}
+			},
+			// 打开调度列表
+			handleOpenTeamList() {
+				this.teamListShow = true;
+			},
+			// 取消调度列表
+			handleCloseTeamList() {
+				this.teamListShow = false;
 			}
 		}
 	}

@@ -39,14 +39,14 @@
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item name="licenseNumber" label="车辆" class="border-bottom">
-					<view class="picker-placeholder text-right">
+				<uni-forms-item v-if="!form.code" name="licenseNumber" label="车辆" class="border-bottom">
+					<view class="picker-placeholder text-right" @click="handleOpenVehicleList">
 						请选择车辆
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
 				</uni-forms-item>
 				<uni-forms-item name="teamCodes" label="调度者" class="border-bottom">
-					<view class="picker-placeholder text-right">
+					<view class="picker-placeholder text-right" @click="handleOpenTeamList">
 						请选择调度者
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
@@ -64,6 +64,9 @@
 			<view class="reset" @click="navigateBack">取消</view>
 			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
+		
+		<TeamList ref="teamListRef" :show="teamListShow" @close="handleCloseTeamList" />
+		<VehicleList ref="VehicleListRef" :show="vehicleListShow" @close="handleCloseVehicleList" />
 	</view>
 </template>
 
@@ -73,7 +76,13 @@
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { phoneReg } from '@/utils/validate.js';
+	import TeamList from '@/pages/capacity/components/teamList.vue'
+	import VehicleList from '@/pages/capacity/components/vehicleList.vue'
 	export default {
+		components: {
+			TeamList,
+			VehicleList
+		},
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
@@ -90,7 +99,11 @@
 				isFreezeOptions: [
 					{ dictLabel: '正常', dictValue: 0 },
 					{ dictLabel: '冻结', dictValue: 1 }
-				]
+				],
+				// 选择调度列表
+				teamListShow: false,
+				// 选择车辆列表
+				vehicleListShow: false
 			}
 		},
 		onLoad(options){
@@ -209,6 +222,22 @@
 					});
 					return true;
 				}
+			},
+			// 打开调度列表
+			handleOpenTeamList() {
+				this.teamListShow = true;
+			},
+			// 取消调度列表
+			handleCloseTeamList() {
+				this.teamListShow = false;
+			},
+			// 打开车辆列表
+			handleOpenVehicleList() {
+				this.vehicleListShow = true;
+			},
+			// 取消车辆列表
+			handleCloseVehicleList() {
+				this.vehicleListShow = false;
 			}
 		}
 	}
