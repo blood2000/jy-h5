@@ -14,15 +14,22 @@
 					@input="handleInput"
 				/>
 			</view>
-			<view class="list-box" v-if="dataList.length > 0">
-				<!-- 列表项 -->
-				<view v-for="(item, index) in dataList" :key="index" class="list-box-item">
-					<image v-if="!!checkMap[item.code]" class="icon-check" src="~@/static/capacity/check.png" @click="handleCheck(item)"></image>
-					<image v-else class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck(item)"></image>
-					{{ item.licenseNumber }}
-				</view>
+			<view v-if="loading" class="list-box ly-flex ly-flex-align-center ly-flex-pack-center">
+				<!-- loading -->
+				<u-loading-icon mode="circle" text=""></u-loading-icon>
 			</view>
-			<view class="list-box" v-else>
+			<view class="list-box" v-if="!loading && dataList.length > 0">
+				<!-- 列表项 -->
+				<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltolower="scrolltolower">
+					<view v-for="(item, index) in dataList" :key="index" class="list-box-item">
+						<image v-if="!!checkMap[item.code]" class="icon-check" src="~@/static/capacity/check.png" @click="handleCheck(item)"></image>
+						<image v-else class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck(item)"></image>
+						{{ item.licenseNumber }}
+					</view>
+					<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
+				</scroll-view>
+			</view>
+			<view class="list-box" v-if="!loading && dataList.length === 0">
 				<!-- 无数据 -->
 				<NonePage></NonePage>
 			</view>
@@ -66,7 +73,16 @@
 				},
 				dataList: [],
 				loading: false,
-				checkMap: {}
+				checkMap: {},
+				scrollTop: 0,
+				// 是否无数据了
+				isEnd: false,
+				status: 'more',
+				contentText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '没有更多了'
+				}
 			}
 		},
 		watch: {
@@ -87,6 +103,8 @@
 			},
 			reset() {
 				this.queryParams.licenseNumber = undefined;
+				this.isEnd = false;
+				this.status = 'more';
 			},
 			setForm() {
 				// 回填选中的车辆
@@ -105,16 +123,33 @@
 				this.$emit('changeVehicleInfoList', vehicleInfoList);
 				this.close();
 			},
+			// 触底
+			scrolltolower(e) {
+				if(!this.isEnd) {
+					this.status = 'more';
+					this.queryParams.pageNum++;
+					this.getList();
+				}
+			},
 			async getList() {
-				this.loading = true;
+				this.status = 'loading';
 				const { data } = await listInfo(this.queryParams, this.headerInfo);
 				this.loading = false;
+				if (data.list.length === 0) {
+					this.isEnd = true;
+					this.status = 'noMore';
+					return;
+				}
+				if(data.list.length < this.queryParams.pageSize){
+					this.status = 'noMore';
+				}
 				this.dataList = [...this.dataList, ...data.list];
 			},
 			/** 搜索按钮操作 */
 			handleQuery() {
 				this.queryParams.pageNum = 1;
 				this.dataList = [];
+				this.loading = true;
 				this.getList();
 			},
 			/** input搜索 */
@@ -167,8 +202,11 @@
 		}
 		>.list-box{
 			height: 640upx;
-			overflow-y: scroll;
-			>.list-box-item{
+			overflow-y: hidden;
+			>.scroll-Y{
+				height: 100%;
+			}
+			.list-box-item{
 				height: 106upx;
 				line-height: 106upx;
 				border-bottom: 1upx solid #EBEBEB;
