@@ -14,11 +14,24 @@
 					@input="handleInput"
 				/>
 			</view>
-			<view class="list-box">
+			<view v-if="loading" class="list-box ly-flex ly-flex-align-center ly-flex-pack-center">
+				<!-- loading -->
+				<u-loading-icon mode="circle" text=""></u-loading-icon>
+			</view>
+			<view class="list-box" v-if="!loading && dataList.length > 0">
 				<!-- 列表项 -->
-				<view v-for="(item, index) in listData" :key="index" class="list-box-item">
-					闽A12345
-				</view>
+				<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltolower="scrolltolower">
+					<view v-for="(item, index) in dataList" :key="index" class="list-box-item">
+						<image v-if="!!checkMap[item.code]" class="icon-check" src="~@/static/capacity/check.png" @click="handleCheck(item)"></image>
+						<image v-else class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck(item)"></image>
+						{{ item.licenseNumber }}
+					</view>
+					<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
+				</scroll-view>
+			</view>
+			<view class="list-box" v-if="!loading && dataList.length === 0">
+				<!-- 无数据 -->
+				<NonePage></NonePage>
 			</view>
 			<view class="button" @click="submit">确认</view>
 		</view>
@@ -26,13 +39,30 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex';
+	import { listInfo } from '@/config/service/capacity/vehicle.js';
+	import NonePage from '@/components/NonePage/NonePage.vue';
 	export default {
 		name: 'VehicleList',
+		components: {
+			NonePage
+		},
 		props: {
 			show: {
 				type: Boolean,
 				default: false
+			},
+			vehicleInfoList: {
+				type: Array,
+				default: () => {
+					return [];
+				}
 			}
+		},
+		computed: {
+			...mapState({
+				headerInfo: state => state.header.headerInfo
+			})
 		},
 		data() {
 			return {
@@ -41,7 +71,18 @@
 					pageSize: 10,
 					licenseNumber: undefined
 				},
-				listData: []
+				dataList: [],
+				loading: false,
+				checkMap: {},
+				scrollTop: 0,
+				// 是否无数据了
+				isEnd: false,
+				status: 'more',
+				contentText: {
+					contentdown: '上拉加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '没有更多了'
+				}
 			}
 		},
 		watch: {
@@ -49,6 +90,7 @@
 				handler(val) {
 					if (val) {
 						this.reset();
+						this.setForm();
 						this.handleQuery();
 					}
 				},
@@ -61,17 +103,53 @@
 			},
 			reset() {
 				this.queryParams.licenseNumber = undefined;
+				this.isEnd = false;
+				this.status = 'more';
+			},
+			setForm() {
+				// 回填选中的车辆
+				this.checkMap = {};
+				if (this.vehicleInfoList && this.vehicleInfoList.length > 0) {
+					this.vehicleInfoList.forEach(el => {
+						this.checkMap[el.code] = el;
+					})
+				}
 			},
 			submit() {
+				const vehicleInfoList = [];
+				for (let key in this.checkMap) {
+					vehicleInfoList.push(this.checkMap[key]);
+				}
+				this.$emit('changeVehicleInfoList', vehicleInfoList);
 				this.close();
 			},
-			getList() {
-				this.listData = [{},{},{},{},{},{},{},{},{},{},{}]
+			// 触底
+			scrolltolower(e) {
+				if(!this.isEnd) {
+					this.status = 'more';
+					this.queryParams.pageNum++;
+					this.getList();
+				}
+			},
+			async getList() {
+				this.status = 'loading';
+				const { data } = await listInfo(this.queryParams, this.headerInfo);
+				this.loading = false;
+				if (data.list.length === 0) {
+					this.isEnd = true;
+					this.status = 'noMore';
+					return;
+				}
+				if(data.list.length < this.queryParams.pageSize){
+					this.status = 'noMore';
+				}
+				this.dataList = [...this.dataList, ...data.list];
 			},
 			/** 搜索按钮操作 */
 			handleQuery() {
 				this.queryParams.pageNum = 1;
-				this.listData = [];
+				this.dataList = [];
+				this.loading = true;
 				this.getList();
 			},
 			/** input搜索 */
@@ -88,6 +166,15 @@
 				if (this.queryParams.licenseNumber === '') {
 					this.handleQuery();
 				}
+			},
+			/** 选中 */
+			handleCheck(item) {
+				if (!!this.checkMap[item.code]) {
+					delete this.checkMap[item.code];
+				} else {
+					this.checkMap[item.code] = item;
+				}
+				this.$forceUpdate();
 			}
 		}
 	}
@@ -115,8 +202,11 @@
 		}
 		>.list-box{
 			height: 640upx;
-			overflow-y: scroll;
-			>.list-box-item{
+			overflow-y: hidden;
+			>.scroll-Y{
+				height: 100%;
+			}
+			.list-box-item{
 				height: 106upx;
 				line-height: 106upx;
 				border-bottom: 1upx solid #EBEBEB;
@@ -125,6 +215,13 @@
 				font-family: PingFang SC;
 				font-weight: bold;
 				color: #333333;
+				.icon-check{
+					width: 50upx;
+					height: 60upx;
+					vertical-align: middle;
+					margin: -6upx 14upx 0 0;
+					padding: 10upx 10upx 10upx 0;
+				}
 			}
 		}
 		>.button{

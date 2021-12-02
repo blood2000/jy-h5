@@ -15,8 +15,9 @@
 				<uni-swipe-action>
 					<uni-swipe-action-item :right-options="options2" @click="checked=>swipeActionClick(checked, item)">
 				        <view class="card-content ly-flex">
-							<view class="img-box">
-								
+							<view class="img-box ly-flex ly-flex-align-center ly-flex-pack-center">
+								<img v-if="item.vehicleImagePath" :src="item.vehicleImagePath" />
+								<img v-else src="~@/static/capacity/car_bg.png" />
 							</view>
 							<view class="info-box ly-flex-1">
 								<view class="platenumber">
@@ -49,6 +50,7 @@
 	import { listInfo, delInfo } from '@/config/service/capacity/vehicle.js';
 	import { getDicts } from '@/config/service/common.js';
 	import { selectDictLabel } from '@/utils/ddc.js';
+	import { getFile } from '@/config/service/common.js'
 	export default {
 		components: {
 			NonePage
@@ -137,7 +139,17 @@
 				if(data.list.length < this.queryParams.pageSize){
 					this.status = 'noMore';
 				}
-				this.total = data.total;
+				// 获取车头正面照
+				data.list.forEach(el => {
+					if (el.vehicleImage) {
+						getFile(el.vehicleImage, this.headerInfo).then(response => {
+							if (response.data && response.data.length > 0) {
+								el.vehicleImagePath = response.data[0].attachUrl;
+								this.$forceUpdate();
+							}
+						});
+					}
+				});
 				this.dataList = [...this.dataList, ...data.list];
 			},
 			swipeActionClick(data, row) {
@@ -201,11 +213,14 @@
 				>.img-box{
 					width: 156upx;
 					height: 132upx;
-					background: #F7F7F7 url('~@/static/capacity/car_bg.png') no-repeat;
-					background-size: 100% 100%;
 					border-radius: 10upx;
 					overflow: hidden;
 					margin-right: 18upx;
+					background: #F7F7F7;
+					>img{
+						max-width: 100%;
+						max-height: 100%;
+					}
 				}
 				>.info-box{
 					width: calc(100% - 174upx);

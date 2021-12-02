@@ -5,7 +5,7 @@ export function addTenantRel(data, config) {
   return uniRequest({
     url: '/jyz/driver/insertTenantDriverVehicleRel',
     method: 'post',
-    data: data,
+    data: Object.assign({}, data, { isApp: 1 }),
 	headers: config
   });
 }

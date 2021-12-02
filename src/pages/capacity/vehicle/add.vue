@@ -90,8 +90,12 @@
 						</view>
 					</picker>
 				</uni-forms-item>
-				<uni-forms-item name="teamCodes" label="调度者" class="border-bottom">
-					<view class="picker-placeholder text-right" @click="handleOpenTeamList">
+				<uni-forms-item label="调度者" class="border-bottom">
+					<view v-if="teamCodes && teamCodes.length > 0" class="picker-input text-right" @click="handleOpenTeamList">
+						共{{teamCodes.length}}组
+						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+					</view>
+					<view v-else class="picker-placeholder text-right" @click="handleOpenTeamList">
 						请选择调度者
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
@@ -110,7 +114,13 @@
 			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
 		
-		<TeamList ref="teamListRef" :show="teamListShow" @close="handleCloseTeamList" />
+		<TeamList
+			ref="teamListRef"
+			:show="teamListShow"
+			:teamCodes="teamCodes"
+			@close="handleCloseTeamList"
+			@changeTeamCodes="changeTeamCodes"
+		/>
 	</view>
 </template>
 
@@ -159,7 +169,8 @@
 				// 车牌键盘
 				carBoardShow: false,
 				// 选择调度列表
-				teamListShow: false
+				teamListShow: false,
+				teamCodes: []
 			}
 		},
 		onLoad(options){
@@ -195,6 +206,10 @@
 			},
 			setForm(data) {
 				this.form = data;
+				// 回填选中的调度者
+				if (this.form.teamCodes) {
+					this.teamCodes = this.form.teamCodes.split(',');
+				}
 			},
 			// picker选中
 			pickerChange(arr, key, e) {
@@ -232,7 +247,7 @@
 				if (this.form.isChyVehicle === 1) {
 					// 认证
 					uni.navigateTo({
-						url: '/pages/capacity/vehicle/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)
+						url: '/pages/capacity/vehicle/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)+'&teamCodes='+JSON.stringify(this.teamCodes)
 					});
 				} else {
 					uni.showLoading({
@@ -242,10 +257,10 @@
 					const driver = removePropertyOfNull(Object.assign({}, this.form));
 					if (this.form.id) {
 						// 编辑
-						// ...调度者
 						updateInfo(driver, this.headerInfo).then(res => {
 						  // 添加租户和车辆的关系
 						  const params = {
+							teamCodes: this.teamCodes.join(','),
 							vehicleCode: driver.code,
 							isChyVehicle: driver.isChyVehicle,
 							isVehicleFreeze: driver.isVehicleFreeze
@@ -259,6 +274,7 @@
 						addInfo(Object.assign({}, driver, { fromSource: 2 }), this.headerInfo).then(res => {
 						  // 添加租户和车辆的关系
 						  const params = {
+							teamCodes: this.teamCodes.join(','),
 							vehicleCode: res.data.code,
 							isChyVehicle: driver.isChyVehicle
 						  };
@@ -309,6 +325,8 @@
 			resetIdAndCode() {
 			  this.form.id = null;
 			  this.form.code = null;
+			  this.form.teamCodes = null;
+			  this.teamCodes = [];
 			},
 			// 校验
 			noValidate() {
@@ -362,6 +380,10 @@
 			// 取消调度列表
 			handleCloseTeamList() {
 				this.teamListShow = false;
+			},
+			// 更改选中的调度者
+			changeTeamCodes(data) {
+				this.teamCodes = data;
 			}
 		}
 	}
