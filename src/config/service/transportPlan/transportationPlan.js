@@ -9,13 +9,21 @@ export function orderPlanInfoList(query) {
   });
 }
 
+// 运输计划分页详情
+export function orderPlanInfoDetatil(id) {
+  return request({
+    url: `/jyz/orderPlanInfo/orderPlanDetatil?id=${id}`,
+    method: 'get',
+  });
+}
+
 
 // 新增运输计划
 export function orderPlanInfoAdd(data) {
   return request({
     url: '/jyz/orderPlanInfo/add',
     method: 'post',
-    data: data
+    data: {isArrayQuery: JSON.stringify(data)}
   });
 }
 
@@ -24,7 +32,7 @@ export function orderPlanInfoUpdate(data) {
   return request({
     url: '/jyz/orderPlanInfo/update',
     method: 'post',
-    data: data
+    data: {isArrayQuery: JSON.stringify(data)}
   });
 }
 
@@ -37,7 +45,7 @@ export function teamSelectTeamListByCodes(data) {
   return request({
     url: `/jyz/team/selectTeamListByCodes`,
     method: 'post',
-    data: data
+    data: {isArrayQuery: JSON.stringify(data)}
   });
 }
 
@@ -49,7 +57,7 @@ export function orderPlanInfoUpdateStatus(data) {
   return request({
     url: '/jyz/orderPlanInfo/updateStatus',
     method: 'post',
-    data: data
+    data: {isArrayQuery: JSON.stringify(data)}
   });
 }
 

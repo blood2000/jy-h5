@@ -18,6 +18,16 @@ uniRequest.defaults.headers['Authorization'] = uni.getStorageSync('token') || ''
 // 请求拦截
 uniRequest.interceptors.request.use(
 	config => {
+
+		if(config.data && config.data.isArrayQuery){
+			if (config.data.isArrayQuery) {
+				try{
+					config.data = JSON.parse(config.data.isArrayQuery)
+				}catch(e){
+					//TODO handle the exception
+				}
+			}
+		}
 		return config;
 	},
 	err => {

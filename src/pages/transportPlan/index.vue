@@ -13,7 +13,7 @@
 		</view>
 		<template v-if="cardList && cardList.length > 0">
 			<view v-for="(item,index) in cardList" :key="index">
-				<TransportCard v-model="cardList[index]" @share='share()'></TransportCard>
+				<TransportCard v-model="cardList[index]" @share='share()' @handlerClick="handlerClick(item)"></TransportCard>
 			</view>
 		</template>
 
@@ -130,6 +130,17 @@
 			share() {
 				this.show = true
 			},
+
+			// 点击
+			handlerClick(_data){
+				console.log(_data);
+				// uni.$emit('caback')
+				const { receiveType, id } = _data
+				uni.navigateTo({
+					url: `./add?type=${receiveType - 1}&id=${id}`
+				})
+			},
+
 			sendPlan(){
 				uni.navigateTo({
 					url:'./add?type=0'

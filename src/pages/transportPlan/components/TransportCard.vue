@@ -1,6 +1,6 @@
 <template>
 	<view class="ly-form-card">
-		<view class="info">
+		<view class="info" @click="$emit('handlerClick')">
 			<view class="ly-flex">
 				<view class="img-box">
 					<view class="avatar"

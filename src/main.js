@@ -28,7 +28,7 @@ window.handleMessage = (_data)=>{
 }
 
 // 测试
-handleMessage({ token: 'a38d69eb-97fd-4487-b06f-c30ee9e1d0f0' })
+handleMessage({ token: '6a6bb3fe-d7dd-4ffd-817d-e4e8d1bacbb2' })
 
 Vue.prototype.$onLaunched = new Promise(resolve => {
 	Vue.prototype.$isResolve = resolve;

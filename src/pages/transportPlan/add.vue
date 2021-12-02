@@ -2,8 +2,8 @@
 	<view class="u-page">
 		<u-navbar :title="this.form.type == 0?'创建收货计划':'创建发货计划'" @leftClick="navigateBack" safeAreaInsetTop fixed placeholder>
 		</u-navbar>
-		<uni-forms ref='form' :rules="rules" :modelValue="form" label-width="150">
-
+		<uni-forms ref='form' :rules="rules" :modelValue="form" label-width="150" err-show-type="toast">
+<!-- validate-trigger="submit" err-show-type="toast" -->
 			<view class="ly-form-card">
 
 				<uni-forms-item required name="name" label="计划名称" class="border-bottom">
@@ -17,8 +17,7 @@
 						type="daterange" rangeSeparator="/" @change="handlerPick" />
 						<!--  (arr)=> oldDatePicker = arr  -->
 					<u-checkbox-group v-model="form.isForever" style="float: right;">
-						<u-checkbox size='14' label='长期有效' labelSize='12rpx'>
-						</u-checkbox>
+						<u-checkbox size='14' label='长期有效' :checked='true' name="" labelSize='12rpx'></u-checkbox>
 					</u-checkbox-group>
 				</uni-forms-item>
 			</view>
@@ -54,8 +53,7 @@
 						</pickers>
 					</view>
 					<u-checkbox-group v-model="form.weightType" style="float: right;">
-						<u-checkbox size='14' label='不限' labelSize='12rpx'>
-						</u-checkbox>
+						<u-checkbox size='14' label='不限' name='' labelSize='12rpx'></u-checkbox>
 					</u-checkbox-group>
 				</uni-forms-item>
 			</view>
@@ -111,9 +109,8 @@
 				</template>
 
 
-				<uni-forms-item required name="schedulers" label="运输终点别名">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.endplacealias"
-						placeholder="请输入运输终点别名" />
+				<uni-forms-item required name="unAliasName" label="运输终点别名">
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.unAliasName" placeholder="请输入运输终点别名" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -142,41 +139,20 @@
 	import { listInfo, orderInfoList, tenantCompanyInfoList, getDispatcherTeam, tenantCompanyAddressInfoList, 
 	tenantGoodsPolicyInfo,
 	getEffectiveGoodsList as goodspriceList,
-	orderPlanFreightList } from "@/config/service/transportPlan/transportationPlan.js"
+	orderPlanFreightList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoDetatil } from "@/config/service/transportPlan/transportationPlan.js"
+
+	// import { orderPlanInfoList as getList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoUpdateStatus, teamSelectTeamListByCodes } from '@/config/service/transportPlan/transportationPlan.js'
+	
 
 	import jsfunPicker from '@/components/jsfun-picker/jsfun-picker.vue'
 	import pickers from './components/picker.vue'
 	import { mapState} from 'vuex';
 
+	import { removePropertyOfNull } from '@/utils/ddc';
+
 	export default {
-		computed: {
-			...mapState({
-				headerInfo: state => state.header.headerInfo
-			}),
-		},
-		watch: {
-			'form.isForever': {
-				handler(val) {
-					if(val && val.length>0){
-						this.$refs.datepick.clear()
-					} else {
-						this.$set(this.form, 'effectiveDate', this.oldDatePicker)
-						this.oldDatePicker1 = Date.now()
-					}
-				},
-				deep: true
-			},
-			'form.weightType': {
-				handler(val) {
-					if(val && val.length>0){
-						this.$set(this.form, 'weight', undefined)
-					} else {
-						this.$set(this.form, 'weight', this.olDweightType)
-					}
-				},
-				deep: true
-			},
-		},
+		
+		
 		components: {
 			pickers,
 			jsfunPicker
@@ -185,10 +161,37 @@
 			return {
 				description: '收货企业为本集运站，自动采用地磅称重数据作为卸货凭证',
 				// 表单数据
+				// form: {
+				// 	name: '2122',
+				// 	effectiveDate: ['2021-12-03 00:00:00','2021-12-04 00:00:00'], // 转成 开始时间 和 结束时间
+				// 	isForever: [], // 转成 数字值 有长度为true 
+				// 	transId: 5,
+				// 	orderInfoId: 6,
+				// 	du__snefniewew: '0',
+				// 	weight: 1010,
+				// 	weightType: [],  // 有长度为true
+				// 	startAddressId: 1,
+				// 	aliasName: '12010',
+				// 	endAddressId: 2,
+				// 	sedCompnayInfoId: 12,
+				// 	recCompnayInfoId: 9,
+				// 	startAddressWlId: 1,
+				// 	endAddressWlId: 2,
+				// 	unAliasName: '卸货',
+				// 	orderPlanTeanRelList: [],
+				// 	h_sjfiejwejfwijfewejw: undefined, // 测试单选 调度者
+				// 	orderPolicyId: 32,
+				// 	goodsPolicyId: 16,
+				// 	planFreightId: 15,
+				// 	receiveType: 1,
+				// 	status: '0',
+
+				// 	type: 0
+				// },
 				form: {
 					name: undefined,
-					effectiveDate: [],
-					isForever: [], // 有长度为true
+					effectiveDate: [''], // 转成 开始时间 和 结束时间
+					isForever: [], // 转成 数字值 有长度为true 
 					transId: undefined,
 					orderInfoId: undefined,
 					du__snefniewew: '0',
@@ -210,34 +213,115 @@
 					receiveType: this.sOr,
 					status: '0',
 
-					du_priceDefault:'25.00,30.00,35.00'
+					type: 0
 				},
-				// // 长期有效
-				// check: [],
-				// // 有效期禁用
-				// disable: false,
-				
-				// schedulersOptions: [
-				// 	{
-				// 		dictValue: 1,
-				// 		dictLabel: '福建大道成物流有限公司'
-				// 	},
-				// 	{
-				// 		dictValue: 2,
-				// 		dictLabel: 'ww'
-				// 	},
-				// 	{
-				// 		dictValue: 3,
-				// 		dictLabel: 'ee'
-				// 	}
-				// ],
+
 				rules: {
-					planName: {
-						rules: [{
-							required: true,
-							errorMessage: '请输入姓名'
-						}],
-					}
+					name:{
+						rules:[
+							{ required: true, errorMessage: '请输入计划名称' }
+						]
+					},
+					effectiveDate:{
+						rules:[
+							{ type: 'array', required: true, errorMessage: '请输入计划有效期' }
+						]
+					},
+					transId:{
+						rules:[
+							{ required: true, errorMessage: '请选择运输公司' }
+						]
+					},
+					orderPlanTeanRelList:{
+						rules:[
+							{ required: false, errorMessage: '请输入指定调度者' }
+						]
+					},
+					
+					orderInfoId:{
+						rules:[
+							{ required: true, errorMessage: '请选择货源' }
+						]
+					},
+					weight:{
+						rules:[
+							{ required: true, errorMessage: '请输入货品总量' }
+						]
+					},
+
+					sedCompnayInfoId:{
+						rules:[
+							{ required: true, errorMessage: '请选择发货企业' }
+						]
+					},
+
+					recCompnayInfoId:{
+						rules:[
+							{ required: true, errorMessage: '请选择收货企业' }
+						]
+					},
+
+					startAddressId:{
+						rules:[
+							{ required: true, errorMessage: '请选择运输起点' }
+						]
+					},
+					startAddressWlId:{
+						rules:[
+							{ required: true, errorMessage: '请选择接单电子围栏' }
+						]
+					},
+					
+					aliasName:{
+						rules:[
+							{ required: true, errorMessage: '请输入运输起点别名' },
+							{
+								minLength: 1,
+								maxLength: 30,
+								errorMessage: '请输入运输起点别名 {minLength} 到 {maxLength} 个字符',
+							}
+						]
+					},
+
+					
+					endAddressId:{
+						rules:[
+							{ required: true, errorMessage: '请选择运输终点' }
+						]
+					},
+
+					endAddressWlId:{
+						rules:[
+							{ required: true, errorMessage: '请选择卸货电子围栏' }
+						]
+					},
+
+					unAliasName:{
+						rules: [
+							{ required: true, errorMessage: '请输入运输终点别名'},
+							{
+								minLength: 1,
+								maxLength: 30,
+								errorMessage: '请输入运输终点别名 {minLength} 到 {maxLength} 个字符',
+							}
+						],
+					},
+
+					orderPolicyId:{
+						rules:[
+							{ required: true, errorMessage: '请选择运输定价策略' }
+						]
+					},
+					goodsPolicyId:{
+						rules:[
+							{ required: true, errorMessage: '请选择货品定价策略' }
+						]
+					},
+					planFreightId:{
+						rules:[
+							{ required: true, errorMessage: '请选择实重计算公式' }
+						]
+					},
 				},
 				// s= 其他数据
 				oldDatePicker:[],
@@ -260,10 +344,50 @@
 				planFreightIdOption: [] // 计算公式
 			}
 		},
+
+		watch: {
+			'form.isForever': {
+				handler(val) {
+					console.log(777);
+					if(!(val && Array.isArray(val))) return
+					if(val.length>0){
+						this.$refs.datepick.clear()
+						// 要去掉验证
+					} else {
+						this.$set(this.form, 'effectiveDate', this.oldDatePicker)
+						this.oldDatePicker1 = Date.now()
+					}
+				},
+				deep: true
+			},
+			'form.weightType': {
+				handler(val) {
+					console.log(888);
+					if(!(val && Array.isArray(val))) return
+					if(val.length>0){
+						this.$set(this.form, 'weight', undefined)
+					} else {
+						this.$set(this.form, 'weight', this.olDweightType)
+					}
+				},
+				deep: true
+			},
+		},
+
+		computed: {
+			...mapState({
+				headerInfo: state => state.header.headerInfo
+			}),
+		},
 		async onLoad(options) {
 			// this.$store.dispatch('getLoginInfoAction', {
 			// 	'Authorization': options.token
 			// });
+			console.log(555);
+			uni.showLoading({
+				title: '加载中',
+				mask: true
+			})
 			this.form.type = options.type;
 			await this.gettransId();
 			await this.getorderInfoIdOption();
@@ -273,8 +397,44 @@
 			await this.getorderPolicyInfoOption();
 			await this.getgoodsPolicyIdOption();
 			await this.getplanFreightIdOption();
+
+			// uni.$on('caback',(_data)=>{
+			// 	console.log(_data);
+			// })
+			if(options.id){
+				// 编辑
+				const { data } = await orderPlanInfoDetatil(options.id)
+				this.cbData = data
+
+				this.handlerstartAddressId(this.cbData.startAddressId);
+      			this.handlerendAddressId(this.cbData.endAddressId);
+
+				this.oldDatePicker = [this.cbData.effectiveDateStart + ' 00:00:00', this.cbData.effectiveDateEnd + ' 00:00:00']
+				this.olDweightType = this.cbData.weight
+
+
+				this.form = {
+					...this.form,
+					...this.cbData,
+					status: this.cbData.status + '',
+					effectiveDate: this.oldDatePicker,
+					isForever: this.cbData.isForever === 1? ['']: [],
+					weightType: this.cbData.weightType === 1? ['']: [],
+					orderPlanTeanRelList: this.cbData.teamCodeList ? this.cbData.teamCodeList : [],
+					h_sjfiejwejfwijfewejw:[],
+					du__snefniewew: '0'
+				};
+				console.log(666);
+
+				console.log(this.form);
+			}
+
+			uni.hideLoading();
+
+			
 			
 		},
+
 		methods: {
 			// 获取运输公司
 			async gettransId() {
@@ -465,59 +625,134 @@
 
 			// e= 初始数据结束
 
+			// s=其他
+			// 时间控件
 			handlerPick(arr){
 				if(arr[0] && arr[1]){
 					this.oldDatePicker = arr
 				}
 			},
-			handlerBlur(val){
-				console.log(val);
-			},
+			
 
 			navigateBack() {
+				// 跳回当前h5页面
 				uni.navigateBack();
 			},
-			// dateChange(val){
-			// if(val[0]){this.oldDate = val}
-			// },
-			/** 查询字典 */
-			// getDictsList() {
-			// 	// 车牌颜色
-			// 	getDicts('licenseColor', this.headerInfo).then(response => {
-			// 		this.licenseColorOptions = response.data;
-			// 	});
-			// 	// 车辆类型
-			// 	getDicts('vehicleClassification', this.headerInfo).then(response => {
-			// 		this.vehicleTypeOptions = response.data;
-			// 	});
-			// },
-			// // 获取详情
-			// getInfoData(code) {
-			// 	getInfo(code, this.headerInfo).then(res => {
-			// 		this.form = res.data;
-			// 	});
-			// },
-			// picker选中
-			pickerChange(arr, key, e) {
-				console.log(e);
-				this.$set(this.form, key, arr[e.detail.value].dictValue);
-			},
-			// 取消
+			
+			
+			// 取消 (重置)
 			handleCancle() {
 
 			},
 			// 确认创建
 			handleSubmit(formName) {
-				this.$refs[formName].validate().then(valid => {
-					if (valid) {
-						uni.showToast({
-							title: '112'
-						})
-					} else {
-						return false
+
+				// 手动验证空值
+				// if(!this.noValidate()) return
+
+				this.$refs[formName].validate().then(res=>{
+
+					console.log(this.form.isForever);
+					console.log(this.form.weightType);
+					const que = {
+						...this.form,
+						effectiveDateStart: this.form.effectiveDate ? this.form.effectiveDate[0] : undefined,
+						effectiveDateEnd: this.form.effectiveDate ? this.form.effectiveDate[1] : undefined,
+						effectiveDate: undefined,
+
+						isForever: this.form.isForever.length>0 ? 1 : 0,
+						weightType: this.form.weightType.length>0 ? 1 : 2,
+						orderPlanTeanRelList: [
+							{objCode: "517a12b2f4db4270866d2132bd878cef", isDel: 0, type: 1}
+						], // 调度者
+						h_sjfiejwejfwijfewejw: undefined,
+						du__snefniewew: undefined, // 单位不用
+            			status: this.form.status - 0, // 默认: 0
+						receiveType: this.form.type + 1, // 1发 2收
+						type: undefined
 					}
+
+					console.log('表单数据信息：', que);
+
+					console.log(removePropertyOfNull(que));
+
+					this.onSubmit(removePropertyOfNull(que))
+				}).catch(err =>{
+					console.log('表单错误信息：', err);
 				})
 			},
+
+			// s= 新增/编辑
+			async onSubmit(data) {
+				const isEdit = !!data.id; // true 为编辑
+				// console.log(isEdit);
+				uni.showLoading({
+					title: '保存中',
+					mask: true
+				})
+				// await this.congfirm(`确定立即${isEdit ? '修改' : '新增'}`);
+				const que = {
+					...data
+				};
+
+				if (isEdit) {
+					await orderPlanInfoUpdate(que);
+				} else {
+					await orderPlanInfoAdd(que);
+				}
+
+				uni.hideLoading();
+				// this.msgSuccess(`${isEdit ? '修改' : '新增'}成功`);
+				uni.showToast({
+					title: `${isEdit ? '修改' : '新增'}成功`,
+					icon: 'none'
+				});
+				// this.open = false;
+				// this.queryParams.pageNum = 1;
+				// this.cbData = null;
+				// this.getList();
+				// 回去
+				uni.redirectTo({
+					url: '/pages/transportPlan/index'
+				});
+
+			},
+
+			// 手动验证空
+
+			noValidate(formName='form', rulesName='rules' ){
+				for (const key in this[rulesName]) {
+					if (Object.hasOwnProperty.call(this[rulesName], key)) {
+						const rule = this[rulesName][key];
+						for (let index = 0; index < rule.rules.length; index++) {
+							const r = rule.rules[index];
+							if(r.required){
+								// console.log(this[formName][key]);
+								if(r.type === 'array' && this[formName][key].length <=0 ){
+									uni.showToast({
+										title: r.errorMessage,
+										icon: 'none'
+									});
+									return false
+								}
+
+								// 去掉空格
+								// console.log(this[formName][key]);
+								if(!this[formName][key] && typeof this[formName][key] !== 'boolean' && this[formName][key] !== 0){
+									console.log(r, '验证不通过 返回false');
+									uni.showToast({
+										title: r.errorMessage,
+										icon: 'none'
+									});
+									return false
+								} 
+							}
+						}
+					}
+				}
+
+				return true
+			}
 		}
 	}
 </script>
