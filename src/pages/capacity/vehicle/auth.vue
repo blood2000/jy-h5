@@ -209,6 +209,7 @@
 				axisTypeOptions: [],
 				// 车型字典
 				vehicleTypeOptions: [],
+				teamCodes: []
 			}
 		},
 		onLoad(options){
@@ -216,6 +217,7 @@
 				'Authorization': options.token
 			});
 			this.form = JSON.parse(options.info);
+			this.teamCodes = JSON.parse(options.teamCodes);
 			this.getDictsList();
 		},
 		methods: {
@@ -268,6 +270,7 @@
 					updateInfo(driver, this.headerInfo).then(res => {
 					  // 添加租户和车辆的关系
 					  const params = {
+						teamCodes: this.teamCodes.join(','),
 						vehicleCode: driver.code,
 						isChyVehicle: driver.isChyVehicle,
 						isVehicleFreeze: driver.isVehicleFreeze
@@ -281,6 +284,7 @@
 					addInfo(Object.assign({}, driver, { fromSource: 2 }), this.headerInfo).then(res => {
 					  // 添加租户和车辆的关系
 					  const params = {
+						teamCodes: this.teamCodes.join(','),
 						vehicleCode: res.data.code,
 						isChyVehicle: driver.isChyVehicle
 					  };

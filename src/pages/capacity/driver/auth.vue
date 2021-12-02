@@ -273,7 +273,9 @@
 				isOptions: [
 					{ dictLabel: '否', dictValue: 0 },
 					{ dictLabel: '是', dictValue: 1 }
-				]
+				],
+				teamCodes: [],
+				vehicleInfoList: []
 			}
 		},
 		onLoad(options){
@@ -281,6 +283,8 @@
 				'Authorization': options.token
 			});
 			this.form = JSON.parse(options.info);
+			this.teamCodes = JSON.parse(options.teamCodes);
+			this.vehicleInfoList = JSON.parse(options.vehicleInfoList);
 			this.getDictsList();
 		},
 		methods: {
@@ -332,12 +336,15 @@
 					title: '保存中',
 					mask: true
 				})
-				const driver = removePropertyOfNull(Object.assign({}, this.form));
+				let driver = (Object.assign({}, this.form));
+				driver.vehicleInfoList = null;
+				driver.vehicleInfo = null;
+				driver = removePropertyOfNull(driver);
 				if (this.form.id) {
 					// 编辑
 					updateInfo(driver, this.headerInfo).then(res => {
 						// 更新租户和司机的关系
-						const vehicleInfoUpdateBos = driver.vehicleInfoList.map(el => {
+						const vehicleInfoUpdateBos = this.vehicleInfoList.map(el => {
 							return {
 								vehicleCode: el.code,
 								isChyVehicle: el.isChyVehicle,
@@ -345,6 +352,7 @@
 							};
 						});
 						const params = {
+							teamCodes: this.teamCodes.join(','),
 							driverCode: driver.code,
 							isChyDriver: driver.isChyDriver,
 							isDriverFreeze: driver.isDriverFreeze,
@@ -358,11 +366,18 @@
 					// 新增
 					addInfo(Object.assign({}, driver, { fromSource: 2 }), this.headerInfo).then(res => {
 						// 添加租户和司机的关系
+						const vehicleInfoUpdateBos = this.vehicleInfoList.map(el => {
+							return {
+								vehicleCode: el.code,
+								isChyVehicle: el.isChyVehicle,
+								isVehicleFreeze: el.isVehicleFreeze
+							};
+						});
 						const params = {
+							teamCodes: this.teamCodes.join(','),
 							driverCode: res.data.code,
-							vehicleCode: res.data.vehicleInfo?res.data.vehicleInfo.code:undefined,
 							isChyDriver: driver.isChyDriver,
-							isChyVehicle: res.data.vehicleInfo?driver.vehicleInfo.isChyVehicle:undefined
+							vehicleInfoUpdateBos: vehicleInfoUpdateBos
 						};
 						this.setRel(params);
 					}).catch(e => {

@@ -17,8 +17,8 @@
 			<view class="list-box" v-if="dataList.length > 0">
 				<!-- 列表项 -->
 				<view v-for="(item, index) in dataList" :key="index" class="list-box-item">
-					<!-- <image class="icon-check" src="~@/static/capacity/check.png"></image> -->
-					<image class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck"></image>
+					<image v-if="!!checkMap[item.code]" class="icon-check" src="~@/static/capacity/check.png" @click="handleCheck(item)"></image>
+					<image v-else class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck(item)"></image>
 					{{ item.licenseNumber }}
 				</view>
 			</view>
@@ -44,6 +44,12 @@
 			show: {
 				type: Boolean,
 				default: false
+			},
+			vehicleInfoList: {
+				type: Array,
+				default: () => {
+					return [];
+				}
 			}
 		},
 		computed: {
@@ -59,7 +65,8 @@
 					licenseNumber: undefined
 				},
 				dataList: [],
-				loading: false
+				loading: false,
+				checkMap: {}
 			}
 		},
 		watch: {
@@ -67,6 +74,7 @@
 				handler(val) {
 					if (val) {
 						this.reset();
+						this.setForm();
 						this.handleQuery();
 					}
 				},
@@ -80,7 +88,21 @@
 			reset() {
 				this.queryParams.licenseNumber = undefined;
 			},
+			setForm() {
+				// 回填选中的车辆
+				this.checkMap = {};
+				if (this.vehicleInfoList && this.vehicleInfoList.length > 0) {
+					this.vehicleInfoList.forEach(el => {
+						this.checkMap[el.code] = el;
+					})
+				}
+			},
 			submit() {
+				const vehicleInfoList = [];
+				for (let key in this.checkMap) {
+					vehicleInfoList.push(this.checkMap[key]);
+				}
+				this.$emit('changeVehicleInfoList', vehicleInfoList);
 				this.close();
 			},
 			async getList() {
@@ -111,8 +133,13 @@
 				}
 			},
 			/** 选中 */
-			handleCheck() {
-				
+			handleCheck(item) {
+				if (!!this.checkMap[item.code]) {
+					delete this.checkMap[item.code];
+				} else {
+					this.checkMap[item.code] = item;
+				}
+				this.$forceUpdate();
 			}
 		}
 	}

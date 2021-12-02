@@ -18,8 +18,8 @@
 				<!-- 列表项 -->
 				<view v-for="(item, index) in dataList" :key="index" class="list-box-item ly-flex ly-flex-pack-justify">
 					<view class="name g-single-row">
-						<!-- <image class="icon-check" src="~@/static/capacity/check.png"></image> -->
-						<image class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck"></image>
+						<image v-if="!!checkMap[item.code]" class="icon-check" src="~@/static/capacity/check.png" @click="handleCheck(item)"></image>
+						<image v-else class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck(item)"></image>
 						{{ item.name }}
 					</view>
 					<view class="leader g-single-row">调度者：{{ item.teamLeaderName }}</view>
@@ -47,6 +47,12 @@
 			show: {
 				type: Boolean,
 				default: false
+			},
+			teamCodes: {
+				type: Array,
+				default: () => {
+					return [];
+				}
 			}
 		},
 		computed: {
@@ -61,7 +67,8 @@
 					pageSize: 10,
 					userName: undefined
 				},
-				dataList: []
+				dataList: [],
+				checkMap: {}
 			}
 		},
 		watch: {
@@ -69,6 +76,7 @@
 				handler(val) {
 					if (val) {
 						this.reset();
+						this.setForm();
 						this.handleQuery();
 					}
 				},
@@ -82,7 +90,21 @@
 			reset() {
 				this.queryParams.userName = undefined;
 			},
+			setForm() {
+				// 回填选中的调度者
+				this.checkMap = {};
+				if (this.teamCodes && this.teamCodes.length > 0) {
+					this.teamCodes.forEach(el => {
+						this.checkMap[el] = true;
+					})
+				}
+			},
 			submit() {
+				const teamCodes = [];
+				for (let key in this.checkMap) {
+					teamCodes.push(key);
+				}
+				this.$emit('changeTeamCodes', teamCodes);
 				this.close();
 			},
 			async getList() {
@@ -113,8 +135,13 @@
 				}
 			},
 			/** 选中 */
-			handleCheck() {
-				
+			handleCheck(item) {
+				if (!!this.checkMap[item.code]) {
+					delete this.checkMap[item.code];
+				} else {
+					this.checkMap[item.code] = true;
+				}
+				this.$forceUpdate();
 			}
 		}
 	}

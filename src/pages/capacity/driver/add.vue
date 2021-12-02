@@ -40,14 +40,22 @@
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item name="licenseNumber" label="车辆" class="border-bottom">
-					<view class="picker-placeholder text-right" @click="handleOpenVehicleList">
+				<uni-forms-item label="车辆" class="border-bottom">
+					<view v-if="vehicleInfoList && vehicleInfoList.length > 0" class="picker-input text-right" @click="handleOpenVehicleList">
+						共{{vehicleInfoList.length}}辆
+						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+					</view>
+					<view v-else class="picker-placeholder text-right" @click="handleOpenVehicleList">
 						请选择车辆
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
 				</uni-forms-item>
-				<uni-forms-item name="teamCodes" label="调度者" class="border-bottom">
-					<view class="picker-placeholder text-right" @click="handleOpenTeamList">
+				<uni-forms-item label="调度者" class="border-bottom">
+					<view v-if="teamCodes && teamCodes.length > 0" class="picker-input text-right" @click="handleOpenTeamList">
+						共{{teamCodes.length}}组
+						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
+					</view>
+					<view v-else class="picker-placeholder text-right" @click="handleOpenTeamList">
 						请选择调度者
 						<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
 					</view>
@@ -66,8 +74,20 @@
 			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
 		
-		<TeamList ref="teamListRef" :show="teamListShow" @close="handleCloseTeamList" />
-		<VehicleList ref="VehicleListRef" :show="vehicleListShow" @close="handleCloseVehicleList" />
+		<TeamList
+			ref="teamListRef"
+			:show="teamListShow"
+			:teamCodes="teamCodes"
+			@close="handleCloseTeamList"
+			@changeTeamCodes="changeTeamCodes"
+		/>
+		<VehicleList
+			ref="VehicleListRef"
+			:show="vehicleListShow"
+			:vehicleInfoList="vehicleInfoList"
+			@close="handleCloseVehicleList"
+			@changeVehicleInfoList="changeVehicleInfoList"
+		/>
 	</view>
 </template>
 
@@ -110,8 +130,10 @@
 				],
 				// 选择调度列表
 				teamListShow: false,
+				teamCodes: [],
 				// 选择车辆列表
-				vehicleListShow: false
+				vehicleListShow: false,
+				vehicleInfoList: []
 			}
 		},
 		onLoad(options){
@@ -135,6 +157,14 @@
 			},
 			setForm(data) {
 				this.form = data;
+				// 回填选中的车辆
+				if (this.form.vehicleInfoList) {
+					this.vehicleInfoList = this.form.vehicleInfoList;
+				}
+				// 回填选中的调度者
+				if (this.form.teamCodes) {
+					this.teamCodes = this.form.teamCodes.split(',');
+				}
 			},
 			// picker选中
 			pickerChange(arr, key, e) {
@@ -147,21 +177,22 @@
 				if (this.form.isChyDriver === 1) {
 					// 认证
 					uni.navigateTo({
-						url: '/pages/capacity/driver/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)
+						url: '/pages/capacity/driver/auth?token='+this.headerInfo.Authorization+'&info='+JSON.stringify(this.form)+'&teamCodes='+JSON.stringify(this.teamCodes)+'&vehicleInfoList='+JSON.stringify(this.vehicleInfoList)
 					});
 				} else {
-					// ...车辆
-					// ...调度者
 					uni.showLoading({
 						title: '保存中',
 						mask: true
 					})
-					const driver = removePropertyOfNull(Object.assign({}, this.form));
+					let driver = (Object.assign({}, this.form));
+					driver.vehicleInfoList = null;
+					driver.vehicleInfo = null;
+					driver = removePropertyOfNull(driver);
 					if (this.form.id) {
 						// 编辑
 						updateInfo(driver, this.headerInfo).then(res => {
 							// 更新租户和司机的关系
-							const vehicleInfoUpdateBos = driver.vehicleInfoList.map(el => {
+							const vehicleInfoUpdateBos = this.vehicleInfoList.map(el => {
 								return {
 									vehicleCode: el.code,
 									isChyVehicle: el.isChyVehicle,
@@ -169,6 +200,7 @@
 								};
 							});
 							const params = {
+								teamCodes: this.teamCodes.join(','),
 								driverCode: driver.code,
 								isChyDriver: driver.isChyDriver,
 								isDriverFreeze: driver.isDriverFreeze,
@@ -182,11 +214,18 @@
 						// 新增
 						addInfo(Object.assign({}, driver, { fromSource: 2 }), this.headerInfo).then(res => {
 							// 添加租户和司机的关系
+							const vehicleInfoUpdateBos = this.vehicleInfoList.map(el => {
+								return {
+									vehicleCode: el.code,
+									isChyVehicle: el.isChyVehicle,
+									isVehicleFreeze: el.isVehicleFreeze
+								};
+							});
 							const params = {
+								teamCodes: this.teamCodes.join(','),
 								driverCode: res.data.code,
-								vehicleCode: res.data.vehicleInfo?res.data.vehicleInfo.code:undefined,
 								isChyDriver: driver.isChyDriver,
-								isChyVehicle: res.data.vehicleInfo?driver.vehicleInfo.isChyVehicle:undefined
+								vehicleInfoUpdateBos: vehicleInfoUpdateBos
 							};
 							this.setRel(params);
 						}).catch(e => {
@@ -235,7 +274,9 @@
 			resetIdAndCode() {
 			  this.form.id = null;
 			  this.form.code = null;
-			  // ...重置车辆
+			  this.form.teamCodes = null;
+			  this.teamCodes = [];
+			  this.vehicleInfoList = [];
 			},
 			// 校验
 			noValidate() {
@@ -269,6 +310,10 @@
 			handleCloseTeamList() {
 				this.teamListShow = false;
 			},
+			// 更改选中的调度者
+			changeTeamCodes(data) {
+				this.teamCodes = data;
+			},
 			// 打开车辆列表
 			handleOpenVehicleList() {
 				this.vehicleListShow = true;
@@ -276,6 +321,10 @@
 			// 取消车辆列表
 			handleCloseVehicleList() {
 				this.vehicleListShow = false;
+			},
+			// 更改选中的车辆
+			changeVehicleInfoList(data) {
+				this.vehicleInfoList = data;
 			}
 		}
 	}
