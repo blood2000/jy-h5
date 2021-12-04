@@ -13,11 +13,15 @@ uniRequest.defaults.headers['App-Code'] = headers['App-Code']
 uniRequest.defaults.headers['App-Type'] = headers['App-Type']
 uniRequest.defaults.headers['App-Version'] = headers['App-Version']
 uniRequest.defaults.headers['Terminal-Type'] = headers['Terminal-Type']
-uniRequest.defaults.headers['Authorization'] = uni.getStorageSync('token') || '';
+uniRequest.defaults.headers['Authorization'] = uni.getStorageSync('token') || headers['Authorization'];
 
 // 请求拦截
 uniRequest.interceptors.request.use(
 	config => {
+		
+		
+		config.headers.Authorization = uni.getStorageSync('token') || headers['Authorization'];
+		console.log('请求头cc', JSON.stringify(config.headers.Authorization));
 
 		if(config.data && config.data.isArrayQuery){
 			if (config.data.isArrayQuery) {

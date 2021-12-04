@@ -21,14 +21,20 @@ Vue.use(VueJsonp)
 import uView from "uview-ui";
 Vue.use(uView);
 
-
+// #ifdef H5
 // 接收App传过来的数据
 window.handleMessage = (_data)=>{
+    store.dispatch('getLoginInfoAction', {
+        'Authorization': _data.token
+    });
     _data.token && uni.setStorageSync('token', _data.token);
 }
+// #endif
 
 // 测试
-handleMessage({ token: '6a6bb3fe-d7dd-4ffd-817d-e4e8d1bacbb2' })
+if(process.env.ENV === 'development'){
+    handleMessage({ token: 'f70b9ad9-4694-4f82-82aa-614d8ddd3435' })
+}
 
 Vue.prototype.$onLaunched = new Promise(resolve => {
 	Vue.prototype.$isResolve = resolve;

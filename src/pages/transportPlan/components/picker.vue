@@ -3,12 +3,12 @@
 		@change="handlerChange($event)">
 		<view class="ly-flex-pack-end">
 			<slot>
-				<view v-if="value" class="picker-input">
-					{{ range[range.findIndex(res => res.dictValue===value)].dictLabel }}
+				<view v-if="(_value || _value ===0) && range.length > 0" class="picker-input">
+					{{ range[_value].dictLabel }}
 				</view>
 				<view class="picker-placeholder" v-else>{{placeholder}}</view>
 			</slot>
-			<u-icon name="arrow-down-fill" size='12'></u-icon>
+			<u-icon name="arrow-down-fill" size='7' color="#999999" class="yangiwiss"></u-icon>
 		</view>
 	</picker>
 </template>
@@ -29,11 +29,14 @@
 		},
 
 		computed:{
-			_value:{
-				get(){
-					const index = this.range.findIndex(e=> e.dictValue === this.value)
-					return index
-				}
+			_value(){
+				if(!this.value && this.value !== 0 && this.range.length <= 0) return
+
+				const index = this.range.findIndex(e=> e.dictValue === this.value)
+
+				if(index === -1) return
+
+				return index
 			}
 		},
 
@@ -47,5 +50,8 @@
 	}
 </script>
 
-<style>
+<style lang="scss" scoped>
+	.yangiwiss{
+		margin-left: 13upx;
+	}
 </style>
