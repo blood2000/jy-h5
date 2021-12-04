@@ -737,7 +737,7 @@
 				if(!this.noValidate()) return
 
 				// s= 判断一下电子围栏是否重复
-				if (this.ruleForm.startAddressId === this.ruleForm.endAddressId && this.ruleForm.startAddressWlId === this.ruleForm.endAddressWlId) {
+				if (this.form.startAddressId === this.form.endAddressId && this.form.startAddressWlId === this.form.endAddressWlId) {
 					this.msgError(`接单电子围栏 和 卸货电子围栏 不能相同`);
 					return;
 				}
