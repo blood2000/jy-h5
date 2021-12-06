@@ -1,55 +1,76 @@
 <!-- 场区管理 -->
 <template>
-  <view class="building-content">
-    <HeaderBar :title="title" @back="back"></HeaderBar>
+  <view class="content-page">
+	<u-navbar title="选择物料" @leftClick="navigateBack" safeAreaInsetTop fixed placeholder >
+		<view slot="right" @click="handleAdd" class="hwiunefwiniwn">选择物料</view>
+	</u-navbar>
+    <!-- <HeaderBar :title="title" @back="back"></HeaderBar> -->
     <!-- main -->
-    <div class="building-main">
-      <div class="building-main-side">
-        <!-- 菜单栏 -->
-        <SiderBar :siderList="buildingList" @changeBuilding="changeBuilding" />
-        <div class="building-main-side-add" @click="toAddBuildingType">
-          <uni-icons type="plus-filled" color="#3A65FF" size="30"></uni-icons>
-        </div>
-      </div>
-      <!-- 内容区域 -->
-      <div class="building-main-content">
-        <div class="building-box-1 building-bottom-line">
-          <div class="building-box-left flex-1">
-            共{{ activeBuilding.num }}条记录
-          </div>
-          <div class="building-box-right">
-            <div class="building-as-btn building-default">编辑分类</div>
-            <div class="building-as-btn" @click="addBuilding">添加场区</div>
-          </div>
-        </div>
-
-        <div class="building-main-content-body">
-          <div
-            class="building-item-box"
-            v-for="(item, index) in activeBuilding.list"
-            :key="index"
-          >
-            <div class="building-item-box-title">{{ item.name }}</div>
-            <div class="building-item-box-content"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <view class="mainsieejiwjfiw">
+    	<!-- 搜索框 -->
+		<u-search shape="square" bgColor="#fff" :showAction="false" placeholder="请输入物料名称" v-model="sfaijidsss"></u-search>
+		
+		<template v-if="true">
+			<view class="sifhwiwiewewe">
+				共 <text class="hfehiehwweee">3</text> 条记录
+			</view>
+			<!-- 列表 -->
+			<view class="lsit-box">
+				<view class="sfwefwfewefwsddd">
+					<u-list
+						@scrolltolower="scrolltolower"
+						preLoadScreen="1.5"
+					>
+						<u-list-item
+							v-for="(item, index) in indexList"
+							:key="index"
+						>
+							<u-cell
+								:title="`列表长度-${index + 1}`"
+							>
+								<u-avatar
+									slot="icon"
+									shape="square"
+									size="35"
+									:src="item.url"
+									customStyle="margin: -3px 5px -3px 0"
+								></u-avatar>
+							</u-cell>
+						</u-list-item>
+					</u-list>
+				</view>
+			</view>
+		</template>
+		
+		<NonePage v-else></NonePage>
+    </view>
   </view>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import mockData from "../building/v1/config/mockData.js";
+import mockData from "./mockData.js";
 import SiderBar from "../../components/Building/SiderBar.vue";
 import HeaderBar from "../../components/Building/HeaderBar.vue";
 export default {
   data() {
     return {
-      title: "场区管理",
-      buildingList: [],
-      activeIndex: 0,
-      activeBuilding: {},
+	  wdheight: '',
+      sfaijidsss:'',
+	  
+	  indexList: [],
+		urls: [
+			'https://cdn.uviewui.com/uview/album/1.jpg',
+			'https://cdn.uviewui.com/uview/album/2.jpg',
+			'https://cdn.uviewui.com/uview/album/3.jpg',
+			'https://cdn.uviewui.com/uview/album/4.jpg',
+			'https://cdn.uviewui.com/uview/album/5.jpg',
+			'https://cdn.uviewui.com/uview/album/6.jpg',
+			'https://cdn.uviewui.com/uview/album/7.jpg',
+			'https://cdn.uviewui.com/uview/album/8.jpg',
+			'https://cdn.uviewui.com/uview/album/9.jpg',
+			'https://cdn.uviewui.com/uview/album/10.jpg',
+		]
     };
   },
 
@@ -64,9 +85,18 @@ export default {
   },
   async onLoad() {
     await this.$onLaunched;
+	let _this = this
+	// uni.getSystemInfo({
+	// 	success: function (res) {
+	// 		// console.log(res.windowHeight);
+	// 		_this.wdheight = (res.windowHeight -122 -44)*2 +"upx" // 502
+	// 	}
+	// });
+	
+	
+	this.loadmore()
   },
   onShow() {
-    this.getBuildingList();
   },
 
   onPullDownRefresh() {
@@ -77,11 +107,26 @@ export default {
   },
 
   methods: {
-    back() {
-      uni.navigateBack({
-        delta: 1,
-      });
+    navigateBack() {
+    	uni.navigateBack({
+    		delta: 1
+    	})
     },
+	// s= 列表相关
+	scrolltolower() {
+		this.loadmore()
+	},
+	loadmore() {
+		for (let i = 0; i < 30; i++) {
+			this.indexList.push({
+				url: this.urls[uni.$u.random(0, this.urls.length - 1)]
+			})
+		}
+	},
+	
+	// e=
+	
+	
     //获取场区数据
     getBuildingList() {
       this.buildingList = mockData.buildingList;
@@ -115,8 +160,51 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
-.detail-container {
-  overflow-y: hidden;
-  padding-bottom: 0;
-}
+	.content-page{
+		font-size: 28upx;
+		font-family: PingFang SC;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		display: felx;
+		flex-direction: column;
+	}
+	.hwiunefwiniwn{
+		font-weight: 400;
+		color: #3A65FF;
+	}
+	.mainsieejiwjfiw{
+		height: calc(100% - 44px) ;
+		padding: 24upx 32upx;
+		background: #F5F5F5;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+	
+	.sifhwiwiewewe{
+		font-weight: bold;
+		margin: 24upx 0;
+		color: #878787;
+		.hfehiehwweee{
+			color: #333333;
+			padding: 0 10upx;
+		}
+	}
+	
+	.lsit-box{
+		max-height: calc(100% - 75px) ;
+		width: 100%;
+		padding: 22upx;
+		background: #FFFFFF;
+		border-radius: 16px;
+		.sfwefwfewefwsddd{
+			height: 100%;
+			overflow: hidden;
+		}
+	}
+	
+	
 </style>

@@ -6,17 +6,17 @@
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     // 启动页
 	{
-		"path": "pages/transportPlan/index",
+		"path": "pages/material/index",
 		"style": {
-		  "navigationBarTitleText": "运输计划",
+		  "navigationBarTitleText": "物料管理",
 		  "navigationStyle": "custom",
 		  "enablePullDownRefresh": true,
-		  "navigationBarBackgroundColor": "#ffffff",
-				"app-plus": {
-				  "bounce": "none"
-				}
+		  "navigationBarBackgroundColor":"#ffffff",
+		  "app-plus": {
+			"bounce": "none"
+		  }
 		}
-	  },
+	},
     {
       "path": "pages/generalTable/index",
       "style": {
@@ -133,18 +133,7 @@
 		}
 	  }
 	},
-	{
-	  "path": "pages/material/index",
-	  "style": {
-	    "navigationBarTitleText": "物料管理",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": true,
-	    "navigationBarBackgroundColor":"#ffffff",
-		"app-plus": {
-		  "bounce": "none"
-		}
-	  }
-	},
+	
 	{
 	  "path": "pages/material/materialCategory",
 	  "style": {
@@ -156,6 +145,18 @@
 	  		  "bounce": "none"
 	  		}
 	  }
+	},
+	{
+		"path": "pages/transportPlan/index",
+		"style": {
+		  "navigationBarTitleText": "运输计划",
+		  "navigationStyle": "custom",
+		  "enablePullDownRefresh": true,
+		  "navigationBarBackgroundColor": "#ffffff",
+				"app-plus": {
+				  "bounce": "none"
+				}
+		}
 	},
 	
 	{
