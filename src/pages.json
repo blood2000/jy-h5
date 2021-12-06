@@ -10,8 +10,7 @@
 		"style": {
 		  "navigationStyle": "custom",
 		  "navigationBarTitleText": "运输计划",
-		  "enablePullDownRefresh": true,
-		  "navigationBarBackgroundColor": "#ffffff"
+		  "enablePullDownRefresh": true
 		}
 	  },
     {

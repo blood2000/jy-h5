@@ -12,7 +12,8 @@
 		},
 		computed: {
 			...mapState({
-			  headerInfo: state => state.header.headerInfo
+			  headerInfo: state => state.header.headerInfo,
+			  statusBarHeight: state => state.header.statusBarHeight,
 			})
 		},
 		watch: {
@@ -25,12 +26,13 @@
 				},
 				deep: true,
 				immediate: true
-			}
+			},
 		}
 	}
 </script>
 
 <style lang='scss'>
+	
 	@import "colorui/main.css";
 	@import "colorui/icon.css";
 	@import "uview-ui/index.scss";
@@ -63,4 +65,7 @@
 			font-size: 36upx !important;
 		}
 	}
+
+
+	
 </style>

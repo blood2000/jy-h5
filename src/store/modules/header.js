@@ -11,7 +11,9 @@ const store = {
 			"Produce-Code":"2c3c8c43b487432b9d67934a6c4dcbbe",
 			"statusBarHeight": 0
 		},
-		statusBarHeight: 0
+		statusBarHeight: 0,
+
+		appOption: {}
     },
     getters: {
 		
@@ -31,7 +33,12 @@ const store = {
         },
 		getStatusBarHeight: (state, val) => {
 			state.statusBarHeight = val || 0;
-		}
+		},
+
+		getAppOption: (state, val) => {
+			state.appOption = val || {};
+			console.log('接收到的数据', JSON.stringify(state.appOption));
+		},
     },
     actions: {
         getLoginInfoAction: ({ commit }, val) => {
@@ -42,7 +49,11 @@ const store = {
 		},
 		getStatusBarHeightAction: ({ commit }, val) => {
 		    commit('getStatusBarHeight', val)
-		}
+		},
+
+		setOption: ({ commit }, val) => {
+		    commit('getAppOption', val)
+		},
     }
 }
 export default store

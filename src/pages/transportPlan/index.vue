@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page">
 		
-		<u-navbar title="运输计划" @leftClick="navigateBack" safeAreaInsetTop placeholder fixed></u-navbar>
+		<HeaderBar title="运输计划" @back="navigateBack"></HeaderBar>
 		
 		<view class="ly-flex-pack-around">
 			<view class="sendPlan box-comm" @click="receivePlan">
@@ -63,20 +63,24 @@
 </template>
 
 <script>
+	import HeaderBar from '@/components/Building/HeaderBar2.vue'
+
 	import html2canvas from '@/components/html2canvas/html2canvas.vue'
 	import TkiQrcode from '@/components/tki-qrcode/tki-qrcode.vue'
 	import TransportCard from './components/TransportCard.vue'
-	import { pathToBase64, base64ToPath } from 'image-tools'
+	// import { pathToBase64, base64ToPath } from 'image-tools'
 	import { saveHeadImgFile } from '@/common/js/saveHeadImgFile'
-	import { orderPlanInfoList as getList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoUpdateStatus, teamSelectTeamListByCodes } from '@/config/service/transportPlan/transportationPlan.js'
+	import { orderPlanInfoList as getList} from '@/config/service/transportPlan/transportationPlan.js'
 	export default {
 		components: {
 			TransportCard,
 			TkiQrcode,
-			html2canvas
+			html2canvas,
+			HeaderBar
 		},
 		data() {
 			return {
+				statusBar: '0px',
 				// 二维码展示
 				show: false,
 				// 运输计划列表
@@ -155,21 +159,27 @@
 		},
 
 		async onLoad(options){
+			
+			if(process.env.ENV === 'development'){
+				options.token = '9e221761-bfad-4c9c-9bd7-24e42ca3a8c9'
+			}
 
-			// console.log('地址参数是~~~', JSON.stringify(options));
-			// 测试
-			options.token = '9e221761-bfad-4c9c-9bd7-24e42ca3a8c9'
+			// token赋值
+			if(options.token){
+				this.$store.dispatch('getLoginInfoAction', {
+					'Authorization': options.token
+				});
+				options.token && uni.setStorageSync('token', options.token)
 
-			this.$store.dispatch('getLoginInfoAction', {
-				'Authorization': options.token
-			});
-			options.token && uni.setStorageSync('token', options.token)
+			}
+			// 高度要赋值
+			options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
 
+			// 转成线上地址
 			try{
 				const imgInfo = await uni.getImageInfo({
 					src: "../../static/jylogo.png"
 				});
-
 				this.logoBase64 = imgInfo[1].path
 			}catch(e){
 				//TODO handle the exception
@@ -242,7 +252,7 @@
 			result(res) {
 				// console.log(res)
 				this.qrcode.src = res
-				this.domId = '#poster'
+				this.domId = '#poster' // 返回后生成海报
 			},
 
 			/**

@@ -1,6 +1,6 @@
 <template>
 	<view class="u-page">
-		<u-navbar :title="this.form.type == 0?'创建收货计划':'创建发货计划'" @leftClick="navigateBack" safeAreaInsetTop fixed placeholder></u-navbar>
+		<HeaderBar :title="this.form.type == 0?'创建收货计划':'创建发货计划'" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms :key="formsUpdate" ref='form' :rules="rules" :modelValue="form" label-width="150" err-show-type="toast">
 			
@@ -166,6 +166,8 @@
 </template>
 
 <script>
+
+	import HeaderBar from '@/components/Building/HeaderBar2.vue'
 	import { listInfo, orderInfoList, tenantCompanyInfoList, getDispatcherTeam, tenantCompanyAddressInfoList, 
 	tenantGoodsPolicyInfo,
 	getEffectiveGoodsList as goodspriceList,
@@ -188,7 +190,8 @@
 		components: {
 			pickers,
 			jsfunPicker,
-			TeamList
+			TeamList,
+			HeaderBar
 		},
 		data() {
 			return {
