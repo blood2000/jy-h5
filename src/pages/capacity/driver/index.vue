@@ -97,6 +97,7 @@
 				this.getList();
 			}
 		},
+		
 		methods: {
 			navigateBack() {
 				uni.navigateBack();

@@ -8,13 +8,10 @@
 	{
 		"path": "pages/transportPlan/index",
 		"style": {
-		  "navigationBarTitleText": "运输计划",
 		  "navigationStyle": "custom",
+		  "navigationBarTitleText": "运输计划",
 		  "enablePullDownRefresh": true,
-		  "navigationBarBackgroundColor": "#ffffff",
-				"app-plus": {
-				  "bounce": "none"
-				}
+		  "navigationBarBackgroundColor": "#ffffff"
 		}
 	  },
     {

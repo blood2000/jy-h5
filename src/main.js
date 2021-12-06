@@ -21,20 +21,24 @@ Vue.use(VueJsonp)
 import uView from "uview-ui";
 Vue.use(uView);
 
+// webview跳回应用
+import('@/utils/uni.webview.1.5.2.js')
+
 // #ifdef H5
 // 接收App传过来的数据
-window.handleMessage = (_data)=>{
-    store.dispatch('getLoginInfoAction', {
-        'Authorization': _data.token
-    });
-    _data.token && uni.setStorageSync('token', _data.token);
+window.sendOption = (_data)=>{
+    console.log('我被触发了, 收到的参数是~~~', JSON.stringify(_data));
+    // store.dispatch('getLoginInfoAction', {
+    //     'Authorization': _data.token
+    // });
+    // _data.token && uni.setStorageSync('token', _data.token);
 }
 // #endif
 
 // 测试
-if(process.env.ENV === 'development'){
-    handleMessage({ token: 'f70b9ad9-4694-4f82-82aa-614d8ddd3435' })
-}
+// if(process.env.ENV === 'development'){
+//     sendOption({ token: 'f70b9ad9-4694-4f82-82aa-614d8ddd3435' })
+// }
 
 Vue.prototype.$onLaunched = new Promise(resolve => {
 	Vue.prototype.$isResolve = resolve;

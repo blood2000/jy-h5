@@ -21,7 +21,7 @@ uniRequest.interceptors.request.use(
 		
 		
 		config.headers.Authorization = uni.getStorageSync('token') || headers['Authorization'];
-		console.log('请求头cc', JSON.stringify(config.headers.Authorization));
+		console.log('request中的请求头', JSON.stringify(config.headers.Authorization));
 
 		if(config.data && config.data.isArrayQuery){
 			if (config.data.isArrayQuery) {

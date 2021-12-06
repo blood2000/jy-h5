@@ -454,14 +454,15 @@
 		methods: {
 			// 获取运输公司
 			async gettransId() {
-				const _data = (await listInfo({ delFlag: 0 })).list;
+				const _data = (await listInfo()).list;
 				this.transIdOption = _data.map(e => {
 					return {
 						dictLabel: e.transName,
 						dictValue: e.id,
-						disable: e.delFlag !== 0
+						disable: e.delFlag !== '0'
 					};
-				});
+				}).filter(e=> !e.disable);
+				console.log(this.transIdOption);
 			},
 			// 获取货源列表
 			async getorderInfoIdOption(queData) {
@@ -477,7 +478,7 @@
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				});
+				}).filter(e=> !e.disable);
 			},
 			// 获取收发企业
 			async getTransceiverAddress() {
@@ -506,7 +507,7 @@
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				});
+				}).filter(e=> !e.disable);
 			},
 
 			// 获取发货企业
@@ -528,7 +529,7 @@
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				});
+				}).filter(e=> !e.disable);
 			},
 
 			// 调度者

@@ -1,7 +1,8 @@
 <template>
 	<view class="u-page">
-		<u-navbar title="运输计划" @leftClick="navigateBack" safeAreaInsetTop fixed placeholder>
-		</u-navbar>
+		
+		<u-navbar title="运输计划" @leftClick="navigateBack" safeAreaInsetTop placeholder fixed></u-navbar>
+		
 		<view class="ly-flex-pack-around">
 			<view class="sendPlan box-comm" @click="receivePlan">
 				<view class="ly-flex-align-center">
@@ -24,7 +25,7 @@
 		</view>
 		<template v-if="cardList && cardList.length > 0">
 			<view v-for="(item,index) in cardList" :key="index">
-				<TransportCard v-model="cardList[index]" @share='share' @handlerClick="handlerClick(item)"></TransportCard>
+				<TransportCard v-model="cardList[index]" @share='share(item)' @handlerClick="handlerClick(item)"></TransportCard>
 			</view>
 		</template>
 
@@ -32,38 +33,47 @@
 
 		<uni-load-more v-if="cardList && cardList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
 
-		<u-overlay :show="show" @click="show = false">
-			<view class="qrcode ly-flex-v ly-flex-align-center">
-				<view class="title">
-					<image src="../../static/transportPlan/title.png" mode="aspectFill" style="height:50px;width:250px">
-					</image>
+			<!-- html -->
+		<html2canvas ref="html2canvas" :domId="domId" @renderFinish="renderFinish" v-if="cbData">
+
+			<u-overlay :show="show" @click="()=>{show = false; cbData = null}" >
+
+				<view class="qrcode ly-flex-v ly-flex-align-center" id="poster">
+					<view class="title">
+						<image src="../../static/transportPlan/title.png" mode="aspectFill" style="height:50px;width:250px">
+						</image>
+					</view>
+					<view class="qr" @tap.stop >
+						<tki-qrcode cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
+							:foreground="qrcode.foreground" :pdground="qrcode.pdground" :icon="qrcode.icon" :iconSize="qrcode.iconsize" :lv="qrcode.lv"
+							:onval="qrcode.onval" :loadMake="qrcode.loadMake" :usingComponents="true" @result="result" />
+					</view>
+					<view class="message mb10 mt10">
+						司机扫码即可接单，您也可以分享链接到微信中让司机点击接单
+					</view>
+					<view class="btn ly-flex-pack-around">
+						<button @click.stop="saveImg">保存到手机</button>
+						<button @click.stop="wxshare">分享链接到微信</button>
+					</view>
 				</view>
-				<view class="qr" @tap.stop>
-					<tki-qrcode cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
-						:foreground="qrcode.foreground" :pdground="qrcode.pdground" :icon="qrcode.icon" :iconSize="qrcode.iconsize" :lv="qrcode.lv"
-						:onval="qrcode.onval" :loadMake="qrcode.loadMake" :usingComponents="true" @result="result" />
-				</view>
-				<view class="message mb10 mt10">
-					司机扫码即可接单，您也可以分享链接到微信中让司机点击接单
-				</view>
-				<view class="btn ly-flex-pack-around">
-					<button @click.stop="">保存到手机</button>
-					<button @click.stop="wxshare">分享链接到微信</button>
-				</view>
-			</view>
-		</u-overlay>
+
+			</u-overlay>
+		</html2canvas>
 	</view>
 </template>
 
 <script>
-
-	import TkiQrcode from '../../components/tki-qrcode/tki-qrcode.vue'
+	import html2canvas from '@/components/html2canvas/html2canvas.vue'
+	import TkiQrcode from '@/components/tki-qrcode/tki-qrcode.vue'
 	import TransportCard from './components/TransportCard.vue'
+	import { pathToBase64, base64ToPath } from 'image-tools'
+	import { saveHeadImgFile } from '@/common/js/saveHeadImgFile'
 	import { orderPlanInfoList as getList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoUpdateStatus, teamSelectTeamListByCodes } from '@/config/service/transportPlan/transportationPlan.js'
 	export default {
 		components: {
 			TransportCard,
 			TkiQrcode,
+			html2canvas
 		},
 		data() {
 			return {
@@ -80,6 +90,10 @@
 					contentnomore: '没有更多了'
 				},
 
+				domId:'',
+
+				cbData: null,
+
 
 				loading: false,
 				queryParams: { // 请求参数
@@ -89,20 +103,25 @@
 
 				// 二维码配置
 				//二维码 D:\my\zjjy-h5\src\static\download\driver.png
+				qrcSrc: 'https://api.chaohaoyun.cn/qrcode/cym;',
+				// qrcSrc: 'https://api.chaohaoyun.cn/qrcode/cym;999d295b69764d399c7de6a0223b77fe',
 				qrcode: {
-					val: 'https://api.chaohaoyun.cn/qrcode/cym;999d295b69764d399c7de6a0223b77fe', // 要生成的二维码值
+					val: '', // 要生成的二维码值
 					size: 460, // 二维码大小
 					unit: 'upx', // 单位
 					background: '#FFFFFF', // 背景色
 					foreground: '#000000', // 前景色
 					pdground: '#000000', // 角标色
-					icon: '../../static/download/driver.png', // 二维码图标
+					icon: '../../static/jylogo.png', // 二维码中心图标
 					iconsize: 80, // 二维码图标大小
 					lv: 3, // 二维码容错级别 ， 一般不用设置，默认就行
 					onval: true, // val值变化时自动重新生成二维码
 					loadMake: true, // 组件加载完成后自动生成二维码
 					src: '' // 二维码生成后的图片地址或base64
 				},
+
+				filePath:'', // 海报地址
+				logoBase64:''
 
 
 			}
@@ -111,7 +130,7 @@
 		computed:{
 			_queryParams(){
 				return this.queryParams
-			}
+			},
 		},
 
 		async onPullDownRefresh() {
@@ -135,11 +154,27 @@
 			}
 		},
 
-		onLoad(options){
-			console.log('请求头',options.token);
+		async onLoad(options){
+
+			// console.log('地址参数是~~~', JSON.stringify(options));
+			// 测试
+			options.token = '9e221761-bfad-4c9c-9bd7-24e42ca3a8c9'
+
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': options.token
 			});
+			options.token && uni.setStorageSync('token', options.token)
+
+			try{
+				const imgInfo = await uni.getImageInfo({
+					src: "../../static/jylogo.png"
+				});
+
+				this.logoBase64 = imgInfo[1].path
+			}catch(e){
+				//TODO handle the exception
+			}
+
 			this.getList();
 		},
 
@@ -173,19 +208,19 @@
 			// e=
 
 			navigateBack() {
-				uni.navigateBack({
-					delta: 1
-				})
+				uni.webView.navigateBack()
 			},
 			share(row) {
-				console.log(row);
+				// console.log(row);
+				this.cbData = row
+				this.$set(this.qrcode, 'val', this.qrcSrc + row.id)
+				console.log(this.qrcode);
+				this.filePath = ''
 				this.show = true
 			},
 
 			// 点击
 			handlerClick(_data){
-				console.log(_data);
-				// uni.$emit('caback')
 				const { receiveType, id } = _data
 				uni.navigateTo({
 					url: `./add?type=${receiveType - 1}&id=${id}`
@@ -205,19 +240,66 @@
 
 			// 二维码返回地址
 			result(res) {
-				console.log(res)
+				// console.log(res)
 				this.qrcode.src = res
+				this.domId = '#poster'
 			},
+
+			/**
+			 * 渲染完毕接收图片
+			 * @param {String} filePath
+			 */
+			async renderFinish(filePath) {
+				 this.filePath = await saveHeadImgFile(filePath)
+			},
+
+
+			// s=与应用交互
+			// 保存海报
+			saveImg(){
+				if(this.filePath){
+					this.sendOption('save', this.filePath)
+				} else {
+					uni.showToast({
+						title: "图片不存在",
+						icon: "none",
+						mask: true,
+					})
+				}
+			},
+			
 			
 			// 分享到微信
 			wxshare(){
-				
+
+				// console.log('分享的连接是:' , this.qrcode.val);
+				this.sendOption('onShare', {
+					shareUrl: this.qrcode.val, // 分享连接
+					shareTitle:"承运链接", // 分享的标题
+					shareContent: `点此接【${ this.cbData.name }】的运单`, // 分享的描述
+					shareImg: this.logoBase64 || "http://qn.kemean.cn//upload/202004/18/1587189024467w6xj18b1.jpg",
+					appId: undefined, // 默认不传type的时候，必须传appId和appPath才会显示小程序图标
+					appPath: undefined,
+					appWebUrl: undefined
+				})
+			},
+
+			// 应用交互
+			sendOption(action, obj){
+				uni.webView.postMessage({  
+					data: {  
+						action: action,
+						data: obj
+					}  
+				});
 			}
+			// e=
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+
 	.sendPlan,
 	.receivePlan{
 		margin-top: 20rpx;
