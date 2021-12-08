@@ -8,8 +8,8 @@
       :class="activeSider === index ? 'active-sider' : ''"
       @click="changeSiderBar(index)"
     >
-      <div>{{item.name}}</div>
-      <div>({{item.num}})</div>
+      <div>{{item.buildingName}}</div>
+      <div>({{item.count}})</div>
     </div>
   </div>
 </template>

@@ -31,18 +31,18 @@
             maxlength="32"
             placeholder="请输入"
             type="text"
-            v-model="buildingMsg.name"
+            v-model="buildingMsg.buildingName"
             cursor-spacing="150"
           />
         </div>
       </div>
       <!-- 位置 -->
-      <div class="building-body-box">
+      <!-- <div class="building-body-box">
         <div class="building-title1">位置信息</div>
         <div class="map-box">
           <Map :locationInfo="locationMsg"></Map>
         </div>
-      </div>
+      </div> -->
       <!-- 备注 -->
       <div class="building-body-box">
         <div class="building-title1">备注信息</div>
@@ -57,7 +57,7 @@
       </div>
     </div>
     <div class="building-btn-box">
-      <div class="building-btn">添加</div>
+      <div class="building-btn" @click="addBuilding">添加</div>
     </div>
   </div>
 </template>
@@ -65,8 +65,10 @@
 <script>
 import { mapState } from "vuex";
 import HeaderBar from "../../../components/Building/HeaderBar.vue";
+import buildingRequest from "../../../config/buildingRequest";
 import Map from "../../../components/Building/Map.vue";
 import mockData from "./config/mockData";
+import { buildingTypes } from "./config/dict";
 export default {
   data() {
     return {
@@ -76,7 +78,7 @@ export default {
       noChoose: true,
       buildingMsg: {
         buildingType: "",
-        name: "",
+        buildingName: "",
         remark: "",
       },
       locationMsg: {
@@ -98,8 +100,8 @@ export default {
   },
 
   onShow() {
-    this.buildingTypes = mockData.buildingTypes;
-    this.getLocationInfo();
+    this.buildingTypes = buildingTypes;
+    // this.getLocationInfo();
   },
 
   methods: {
@@ -111,7 +113,8 @@ export default {
     changeTypes(e) {
       this.buildingTypeIndex = e.detail.value;
       this.noChoose = false;
-      this.buildingMsg.buildingType = this.buildingTypeIndex;
+      this.buildingMsg.buildingType =
+        this.buildingTypes[this.buildingTypeIndex].type;
     },
     // 获取地理位置
     getLocationInfo() {
@@ -125,6 +128,50 @@ export default {
           that.locationMsg.longitude = res.longitude;
         },
       });
+    },
+    addBuilding() {
+      console.log("添加场区参数", this.buildingMsg);
+      if (!this.validParams()) return;
+      const config = {
+        url: "addBuilding",
+        header: this.headerInfo,
+        method: "POST",
+        data: this.buildingMsg,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("添加场区分类请求", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success:  (res) => {
+            if (res.confirm) {
+              //点击确认
+              this.back();
+            }
+          },
+        });
+      });
+    },
+
+    validParams() {
+      if (this.noChoose) {
+        uni.showToast({
+          title: "请选择场区分类",
+          icon: "none",
+          duration: 1500,
+        });
+        return false;
+      }
+      if (!this.buildingMsg.buildingName) {
+        uni.showToast({
+          title: "请输入场区名称",
+          icon: "none",
+          duration: 1500,
+        });
+        return false;
+      }
+      return true;
     },
   },
 };

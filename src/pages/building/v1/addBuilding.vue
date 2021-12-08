@@ -20,23 +20,23 @@
         </div>
       </div>
       <!-- 位置 -->
-      <div class="building-body-box">
+      <!-- <div class="building-body-box">
         <div class="building-title1">位置信息</div>
         <div class="map-box">
           <Map :locationInfo="locationMsg"></Map>
         </div>
-      </div>
+      </div> -->
       <!-- 选择物料 -->
       <!-- <MaterialPicker
-        v-if="buildingMsg.buildingType !== '0'"
+        v-if="buildingMsg.buildingType !== 1"
         :materialList="materialList"
         @changeMaterialList="changeMaterialList"
       ></MaterialPicker> -->
 
-      <div class="building-input-box" v-if="buildingMsg.buildingType !== '0'">
+      <div class="building-input-box" v-if="buildingMsg.buildingType !== 1">
         <div class="building-input-item">
-          <div class="building-title1">请选择存储的物料</div>
-          <div class="placeholder" @click="chooseMaterial">
+          <div class="building-title1">请选择存储的物料 <span class="required">*</span></div>
+          <div class="placeholder" @click="toChooseMaterial">
             请选择
             <uni-icons type="forward" size="14"></uni-icons>
           </div>
@@ -45,10 +45,10 @@
         <div class="building-input-content">
           <div
             class="building-input-content-item"
-            v-for="(item, index) in choosedList"
+            v-for="(item, index) in choosedMaterial"
             :key="index"
           >
-            {{ item.name }}
+            {{ item.goodsName }}
             <span class="building-input-delete" @click="deleteItem(index)">
               <uni-icons type="clear" color="red" size="14"></uni-icons>
             </span>
@@ -57,7 +57,7 @@
       </div>
 
       <!-- 物料相关 -->
-      <div class="building-input-box" v-if="buildingMsg.buildingType !== '0'">
+      <div class="building-input-box" v-if="buildingMsg.buildingType !== 1">
         <div class="building-input-item">
           <div class="building-title1">
             物料单位 <span class="required">*</span>
@@ -107,6 +107,7 @@
 <script>
 import { mapState } from "vuex";
 import HeaderBar from "../../../components/Building/HeaderBar.vue";
+import buildingRequest from "../../../config/buildingRequest";
 import Map from "../../../components/Building/Map.vue";
 import MaterialPicker from "../../../components/Building/MaterialPicker.vue";
 import mockData from "./config/mockData";
@@ -142,13 +143,13 @@ export default {
       isAndroid: (state) => state.header.isAndroid,
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
-      materialList: (state) => state.building.materialList,
+      choosedMaterial: (state) => state.building.choosedMaterial,
     }),
   },
 
   onLoad(option) {
     this.buildingMsg.buildingType = option.type;
-    if (option.type === "0") {
+    if (option.type === 1) {
       // 磅房
       this.title = "添加设施（地磅类）";
     } else {
@@ -157,10 +158,12 @@ export default {
   },
 
   onShow() {
+    console.log(this.choosedMaterial)
     this.buildingTypes = mockData.buildingTypes;
     this.getChoosedList();
     // this.handleMaterialList();
     this.getLocationInfo();
+
   },
 
   methods: {
@@ -191,15 +194,15 @@ export default {
     changeMaterialList(list) {
       this.materialList = JSON.parse(list);
     },
-    chooseMaterial() {
+    toChooseMaterial() {
       uni.navigateTo({
-        url: "./materialList",
+        url: "./materialList?check=1",
       });
     },
     //获取已选物料列表
     getChoosedList() {
       let choosedList = [];
-      this.materialList.map((item) => {
+      this.choosedMaterial.map((item) => {
         item.list.map(itm => {
           if (itm.checked) {
           choosedList.push(itm);

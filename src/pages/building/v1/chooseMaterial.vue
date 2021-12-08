@@ -34,6 +34,9 @@
         </div>
       </div>
     </div>
+    <div class="building-bottom">
+      <div class="building-btn">添加</div>
+    </div>
   </div>
 </template>
 
@@ -92,4 +95,7 @@ export default {
 
 </script>
 <style lang='scss' scoped>
+.building-btn {
+  width: 100%;
+}
 </style>
