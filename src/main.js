@@ -4,6 +4,7 @@ import './common/css/index.scss'
 import "./common/css/building.scss";
 //引入vuex
 import store from './store'
+console.log(store,'请求---');
 //与app桥接
 // import './config/bridge.js'
 //自定义指令
@@ -19,6 +20,17 @@ Vue.use(VueJsonp)
 // uview
 import uView from "uview-ui";
 Vue.use(uView);
+
+// webview跳回应用
+import('@/utils/uni.webview.1.5.2.js')
+
+// #ifdef H5
+// 接收App传过来的数据
+window.sendOption = (_data)=>{
+    console.log('我被触发了, 收到的参数是~~~', JSON.stringify(_data));
+    store.dispatch('setOption', _data);
+}
+// #endif
 
 Vue.prototype.$onLaunched = new Promise(resolve => {
 	Vue.prototype.$isResolve = resolve;
