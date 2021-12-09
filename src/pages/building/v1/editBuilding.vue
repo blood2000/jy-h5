@@ -1,4 +1,5 @@
-<!-- 添加场区 -->
+
+<!-- 编辑场区 -->
 <template>
   <div class="building-content">
     <HeaderBar :title="title" @back="back"></HeaderBar>
@@ -69,7 +70,7 @@
             maxlength="9"
             placeholder="请输入"
             type="text"
-            v-model="buildingMsg.goodsUnit"
+            v-model="buildingMsg.building.goodsUnit"
             cursor-spacing="150"
           />
         </div>
@@ -82,7 +83,7 @@
             maxlength="16"
             placeholder="请输入"
             type="text"
-            v-model="buildingMsg.maxVolume"
+            v-model="buildingMsg.building.maxVolume"
             cursor-spacing="150"
           />
         </div>
@@ -101,7 +102,7 @@
       </div>
     </div>
     <div class="building-btn-box">
-      <div class="building-btn" @click="addBuilding">添加</div>
+      <div class="building-btn" @click="editBuilding">编辑</div>
     </div>
   </div>
 </template>
@@ -117,15 +118,16 @@ export default {
   data() {
     return {
       title: "",
-      buildingTypeIndex: 0,
-      noChoose: true,
+      bid: '',
       buildingMsg: {
         buildingType: "",
         buildingName: "",
         pid: "",
         remark: "",
-        goodsUnit: "",
-        maxVolume: "",
+        building: {
+          goodsUnit: '',
+          maxVolume: '',
+        }
       },
       locationMsg: {
         latitude: "",
@@ -143,6 +145,7 @@ export default {
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
       choosedMaterial: (state) => state.building.choosedMaterial,
+      materialList: (state) => state.building.materialList,
     }),
   },
 
@@ -152,22 +155,21 @@ export default {
     console.log(option.data);
     this.buildingMsg.buildingType = data.type;
     this.buildingMsg.pid = data.pid;
+    this.bid = data.id;
     if (data.type === 1) {
       // 磅房
-      this.title = "添加设施（地磅类）";
+      this.title = "编辑设施（地磅类）";
     } else {
-      this.title = "添加场区（仓储类）";
+      this.title = "编辑场区（仓储类）";
     }
     //获取当前物料并存入vuex
     //TODO...  this.$store.commit("getChoosedMaterial", this.choosedList);
-  
+    this.getBuildingInfo();
   },
 
   onShow() {
     console.log(this.choosedMaterial);
-    // this.getChoosedList();
-    // this.handleMaterialList();
-    // this.getLocationInfo();
+  
   },
 
   methods: {
@@ -176,7 +178,42 @@ export default {
         delta: 1,
       });
     },
-    
+    //获取场区信息
+    getBuildingInfo() {
+      const config = {
+        url: "getBuildingInfo",
+        header: this.headerInfo,
+        params: this.bid,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("获取场区信息", res);
+        if (res.code === 200) {
+          this.buildingMsg = {...this.buildingMsg, ...res.data};
+          if (this.buildingMsg.buildingType !== 1) {
+            this.handleCurMaterial(res.data.building);
+          }
+          
+        }
+      });
+    },
+    //当前场区物料数据处理
+    handleCurMaterial(cur) {
+      console.log(this.materialList)
+      if (cur.goodsTypes) {
+        let curMaterial = cur.goodsTypes.split(',');
+        let choosedMaterial = [];
+        this.materialList.map(mItem => {
+           curMaterial.map(cItem => {
+              if (cItem === mItem.goodsType) {
+                mItem.checked = true;
+                choosedMaterial.push(mItem);
+              }
+            })
+        })
+        this.$store.commit('getChoosedMaterial', choosedMaterial);
+      }
+    },
+
     // 获取地理位置
     getLocationInfo() {
       var that = this;
@@ -207,7 +244,7 @@ export default {
 
     //请求参数
     getReqData() {
-      let { buildingType, buildingName, pid, remark, goodsUnit, maxVolume } =
+      let { buildingType, buildingName, pid, remark, building } =
         this.buildingMsg;
 
       if (!buildingName) {
@@ -219,7 +256,7 @@ export default {
         return false;
       }
 
-      if (this.buildingMsg.buildingType !== 1) {
+      if (buildingType !== 1) {
         if (this.choosedMaterial.length === 0) {
           uni.showToast({
             title: "请选择物料",
@@ -229,7 +266,7 @@ export default {
           return false;
         }
 
-        if (!goodsUnit) {
+        if (!building.goodsUnit) {
           uni.showToast({
             title: "请选择物料单位",
             icon: "none",
@@ -238,7 +275,7 @@ export default {
           return false;
         }
 
-        if (!maxVolume) {
+        if (!building.maxVolume) {
           uni.showToast({
             title: "请输入最大容积",
             icon: "none",
@@ -251,34 +288,27 @@ export default {
         this.choosedMaterial.map((item) => {
           goodsTypes += item.goodsType + ",";
         });
+        buildingMsg.building.goodsTypes = goodsTypes;
+        // let reqData = {
+        //   buildingType,
+        //   buildingName,
+        //   pid,
+        //   remark,
+        //   building
+        // };
 
-        let reqData = {
-          buildingType,
-          buildingName,
-          pid,
-          remark,
-          building: { goodsUnit, maxVolume, goodsTypes },
-        };
-
-        return reqData;
-      } else {
-        return  {
-          buildingType,
-          buildingName,
-          pid,
-          remark,
-        };
-      }
+        // return reqData;
+      } 
     },
 
-    addBuilding() {
+    editBuilding() {
       let data = this.getReqData();
       if (!data) return;
       const config = {
         url: "insertSubBuilding",
         header: this.headerInfo,
         method: "POST",
-        data: data,
+        data: this.buildingMsg,
       };
       buildingRequest(config).then((res) => {
         console.log("添加场区", res);

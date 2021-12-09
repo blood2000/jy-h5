@@ -1,7 +1,14 @@
 <!-- 物料类别 -->
 <template>
   <div class="building-content">
-    <HeaderBar :title="title" :rightText="rightText" @back="back" @jump="jump">
+    <HeaderBar :title="title" @back="back" v-if="checkMode === 1"> </HeaderBar>
+    <HeaderBar
+      :title="title"
+      :rightText="rightText"
+      @back="back"
+      @jump="jump"
+      v-else
+    >
     </HeaderBar>
     <div class="search-box">
       <div class="search-input-box">
@@ -13,20 +20,24 @@
           type="text"
           v-model="materialName"
         />
-        <!-- <view class="enter" @click="searchUserByTel"></view> -->
+        <view class="enter" @click="searchName"></view>
       </div>
     </div>
     <div class="building-body">
       <div class="building-body-title building-title2">共{{ total }}条记录</div>
-      <div class="building-input-box">
+      <div class="building-input-box" v-if="renderList.length > 0">
         <div
           class="building-input-item"
           v-for="(item, index) in renderList"
           :key="index"
         >
           <div class="building-input-item-name">{{ item.goodsName }}</div>
-          <div class="building-input-item-icon" @click="chooseItem(item)" v-if="checkMode === 1">
-            <div class="as-checkbox" >
+          <div
+            class="building-input-item-icon"
+            @click="chooseItem(item)"
+            v-if="checkMode === 1"
+          >
+            <div class="as-checkbox">
               <uni-icons
                 v-show="item.checked"
                 type="checkmarkempty"
@@ -34,16 +45,13 @@
                 color="#3A65FF"
               ></uni-icons>
             </div>
-            
           </div>
-          <div class="building-input-item-icon" @click="deleteItem(index)" v-else>
-            <uni-icons
-             
-              type="trash"
-              size="16"
-              color="red"
-              
-            ></uni-icons>
+          <div
+            class="building-input-item-icon"
+            @click="deleteItem(item)"
+            v-else
+          >
+            <uni-icons type="trash" size="16" color="red"></uni-icons>
           </div>
         </div>
       </div>
@@ -82,17 +90,16 @@ export default {
   },
 
   onLoad(option) {
-    console.log(option)
+    console.log(option);
     if (option.check) {
       this.checkMode = option.check * 1;
     } else {
       this.checkMode = 0;
     }
-    this.getAddedGoods();
   },
 
   onShow() {
-    
+    this.getAddedGoods();
     // this.getChoosedList();
   },
 
@@ -104,7 +111,7 @@ export default {
     },
     jump() {
       uni.navigateTo({
-        url: "./chooseMaterial",
+        url: "./chooseMaterial?choosedList=" + JSON.stringify(this.choosedList),
       });
     },
     searchName() {
@@ -117,30 +124,31 @@ export default {
       });
       this.renderList = renderList;
       this.total = this.renderList.length;
+      // console.log(this.choosedList)
     },
     //获取已添加到选项的物料列表
     getAddedGoods() {
       const config = {
         url: "getAddedGoods",
         header: this.headerInfo,
-        querys: {
-          name: this.materialName,
-        },
+        // querys: {
+        //   name: this.materialName,
+        // },
       };
       buildingRequest(config).then((res) => {
         console.log("获取已添加物料列表", res);
         if (res.code === 200) {
           let choosedList = [];
           res.data.map((item) => {
-            this.choosedMaterial.map(cItem => {
+            this.choosedMaterial.map((cItem) => {
               if (cItem.goodsType === item.goodsType) {
                 item.checked = true;
               }
-            })
+            });
             choosedList.push(item);
           });
           this.choosedList = choosedList;
-          console.log(this.choosedList)
+          console.log(this.choosedList);
 
           // this.$store.commit('getChoosedMaterial', this.choosedList);
           this.searchName();
@@ -149,16 +157,16 @@ export default {
     },
     //选择物料
     chooseItem(item) {
-      console.log(this.choosedList)
-      this.$set(item, 'checked', !item.checked);
+      console.log(this.choosedList);
+      this.$set(item, "checked", !item.checked);
       let choosedMaterial = [];
-      this.choosedList.map(cItem => {
+      this.choosedList.map((cItem) => {
         if (item.goodsType === cItem.goodsType) {
-          this.$set(cItem, 'checked', item.checked);
+          this.$set(cItem, "checked", item.checked);
         }
-        (cItem.checked )&& (choosedMaterial.push(cItem))
-      })
-      this.$store.commit('getChoosedMaterial', choosedMaterial);
+        cItem.checked && choosedMaterial.push(cItem);
+      });
+      this.$store.commit("getChoosedMaterial", choosedMaterial);
       // let list = [];
       // this.renderList.map(itm => {
       //   if (itm.checked) {
@@ -170,18 +178,28 @@ export default {
     },
 
     // 删除已选物料
-    deleteItem(index) {
-      let delType = this.renderList[index].type;
-      this.materialList.map((item) => {
-        item.list.map((itm) => {
-          if (itm.type === delType) {
-            this.$set(itm, "checked", false);
-          }
-        });
+    deleteItem(item) {
+      const config = {
+        url: "delAddedGoods",
+        method: "DELETE",
+        header: this.headerInfo,
+        params: item.id,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("删除已选物料", res);
+        if (res.code === 200) {
+          uni.showToast({
+            title: "删除成功",
+            icon: "success",
+            duration: 1500,
+            mask: true,
+            success: confirm => {
+              this.getAddedGoods();
+            }
+          });
+        }
+        
       });
-
-      this.getChoosedList();
-      this.$store.commit("getMaterialList", this.materialList);
     },
   },
 };

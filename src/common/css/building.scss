@@ -71,6 +71,16 @@
 	/* min-width: 170rpx; */
 	padding: 0;
 }
+
+.enter {
+	position: absolute;
+	top: 12rpx;
+	right: 20rpx;
+	width: 40rpx;
+	height: 40rpx;
+	background: url('../../static/building/enter.png') no-repeat center;
+	background-size: 40rpx 40rpx;
+}
 /* 页面容器 */
 .building-content {
   box-sizing: border-box;
@@ -116,12 +126,18 @@
   }
   &-content {
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     flex: 1;
     &-body {
-      padding: 40rpx 0;
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 20rpx;
+      flex: 1;
+      overflow-y: auto;
+      &-container {
+        padding: 40rpx 0 0;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20rpx;
+      }
     }
   }
 }
@@ -197,13 +213,13 @@
   width: 50rpx;
   height: 50rpx;
   border-radius: 25rpx;
-  border: 4rpx solid #999;
+  border: 2rpx solid #999;
   line-height: 42rpx;
   text-align: center;
 }
 
 .checked {
-  border: 4rpx solid #3a65ff;
+  border: 2rpx solid #3a65ff;
   font-weight: bold;
 }
 

@@ -41,13 +41,18 @@
         </div>
 
         <div class="building-main-content-body">
-          <div
-            class="building-item-box"
-            v-for="(item, index) in activeBuilding"
-            :key="index"
-          >
-            <div class="building-item-box-title me-text-beyond">{{ item.buildingName }}</div>
-            <div class="building-item-box-content"></div>
+          <div class="building-main-content-body-container">
+            <div
+              class="building-item-box "
+              v-for="(item, index) in activeBuilding"
+              :key="index"
+              @click="editBuilding(item)"
+            >
+              <div class="building-item-box-title me-text-beyond">
+                {{ item.buildingName }}
+              </div>
+              <div class="building-item-box-content"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -83,6 +88,7 @@ export default {
   },
   async onLoad() {
     await this.$onLaunched;
+    this.getAddedGoods();
     // this.$store.commit("getMaterialList", mockData.materialList);
   },
   onShow() {
@@ -100,6 +106,20 @@ export default {
     back() {
       uni.navigateBack({
         delta: 1,
+      });
+    },
+    //获取物料字典
+    getAddedGoods() {
+      const config = {
+        url: "getAddedGoods",
+        header: this.headerInfo,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("获取所有物料", res);
+        
+        if (res.code === 200) {
+          this.$store.commit("getMaterialList", res.data);
+        }
       });
     },
     //获取父类场区数据
@@ -120,20 +140,20 @@ export default {
     //场区子类数据显示
     renderBuilding() {
       // this.activeBuilding = this.buildingList[this.activeIndex];
-      this.buildingCount = this.buildingList[this.activeIndex].count
+      this.buildingCount = this.buildingList[this.activeIndex].count;
       let buildingId = this.buildingList[this.activeIndex].id;
       //获取子类
       const config = {
         url: "getSubBuilding",
         header: this.headerInfo,
         querys: {
-          id: buildingId
-        }
+          id: buildingId,
+        },
       };
-      buildingRequest(config).then(res => {
-        console.log('获取场区子类', res)
+      buildingRequest(config).then((res) => {
+        console.log("获取场区子类", res);
         this.activeBuilding = res.data;
-      })
+      });
     },
 
     changeBuilding(index) {
@@ -153,9 +173,25 @@ export default {
 
     // 添加场区
     addBuilding() {
-      let buildingType = this.buildingList[this.activeIndex].type;
+      //isEdit: 0-添加，1-编辑
+      let data = {
+        type: this.buildingList[this.activeIndex].buildingType,
+        pid: this.buildingList[this.activeIndex].id
+      }
       uni.navigateTo({
-        url: "./addBuilding?type=" + buildingType,
+        url: `./addBuilding?data=${JSON.stringify(data)}`,
+      });
+    },
+    // 编辑场区
+    editBuilding(item) {
+      //isEdit: 0-添加，1-编辑
+      let data = {
+        type: this.buildingList[this.activeIndex].buildingType,
+        pid: this.buildingList[this.activeIndex].id,
+        id: item.id,
+      }
+      uni.navigateTo({
+        url: `./editBuilding?data=${JSON.stringify(data)}`,
       });
     },
     // 场区申请审核

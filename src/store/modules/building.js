@@ -1,7 +1,7 @@
 const store = {
   state: {
-    materialList: [],
-    choosedMaterial: [],
+    materialList: [],    //可选的物料列表
+    choosedMaterial: [],   //当前场区已选物料
   },
   mutations: {
     getMaterialList: (state, list) => {
@@ -9,6 +9,9 @@ const store = {
     },
     getChoosedMaterial: (state, list) => {
       state.choosedMaterial = list;
+    },
+    deleteMaterial: (state, index) => {
+      state.choosedMaterial.splice(index, 1);
     },
   },
   actions: {

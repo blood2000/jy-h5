@@ -8,7 +8,7 @@
       :class="activeSider === index ? 'active-sider' : ''"
       @click="changeSiderBar(index)"
     >
-      <div>{{item.buildingName}}</div>
+      <div>{{item.buildingName || item.dict_label}}</div>
       <div>({{item.count}})</div>
     </div>
   </div>

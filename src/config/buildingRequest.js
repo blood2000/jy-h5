@@ -3,7 +3,9 @@ import apiUrl from '../api/buildingApi'
 const baseUrl = process.env.VUE_APP_BASE_API;
 //config:url, method, params, data, util
 const buildingRequest = function (config) {
-  uni.showLoading();
+  uni.showLoading({
+    mask: true
+  });
   let util = config.resFun;
   if (!util) {
     util = {
@@ -25,9 +27,12 @@ const buildingRequest = function (config) {
       url += key + '=' + config.querys[key] + '&'
     }
     url = url.slice(0, -1);
+  } else if (config.params) {
+    url = apiUrl[config.url](config.params);
   } else {
     url = apiUrl[config.url]
   }
+  
   console.log('请求地址', baseUrl + url);
   return new Promise((resolve, reject) => {
     uni.request({

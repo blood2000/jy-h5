@@ -48,6 +48,18 @@
       }
     },
     {
+      "path": "pages/building/v1/editBuilding",
+      "style": {
+        "navigationBarTitleText": "编辑场区",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
       "path": "pages/building/v1/materialList",
       "style": {
         "navigationBarTitleText": "物料类别",
