@@ -164,9 +164,9 @@
 					uni.hideLoading();
 					uni.stopPullDownRefresh();
 				});
-				userNotice({pageNum: 1, pageSize: 2}, this.headerInfo).then(res => {
-					this.noticeList = res.data.rows;
-				});
+				// userNotice({pageNum: 1, pageSize: 2}, this.headerInfo).then(res => {
+				// 	this.noticeList = res.data.rows;
+				// });
 			},
 			// 获取常用应用列表
 			getUsuallyList() {
