@@ -2,11 +2,10 @@ import uniRequest from "../request.js";
 // import baseURL from '../index.js';
 
 // 常用应用列表
-export function listUsually(query, config) {
+export function listUsually(config) {
 	return uniRequest({
 		url: '/system/sysCommonUser/querySysCommonUserMenuByUserCode',
 		method: 'get',
-		params: query,
 		headers: config
 	});
 }
@@ -23,7 +22,7 @@ export function addUsually(menuCodes, config) {
 	});
 }
 
-// 添加常用应用
+// 删除常用应用
 export function deleteUsually(menuCodes, config) {
 	return uniRequest({
 		url: '/system/sysCommonUser/' + menuCodes,

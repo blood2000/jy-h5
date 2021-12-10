@@ -10,8 +10,7 @@
 			</view>
 		</view>
 		<view class="bg-white" style="padding: 0 0 24upx;">
-			<view v-if="system==='ios'" :style="{height:statusBarHeight*2 + 100 +'upx'}"></view>
-			<view v-else :style="{height:statusBarHeight*2 + 200 +'upx'}"></view>
+			<view :style="{height:statusBarHeight*2 + 100 +'upx'}"></view>
 			<!-- 官网新闻 -->
 			<swiper class="screen-swiper square-dot" :indicator-dots="true" :circular="true" :autoplay="true" interval="5000" duration="500">
 				<swiper-item v-for="(item,index) in newsList" :key="index" @click="navToWebsite">
@@ -159,7 +158,7 @@
 				uni.showLoading({mask: true});
 				// 获取应用列表
 				this.getUsuallyList();
-				this.getAllList();
+				// this.getAllList();
 				listNews({newsStatus: 0, newsType: 1}, this.headerInfo).then(res => {
 					this.newsList = res.rows;
 					uni.hideLoading();
@@ -173,14 +172,6 @@
 			getUsuallyList() {
 				listUsually(this.headerInfo).then(res => {
 					this.usuallyList = res.data;
-				});
-			},
-			// 获取全部应用列表
-			getAllList() {
-				applicateList(this.headerInfo).then(res => {
-					// this.applicateList = res.data.find(res => res.menuId === 2837).children;
-					const menu = res.data.find(res => res.menuId === 2837)
-					this.applicateList = menu? menu.children: [];
 				});
 			},
 			showModal() {
