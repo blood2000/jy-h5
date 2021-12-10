@@ -311,6 +311,7 @@
 						icon: 'none',
 						duration: 2000
 					});
+					res.data.isChyVehicle = 1;
 					this.setForm(res.data);
 				  } else {
 					// 不存在

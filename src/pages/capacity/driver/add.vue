@@ -260,6 +260,7 @@
 						icon: 'none',
 						duration: 2000
 					});
+					res.data.isChyDriver = 1;
 					this.setForm(res.data);
 				  } else {
 					// 不存在

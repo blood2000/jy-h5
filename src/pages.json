@@ -118,6 +118,14 @@
 	  }
 	},
 	{
+		"path": "pages/workbench/index",
+		"style": {
+			"navigationBarTitleText": "工作台",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": true
+		}
+	},
+	{
 	  "path": "pages/capacity/driver/auth",
 	  "style": {
 	    "navigationBarTitleText": "提交S认证",
