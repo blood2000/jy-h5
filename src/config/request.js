@@ -1,5 +1,6 @@
 import uniRequest from "uni-request";
 import store from '../store';
+import uniData from '@/utils/uni.webview.1.5.2.js'
 
 const headers = store.state.header.headerInfo
 
@@ -51,6 +52,11 @@ uniRequest.interceptors.response.use(
 				icon: 'none',
 				duration: 2000
 			});
+			setTimeout(() => {
+				uni.webView.reLaunch({
+					url: '/pages/public/applogin'
+				});
+			}, 1000)
 			return Promise.reject(new Error(msg));
 		} else if (code === 500) {
 			uni.showToast({
