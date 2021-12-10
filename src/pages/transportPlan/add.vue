@@ -576,8 +576,10 @@
 			handlerstartAddressId(m_id) {
 				this.form.startAddressWlId = undefined;
 				const m_findData = this.shfuewnsdnsddssOption.find(e => e.id === m_id);
+
+				console.log(m_findData);
 				if (m_findData) {
-					this.startAddressIdOption = m_findData.tenantAddressWlInfoList.map(e => {
+					this.startAddressIdOption = m_findData.zjFenceList.map(e => {
 						return {
 							dictLabel: e.name,
 							dictValue: e.id,
@@ -591,7 +593,7 @@
 				this.form.endAddressWlId = undefined;
 				const m_findData = this.shfuewnsdnsddssOption.find(e => e.id === m_id);
 				if (m_findData) {
-					this.endAddressIdOption = m_findData.tenantAddressWlInfoList.map(e => {
+					this.endAddressIdOption = m_findData.zjFenceList.map(e => {
 					return {
 						dictLabel: e.name,
 						dictValue: e.id,

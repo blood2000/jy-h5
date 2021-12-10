@@ -159,10 +159,10 @@
 		},
 
 		async onLoad(options){
-			
-			if(process.env.ENV === 'development'){
-				options.token = '9e221761-bfad-4c9c-9bd7-24e42ca3a8c9'
+			if(process.env.NODE_ENV === 'development'){
+				options.token = '30d2afde-8ff3-41d2-b687-2331330c7614'
 			}
+
 
 			// token赋值
 			if(options.token){
