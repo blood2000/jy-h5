@@ -14,6 +14,11 @@ import { parseTime, numberFormat, numberFormatUnit, selectDictLabel } from './ut
 import VueClipboard from 'vue-clipboard2'
 Vue.use(VueClipboard)
 
+// 基本提示
+Vue.prototype.msgSuccess = (msg)=>{
+    uni.showToast({title: msg,icon: 'none', duration: 1000});
+};
+
 import {VueJsonp} from 'vue-jsonp'
 Vue.use(VueJsonp)
 
