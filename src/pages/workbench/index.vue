@@ -123,7 +123,7 @@
 			}
 		},
 		onLoad(option) {
-			uni.setStorageSync('token', option.token)
+			// uni.setStorageSync('token', option.token)
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': option.token
 			});

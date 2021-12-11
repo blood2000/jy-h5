@@ -107,7 +107,7 @@
 
 				// 二维码配置
 				//二维码 D:\my\zjjy-h5\src\static\download\driver.png
-				qrcSrc: 'https://api.chaohaoyun.cn/qrcode/cym;',
+				qrcSrc: `https://api.chaohaoyun.cn/jysj/qrcode?code=${this.cbData.orderPlanCode}&type=1`,
 				// qrcSrc: 'https://api.chaohaoyun.cn/qrcode/cym;999d295b69764d399c7de6a0223b77fe',
 				qrcode: {
 					val: '', // 要生成的二维码值
@@ -159,9 +159,11 @@
 		},
 
 		async onLoad(options){
-			if(process.env.NODE_ENV === 'development'){
-				options.token = '30d2afde-8ff3-41d2-b687-2331330c7614'
-			}
+			// if(process.env.NODE_ENV === 'development'){
+			// 	options.token = '2d688ed2-2de8-4e97-8d20-030fd70084fd'
+			// }
+
+			console.log(options.token);
 
 
 			// token赋值
@@ -169,7 +171,7 @@
 				this.$store.dispatch('getLoginInfoAction', {
 					'Authorization': options.token
 				});
-				options.token && uni.setStorageSync('token', options.token)
+				// options.token && uni.setStorageSync('token', options.token)
 
 			}
 			// 高度要赋值
