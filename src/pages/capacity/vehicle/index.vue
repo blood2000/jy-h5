@@ -51,6 +51,7 @@
 	import { getDicts } from '@/config/service/common.js';
 	import { selectDictLabel } from '@/utils/ddc.js';
 	import { getFile } from '@/config/service/common.js'
+	import uniData from '@/utils/uni.webview.1.5.2.js'
 	export default {
 		components: {
 			NonePage
@@ -110,7 +111,7 @@
 		},
 		methods: {
 			navigateBack() {
-				uni.navigateBack();
+				uni.webView.navigateBack();
 			},
 			/** 查询字典 */
 			getDictsList() {

@@ -18,9 +18,7 @@ uniRequest.defaults.headers['Terminal-Type'] = headers['Terminal-Type']
 // 请求拦截
 uniRequest.interceptors.request.use(
 	config => {
-		
-		
-		config.headers.Authorization = headers['Authorization'];
+		// config.headers.Authorization = headers['Authorization'];
 		console.log('request中的请求token', JSON.stringify(config.headers.Authorization));
 
 		if(config.data && config.data.isArrayQuery){

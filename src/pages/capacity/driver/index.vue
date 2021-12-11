@@ -43,6 +43,7 @@
 	import { mapState } from 'vuex';
 	import NonePage from '@/components/NonePage/NonePage.vue';
 	import { listInfo, delInfo } from '@/config/service/capacity/driver.js';
+	import uniData from '@/utils/uni.webview.1.5.2.js'
 	export default {
 		components: {
 			NonePage
@@ -100,7 +101,7 @@
 		
 		methods: {
 			navigateBack() {
-				uni.navigateBack();
+				uni.webView.navigateBack();
 			},
 			handleQuery() {
 			  this.queryParams.pageNum = 1;
