@@ -2,7 +2,7 @@
 <template>
   <div :style="{'--statusBar': statusBar }">
     <uni-nav-bar left-icon="back" @clickLeft="$emit('back')" :title="title" :statusBar="true" fixed :border='false' v-bind="$attrs">
-        <view slot="right">
+        <view slot="right" class="header-bar-right-text">
           <slot name="right"></slot>
         </view>
     </uni-nav-bar>
@@ -49,5 +49,9 @@ export default {
 	.uni-status-bar{
 		height: var(--statusBar) !important;
 	}
+}
+.header-bar-right-text{
+	width: 120rpx !important;
+	font-size: 28upx !important;
 }
 </style>

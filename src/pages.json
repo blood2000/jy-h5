@@ -160,19 +160,50 @@
 	  		  "bounce": "none"
 	  		}
 	  }
-	},
-	
-	{
-	  "path": "pages/transportPlan/add",
-	  "style": {
-	    "navigationBarTitleText": "创建收货计划",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false,
-	    "navigationBarBackgroundColor": "#ffffff",
-	  		"app-plus": {
-	  		  "bounce": "none"
-	  		}
-	  }
+	},{
+		"path": "pages/transportPlan/add",
+		"style": {
+			"navigationBarTitleText": "创建收货计划",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#ffffff",
+			"app-plus": {
+				"bounce": "none"
+			}
+		}
+	},{
+		"path": "pages/statistics/receive",
+		"style": {
+			"navigationBarTitleText": "收货统计",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#ffffff",
+			"app-plus": {
+				"bounce": "none"
+			}
+		}
+	},{
+		"path": "pages/statistics/deliver",
+		"style": {
+			"navigationBarTitleText": "发货统计",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#ffffff",
+			"app-plus": {
+				"bounce": "none"
+			}
+		}
+	},{
+		"path": "pages/statistics/custom",
+		"style": {
+			"navigationBarTitleText": "自定义统计",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#ffffff",
+			"app-plus": {
+				"bounce": "none"
+			}
+		}
 	}
   ],
   "globalStyle": {

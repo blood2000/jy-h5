@@ -1,12 +1,6 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			:title="this.form.code?'编辑车辆':'新增车辆'"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		></u-navbar>
+		<HeaderBar :title="this.form.code?'编辑车辆':'新增车辆'" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
@@ -132,9 +126,11 @@
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { plateNoReg } from '@/utils/validate.js';
 	import TeamList from '@/pages/capacity/components/teamList.vue';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
 		components: {
-			TeamList
+			TeamList,
+			HeaderBar
 		},
 		computed: {
 			...mapState({

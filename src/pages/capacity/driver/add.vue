@@ -1,12 +1,6 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			:title="this.form.code?'编辑司机':'新增司机'"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		></u-navbar>
+		<HeaderBar :title="this.form.code?'编辑车辆':'新增车辆'" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
@@ -99,10 +93,12 @@
 	import { phoneReg } from '@/utils/validate.js';
 	import TeamList from '@/pages/capacity/components/teamList.vue'
 	import VehicleList from '@/pages/capacity/components/vehicleList.vue'
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
 		components: {
 			TeamList,
-			VehicleList
+			VehicleList,
+			HeaderBar
 		},
 		computed: {
 			...mapState({
