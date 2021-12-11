@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page">
 		<HeaderBar title="司机管理" @back="navigateBack">
-			<template slot="right" @click="handleAdd">新增司机</template>
+			<text slot="right" @click="handleAdd">新增司机</text>
 		</HeaderBar>
 		
 		<view class="card-list" v-if="dataList && dataList.length > 0">

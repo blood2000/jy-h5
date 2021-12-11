@@ -234,9 +234,11 @@
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { idCardReg } from '@/utils/validate.js';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
 		components: {
-			UploadSingleImage
+			UploadSingleImage,
+			HeaderBar
 		},
 		computed: {
 			...mapState({

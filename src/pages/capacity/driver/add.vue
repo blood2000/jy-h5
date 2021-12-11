@@ -93,10 +93,12 @@
 	import { phoneReg } from '@/utils/validate.js';
 	import TeamList from '@/pages/capacity/components/teamList.vue'
 	import VehicleList from '@/pages/capacity/components/vehicleList.vue'
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
 		components: {
 			TeamList,
-			VehicleList
+			VehicleList,
+			HeaderBar
 		},
 		computed: {
 			...mapState({

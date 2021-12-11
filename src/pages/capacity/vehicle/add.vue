@@ -126,9 +126,11 @@
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { plateNoReg } from '@/utils/validate.js';
 	import TeamList from '@/pages/capacity/components/teamList.vue';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
 		components: {
-			TeamList
+			TeamList,
+			HeaderBar
 		},
 		computed: {
 			...mapState({

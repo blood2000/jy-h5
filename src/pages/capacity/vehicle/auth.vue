@@ -172,9 +172,11 @@
 	import { addInfo, updateInfo } from '@/config/service/capacity/vehicle.js';
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
 		components: {
-			UploadSingleImage
+			UploadSingleImage,
+			HeaderBar
 		},
 		computed: {
 			...mapState({
