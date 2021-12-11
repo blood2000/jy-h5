@@ -1,12 +1,6 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			:title="this.form.code?'编辑车辆':'新增车辆'"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		></u-navbar>
+		<HeaderBar :title="this.form.code?'编辑车辆':'新增车辆'" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">

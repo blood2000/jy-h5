@@ -1,14 +1,8 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			title="车辆管理"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		>
-			<view slot="right" @click="handleAdd">新增车辆</view>
-		</u-navbar>
+		<HeaderBar title="车辆管理" @back="navigateBack">
+			<template slot="right" @click="handleAdd">新增车辆</template>
+		</HeaderBar>
 		
 		<view class="card-list" v-if="dataList && dataList.length > 0">
 			<view v-for="(item, index) in dataList" :key="index" class="card-item">
@@ -51,10 +45,12 @@
 	import { getDicts } from '@/config/service/common.js';
 	import { selectDictLabel } from '@/utils/ddc.js';
 	import { getFile } from '@/config/service/common.js'
-	import uniData from '@/utils/uni.webview.1.5.2.js'
+	import uniData from '@/utils/uni.webview.1.5.2.js';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
 		components: {
-			NonePage
+			NonePage,
+			HeaderBar
 		},
 		computed: {
 			...mapState({

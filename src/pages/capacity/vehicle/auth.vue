@@ -1,12 +1,6 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			title="提交S认证"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		></u-navbar>
+		<HeaderBar title="提交S认证" @back="navigateBack"></HeaderBar>
 		
 		<div class="notify-msg">提交S认证并通过后，该车辆可以承接无车承运开票运单</div>
 		<uni-forms ref="form" :modelValue="form" label-width="160">
