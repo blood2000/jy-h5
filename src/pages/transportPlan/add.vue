@@ -422,7 +422,7 @@
 			])
 
 			if(options.id){
-				const { data } = await orderPlanInfoDetatil(options.id)
+				const { data } = await orderPlanInfoDetatil(options.id, this.headerInfo)
 				this.cbData = data
 
 				this.handlerstartAddressId(this.cbData.startAddressId);
@@ -457,7 +457,7 @@
 		methods: {
 			// 获取运输公司
 			async gettransId() {
-				const _data = (await listInfo()).list;
+				const _data = (await listInfo({},this.headerInfo)).list;
 				this.transIdOption = _data.map(e => {
 					return {
 						dictLabel: e.transName,
@@ -474,7 +474,7 @@
 					'pageSize': 10,
 				};
 
-				const _data = (await orderInfoList(que)).data.list;
+				const _data = (await orderInfoList(que, this.headerInfo)).data.list;
 				this.orderInfoIdOption = _data.map(e => {
 					return {
 						dictLabel: e.orderName,
@@ -499,7 +499,7 @@
 					'pageSize': 10,
 				};
 
-				const _data = (await tenantCompanyInfoList(que)).data.list;
+				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
 				this.recCompnayInfoIdOption = _data.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.sedCompnayInfoId = e.id;
@@ -520,7 +520,7 @@
 					'pageSize': 10,
 				};
 
-				const _data = (await tenantCompanyInfoList(que)).data.list;
+				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
 				this.sedCompnayInfoIdOption = _data.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.recCompnayInfoId = e.id;
@@ -541,7 +541,7 @@
 					'pageNum': queData?.page || 1,
 					'pageSize': 10
 				};
-				const _data = (await getDispatcherTeam(que)).list
+				const _data = (await getDispatcherTeam(que, this.headerInfo)).list
 
 				this.teamList = _data.map(e => {
 					return {
@@ -559,7 +559,7 @@
 					'pageSize': 10
 				};
 
-				const _data = (await tenantCompanyAddressInfoList(que)).data.list;
+				const _data = (await tenantCompanyAddressInfoList(que, this.headerInfo)).data.list;
 
 				this.shfuewnsdnsddssOption = _data.map(e => {
 					return {
@@ -609,7 +609,7 @@
 					'pageNum': queData?.page || 1,
 					'pageSize': 10,
 				};
-				const _data = (await tenantGoodsPolicyInfo(que)).data;
+				const _data = (await tenantGoodsPolicyInfo(que, this.headerInfo)).data;
 
 				this.orderPolicyInfoOption = _data.map(e => {
 					return {
@@ -625,7 +625,7 @@
 					'pageNum': queData?.page || 1,
 					'pageSize': 10,
 				};
-				const _data = (await goodspriceList(que)).data;
+				const _data = (await goodspriceList(que, this.headerInfo)).data;
 
 				this.goodsPolicyIdOption = _data.map(e => {
 					return {
@@ -641,7 +641,7 @@
 					'pageNum': queData?.page || 1,
 					'pageSize': 10,
 				};
-				const _data = (await orderPlanFreightList(que)).data.list;
+				const _data = (await orderPlanFreightList(que, this.headerInfo)).data.list;
 				this.planFreightIdOption = _data.map(e => {
 					return {
 						dictLabel: e.name,
@@ -791,9 +791,9 @@
 				};
 
 				if (isEdit) {
-					await orderPlanInfoUpdate(que);
+					await orderPlanInfoUpdate(que, this.headerInfo);
 				} else {
-					await orderPlanInfoAdd(que);
+					await orderPlanInfoAdd(que, this.headerInfo);
 				}
 
 				uni.hideLoading();
