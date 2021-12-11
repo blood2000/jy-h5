@@ -24,7 +24,7 @@
 		<!-- 背景 -->
 		<view :style="{height:statusBarHeight*2 + 176 +'upx'}"></view>
 		<view class="list-bgframe">
-			<view :style="{height:statusBarHeight*2 + 176 +'upx'}"></view>
+			<view :style="{height:statusBarHeight*2 + 170 +'upx'}"></view>
 			<view class="list-bg"></view>
 		</view>
 		<!-- 列表 -->
