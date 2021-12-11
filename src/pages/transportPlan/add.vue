@@ -74,7 +74,7 @@
 						</view>
 					</view>
 					<u-checkbox-group v-model="form.weightType" style="float: right;">
-						<u-checkbox size='14' label='不限' name='' labelSize='12rpx'></u-checkbox>
+						<u-checkbox size='14' label='不限' name='' labelSize='24upx'></u-checkbox>
 					</u-checkbox-group>
 				</uni-forms-item>
 			</view>
@@ -378,7 +378,6 @@
 			},
 			'form.weightType': {
 				handler(val) {
-					console.log(888);
 					if(!(val && Array.isArray(val))) return
 					if(val.length>0){
 						this.$set(this.form, 'weight', undefined)
@@ -744,7 +743,10 @@
 
 				// s= 判断一下电子围栏是否重复
 				if (this.form.startAddressId === this.form.endAddressId && this.form.startAddressWlId === this.form.endAddressWlId) {
-					this.msgError(`接单电子围栏 和 卸货电子围栏 不能相同`);
+					uni.showToast({
+						title: '接单电子围栏 和 卸货电子围栏 不能相同',
+						icon: 'none'
+					});
 					return;
 				}
 				// e=

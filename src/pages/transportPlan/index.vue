@@ -162,11 +162,8 @@
 		},
 
 		async onLoad(options){
-			// if(process.env.NODE_ENV === 'development'){
-			// 	options.token = '771150ad-efd4-4fa7-b36a-4d4e1d5df0d4'
-			// }
 
-			console.log(options.token, '接收到的token');
+			// console.log(options.token, '接收到的token');
 
 
 			// token赋值
@@ -174,7 +171,6 @@
 				this.$store.dispatch('getLoginInfoAction', {
 					'Authorization': options.token
 				});
-				this.headerInfo["App-Code"] = 'f3209f6c7353414e8dbb94dd23cf8b91'
 				// options.token && uni.setStorageSync('token', options.token)
 				// 高度要赋值
 				options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
@@ -202,7 +198,6 @@
 				uni.showLoading();
 				this.loading = true;
 				return getList(this._queryParams, this.headerInfo).then(async res => {
-					console.log(res);
 					this.loading = false;
 					uni.hideLoading();
 					if (res.data.list.length === 0) {
@@ -257,7 +252,6 @@
 
 			// 二维码返回地址
 			result(res) {
-				// console.log(res)
 				this.qrcode.src = res
 				this.domId = '#poster' // 返回后生成海报
 			},

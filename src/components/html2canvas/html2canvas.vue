@@ -29,7 +29,7 @@
 					title: "正在生成中...",
 					icon: "none",
 					mask: true,
-					duration: 100000
+					duration: 5000
 				})
 			},
 			hideLoading() {
@@ -50,9 +50,12 @@ export default {
 				this.$ownerInstance.callMethod('showLoading', true);
 				const timeout = setTimeout(async ()=> {
 					const shareContent = document.querySelector(domId);
-					const canvas = await html2canvas(shareContent,{
+					console.log(window.html2canvas,' window.html2canvas');
+					const canvas = await (window.html2canvas || html2canvas)(shareContent,{
 						width: shareContent.offsetWidth,//设置canvas尺寸与所截图尺寸相同，防止白边
 						height: shareContent.offsetHeight,//防止白边
+						scrollY: 0,
+						scrollX: 0,
 						logging: true,
 						useCORS: true
 					});
