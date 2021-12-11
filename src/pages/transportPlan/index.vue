@@ -174,6 +174,7 @@
 				this.$store.dispatch('getLoginInfoAction', {
 					'Authorization': options.token
 				});
+				this.headerInfo["App-Code"] = 'f3209f6c7353414e8dbb94dd23cf8b91'
 				// options.token && uni.setStorageSync('token', options.token)
 				// 高度要赋值
 				options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
