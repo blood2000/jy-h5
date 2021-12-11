@@ -122,7 +122,7 @@
 				</uni-forms-item>
 
 				<template v-if="form.endAddressId">
-					<u-alert v-if='form.type == 0' type="error" :description="description" fontSize='1'></u-alert>
+					<u-alert v-if='form.type == 0' type="error" class="descriptionwq" :description="description" fontSize='1'></u-alert>
 
 					<uni-forms-item v-else required name="endAddressWlId" label="接单电子围栏">
 						<pickers v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择电子围栏'></pickers>
