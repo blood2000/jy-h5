@@ -63,6 +63,7 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex';
 	import HeaderBar from '@/components/Building/HeaderBar2.vue'
 
 	import html2canvas from '@/components/html2canvas/html2canvas.vue'
@@ -107,8 +108,7 @@
 
 				// 二维码配置
 				//二维码 D:\my\zjjy-h5\src\static\download\driver.png
-				qrcSrc: `https://api.chaohaoyun.cn/jysj/qrcode?code=${this.cbData.orderPlanCode}&type=1`,
-				// qrcSrc: 'https://api.chaohaoyun.cn/qrcode/cym;999d295b69764d399c7de6a0223b77fe',
+				
 				qrcode: {
 					val: '', // 要生成的二维码值
 					size: 460, // 二维码大小
@@ -132,6 +132,9 @@
 		},
 
 		computed:{
+			...mapState({
+				headerInfo: state => state.header.headerInfo
+			}),
 			_queryParams(){
 				return this.queryParams
 			},
@@ -160,10 +163,10 @@
 
 		async onLoad(options){
 			// if(process.env.NODE_ENV === 'development'){
-			// 	options.token = '2d688ed2-2de8-4e97-8d20-030fd70084fd'
+			// 	options.token = '771150ad-efd4-4fa7-b36a-4d4e1d5df0d4'
 			// }
 
-			console.log(options.token);
+			console.log(options.token, '接收到的token');
 
 
 			// token赋值
@@ -171,23 +174,25 @@
 				this.$store.dispatch('getLoginInfoAction', {
 					'Authorization': options.token
 				});
+				this.headerInfo["App-Code"] = 'f3209f6c7353414e8dbb94dd23cf8b91'
 				// options.token && uni.setStorageSync('token', options.token)
+				// 高度要赋值
+				options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
+
+				// 转成线上地址
+				try{
+					const imgInfo = await uni.getImageInfo({
+						src: "../../static/jylogo.png"
+					});
+					this.logoBase64 = imgInfo[1].path
+				}catch(e){
+					//TODO handle the exception
+				}
+
+				this.getList();
+			} else {
 
 			}
-			// 高度要赋值
-			options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
-
-			// 转成线上地址
-			try{
-				const imgInfo = await uni.getImageInfo({
-					src: "../../static/jylogo.png"
-				});
-				this.logoBase64 = imgInfo[1].path
-			}catch(e){
-				//TODO handle the exception
-			}
-
-			this.getList();
 		},
 
 		methods: {
@@ -196,7 +201,7 @@
 				this.status = 'loading';
 				uni.showLoading();
 				this.loading = true;
-				return getList(this._queryParams).then(async res => {
+				return getList(this._queryParams, this.headerInfo).then(async res => {
 					console.log(res);
 					this.loading = false;
 					uni.hideLoading();
@@ -225,7 +230,7 @@
 			share(row) {
 				// console.log(row);
 				this.cbData = row
-				this.$set(this.qrcode, 'val', this.qrcSrc + row.id)
+				this.$set(this.qrcode, 'val', `https://api.chaohaoyun.cn/jysj/qrcode?code=${this.cbData.orderPlanCode}&type=1`)
 				console.log(this.qrcode);
 				this.filePath = ''
 				this.show = true

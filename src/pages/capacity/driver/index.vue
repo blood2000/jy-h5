@@ -1,14 +1,8 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			title="司机管理"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		>
-			<view slot="right" @click="handleAdd">新增司机</view>
-		</u-navbar>
+		<HeaderBar title="司机管理" @back="navigateBack">
+			<text slot="right" @click="handleAdd">新增司机</text>
+		</HeaderBar>
 		
 		<view class="card-list" v-if="dataList && dataList.length > 0">
 			<view v-for="(item, index) in dataList" :key="index" class="card-item">
@@ -43,10 +37,12 @@
 	import { mapState } from 'vuex';
 	import NonePage from '@/components/NonePage/NonePage.vue';
 	import { listInfo, delInfo } from '@/config/service/capacity/driver.js';
-	import uniData from '@/utils/uni.webview.1.5.2.js'
+	import uniData from '@/utils/uni.webview.1.5.2.js';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
 		components: {
-			NonePage
+			NonePage,
+			HeaderBar
 		},
 		computed: {
 			...mapState({
