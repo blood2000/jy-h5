@@ -165,7 +165,6 @@
 
 			// console.log(options.token, '接收到的token');
 
-
 			// token赋值
 			if(options.token){
 				this.$store.dispatch('getLoginInfoAction', {
