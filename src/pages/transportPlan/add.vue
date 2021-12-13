@@ -470,7 +470,7 @@
 			async getorderInfoIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
 				};
 
 				const _data = (await orderInfoList(que, this.headerInfo)).data.list;
@@ -495,7 +495,7 @@
 			async getrecCompnayInfoIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
 				};
 
 				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
@@ -516,7 +516,7 @@
 			async getsedCompnayInfoIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
 				};
 
 				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
@@ -538,7 +538,7 @@
 			async getOrderPlanTeanRelList(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10
+					'pageSize': 1000
 				};
 				const _data = (await getDispatcherTeam(que, this.headerInfo)).list
 
@@ -555,7 +555,7 @@
 			async getshfuewnsdnsddssOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10
+					'pageSize': 1000
 				};
 
 				const _data = (await tenantCompanyAddressInfoList(que, this.headerInfo)).data.list;
@@ -606,7 +606,7 @@
 			async getorderPolicyInfoOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
 				};
 				const _data = (await tenantGoodsPolicyInfo(que, this.headerInfo)).data;
 
@@ -622,7 +622,7 @@
 			async getgoodsPolicyIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
 				};
 				const _data = (await goodspriceList(que, this.headerInfo)).data;
 
@@ -638,7 +638,7 @@
 			async getplanFreightIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
 				};
 				const _data = (await orderPlanFreightList(que, this.headerInfo)).data.list;
 				this.planFreightIdOption = _data.map(e => {
@@ -806,7 +806,7 @@
 				this.cbData = null
 				setTimeout(()=>{
 					uni.redirectTo({
-						url: '/pages/transportPlan/index?isCbData=true'
+						url: '/pages/transportPlan/index'
 					});
 				}, 700)
 

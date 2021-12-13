@@ -186,9 +186,9 @@
 				}catch(e){
 					//TODO handle the exception
 				}
+			
 				this.getList();
 			}
-			
 		},
 
 		methods: {
