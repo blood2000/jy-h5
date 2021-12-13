@@ -185,7 +185,7 @@
 
 <style lang="scss" scoped>
 	.popup-box{
-		height: 960upx;
+		height: 860upx;
 		padding: 30upx 0 44upx;
 		>.title{
 			line-height: 36upx;
@@ -207,7 +207,7 @@
 			}
 		}
 		>.list-box{
-			height: 640upx;
+			height: 540upx;
 			overflow-y: hidden;
 			>.scroll-Y{
 				height: 100%;
