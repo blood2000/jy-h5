@@ -60,20 +60,24 @@
 					/* line-height: 36px; */
 					align-items: center; -->
 						<view style="height: 100%" class="ly-flex-align-center">
-							<pickers v-model="form.du__snefniewew" :disabled="true || form.weightType.length>0" :range="[
-								{dictLabel: '吨',dictValue:'0' }
+							<pickers v-model="form.unit" :disabled="form.weightType.length>0" 
+								@change="handlerunit"
+							:range="[
+								{dictLabel: '吨',dictValue:'1' },
+								{dictLabel: '车',dictValue:'2' },
 							]">
 							 <view class="ly-flex-pack-end">
 								<view class="ly-flex ml10 g-color-gray picker-input" > {{ 
 									[
-										{dictLabel: '吨',dictValue:'0' }
-									].find(e=> e.dictValue === form.du__snefniewew ).dictLabel
+										{dictLabel: '吨',dictValue:'1' },
+										{dictLabel: '车',dictValue:'2' },
+									].find(e=> e.dictValue === form.unit ).dictLabel
 								}} </view>
 							</view>
 							</pickers>
 						</view>
 					</view>
-					<u-checkbox-group v-model="form.weightType" style="float: right;">
+					<u-checkbox-group v-model="form.weightType" style="float: right;" v-if="form.unit ==='1'">
 						<u-checkbox size='14' label='不限' name='' labelSize='24upx'></u-checkbox>
 					</u-checkbox-group>
 				</uni-forms-item>
@@ -208,7 +212,7 @@
 					isForever: [], // 转成 数字值 有长度为true 
 					transId: undefined,
 					orderInfoId: undefined,
-					du__snefniewew: '0',
+					unit: '1',
 					weight: undefined,
 					weightType: [],  // 有长度为true
 					startAddressId: undefined,
@@ -433,7 +437,7 @@
 				this.olDweightType = this.cbData.weight
 
 				this.teamCodes = this.cbData.teamCodeList.map(e=> e.objCode)
-				this.changeTeamCodes(this.teamCodes, this.cbData.teamCodeList)
+				this.changeTeamCodes(this.teamCodes)
 
 				this.form = {
 					...this.form,
@@ -442,7 +446,7 @@
 					effectiveDate: this.oldDatePicker,
 					isForever: this.cbData.isForever === 1? ['']: [],
 					weightType: this.cbData.weightType === 1? ['']: [],
-					du__snefniewew: '0'
+					unit: this.cbData.unit === 1? '1':'2' // todo
 				};
 				this.formsUpdate = Date.now()
 			}
@@ -635,7 +639,8 @@
 			async getorderPolicyInfoOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 1000
+					'pageSize': 1000,
+					'policyType': this.form.unit === '1' ? 1 : 2
 				};
 				
 				const _data = (await tenantGoodsPolicyInfo(que, this.headerInfo)).data;
@@ -684,27 +689,48 @@
 
 			// e= 初始数据结束
 
+			// 选择单位
+			handlerunit(_uit){
+				// console.log(_uit);
+				this.getorderPolicyInfoOption()
+			},
+
+
 			// s=其他
 
 			// 更改选中的调度者
-			changeTeamCodes(data, cb) {
-				// console.log(data);
+			changeTeamCodes(data) {
+
+				const cb = this.cbData ? this.cbData.teamCodeList: null
 				this.form.orderPlanTeanRelList = []
 				this.teamCodes = data;
-				// console.log(cb);
+
 				// 编辑要添加调度者id
 				if(cb){
-					this.teamList.forEach(e=>{
+					const newArr = this.teamCodes.map(e=>{
 						for (let i = 0; i < cb.length; i++) {
 							const ee = cb[i];
+							if (ee.objCode === e) {
+								return ee
+							}
+						}
+						return {
+							objCode: e
+						}
+					})
+
+					this.teamList.forEach(e=>{
+						for (let i = 0; i < newArr.length; i++) {
+							const ee = newArr[i];
 							if(ee.objCode === e.code){
 								this.form.orderPlanTeanRelList.push(
-									{ id:ee.id, objCode: ee.objCode, isDel: 0, type: 1, name: e.name}
+									{ ...ee, id:ee.id, objCode: ee.objCode, isDel: 0, type: 1, name: e.name}
 								)
 								return
 							}
 						}
 					})
+
 				} else {
 					this.teamList.forEach(e=>{
 						for (let i = 0; i < this.teamCodes.length; i++) {
@@ -764,7 +790,7 @@
 					isForever: [], // 转成 数字值 有长度为true 
 					transId: undefined,
 					orderInfoId: undefined,
-					du__snefniewew: '0',
+					unit: '1',
 					weight: undefined,
 					weightType: [],  // 有长度为true
 					startAddressId: undefined,
@@ -822,7 +848,7 @@
 						// ], // 调度者
 						teamCodes: undefined,
 						teamCodeList: undefined,
-						du__snefniewew: undefined, // 单位不用
+						unit: this.form.unit === '1'? 1 : 2, // 单位不用
             			status: this.form.status - 0, // 默认: 0
 						receiveType: (this.form.type - 0) + 1, // 1发 2收
 						type: undefined
