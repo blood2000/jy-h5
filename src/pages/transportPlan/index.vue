@@ -164,6 +164,8 @@
 
 		async onLoad(options){
 
+			console.log(JSON.stringify(options),'8888888888888888888888');
+
 			console.log('h5---------------------------',options.token, '---------------------------');
 
 			// token赋值
@@ -184,11 +186,9 @@
 				}catch(e){
 					//TODO handle the exception
 				}
-
 				this.getList();
-			} else {
-
 			}
+			
 		},
 
 		methods: {

@@ -118,13 +118,13 @@
 				<uni-forms-item required name="endAddressId" label="运输终点">
 					<!-- <uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.endplace"
 						placeholder="请输入运输终点别名" /> -->
-						<pickers v-model="form.endAddressId" :range="shfuewnsdnsddssOption" placeholder="请输入运输起点" @change="handlerendAddressId"></pickers>
+						<pickers v-model="form.endAddressId" :range="shfuewnsdnsddssOption" placeholder="请输入运输终点" @change="handlerendAddressId"></pickers>
 				</uni-forms-item>
 
 				<template v-if="form.endAddressId">
-					<u-alert v-if='form.type == 0' type="error" :description="description" fontSize='1'></u-alert>
+					<!-- <u-alert v-if='form.type == 0' type="error" :description="description" fontSize='1'></u-alert> -->
 
-					<uni-forms-item v-else required name="endAddressWlId" label="接单电子围栏">
+					<uni-forms-item required name="endAddressWlId" label="接单电子围栏">
 						<pickers v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择电子围栏'></pickers>
 					</uni-forms-item>
 				</template>
@@ -806,7 +806,7 @@
 				this.cbData = null
 				setTimeout(()=>{
 					uni.redirectTo({
-						url: '/pages/transportPlan/index'
+						url: '/pages/transportPlan/index?isCbData=true'
 					});
 				}, 700)
 
