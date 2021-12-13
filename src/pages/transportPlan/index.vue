@@ -44,7 +44,8 @@
 						</image>
 					</view>
 					<view class="qr" @tap.stop >
-						<tki-qrcode cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
+						<image :src="qrcode.src" mode="aspectFill" style="height:460upx;width:460upx"></image>
+						<tki-qrcode :show="false" cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
 							:foreground="qrcode.foreground" :pdground="qrcode.pdground" :icon="qrcode.icon" :iconSize="qrcode.iconsize" :lv="qrcode.lv"
 							:onval="qrcode.onval" :loadMake="qrcode.loadMake" :usingComponents="true" @result="result" />
 					</view>
@@ -69,7 +70,7 @@
 	import html2canvas from '@/components/html2canvas/html2canvas.vue'
 	import TkiQrcode from '@/components/tki-qrcode/tki-qrcode.vue'
 	import TransportCard from './components/TransportCard.vue'
-	// import { pathToBase64, base64ToPath } from 'image-tools'
+	import { pathToBase64, base64ToPath } from 'image-tools'
 	import { saveHeadImgFile } from '@/common/js/saveHeadImgFile'
 	import { orderPlanInfoList as getList} from '@/config/service/transportPlan/transportationPlan.js'
 	export default {
@@ -163,7 +164,7 @@
 
 		async onLoad(options){
 
-			// console.log(options.token, '接收到的token');
+			console.log('h5---------------------------',options.token, '---------------------------');
 
 			// token赋值
 			if(options.token){
@@ -225,7 +226,6 @@
 				// console.log(row);
 				this.cbData = row
 				this.$set(this.qrcode, 'val', `https://api.chaohaoyun.cn/jysj/qrcode?code=${this.cbData.orderPlanCode}&type=1`)
-				console.log(this.qrcode);
 				this.filePath = ''
 				this.show = true
 			},
@@ -251,8 +251,10 @@
 
 			// 二维码返回地址
 			result(res) {
-				this.qrcode.src = res
-				this.domId = '#poster' // 返回后生成海报
+				base64ToPath(res).then(src=>{
+					this.qrcode.src = src
+					this.domId = '#poster' // 返回后生成海报
+				})
 			},
 
 			/**
