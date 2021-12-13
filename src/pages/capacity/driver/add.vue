@@ -1,6 +1,6 @@
 <template>
 	<view class="u-page">
-		<HeaderBar :title="this.form.code?'编辑车辆':'新增车辆'" @back="navigateBack"></HeaderBar>
+		<HeaderBar :title="this.form.code?'编辑司机':'新增司机'" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
