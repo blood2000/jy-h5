@@ -29,7 +29,7 @@
 						<view class="cuIcon-triangledownfill size40 text-grey"></view>
 					</view>
 				</picker>
-				<view style="margin: 0 10upx;">|</view>
+				<view class="text-grey" style="margin: 0 10upx;">|</view>
 				<input class="search-input" v-model="queryParams.goodsTypeName" placeholder="按查询条件输入商品名称" name="input" @blur="changeName"></input>
 				<view v-if="queryParams.receiveType || queryParams.endCreateTime" class="cuIcon-roundclose text-grey margin-mleft" @click="handleCleartype"></view>
 			</view>
@@ -37,7 +37,7 @@
 		<!-- 背景 -->
 		<view :style="{height:statusBarHeight*2 + 276 +'upx'}"></view>
 		<view class="list-bgframe">
-			<view :style="{height:statusBarHeight*2 + 276 +'upx'}"></view>
+			<view :style="{height:statusBarHeight*2 + 268 +'upx'}"></view>
 			<view class="list-bg"></view>
 		</view>
 		<!-- 列表 -->
