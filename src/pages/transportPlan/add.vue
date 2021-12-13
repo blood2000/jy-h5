@@ -1,6 +1,6 @@
 <template>
 	<view class="u-page">
-		<HeaderBar :title="this.form.type == 0?'创建收货计划':'创建发货计划'" @back="navigateBack"></HeaderBar>
+		<HeaderBar :title="title" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms :key="formsUpdate" ref='form' :rules="rules" :modelValue="form" label-width="150" err-show-type="toast">
 			
@@ -54,7 +54,8 @@
 
 				<uni-forms-item required name="weight" label="货品总量">
 					<view class="ly-flex-align-center">
-						<uni-easyinput @blur="()=> olDweightType = form.weight" type="number" :disabled="form.weightType.length>0" :inputBorder="false" :clearable="false" v-model="form.weight" placeholder="两位小数数字" />
+						<uni-easyinput :maxlength="15" @blur="()=> olDweightType = form.weight" type="number" :disabled="form.weightType.length>0" :inputBorder="false" :clearable="false" v-model="form.weight" 
+							placeholder="请输入货品总量" />
 						<!-- height: 36px;
 					display: flex;
 					/* line-height: 36px; */
@@ -96,7 +97,7 @@
 					<uni-forms-item required label="发货企业" >
 						<uni-easyinput type="text" :inputBorder="false" disabled :clearable="false" v-model="transceiverAddress" />
 					</uni-forms-item>
-					<uni-forms-item required name="sedCompnayInfoId" label="收货企业" class="border-bottom">
+					<uni-forms-item required name="sedCompnayInfoId" label="收货企业1" class="border-bottom">
 						<pickers v-model="form.sedCompnayInfoId" :range="sedCompnayInfoIdOption" placeholder='请选择收货企业'></pickers>
 					</uni-forms-item>
 				</template>
@@ -112,7 +113,7 @@
 
 				<!--  -->
 				<uni-forms-item required name="aliasName" label="运输起点别名">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.aliasName"
+					<uni-easyinput :maxlength="30" type="text" :inputBorder="false" :clearable="false" v-model="form.aliasName"
 						placeholder="请输入运输起点别名" />
 				</uni-forms-item>
 			</view>
@@ -135,7 +136,7 @@
 
 
 				<uni-forms-item required name="unAliasName" label="运输终点别名">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.unAliasName" placeholder="请输入运输终点别名" />
+					<uni-easyinput :maxlength="30" type="text" :inputBorder="false" :clearable="false" v-model="form.unAliasName" placeholder="请输入运输终点别名" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -360,7 +361,9 @@
 
 				orderPolicyInfoOption: [], // 运价策略
 				goodsPolicyIdOption: [], // 货价策略
-				planFreightIdOption: [] // 计算公式
+				planFreightIdOption: [], // 计算公式
+
+				id: ''
 			}
 		},
 
@@ -383,10 +386,18 @@
 			'form.weightType': {
 				handler(val) {
 					if(!(val && Array.isArray(val))) return
+
+					console.log(val.length>0);
 					if(val.length>0){
 						this.$set(this.form, 'weight', undefined)
+						this.$set(this.rules.weight,'rules', [
+							{ required: false, errorMessage: '请输入货品总量' }
+						])
 					} else {
 						this.$set(this.form, 'weight', this.olDweightType)
+						this.$set(this.rules.weight,'rules', [
+							{ required: true, errorMessage: '请输入货品总量' }
+						])
 					}
 				},
 				deep: true
@@ -397,9 +408,18 @@
 			...mapState({
 				headerInfo: state => state.header.headerInfo
 			}),
+			title(){
+				let text = ''
+				if(this.id){
+					text = this.form.type == 0?'编辑收货计划':'编辑发货计划'
+				} else {
+					text = this.form.type == 0?'创建收货计划':'创建发货计划'
+				}
+				return text
+			}
 		},
 		async onLoad(options) {
-			
+			this.id = options.id
 			uni.showLoading({
 				title: '加载中',
 				mask: true
@@ -425,6 +445,7 @@
 			])
 
 			if(options.id){
+				
 				const { data } = await orderPlanInfoDetatil(options.id, this.headerInfo)
 				this.cbData = data
 
@@ -525,7 +546,7 @@
 						this.transceiverAddress = e.companyName;
 					}
 					return {
-						dictLabel: e.companyName,
+						dictLabel: e.companyAbbreviation || e.companyName,
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
@@ -551,7 +572,7 @@
 					}
 
 					return {
-						dictLabel: e.companyName,
+						dictLabel: e.companyAbbreviation || e.companyName,
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
@@ -932,7 +953,9 @@
 </script>
 
 <style lang="scss" scoped>
-
+	.uni-forms-item{
+		overflow: hidden;
+	}
 	.ml10 {
 		margin-left: 10px;
 	}
