@@ -61,12 +61,13 @@
 					/* line-height: 36px; */
 					align-items: center; -->
 						<view style="height: 100%" class="ly-flex-align-center">
-							<pickers v-model="form.unit" :disabled="form.weightType.length>0" 
+							<pickers v-model="form.unit" 
+								:disabled="true || form.weightType.length>0" 
 								@change="handlerunit"
-							:range="[
-								{dictLabel: '吨',dictValue:'1' },
-								{dictLabel: '车',dictValue:'2' },
-							]">
+								:range="[
+									{dictLabel: '吨',dictValue:'1' },
+									{dictLabel: '车',dictValue:'2' },
+								]">
 							 <view class="ly-flex-pack-end">
 								<view class="ly-flex ml10 g-color-gray picker-input" > {{ 
 									[
