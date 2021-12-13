@@ -82,6 +82,7 @@
 		},
 		data() {
 			return {
+				ifOnShow:false,
 				statusBar: '0px',
 				// 二维码展示
 				show: false,
@@ -162,12 +163,26 @@
 			}
 		},
 
-		async onLoad(options){
+		onHide(){
+			console.log('this.ifOnShow=true')
+            this.ifOnShow=true
+        },
 
-			console.log(JSON.stringify(options),'8888888888888888888888');
+		async onShow(){
+			if(this.ifOnShow){
+				this.queryParams.pageNum = 1
+				// 是否无数据了
+				this.isEnd = false,
+				this.status = 'more',
+				await this.getList('2')
+			}
+		},
+
+
+		async onLoad(options){
+			// options.token = '7d37f0a1-a6ce-4b80-a6cb-97c72d677502'
 
 			console.log('h5---------------------------',options.token, '---------------------------');
-
 			// token赋值
 			if(options.token){
 				this.$store.dispatch('getLoginInfoAction', {
