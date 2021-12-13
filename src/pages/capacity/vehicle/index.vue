@@ -108,7 +108,14 @@
 		},
 		methods: {
 			navigateBack() {
-				uni.webView.navigateBack();
+				const pages = getCurrentPages().length;
+				if (pages === 1) {
+					uni.webView.navigateBack();
+				} else {
+					uni.webView.switchTab({
+						url: '/pages/applicate/index'
+					})
+				}
 			},
 			/** 查询字典 */
 			getDictsList() {
