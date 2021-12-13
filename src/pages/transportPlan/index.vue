@@ -86,7 +86,7 @@
 				// 二维码展示
 				show: false,
 				// 运输计划列表
-				cardList: [{}],
+				cardList: [],
 				// 是否无数据了
 				isEnd: false,
 				status: 'more',
@@ -194,7 +194,6 @@
 		methods: {
 			// s= 请求列表数据(固定字段名)
 			getList(index) {
-				return
 				this.status = 'loading';
 				uni.showLoading();
 				this.loading = true;
