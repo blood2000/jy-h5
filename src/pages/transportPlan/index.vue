@@ -220,7 +220,14 @@
 			// e=
 
 			navigateBack() {
-				uni.webView.navigateBack()
+				const pages = getCurrentPages().length;
+				if (pages === 1) {
+					uni.webView.navigateBack();
+				} else {
+					uni.webView.switchTab({
+						url: '/pages/applicate/index'
+					})
+				}
 			},
 			share(row) {
 				// console.log(row);
