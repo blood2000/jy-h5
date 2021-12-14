@@ -278,6 +278,7 @@
 			resetIdAndCode() {
 			  this.form.id = null;
 			  this.form.code = null;
+			  this.form.authStatus = 0;
 			  this.form.teamCodes = null;
 			  this.teamCodes = [];
 			},
