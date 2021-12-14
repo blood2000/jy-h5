@@ -1,6 +1,6 @@
 <template>
 	<view class="u-page">
-		<HeaderBar :title="this.form.code?'编辑司机':'新增司机'" @back="navigateBack"></HeaderBar>
+		<HeaderBar :title="title" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
@@ -117,7 +117,8 @@
 				teamCodes: [],
 				// 选择车辆列表
 				vehicleListShow: false,
-				vehicleInfoList: []
+				vehicleInfoList: [],
+				title: ''
 			}
 		},
 		onLoad(options){
@@ -125,6 +126,7 @@
 				'Authorization': options.token
 			});
 			this.form.code = options.code;
+			this.title = options.title;
 			if (options.code) {
 				this.getInfoData(options.code);
 			}
