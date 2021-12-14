@@ -92,22 +92,24 @@
 			</view>
 			<view class="ly-form-card">
 				<template v-if="form.type==0">
-					<uni-forms-item required name="recCompnayInfoId" label="发货企业" >
-						<pickers v-model="form.recCompnayInfoId" :range="recCompnayInfoIdOption" placeholder='请选择发货企业'></pickers>
-					</uni-forms-item>
-					<uni-forms-item required label="收货企业" class="border-bottom">
+					<uni-forms-item required label="收货企业" >
 						<uni-easyinput type="text" :inputBorder="false" disabled :clearable="false" v-model="transceiverAddress" />
+					</uni-forms-item>
+					<uni-forms-item required name="sedCompnayInfoId" label="发货企业" class="border-bottom">
+						<pickers v-model="form.sedCompnayInfoId" :range="sedCompnayInfoIdOption" placeholder='请选择发货企业'></pickers>
 					</uni-forms-item>
 				</template>
 
 				<template v-else>
-					<uni-forms-item required label="发货企业" >
+					<uni-forms-item required name="recCompnayInfoId" label="收货企业" >
+						<pickers v-model="form.recCompnayInfoId" :range="recCompnayInfoIdOption" placeholder='请选择收货企业'></pickers>
+					</uni-forms-item>
+					<uni-forms-item required label="发货企业" class="border-bottom">
 						<uni-easyinput type="text" :inputBorder="false" disabled :clearable="false" v-model="transceiverAddress" />
 					</uni-forms-item>
-					<uni-forms-item required name="sedCompnayInfoId" label="收货企业1" class="border-bottom">
-						<pickers v-model="form.sedCompnayInfoId" :range="sedCompnayInfoIdOption" placeholder='请选择收货企业'></pickers>
-					</uni-forms-item>
 				</template>
+
+				
 
 				<!-- 运输起点 -->
 				<uni-forms-item required name="startAddressId" label="运输起点" class="border-bottom">
@@ -435,7 +437,7 @@
 			this.form.type = options.type -0;
 			await this.gettransId();
 			await this.getorderInfoIdOption();
-			await this.getTransceiverAddress();
+			
 			await this.getOrderPlanTeanRelList();
 			await this.getshfuewnsdnsddssOption();
 			await this.getorderPolicyInfoOption();
@@ -480,6 +482,8 @@
 				this.formsUpdate = Date.now()
 			}
 
+			await this.getTransceiverAddress();
+
 			uni.hideLoading();
 
 			
@@ -505,7 +509,7 @@
 						dictValue: e.id,
 						disable: e.delFlag !== '0'
 					};
-				}).filter(e=> !e.disable);
+				});
 				console.log('获取运输公司: ',JSON.stringify(this.transIdOption));
 			},
 			// 获取货源列表
@@ -515,7 +519,7 @@
 					'pageSize': 1000,
 					'status': 0
 				};
-				if (this.cbData) {
+				if (this.id) {
 					delete que.status;
 				}
 
@@ -526,12 +530,11 @@
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				}).filter(e=> !e.disable);
+				});
 			},
 			// 获取收发企业
 			async getTransceiverAddress() {
-				console.log(this.form.type == 0);
-				if (this.form.type == 0) {
+				if (this.form.type == 1) {
 					return this.getrecCompnayInfoIdOption();
 				} else {
 					return this.getsedCompnayInfoIdOption();
@@ -544,11 +547,12 @@
 					'pageSize': 1000,
 					'status': 0
 				};
-				if (this.cbData) {
+				if (this.id) {
 					delete que.status;
 				}
 
 				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
+				
 				this.recCompnayInfoIdOption = _data.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.sedCompnayInfoId = e.id;
@@ -559,7 +563,7 @@
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				}).filter(e=> !e.disable);
+				});
 			},
 
 			// 获取发货企业
@@ -569,11 +573,13 @@
 					'pageSize': 1000,
 					'status': 0
 				};
-				if (this.cbData) {
+				if (this.id) {
 					delete que.status;
 				}
 
 				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
+
+				console.log(_data,' 88887');
 				this.sedCompnayInfoIdOption = _data.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.recCompnayInfoId = e.id;
@@ -585,7 +591,7 @@
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				}).filter(e=> !e.disable);
+				});
 			},
 
 			// 调度者
@@ -595,7 +601,7 @@
 					'pageSize': 1000,
 					'status': 0
 				};
-				if (this.cbData) {
+				if (this.id) {
 					delete que.status;
 				}
 				const _data = (await getDispatcherTeam(que, this.headerInfo)).list
@@ -617,7 +623,7 @@
 					'pageSize': 1000,
 					'status': 0
 				};
-				if (this.cbData) {
+				if (this.id) {
 					delete que.status;
 				}
 

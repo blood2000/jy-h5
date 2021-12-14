@@ -43,6 +43,10 @@
 		methods:{
 			handlerChange(e){
 				const index = e.detail.value
+				if(this.range[index].disable){
+					uni.showToast({title: '此项已禁用',icon: 'none', duration: 1000});
+					return
+				}
 				this.$emit('input', this.range[index].dictValue)
 				this.$emit('change', this.range[index].dictValue)
 			}
@@ -64,4 +68,5 @@
 		height: 100%;
 		text-align: right;
 	}
+	
 </style>
