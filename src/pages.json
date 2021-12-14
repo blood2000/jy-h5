@@ -153,6 +153,20 @@
 			"enablePullDownRefresh": false,
 			"navigationBarBackgroundColor": "#ffffff"
 		}
+	},{
+		"path": "pages/protocol/privacyPolicy",
+		"style": {
+			"navigationBarTitleText": "隐私政策",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false
+		}
+	},{
+		"path": "pages/protocol/userAgreement",
+		"style": {
+			"navigationBarTitleText": "用户协议",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false
+		}
 	}
   ],
   "globalStyle": {

@@ -59,3 +59,12 @@ export function userNotice(query, config) {
 		headers: config
 	});
 }
+
+// 获取用户详细信息
+export function getInfo(config) {
+	return uniRequest({
+		url: '/system/addressBook/detailCurrentUser',
+		method: 'get',
+		headers: config
+	});
+}

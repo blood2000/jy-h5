@@ -3,7 +3,7 @@
 		@change="handlerChange($event)">
 		<view class="ly-flex-pack-end">
 			<slot>
-				<view v-if="(_value || _value ===0) && range.length > 0" class="picker-input">
+				<view v-if="(_value || _value ===0) && range.length > 0" class="limitWide picker-input g-single-row" >
 					{{ range[_value].dictLabel }}
 				</view>
 				<view class="picker-placeholder" v-else>{{placeholder}}</view>
@@ -51,7 +51,17 @@
 </script>
 
 <style lang="scss" scoped>
+	.ly-flex-pack-end .limitWide{
+		width: 300upx;
+	}
+
 	.yangiwiss{
 		margin-left: 13upx;
+	}
+	.picker-input{
+		position: relative;
+		width: 100%;
+		height: 100%;
+		text-align: right;
 	}
 </style>
