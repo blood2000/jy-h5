@@ -21,56 +21,59 @@
 				</view>
 			</view>
 		</view>
-		<view class="bg-white" style="padding: 0 0 24upx;">
-			<view :style="{height:statusBarHeight*2 + 212 +'upx'}"></view>
-			<!-- 官网新闻 -->
-			<swiper class="screen-swiper square-dot" :indicator-dots="true" :circular="true" :autoplay="true" interval="5000" duration="500">
-				<swiper-item v-for="(item,index) in newsList" :key="index" @click="navToWebsite">
-					<image style="border-radius: 16upx;" :src="item.newsPrefaceImg" mode="aspectFill"></image>
-					<view class="news-title">
-						<view class="news-tag text-white">{{item.newsPreface}}</view>
+		<view class="" style="overflow-y: auto;" @touchmove.stop>
+			<view class="bg-white" style="padding: 0 0 24upx;">
+				<view :style="{height:statusBarHeight*2 + 212 +'upx'}"></view>
+				<!-- 官网新闻 -->
+				<swiper class="screen-swiper square-dot" :indicator-dots="true" :circular="true" :autoplay="true" interval="5000" duration="500">
+					<swiper-item v-for="(item,index) in newsList" :key="index" @click="navToWebsite">
+						<image style="border-radius: 16upx;" :src="item.newsPrefaceImg" mode="aspectFill"></image>
+						<view class="news-title">
+							<view class="news-tag text-white">{{item.newsPreface}}</view>
+						</view>
+					</swiper-item>
+				</swiper>
+				<!-- 应用 -->
+				<view class="flex align-center flex-wrap" style="margin: 0 10upx;">
+					<view v-for="(item, index) in usuallyList" :key="index" class="app-frame" @click="navToApplicate(item)">
+						<image class="app-icon" :src="'/static/icons/svg/' + item.icon + '.svg'" mode=""></image>
+						<view class="app-name">{{item.menuName}}</view>
 					</view>
-				</swiper-item>
-			</swiper>
-			<!-- 应用 -->
-			<view class="flex align-center flex-wrap" style="margin: 0 10upx;">
-				<view v-for="(item, index) in usuallyList" :key="index" class="app-frame" @click="navToApplicate(item)">
-					<image class="app-icon" :src="'/static/icons/svg/' + item.icon + '.svg'" mode=""></image>
-					<view class="app-name">{{item.menuName}}</view>
+					<view class="app-frame flex flex-direction align-center justify-center" @tap="showModal" data-target="DrawerModalR">
+						<image class="app-icon" src="/static/workbench/icon_add.png" mode=""></image>
+						<view class="app-name">添加</view>
+					</view>
 				</view>
-				<view class="app-frame flex flex-direction align-center justify-center" @tap="showModal" data-target="DrawerModalR">
-					<image class="app-icon" src="/static/workbench/icon_add.png" mode=""></image>
-					<view class="app-name">添加</view>
+			</view>
+			<!-- 通知 -->
+			<view class="app-container margin-mtop padding-m flex align-center justify-between" @click="navToNotice">
+				<image class="notice-img" src="/static/workbench/icon_notice.png" mode=""></image>
+				<view style="width: calc(100vw - 220upx);padding-left: 20upx;border-left: 1upx solid #EEEEEE;">
+					 <!-- v-for="(item,index) in noticeList" :key="index" -->
+					<view class="flex align-center justify-between size26">
+						<view class="todo-title">暂无消息</view>
+						<!-- new Date(item.createTime) -->
+						<!-- <l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date() "></l-time> -->
+					</view>
+					<!-- <view class="flex align-center justify-between size26">
+						<view class="todo-title">运输计划名称</view>
+						<l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date() "></l-time>
+					</view> -->
+				</view>
+			</view>
+			<!-- 待办 -->
+			<view class="app-container padding-m margin-mtop">
+				<view class="flex align-center justify-between">
+					 <!-- <text class="text-red">{{todoTotal}}</text> -->
+					<view class="todo-title">今日事项</view>
+					<!-- <view class="text-gray" @click="navToUpcoming">更多<text class="cuIcon-right"></text></view> -->
+				</view>
+				<view class="flex align-center justify-center" style="height: 500upx;">
+					<image class="todo-img" src="/static/workbench/icon_expect.png" mode=""></image>
 				</view>
 			</view>
 		</view>
-		<!-- 通知 -->
-		<view class="app-container margin-mtop padding-m flex align-center justify-between" @click="navToNotice">
-			<image class="notice-img" src="/static/workbench/icon_notice.png" mode=""></image>
-			<view style="width: calc(100vw - 220upx);padding-left: 20upx;border-left: 1upx solid #EEEEEE;">
-				 <!-- v-for="(item,index) in noticeList" :key="index" -->
-				<view class="flex align-center justify-between size26">
-					<view class="todo-title">暂无消息</view>
-					<!-- new Date(item.createTime) -->
-					<!-- <l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date() "></l-time> -->
-				</view>
-				<!-- <view class="flex align-center justify-between size26">
-					<view class="todo-title">运输计划名称</view>
-					<l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date() "></l-time>
-				</view> -->
-			</view>
-		</view>
-		<!-- 待办 -->
-		<view class="app-container padding-m margin-mtop">
-			<view class="flex align-center justify-between">
-				 <!-- <text class="text-red">{{todoTotal}}</text> -->
-				<view class="todo-title">今日事项</view>
-				<!-- <view class="text-gray" @click="navToUpcoming">更多<text class="cuIcon-right"></text></view> -->
-			</view>
-			<view class="flex align-center justify-center" style="height: 500upx;">
-				<image class="todo-img" src="/static/workbench/icon_expect.png" mode=""></image>
-			</view>
-		</view>
+		
 		<!-- 底部操作栏 -->
 		<Tabbar :cur="'work'" :height="true" />
 	</view>
