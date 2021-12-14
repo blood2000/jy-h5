@@ -55,7 +55,6 @@
                //正则表达试
                 // let value = (val - 0) + ''
                 let value = Math.round((val - 0)*100)/100 
-                // console.log(value.match(/^\d*(\.?\d{0,2})/g));
                 // value = (value.match(/^\d*(\.?\d{0,2})/g)[0]) || null
 
 				//重新赋值给input
