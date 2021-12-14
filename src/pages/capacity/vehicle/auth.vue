@@ -349,7 +349,7 @@
 
 <style lang="scss" scoped>
 	.u-page{
-		padding-bottom: 154upx;
+		padding-bottom: 128upx;
 		.notify-msg{
 			height: 66upx;
 			line-height: 66upx;

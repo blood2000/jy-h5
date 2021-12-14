@@ -85,7 +85,9 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	margin: 24upx 24upx 50upx;
+	padding: 24upx 24upx 24upx;
+	border-top: 1px solid #f0f0f0;
+	background: #fff;
 	.reset, .submit{
 		height: 80upx;
 		line-height: 76upx;

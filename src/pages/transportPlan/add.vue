@@ -160,7 +160,7 @@
 
 
 		</uni-forms>
-		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center mt">
+		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
 			<view class="reset" @click="handleCancle('form')">{{ cbData?'取消':'重置' }}</view>
 			<view class="submit" @click="handleSubmit('form')">{{ cbData?'确认修改': '确认创建' }}</view>
 		</view>
@@ -986,6 +986,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.u-page{
+		padding-bottom: 128upx;
+	}
 	.uni-forms-item{
 		overflow: hidden;
 	}
@@ -995,10 +998,6 @@
 
 	.g-color-gray {
 		color: #999999;
-	}
-	.ly-form-button.mt{
-		position: static;
-		padding-bottom: 20upx;
 	}
 	.yangiwiss{
 		margin-left: 13upx;

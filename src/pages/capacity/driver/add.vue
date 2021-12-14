@@ -316,6 +316,6 @@
 
 <style lang="scss" scoped>
 	.u-page{
-		padding-bottom: 154upx;
+		padding-bottom: 128upx;
 	}
 </style>
