@@ -16,21 +16,7 @@
 					<uni-easyinput type="password" :inputBorder="false" :clearable="false" v-model="form.password" :disabled="disabled" :placeholder="form.id?'密码未修改可不填写':'初始密码abcd1234@'" />
 				</uni-forms-item>
 				<uni-forms-item required name="isDriverFreeze" label="账号状态">
-					<picker
-					 :value="form.isDriverFreeze"
-					 :range="isFreezeOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(isFreezeOptions, 'isDriverFreeze', e)">
-						<view v-if="form.isDriverFreeze || form.isDriverFreeze === 0" class="picker-input text-right">
-							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isDriverFreeze)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择账号状态
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.isDriverFreeze" :range="isFreezeOptions" placeholder='请选择账号状态' :disabled="disabled"></pickers>
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -94,11 +80,13 @@
 	import TeamList from '@/pages/capacity/components/teamList.vue'
 	import VehicleList from '@/pages/capacity/components/vehicleList.vue'
 	import HeaderBar from '@/components/Building/HeaderBar2.vue';
+	import pickers from '../components/picker.vue';
 	export default {
 		components: {
 			TeamList,
 			VehicleList,
-			HeaderBar
+			HeaderBar,
+			pickers
 		},
 		computed: {
 			...mapState({
@@ -161,10 +149,6 @@
 				if (this.form.teamCodes) {
 					this.teamCodes = this.form.teamCodes.split(',');
 				}
-			},
-			// picker选中
-			pickerChange(arr, key, e) {
-				this.$set(this.form, key, arr[e.detail.value].dictValue);
 			},
 			// 确认创建
 			handleSubmit() {

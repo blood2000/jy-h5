@@ -60,21 +60,7 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="identificationEffective" label="长期有效" class="border-bottom">
-					<picker
-					 :value="form.identificationEffective"
-					 :range="isOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(isOptions, 'identificationEffective', e)">
-						<view v-if="form.identificationEffective || form.identificationEffective === 0" class="picker-input text-right">
-							{{ isOptions[isOptions.findIndex(res => res.dictValue===form.identificationEffective)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							是否长期有效
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.identificationEffective" :range="isOptions" placeholder='是否长期有效' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item name="homeAddress" label="所在区域">
 					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.homeAddress" :disabled="disabled" placeholder="支持自动识别" />
@@ -111,21 +97,7 @@
 					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.issuingOrganizations" :disabled="disabled" placeholder="支持自动识别" />
 				</uni-forms-item>
 				<uni-forms-item name="driverLicenseType" label="驾驶证类型" class="border-bottom">
-					<picker
-					 :value="form.driverLicenseType"
-					 :range="driverLicenseTypeOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(driverLicenseTypeOptions, 'driverLicenseType', e)">
-						<view v-if="form.driverLicenseType" class="picker-input text-right">
-							{{ driverLicenseTypeOptions[driverLicenseTypeOptions.findIndex(res => res.dictValue===form.driverLicenseType)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							支持自动识别
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.driverLicenseType" :range="driverLicenseTypeOptions" placeholder='支持自动识别' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item required name="validPeriodFrom" label="生效日期" class="border-bottom">
 					<picker mode="date" :value="form.validPeriodFrom" :start="startDate" :end="form.validPeriodTo" :disabled="disabled" @change="(e)=>bindDateChange('validPeriodFrom', e)">
@@ -152,21 +124,7 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="validPeriodAlways" label="长期有效">
-					<picker
-					 :value="form.validPeriodAlways"
-					 :range="isOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(isOptions, 'validPeriodAlways', e)">
-						<view v-if="form.validPeriodAlways || form.validPeriodAlways === 0" class="picker-input text-right">
-							{{ isOptions[isOptions.findIndex(res => res.dictValue===form.validPeriodAlways)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							是否长期有效
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.validPeriodAlways" :range="isOptions" placeholder='是否长期有效' :disabled="disabled"></pickers>
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -199,21 +157,7 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="workLicenseProvinceCode" label="从业证办理省份名称">
-					<picker
-					 :value="form.workLicenseProvinceCode"
-					 :range="provinceCodeOptions"
-					 range-key="provinceName"
-					 :disabled="disabled"
-					 @change="(e)=>pickerProvinceChange(provinceCodeOptions, 'workLicenseProvinceCode', e)">
-						<view v-if="form.workLicenseProvinceCode" class="picker-input text-right">
-							{{ provinceCodeOptions[provinceCodeOptions.findIndex(res => res.provinceCode===form.workLicenseProvinceCode)].provinceName }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择省份
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickerProvince v-model="form.workLicenseProvinceCode" :range="provinceCodeOptions" placeholder='请选择省份' :disabled="disabled"></pickerProvince>
 				</uni-forms-item>
 			</view>
 		</uni-forms>
@@ -235,10 +179,14 @@
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { idCardReg } from '@/utils/validate.js';
 	import HeaderBar from '@/components/Building/HeaderBar2.vue';
+	import pickers from '../components/picker.vue';
+	import pickerProvince from '../components/pickerProvince.vue';
 	export default {
 		components: {
 			UploadSingleImage,
-			HeaderBar
+			HeaderBar,
+			pickers,
+			pickerProvince
 		},
 		computed: {
 			...mapState({
@@ -297,13 +245,6 @@
 				getProvinceList({}, this.headerInfo).then((response) => {
 					this.provinceCodeOptions = response.rows;
 				});
-			},
-			// picker选中
-			pickerChange(arr, key, e) {
-				this.$set(this.form, key, arr[e.detail.value].dictValue);
-			},
-			pickerProvinceChange(arr, key, e) {
-				this.$set(this.form, key, arr[e.detail.value].provinceCode);
 			},
 			// 时间控件
 			bindDateChange(key, e) {
