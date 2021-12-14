@@ -57,9 +57,7 @@
 		margin: 10upx 0 0;
 		padding: 6upx;
 		&.disabled{
-			-webkit-filter: grayscale(100%);
-			filter: grayscale(100%);
-			opacity: 0.5;
+			opacity: 0.6;
 		}
 	}
 	.uni-error-message{

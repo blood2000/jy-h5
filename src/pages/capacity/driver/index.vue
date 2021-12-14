@@ -142,13 +142,13 @@
 			// 新增
 			handleAdd() {
 				uni.navigateTo({
-				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization
+				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization+'&title=新增司机'
 				});
 			},
 			// 编辑
 			handleUpdate(row) {
 				uni.navigateTo({
-				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization+'&code='+row.code
+				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization+'&code='+row.code+'&title=编辑司机'
 				});
 			},
 			// 删除
