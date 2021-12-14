@@ -18,7 +18,7 @@
 					<pickers v-model="form.vehicleWidth" :range="vehicleWidthOptions" placeholder='请选择车宽' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item name="roadTransportCertificateNumber" label="道路运输许可证号" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.roadTransportCertificateNumber" :disabled="disabled" placeholder="请输入道路运输许可证号" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.roadTransportCertificateNumber" :disabled="disabled" placeholder="请输入道路运输许可证号" />
 				</uni-forms-item>
 				<uni-forms-item name="vehicleColorCode" label="车身颜色" class="border-bottom">
 					<pickers v-model="form.vehicleColorCode" :range="carBodyColorOptions" placeholder='请选择车身颜色' :disabled="disabled"></pickers>
