@@ -2,6 +2,18 @@
 	<view class="home-page">
 		<view class="search-container">
 			<view :style="{height:statusBarHeight*2+'upx'}"></view>
+			<view class="flex justify-between margin-mtop">
+				<view class="flex align-center">
+					<image class="top-avatar shadow-warp bg-white" :src="userInfo.avatar?userInfo.avatar:avatar" mode="aspectFill"></image>
+					<view class="margin-mleft">
+						<view class="flex align-center">
+							<view class="size32 text-bold">Hi,{{userInfo.userName}}</view>
+						</view>
+						<view class="text-tag size20 margin-stop">{{userInfo.org?userInfo.org.orgName:'暂无'}}</view>
+					</view>
+				</view>
+				<!-- <view class="size52 cuIcon-add text-bold" @click="moreFunction = !moreFunction"></view> -->
+			</view>
 			<view class="cu-bar search">
 				<view class="search-form" @click="navToSearch">
 					<text class="cuIcon-search"></text>
@@ -10,7 +22,7 @@
 			</view>
 		</view>
 		<view class="bg-white" style="padding: 0 0 24upx;">
-			<view :style="{height:statusBarHeight*2 + 100 +'upx'}"></view>
+			<view :style="{height:statusBarHeight*2 + 212 +'upx'}"></view>
 			<!-- 官网新闻 -->
 			<swiper class="screen-swiper square-dot" :indicator-dots="true" :circular="true" :autoplay="true" interval="5000" duration="500">
 				<swiper-item v-for="(item,index) in newsList" :key="index" @click="navToWebsite">
@@ -66,7 +78,7 @@
 
 <script>
 	import { mapState } from 'vuex';
-	import { listUsually, listNews, userNotice, applicateList }from "@/config/service/workbench.js"
+	import { listUsually, listNews, userNotice, applicateList, getInfo }from "@/config/service/workbench.js"
 	import uniData from '@/utils/uni.webview.1.5.2.js'
 	import Tabbar from '@/components/Tabbar/Tabbar.vue';
 
@@ -83,7 +95,9 @@
 		},
 		data() {
 			return {
-				userInfo: uni.getStorageSync('userInfo'),
+				userInfo: {
+					avatar: ''
+				},
 				// 默认头像
 				avatar: '/static/avatar.png',
 				CustomBar: this.CustomBar, // 顶部距离
@@ -151,6 +165,12 @@
 		},
 		methods: {
 			getInfo() {
+				// 获取用户信息
+				getInfo(this.headerInfo).then(res => {
+					this.userInfo = res.data;
+					uni.hideLoading();
+					uni.stopPullDownRefresh();
+				});
 				this.getList();
 				// this.getData_1();
 			},
