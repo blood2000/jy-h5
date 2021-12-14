@@ -118,14 +118,18 @@
 			// 根据code获取图片path
 			handleGetFile(code) {
 				if (code) {
-					getFile(code, this.headerInfo).then(response => {
-						if (response.data && response.data.length > 0) {
-							this.pathValue = response.data[0].attachUrl;
-						} else {
-							this.pathValue = '';
-						}
-						console.log('getFile: ', this.pathValue)
-					});
+					if (code.startsWith('https://') || code.startsWith('http://')) {
+					  this.pathValue = code;
+					} else {
+						getFile(code, this.headerInfo).then(response => {
+							if (response.data && response.data.length > 0) {
+								this.pathValue = response.data[0].attachUrl;
+							} else {
+								this.pathValue = '';
+							}
+							console.log('getFile: ', this.pathValue)
+						});
+					}
 				}
 			},
 			// 图片识别
