@@ -54,8 +54,14 @@
 
 				<uni-forms-item required name="weight" label="货品总量">
 					<view class="ly-flex-align-center">
-						<uni-easyinput :maxlength="15" @blur="()=> olDweightType = form.weight" type="number" :disabled="form.weightType.length>0" :inputBorder="false" :clearable="false" v-model="form.weight" 
+						<NumberBox
+							:max="15" 
+							@blur="()=> olDweightType = form.weight" 
+							type="number" 
+							:disabled="form.weightType.length>0" 
+							v-model="form.weight" 
 							placeholder="请输入货品总量" />
+						
 						<!-- height: 36px;
 					display: flex;
 					/* line-height: 36px; */
@@ -180,7 +186,7 @@
 	orderPlanFreightList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoDetatil } from "@/config/service/transportPlan/transportationPlan.js"
 
 	// import { orderPlanInfoList as getList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoUpdateStatus, teamSelectTeamListByCodes } from '@/config/service/transportPlan/transportationPlan.js'
-	
+	import NumberBox from '@/components/number-box/number-box'
 	import TeamList from '@/pages/capacity/components/teamList.vue'
 
 	import jsfunPicker from '@/components/jsfun-picker/jsfun-picker.vue'
@@ -197,7 +203,8 @@
 			pickers,
 			jsfunPicker,
 			TeamList,
-			HeaderBar
+			HeaderBar,
+			NumberBox
 		},
 		data() {
 			return {
@@ -479,6 +486,7 @@
 			
 		},
 
+		
 		methods: {
 			// 获取运输公司
 			async gettransId() {
@@ -948,7 +956,31 @@
 				}
 
 				return true
-			}
+			},
+
+			// handleInput(e) {
+			// 	let val = e.target.value;
+			// 	val = val.replace(/^./g, "");
+			// 	val = val.replace(/[^\d.]/g, ""); //清除"数字"和"."以外的字符
+			// 	val = val.replace(/.{2,}/g, "."); //只保留第一个. 清除多余的
+			// 	val = val.replace(/^0+./g, "0.");
+			// 	val = val.match(/^0+[1-9]+/) ? (val = val.replace(/^0+/g, "")) : val;
+			// 	val = val.match(/^\d*(.?\d{0,2})/g)[0] || "";
+			// 	val = val
+			// 	.replace(".", "")
+			// 	.replace(/./g, "")
+			// 	.replace("", ".");
+			// 	if (val.includes(".")) {
+			// 	let numDian = val.toString().split(".")[1].length;
+			// 	if (numDian === 2) {
+			// 	this.moneyMaxLeng = val.length;
+			// 	}
+			// 	} else {
+			// 	this.moneyMaxLeng = 8;
+			// 	}
+			// 	this.fee = val;
+			// }
+
 		}
 	}
 </script>
