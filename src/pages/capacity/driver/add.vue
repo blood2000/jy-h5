@@ -216,7 +216,7 @@
 			},
 			/** 绑定司机和租户的关系 */
 			setRel(params) {
-				addTenantRel({isArrayQuery: JSON.stringify(params), this.headerInfo).then(result => {
+				addTenantRel({isArrayQuery: JSON.stringify(params)}, this.headerInfo).then(result => {
 					uni.hideLoading();
 					uni.showToast({
 						title: '保存成功',
