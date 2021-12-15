@@ -28,7 +28,7 @@
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="请上传行驶证" label-position="top">
+				<uni-forms-item label="请上传行驶证" label-position="top">
 					<view class="upload-msg">上传行驶证照片，图片大小不能超过3M</view>
 					<uni-row class="demo-uni-row mb20" :gutter="32">
 					    <uni-col :span="12">
@@ -57,7 +57,7 @@
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="道路运输许可证" label-position="top">
+				<uni-forms-item label="道路运输许可证" label-position="top">
 					<view class="upload-msg">上传道路运输许可证，图片大小不能超过3M</view>
 					<uni-row class="demo-uni-row mb20" :gutter="32">
 					    <uni-col :span="12">
@@ -72,7 +72,7 @@
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="车头正面照" label-position="top">
+				<uni-forms-item label="车头正面照" label-position="top">
 					<view class="upload-msg">上传车头正面照，图片大小不能超过3M</view>
 					<uni-row class="demo-uni-row mb20" :gutter="32">
 					    <uni-col :span="12">
@@ -249,34 +249,34 @@
 					});
 					return true;
 				}
-				if (!this.form.vehicleLicenseImg) {
-					uni.showToast({
-						title: '请上传行驶证',
-						icon: 'none'
-					});
-					return true;
-				}
-				if (!this.form.vehicleLicenseSecondImg) {
-					uni.showToast({
-						title: '请上传行驶证副页',
-						icon: 'none'
-					});
-					return true;
-				}
-				if (!this.form.roadTransportCertificateImg) {
-					uni.showToast({
-						title: '请上传道路运输许可证',
-						icon: 'none'
-					});
-					return true;
-				}
-				if (!this.form.vehicleImage) {
-					uni.showToast({
-						title: '请上传车头正面照',
-						icon: 'none'
-					});
-					return true;
-				}
+				// if (!this.form.vehicleLicenseImg) {
+				// 	uni.showToast({
+				// 		title: '请上传行驶证',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
+				// if (!this.form.vehicleLicenseSecondImg) {
+				// 	uni.showToast({
+				// 		title: '请上传行驶证副页',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
+				// if (!this.form.roadTransportCertificateImg) {
+				// 	uni.showToast({
+				// 		title: '请上传道路运输许可证',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
+				// if (!this.form.vehicleImage) {
+				// 	uni.showToast({
+				// 		title: '请上传车头正面照',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
 			},
 			/** 图片识别后回填 */
 			fillForm(type, data, side) {

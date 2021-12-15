@@ -202,6 +202,7 @@
 <style lang="scss" scoped>
 	.u-page {
 		padding: 0;
+		height: 100vh;
 	}
 	// 列表
 	.card-list{
