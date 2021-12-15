@@ -1,4 +1,4 @@
-    <!-- 头部导航栏 -->
+<!-- 头部导航栏 -->
 <template>
   <div :style="{'--statusBar': statusBar }">
     <uni-nav-bar left-icon="back" @clickLeft="$emit('back')" :title="title" :statusBar="true" fixed :border='false' v-bind="$attrs">
@@ -31,6 +31,7 @@ export default {
     ...mapState({
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
+	
     statusBar(){
       return this.statusBarHeight + 'px'
     }
@@ -49,9 +50,14 @@ export default {
 	.uni-status-bar{
 		height: var(--statusBar) !important;
 	}
+  
+  /* #ifdef H5 */
+  .uni-navbar__header-btns-right{
+    width: 180upx;
+  }
+  /* #endif */
 }
 .header-bar-right-text{
-	width: 120rpx !important;
 	font-size: 28upx !important;
 }
 </style>
