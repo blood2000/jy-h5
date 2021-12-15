@@ -5,6 +5,16 @@
 	"pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     // 启动页
+
+	{
+		"path": "pages/material/index",
+		"style": {
+		  "navigationBarTitleText": "物料管理",
+		  "navigationStyle": "custom",
+		  "enablePullDownRefresh": true,
+		  "navigationBarBackgroundColor":"#ffffff"
+		}
+	},
 	{
 		"path": "pages/transportPlan/index",
 		"style": {
@@ -12,7 +22,7 @@
 		  "navigationBarTitleText": "运输计划",
 		  "enablePullDownRefresh": true
 		}
-	  },
+	},
     {
       "path": "pages/generalTable/index",
       "style": {
@@ -27,10 +37,7 @@
         "navigationBarTitleText": "厂区管理",
         "navigationStyle": "custom",
         "enablePullDownRefresh": true,
-        "navigationBarBackgroundColor": "#3A65FF",
-        "app-plus": {
-          "bounce": "none"
-        }
+        "navigationBarBackgroundColor": "#3A65FF"
       }
     },
     {
@@ -39,10 +46,7 @@
         "navigationBarTitleText": "添加场区分类",
         "navigationStyle": "custom",
         "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#3A65FF",
-        "app-plus": {
-          "bounce": "none"
-        }
+        "navigationBarBackgroundColor": "#3A65FF"
       }
     },
     {
@@ -51,10 +55,7 @@
         "navigationBarTitleText": "添加场区",
         "navigationStyle": "custom",
         "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#3A65FF",
-        "app-plus": {
-          "bounce": "none"
-        }
+        "navigationBarBackgroundColor": "#3A65FF"
       }
     },
 	{
@@ -62,11 +63,7 @@
 	  "style": {
 	    "navigationBarTitleText": "车辆管理",
 	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false,
-	    "navigationBarBackgroundColor": "#ffffff",
-		"app-plus": {
-		  "bounce": "none"
-		}
+	    "enablePullDownRefresh": false
 	  }
 	},
 	{
@@ -74,11 +71,7 @@
 	  "style": {
 	    "navigationBarTitleText": "新增车辆",
 	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false,
-	    "navigationBarBackgroundColor": "#ffffff",
-		"app-plus": {
-		  "bounce": "none"
-		}
+	    "enablePullDownRefresh": false
 	  }
 	},
 	{
@@ -86,11 +79,7 @@
 	  "style": {
 	    "navigationBarTitleText": "提交S认证",
 	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false,
-	    "navigationBarBackgroundColor": "#ffffff",
-		"app-plus": {
-		  "bounce": "none"
-		}
+	    "enablePullDownRefresh": false
 	  }
 	},
 	{
@@ -98,11 +87,7 @@
 	  "style": {
 	    "navigationBarTitleText": "司机管理",
 	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false,
-	    "navigationBarBackgroundColor": "#ffffff",
-		"app-plus": {
-		  "bounce": "none"
-		}
+	    "enablePullDownRefresh": false
 	  }
 	},
 	{
@@ -110,11 +95,15 @@
 	  "style": {
 	    "navigationBarTitleText": "新增司机",
 	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false,
-	    "navigationBarBackgroundColor": "#ffffff",
-		"app-plus": {
-		  "bounce": "none"
-		}
+	    "enablePullDownRefresh": false
+	  }
+	},
+	{
+	  "path": "pages/capacity/driver/auth",
+	  "style": {
+	    "navigationBarTitleText": "提交S认证",
+	    "navigationStyle": "custom",
+	    "enablePullDownRefresh": false
 	  }
 	},
 	{
@@ -125,40 +114,14 @@
 			"enablePullDownRefresh": true
 		}
 	},
-	{
-	  "path": "pages/capacity/driver/auth",
-	  "style": {
-	    "navigationBarTitleText": "提交S认证",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false,
-	    "navigationBarBackgroundColor": "#ffffff",
-		"app-plus": {
-		  "bounce": "none"
-		}
-	  }
-	},
-	{
-	  "path": "pages/material/index",
-	  "style": {
-	    "navigationBarTitleText": "物料管理",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": true,
-	    "navigationBarBackgroundColor":"#ffffff",
-		"app-plus": {
-		  "bounce": "none"
-		}
-	  }
-	},
+	
 	{
 	  "path": "pages/material/materialCategory",
 	  "style": {
 	    "navigationBarTitleText": "物料管理",
 	    "navigationStyle": "custom",
 	    "enablePullDownRefresh": true,
-	    "navigationBarBackgroundColor":"#ffffff",
-	  		"app-plus": {
-	  		  "bounce": "none"
-	  		}
+	    "navigationBarBackgroundColor":"#ffffff"
 	  }
 	},{
 		"path": "pages/transportPlan/add",
@@ -166,10 +129,7 @@
 			"navigationBarTitleText": "创建收货计划",
 			"navigationStyle": "custom",
 			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#ffffff",
-			"app-plus": {
-				"bounce": "none"
-			}
+			"navigationBarBackgroundColor": "#ffffff"
 		}
 	},{
 		"path": "pages/statistics/receive",
@@ -177,10 +137,7 @@
 			"navigationBarTitleText": "收货统计",
 			"navigationStyle": "custom",
 			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#ffffff",
-			"app-plus": {
-				"bounce": "none"
-			}
+			"navigationBarBackgroundColor": "#ffffff"
 		}
 	},{
 		"path": "pages/statistics/deliver",
@@ -188,10 +145,7 @@
 			"navigationBarTitleText": "发货统计",
 			"navigationStyle": "custom",
 			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#ffffff",
-			"app-plus": {
-				"bounce": "none"
-			}
+			"navigationBarBackgroundColor": "#ffffff"
 		}
 	},{
 		"path": "pages/statistics/custom",
@@ -199,10 +153,21 @@
 			"navigationBarTitleText": "自定义统计",
 			"navigationStyle": "custom",
 			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#ffffff",
-			"app-plus": {
-				"bounce": "none"
-			}
+			"navigationBarBackgroundColor": "#ffffff"
+		}
+	},{
+		"path": "pages/protocol/privacyPolicy",
+		"style": {
+			"navigationBarTitleText": "隐私政策",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false
+		}
+	},{
+		"path": "pages/protocol/userAgreement",
+		"style": {
+			"navigationBarTitleText": "用户协议",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false
 		}
 	}
   ],

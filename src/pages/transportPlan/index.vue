@@ -1,5 +1,5 @@
 <template>
-	<view class="u-page">
+	<view class="u-page" style="height: 100%;">
 		
 		<HeaderBar title="运输计划" @back="navigateBack"></HeaderBar>
 		
@@ -44,7 +44,8 @@
 						</image>
 					</view>
 					<view class="qr" @tap.stop >
-						<tki-qrcode cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
+						<image :src="qrcode.src" mode="aspectFill" style="height:460upx;width:460upx"></image>
+						<tki-qrcode :show="false" cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
 							:foreground="qrcode.foreground" :pdground="qrcode.pdground" :icon="qrcode.icon" :iconSize="qrcode.iconsize" :lv="qrcode.lv"
 							:onval="qrcode.onval" :loadMake="qrcode.loadMake" :usingComponents="true" @result="result" />
 					</view>
@@ -69,7 +70,7 @@
 	import html2canvas from '@/components/html2canvas/html2canvas.vue'
 	import TkiQrcode from '@/components/tki-qrcode/tki-qrcode.vue'
 	import TransportCard from './components/TransportCard.vue'
-	// import { pathToBase64, base64ToPath } from 'image-tools'
+	import { pathToBase64, base64ToPath } from 'image-tools'
 	import { saveHeadImgFile } from '@/common/js/saveHeadImgFile'
 	import { orderPlanInfoList as getList} from '@/config/service/transportPlan/transportationPlan.js'
 	export default {
@@ -81,6 +82,7 @@
 		},
 		data() {
 			return {
+				ifOnShow:false,
 				statusBar: '0px',
 				// 二维码展示
 				show: false,
@@ -161,11 +163,26 @@
 			}
 		},
 
+		onHide(){
+			console.log('this.ifOnShow=true')
+            this.ifOnShow=true
+        },
+
+		async onShow(){
+			if(this.ifOnShow){
+				this.queryParams.pageNum = 1
+				// 是否无数据了
+				this.isEnd = false,
+				this.status = 'more',
+				await this.getList('2')
+			}
+		},
+
+
 		async onLoad(options){
+			// options.token = '7d37f0a1-a6ce-4b80-a6cb-97c72d677502'
 
-			// console.log(options.token, '接收到的token');
-
-
+			console.log('h5---------------------------',options.token, '---------------------------');
 			// token赋值
 			if(options.token){
 				this.$store.dispatch('getLoginInfoAction', {
@@ -184,10 +201,8 @@
 				}catch(e){
 					//TODO handle the exception
 				}
-
+			
 				this.getList();
-			} else {
-
 			}
 		},
 
@@ -220,13 +235,19 @@
 			// e=
 
 			navigateBack() {
-				uni.webView.navigateBack()
+				const pages = getCurrentPages().length;
+				if (pages === 1) {
+					uni.webView.navigateBack();
+				} else {
+					uni.webView.switchTab({
+						url: '/pages/applicate/index'
+					})
+				}
 			},
 			share(row) {
 				// console.log(row);
 				this.cbData = row
 				this.$set(this.qrcode, 'val', `https://api.chaohaoyun.cn/jysj/qrcode?code=${this.cbData.orderPlanCode}&type=1`)
-				console.log(this.qrcode);
 				this.filePath = ''
 				this.show = true
 			},
@@ -252,8 +273,10 @@
 
 			// 二维码返回地址
 			result(res) {
-				this.qrcode.src = res
-				this.domId = '#poster' // 返回后生成海报
+				base64ToPath(res).then(src=>{
+					this.qrcode.src = src
+					this.domId = '#poster' // 返回后生成海报
+				})
 			},
 
 			/**

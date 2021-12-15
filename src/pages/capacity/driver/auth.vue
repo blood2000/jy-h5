@@ -5,7 +5,7 @@
 		<div class="notify-msg">提交S认证并通过后，该车辆可以承接无车承运开票运单</div>
 		<uni-forms ref="form" :modelValue="form" label-width="160">
 			<view class="ly-form-card">
-				<uni-forms-item required label="请上传身份证件" label-position="top">
+				<uni-forms-item label="请上传身份证件" label-position="top">
 					<view class="upload-msg">上传身份证照片，图片大小不能超过3M</view>
 					<uni-row class="demo-uni-row" :gutter="32">
 					    <uni-col :span="12">
@@ -60,28 +60,14 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="identificationEffective" label="长期有效" class="border-bottom">
-					<picker
-					 :value="form.identificationEffective"
-					 :range="isOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(isOptions, 'identificationEffective', e)">
-						<view v-if="form.identificationEffective || form.identificationEffective === 0" class="picker-input text-right">
-							{{ isOptions[isOptions.findIndex(res => res.dictValue===form.identificationEffective)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							是否长期有效
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.identificationEffective" :range="isOptions" placeholder='是否长期有效' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item name="homeAddress" label="所在区域">
 					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.homeAddress" :disabled="disabled" placeholder="支持自动识别" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="请上传驾驶证件" label-position="top">
+				<uni-forms-item label="请上传驾驶证件" label-position="top">
 					<view class="upload-msg">上传驾驶证照片，图片大小不能超过3M</view>
 					<uni-row class="demo-uni-row" :gutter="32">
 					    <uni-col :span="12">
@@ -111,21 +97,7 @@
 					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.issuingOrganizations" :disabled="disabled" placeholder="支持自动识别" />
 				</uni-forms-item>
 				<uni-forms-item name="driverLicenseType" label="驾驶证类型" class="border-bottom">
-					<picker
-					 :value="form.driverLicenseType"
-					 :range="driverLicenseTypeOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(driverLicenseTypeOptions, 'driverLicenseType', e)">
-						<view v-if="form.driverLicenseType" class="picker-input text-right">
-							{{ driverLicenseTypeOptions[driverLicenseTypeOptions.findIndex(res => res.dictValue===form.driverLicenseType)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							支持自动识别
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.driverLicenseType" :range="driverLicenseTypeOptions" placeholder='支持自动识别' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item required name="validPeriodFrom" label="生效日期" class="border-bottom">
 					<picker mode="date" :value="form.validPeriodFrom" :start="startDate" :end="form.validPeriodTo" :disabled="disabled" @change="(e)=>bindDateChange('validPeriodFrom', e)">
@@ -152,25 +124,11 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="validPeriodAlways" label="长期有效">
-					<picker
-					 :value="form.validPeriodAlways"
-					 :range="isOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(isOptions, 'validPeriodAlways', e)">
-						<view v-if="form.validPeriodAlways || form.validPeriodAlways === 0" class="picker-input text-right">
-							{{ isOptions[isOptions.findIndex(res => res.dictValue===form.validPeriodAlways)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							是否长期有效
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.validPeriodAlways" :range="isOptions" placeholder='是否长期有效' :disabled="disabled"></pickers>
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="请上传从业资格证" label-position="top">
+				<uni-forms-item label="请上传从业资格证" label-position="top">
 					<view class="upload-msg">上传从业资格证，图片大小不能超过3M</view>
 					<uni-row class="demo-uni-row" :gutter="32">
 					    <uni-col :span="12">
@@ -199,21 +157,7 @@
 					</picker>
 				</uni-forms-item>
 				<uni-forms-item name="workLicenseProvinceCode" label="从业证办理省份名称">
-					<picker
-					 :value="form.workLicenseProvinceCode"
-					 :range="provinceCodeOptions"
-					 range-key="provinceName"
-					 :disabled="disabled"
-					 @change="(e)=>pickerProvinceChange(provinceCodeOptions, 'workLicenseProvinceCode', e)">
-						<view v-if="form.workLicenseProvinceCode" class="picker-input text-right">
-							{{ provinceCodeOptions[provinceCodeOptions.findIndex(res => res.provinceCode===form.workLicenseProvinceCode)].provinceName }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择省份
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickerProvince v-model="form.workLicenseProvinceCode" :range="provinceCodeOptions" placeholder='请选择省份' :disabled="disabled"></pickerProvince>
 				</uni-forms-item>
 			</view>
 		</uni-forms>
@@ -235,10 +179,14 @@
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { idCardReg } from '@/utils/validate.js';
 	import HeaderBar from '@/components/Building/HeaderBar2.vue';
+	import pickers from '../components/picker.vue';
+	import pickerProvince from '../components/pickerProvince.vue';
 	export default {
 		components: {
 			UploadSingleImage,
-			HeaderBar
+			HeaderBar,
+			pickers,
+			pickerProvince
 		},
 		computed: {
 			...mapState({
@@ -297,13 +245,6 @@
 				getProvinceList({}, this.headerInfo).then((response) => {
 					this.provinceCodeOptions = response.rows;
 				});
-			},
-			// picker选中
-			pickerChange(arr, key, e) {
-				this.$set(this.form, key, arr[e.detail.value].dictValue);
-			},
-			pickerProvinceChange(arr, key, e) {
-				this.$set(this.form, key, arr[e.detail.value].provinceCode);
 			},
 			// 时间控件
 			bindDateChange(key, e) {
@@ -383,7 +324,7 @@
 			},
 			/** 绑定司机和租户的关系 */
 			setRel(params) {
-				addTenantRel(params, this.headerInfo).then(result => {
+				addTenantRel({isArrayQuery: JSON.stringify(params)}, this.headerInfo).then(result => {
 					uni.hideLoading();
 					uni.showToast({
 						title: '保存成功',
@@ -398,13 +339,13 @@
 			},
 			// 校验
 			noValidate() {
-				if (!this.form.identificationImage || !this.form.identificationBackImage) {
-					uni.showToast({
-						title: '请上传身份证件',
-						icon: 'none'
-					});
-					return true;
-				}
+				// if (!this.form.identificationImage || !this.form.identificationBackImage) {
+				// 	uni.showToast({
+				// 		title: '请上传身份证件',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
 				if (!this.form.identificationNumber) {
 					uni.showToast({
 						title: '身份证号不能为空',
@@ -429,20 +370,20 @@
 					});
 					return true;
 				}
-				if (!this.form.driverLicenseImage) {
-					uni.showToast({
-						title: '请上传驾驶证件',
-						icon: 'none'
-					});
-					return true;
-				}
-				if (!this.form.peopleImage) {
-					uni.showToast({
-						title: '请上传司机照片',
-						icon: 'none'
-					});
-					return true;
-				}
+				// if (!this.form.driverLicenseImage) {
+				// 	uni.showToast({
+				// 		title: '请上传驾驶证件',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
+				// if (!this.form.peopleImage) {
+				// 	uni.showToast({
+				// 		title: '请上传司机照片',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
 				if (!this.form.issuingOrganizations) {
 					uni.showToast({
 						title: '驾驶证发证机关不能为空',
@@ -460,13 +401,13 @@
 					});
 					return true;
 				}
-				if (!this.form.workLicenseImage) {
-					uni.showToast({
-						title: '请上传从业资格证',
-						icon: 'none'
-					});
-					return true;
-				}
+				// if (!this.form.workLicenseImage) {
+				// 	uni.showToast({
+				// 		title: '请上传从业资格证',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
 			},
 			/** 图片识别后回填 */
 			fillForm(type, data, side) {
@@ -551,7 +492,7 @@
 
 <style lang="scss" scoped>
 	.u-page{
-		padding-bottom: 154upx;
+		padding-bottom: 128upx;
 		.notify-msg{
 			height: 66upx;
 			line-height: 66upx;

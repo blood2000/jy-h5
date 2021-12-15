@@ -91,6 +91,7 @@
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': options.token
 			});
+			options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
 			this.getDictsList();
 			this.getList();
 		},
@@ -107,7 +108,14 @@
 		},
 		methods: {
 			navigateBack() {
-				uni.webView.navigateBack();
+				const pages = getCurrentPages().length;
+				if (pages === 1) {
+					uni.webView.navigateBack();
+				} else {
+					uni.webView.switchTab({
+						url: '/pages/applicate/index'
+					})
+				}
 			},
 			/** 查询字典 */
 			getDictsList() {
@@ -162,13 +170,13 @@
 			// 新增
 			handleAdd() {
 				uni.navigateTo({
-				    url: '/pages/capacity/vehicle/add?token='+this.headerInfo.Authorization
+				    url: '/pages/capacity/vehicle/add?token='+this.headerInfo.Authorization+'&title=新增车辆'
 				});
 			},
 			// 编辑
 			handleUpdate(row) {
 				uni.navigateTo({
-				    url: '/pages/capacity/vehicle/add?token='+this.headerInfo.Authorization+'&code='+row.code
+				    url: '/pages/capacity/vehicle/add?token='+this.headerInfo.Authorization+'&code='+row.code+'&title=编辑车辆'
 				});
 			},
 			// 删除
@@ -194,6 +202,7 @@
 <style lang="scss" scoped>
 	.u-page {
 		padding: 0;
+		height: 100vh;
 	}
 	// 列表
 	.card-list{

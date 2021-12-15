@@ -81,6 +81,7 @@
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': options.token
 			});
+			options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
 			this.getList();
 		},
 		onPullDownRefresh() {
@@ -97,7 +98,14 @@
 		
 		methods: {
 			navigateBack() {
-				uni.webView.navigateBack();
+				const pages = getCurrentPages().length;
+				if (pages === 1) {
+					uni.webView.navigateBack();
+				} else {
+					uni.webView.switchTab({
+						url: '/pages/applicate/index'
+					})
+				}
 			},
 			handleQuery() {
 			  this.queryParams.pageNum = 1;
@@ -134,13 +142,13 @@
 			// 新增
 			handleAdd() {
 				uni.navigateTo({
-				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization
+				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization+'&title=新增司机'
 				});
 			},
 			// 编辑
 			handleUpdate(row) {
 				uni.navigateTo({
-				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization+'&code='+row.code
+				    url: '/pages/capacity/driver/add?token='+this.headerInfo.Authorization+'&code='+row.code+'&title=编辑司机'
 				});
 			},
 			// 删除
@@ -166,6 +174,7 @@
 <style lang="scss" scoped>
 	.u-page {
 		padding: 0;
+		height: 100vh;
 	}
 	// 列表
 	.card-list{
