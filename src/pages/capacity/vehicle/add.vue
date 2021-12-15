@@ -349,6 +349,6 @@
 	.u-page{
 		padding-bottom: 128upx;
 		overflow-y: auto;
-		height: 100vh;
+		height: 100%;
 	}
 </style>
