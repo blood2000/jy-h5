@@ -1,10 +1,9 @@
 <!-- 场区管理 -->
 <template>
   <view class="content-page">
-	<u-navbar title="选择物料" @leftClick="navigateBack" safeAreaInsetTop fixed placeholder >
-		<view slot="right" @click="handleAdd" class="hwiunefwiniwn">选择物料</view>
-	</u-navbar>
-    <!-- <HeaderBar :title="title" @back="back"></HeaderBar> -->
+	<HeaderBar title="选择物料" @back="navigateBack">
+			<text slot="right" @click="handleAdd">添加</text>
+	</HeaderBar>
     <!-- main -->
     <view class="mainsieejiwjfiw">
     	<!-- 搜索框 -->
@@ -50,8 +49,9 @@
 <script>
 import { mapState } from "vuex";
 import mockData from "./mockData.js";
+import uniData from '@/utils/uni.webview.1.5.2.js';
+import HeaderBar from '@/components/Building/HeaderBar2.vue';
 import SiderBar from "../../components/Building/SiderBar.vue";
-import HeaderBar from "../../components/Building/HeaderBar.vue";
 export default {
   data() {
     return {
@@ -83,9 +83,15 @@ export default {
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
   },
-  async onLoad() {
-    await this.$onLaunched;
-	let _this = this
+  async onLoad(options) {
+	this.$store.dispatch('getLoginInfoAction', {
+		'Authorization': options.token
+	});
+	options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
+	// this.getList();
+
+    // await this.$onLaunched;
+	// let _this = this
 	// uni.getSystemInfo({
 	// 	success: function (res) {
 	// 		// console.log(res.windowHeight);
@@ -108,10 +114,21 @@ export default {
 
   methods: {
     navigateBack() {
-    	uni.navigateBack({
-    		delta: 1
-    	})
+    	const pages = getCurrentPages().length;
+		if (pages === 1) {
+			uni.webView.navigateBack();
+		} else {
+			uni.webView.switchTab({
+				url: '/pages/applicate/index'
+			})
+		}
     },
+	// 新增
+	handleAdd() {
+		uni.navigateTo({
+			url: '/pages/material/materialCategory'
+		});
+	},
 	// s= 列表相关
 	scrolltolower() {
 		this.loadmore()
