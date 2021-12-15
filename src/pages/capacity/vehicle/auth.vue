@@ -1,12 +1,6 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			title="提交S认证"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		></u-navbar>
+		<HeaderBar title="提交S认证" @back="navigateBack"></HeaderBar>
 		
 		<div class="notify-msg">提交S认证并通过后，该车辆可以承接无车承运开票运单</div>
 		<uni-forms ref="form" :modelValue="form" label-width="160">
@@ -15,92 +9,22 @@
 					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.chassisNumber" :disabled="disabled" placeholder="支持自动识别" />
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleEnergyType" label="车辆能源类型" class="border-bottom">
-					<picker
-					 :value="form.vehicleEnergyType"
-					 :range="energyTypesOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(energyTypesOptions, 'vehicleEnergyType', e)">
-						<view v-if="form.vehicleEnergyType && energyTypesOptions.length>0" class="picker-input text-right">
-							{{ energyTypesOptions[energyTypesOptions.findIndex(res => res.dictValue===form.vehicleEnergyType)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择车辆能源类型
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.vehicleEnergyType" :range="energyTypesOptions" placeholder='请选择车辆能源类型' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item name="vehicleLength" label="车长" class="border-bottom">
-					<picker
-					 :value="form.vehicleLength"
-					 :range="vehicleLengthOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(vehicleLengthOptions, 'vehicleLength', e)">
-						<view v-if="form.vehicleLength && vehicleLengthOptions.length>0" class="picker-input text-right">
-							{{ vehicleLengthOptions[vehicleLengthOptions.findIndex(res => res.dictValue===form.vehicleLength)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择车长
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.vehicleLength" :range="vehicleLengthOptions" placeholder='请选择车长' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item name="vehicleWidth" label="车宽" class="border-bottom">
-					<picker
-					 :value="form.vehicleWidth"
-					 :range="vehicleWidthOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(vehicleWidthOptions, 'vehicleWidth', e)">
-						<view v-if="form.vehicleWidth && vehicleWidthOptions.length>0" class="picker-input text-right">
-							{{ vehicleWidthOptions[vehicleWidthOptions.findIndex(res => res.dictValue===form.vehicleWidth)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择车宽
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.vehicleWidth" :range="vehicleWidthOptions" placeholder='请选择车宽' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item name="roadTransportCertificateNumber" label="道路运输许可证号" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.roadTransportCertificateNumber" :disabled="disabled" placeholder="请输入道路运输许可证号" />
+					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.roadTransportCertificateNumber" :disabled="disabled" placeholder="请输入道路运输许可证号" />
 				</uni-forms-item>
 				<uni-forms-item name="vehicleColorCode" label="车身颜色" class="border-bottom">
-					<picker
-					 :value="form.vehicleColorCode"
-					 :range="carBodyColorOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(carBodyColorOptions, 'vehicleColorCode', e)">
-						<view v-if="form.vehicleColorCode && carBodyColorOptions.length>0" class="picker-input text-right">
-							{{ carBodyColorOptions[carBodyColorOptions.findIndex(res => res.dictValue===form.vehicleColorCode)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择车身颜色
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.vehicleColorCode" :range="carBodyColorOptions" placeholder='请选择车身颜色' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item name="axesNumber" label="轴数">
-					<picker
-					 :value="form.axesNumber"
-					 :range="axisTypeOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(axisTypeOptions, 'axesNumber', e)">
-						<view v-if="form.axesNumber && axisTypeOptions.length>0" class="picker-input text-right">
-							{{ axisTypeOptions[axisTypeOptions.findIndex(res => res.dictValue===form.axesNumber)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择轴数
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.axesNumber" :range="axisTypeOptions" placeholder='请选择轴数' :disabled="disabled"></pickers>
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -178,9 +102,13 @@
 	import { addInfo, updateInfo } from '@/config/service/capacity/vehicle.js';
 	import { addTenantRel } from '@/config/service/capacity/rel';
 	import { removePropertyOfNull } from '@/utils/ddc';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
+	import pickers from '../components/picker.vue';
 	export default {
 		components: {
-			UploadSingleImage
+			UploadSingleImage,
+			HeaderBar,
+			pickers
 		},
 		computed: {
 			...mapState({
@@ -250,10 +178,6 @@
 				getDicts('vehicleClassification', this.headerInfo).then(response => {
 					this.vehicleTypeOptions = response.data;
 				});
-			},
-			// picker选中
-			pickerChange(arr, key, e) {
-				this.$set(this.form, key, arr[e.detail.value].dictValue);
 			},
 			// 确认创建
 			handleSubmit() {
@@ -425,7 +349,7 @@
 
 <style lang="scss" scoped>
 	.u-page{
-		padding-bottom: 154upx;
+		padding-bottom: 128upx;
 		.notify-msg{
 			height: 66upx;
 			line-height: 66upx;

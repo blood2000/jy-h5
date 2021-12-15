@@ -16,6 +16,7 @@
 </template>
 
 <script>
+	
 	import { mapState } from 'vuex'
 	export default {
 		props:{
@@ -53,10 +54,10 @@
 			this.titleHeight = this.statusBarHeight*2 + 95;
 		},
 		async onLoad() {
+			// 组件onLoad好像不执行
 			await this.$onLaunched;
 		},
-		onShow() {
-		},
+		
 		methods: {
 			back() {
 				this.$emit('close')
@@ -81,6 +82,14 @@
 					uni.navigateBack({
 						delta: 1
 					});
+				}
+
+				if(uni.webView){
+					uni.webView.navigateBack({
+						delta: 1
+					});
+
+					return
 				}
 			},
 		}

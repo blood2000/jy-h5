@@ -1,12 +1,6 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			:title="this.form.code?'编辑车辆':'新增车辆'"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		></u-navbar>
+		<HeaderBar :title="title" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
@@ -27,38 +21,10 @@
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item required name="vehicleLicenseColorCode" label="车牌颜色" class="border-bottom">
-					<picker
-					 :value="form.vehicleLicenseColorCode"
-					 :range="licenseColorOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(licenseColorOptions, 'vehicleLicenseColorCode', e)">
-						<view v-if="form.vehicleLicenseColorCode && licenseColorOptions.length>0" class="picker-input text-right">
-							{{ licenseColorOptions[licenseColorOptions.findIndex(res => res.dictValue===form.vehicleLicenseColorCode)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择车牌颜色
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.vehicleLicenseColorCode" :range="licenseColorOptions" placeholder='请选择车牌颜色' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleTypeCode" label="车型">
-					<picker
-					 :value="form.vehicleTypeCode"
-					 :range="vehicleTypeOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(vehicleTypeOptions, 'vehicleTypeCode', e)">
-						<view v-if="form.vehicleTypeCode && vehicleTypeOptions.length>0" class="picker-input text-right">
-							{{ vehicleTypeOptions[vehicleTypeOptions.findIndex(res => res.dictValue===form.vehicleTypeCode)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择车型
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.vehicleTypeCode" :range="vehicleTypeOptions" placeholder='请选择车型' :disabled="disabled"></pickers>
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -74,21 +40,7 @@
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item required name="isVehicleFreeze" label="状态" class="border-bottom">
-					<picker
-					 :value="form.isVehicleFreeze"
-					 :range="isFreezeOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(isFreezeOptions, 'isVehicleFreeze', e)">
-						<view v-if="form.isVehicleFreeze || form.isVehicleFreeze === 0" class="picker-input text-right">
-							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isVehicleFreeze)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择账号状态
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.isVehicleFreeze" :range="isFreezeOptions" placeholder='请选择账号状态' :disabled="disabled"></pickers>
 				</uni-forms-item>
 				<uni-forms-item label="调度者" class="border-bottom">
 					<view v-if="teamCodes && teamCodes.length > 0" class="picker-input text-right" @click="handleOpenTeamList">
@@ -132,9 +84,13 @@
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { plateNoReg } from '@/utils/validate.js';
 	import TeamList from '@/pages/capacity/components/teamList.vue';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
+	import pickers from '../components/picker.vue';
 	export default {
 		components: {
-			TeamList
+			TeamList,
+			HeaderBar,
+			pickers
 		},
 		computed: {
 			...mapState({
@@ -170,7 +126,8 @@
 				carBoardShow: false,
 				// 选择调度列表
 				teamListShow: false,
-				teamCodes: []
+				teamCodes: [],
+				title: ''
 			}
 		},
 		onLoad(options){
@@ -178,6 +135,7 @@
 				'Authorization': options.token
 			});
 			this.form.code = options.code;
+			this.title = options.title;
 			if (options.code) {
 				this.getInfoData(options.code);
 			}
@@ -210,10 +168,6 @@
 				if (this.form.teamCodes) {
 					this.teamCodes = this.form.teamCodes.split(',');
 				}
-			},
-			// picker选中
-			pickerChange(arr, key, e) {
-				this.$set(this.form, key, arr[e.detail.value].dictValue);
 			},
 			// 车牌键盘
 			handlecarBoard() {
@@ -311,6 +265,7 @@
 						icon: 'none',
 						duration: 2000
 					});
+					res.data.isChyVehicle = 1;
 					this.setForm(res.data);
 				  } else {
 					// 不存在
@@ -325,6 +280,7 @@
 			resetIdAndCode() {
 			  this.form.id = null;
 			  this.form.code = null;
+			  this.form.authStatus = 0;
 			  this.form.teamCodes = null;
 			  this.teamCodes = [];
 			},
@@ -391,6 +347,6 @@
 
 <style lang="scss" scoped>
 	.u-page{
-		padding-bottom: 154upx;
+		padding-bottom: 128upx;
 	}
 </style>

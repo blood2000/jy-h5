@@ -12,8 +12,8 @@
 						</view>
 					</view>
 				</view>
-				<view class="share-box ly-flex-align-center" >
-					<view class="share-box-text" @click.stop="$emit('share', value )">
+				<view class="share-box ly-flex-align-center" @click.stop="$emit('share', value )">
+					<view class="share-box-text">
 						分享接单码
 					</view>
 					<image class="share-img" src="@/static/transportPlan/qr.png" mode=""></image>

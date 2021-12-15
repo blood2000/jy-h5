@@ -1,5 +1,6 @@
 import uniRequest from "uni-request";
 import store from '../store';
+import uniData from '@/utils/uni.webview.1.5.2.js'
 
 const headers = store.state.header.headerInfo
 
@@ -13,16 +14,14 @@ uniRequest.defaults.headers['App-Code'] = headers['App-Code']
 uniRequest.defaults.headers['App-Type'] = headers['App-Type']
 uniRequest.defaults.headers['App-Version'] = headers['App-Version']
 uniRequest.defaults.headers['Terminal-Type'] = headers['Terminal-Type']
-uniRequest.defaults.headers['Authorization'] = uni.getStorageSync('token') || headers['Authorization'];
 
 // 请求拦截
 uniRequest.interceptors.request.use(
 	config => {
-		
-		
-		config.headers.Authorization = uni.getStorageSync('token') || headers['Authorization'];
-		console.log('请求头cc', JSON.stringify(config.headers.Authorization));
+		console.log('request中的请求token', JSON.stringify(config.headers.Authorization));
+		console.log('request请求地址', JSON.stringify(config.url));
 
+		
 		if(config.data && config.data.isArrayQuery){
 			if (config.data.isArrayQuery) {
 				try{
@@ -51,6 +50,11 @@ uniRequest.interceptors.response.use(
 				icon: 'none',
 				duration: 2000
 			});
+			setTimeout(() => {
+				uni.webView.reLaunch({
+					url: '/pages/public/applogin'
+				});
+			}, 1000)
 			return Promise.reject(new Error(msg));
 		} else if (code === 500) {
 			uni.showToast({

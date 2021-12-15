@@ -1,6 +1,6 @@
 <template>
 	<view class="u-page">
-		<u-navbar :title="this.form.type == 0?'创建收货计划':'创建发货计划'" @leftClick="navigateBack" safeAreaInsetTop fixed placeholder></u-navbar>
+		<HeaderBar :title="title" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms :key="formsUpdate" ref='form' :rules="rules" :modelValue="form" label-width="150" err-show-type="toast">
 			
@@ -54,61 +54,75 @@
 
 				<uni-forms-item required name="weight" label="货品总量">
 					<view class="ly-flex-align-center">
-						<uni-easyinput @blur="()=> olDweightType = form.weight" type="number" :disabled="form.weightType.length>0" :inputBorder="false" :clearable="false" v-model="form.weight" placeholder="两位小数数字" />
+						<NumberBox
+							:max="15" 
+							@blur="()=> olDweightType = form.weight" 
+							type="number" 
+							:disabled="form.weightType.length>0" 
+							v-model="form.weight" 
+							placeholder="请输入货品总量" />
+						
 						<!-- height: 36px;
 					display: flex;
 					/* line-height: 36px; */
 					align-items: center; -->
 						<view style="height: 100%" class="ly-flex-align-center">
-							<pickers v-model="form.du__snefniewew" :disabled="true || form.weightType.length>0" :range="[
-								{dictLabel: '吨',dictValue:'0' }
-							]">
+							<pickers v-model="form.unit" 
+								:disabled="true || form.weightType.length>0" 
+								@change="handlerunit"
+								:range="[
+									{dictLabel: '吨',dictValue:'1' },
+									{dictLabel: '车',dictValue:'2' },
+								]">
 							 <view class="ly-flex-pack-end">
 								<view class="ly-flex ml10 g-color-gray picker-input" > {{ 
 									[
-										{dictLabel: '吨',dictValue:'0' }
-									].find(e=> e.dictValue === form.du__snefniewew ).dictLabel
+										{dictLabel: '吨',dictValue:'1' },
+										{dictLabel: '车',dictValue:'2' },
+									].find(e=> e.dictValue === form.unit ).dictLabel
 								}} </view>
 							</view>
 							</pickers>
 						</view>
 					</view>
-					<u-checkbox-group v-model="form.weightType" style="float: right;">
-						<u-checkbox size='14' label='不限' name='' labelSize='12rpx'></u-checkbox>
+					<u-checkbox-group v-model="form.weightType" style="float: right;" v-if="form.unit ==='1'">
+						<u-checkbox size='14' label='不限' name='' labelSize='24upx'></u-checkbox>
 					</u-checkbox-group>
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
 				<template v-if="form.type==0">
-					<uni-forms-item required name="recCompnayInfoId" label="发货企业" >
-						<pickers v-model="form.recCompnayInfoId" :range="recCompnayInfoIdOption" placeholder='请选择发货企业'></pickers>
-					</uni-forms-item>
-					<uni-forms-item required label="收货企业" class="border-bottom">
+					<uni-forms-item required label="收货企业" >
 						<uni-easyinput type="text" :inputBorder="false" disabled :clearable="false" v-model="transceiverAddress" />
+					</uni-forms-item>
+					<uni-forms-item required name="sedCompnayInfoId" label="发货企业" class="border-bottom">
+						<pickers v-model="form.sedCompnayInfoId" :range="sedCompnayInfoIdOption" placeholder='请选择发货企业'></pickers>
 					</uni-forms-item>
 				</template>
 
 				<template v-else>
-					<uni-forms-item required label="发货企业" >
-						<uni-easyinput type="text" :inputBorder="false" disabled :clearable="false" v-model="transceiverAddress" />
+					<uni-forms-item required name="recCompnayInfoId" label="收货企业" >
+						<pickers v-model="form.recCompnayInfoId" :range="recCompnayInfoIdOption" placeholder='请选择收货企业'></pickers>
 					</uni-forms-item>
-					<uni-forms-item required name="sedCompnayInfoId" label="收货企业" class="border-bottom">
-						<pickers v-model="form.sedCompnayInfoId" :range="sedCompnayInfoIdOption" placeholder='请选择收货企业'></pickers>
+					<uni-forms-item required label="发货企业" class="border-bottom">
+						<uni-easyinput type="text" :inputBorder="false" disabled :clearable="false" v-model="transceiverAddress" />
 					</uni-forms-item>
 				</template>
 
+				
+
 				<!-- 运输起点 -->
 				<uni-forms-item required name="startAddressId" label="运输起点" class="border-bottom">
-					<pickers v-model="form.startAddressId" :range="shfuewnsdnsddssOption" placeholder="请输入运输起点" @change="handlerstartAddressId"></pickers>
+					<pickers :disabled="!!cbData" v-model="form.startAddressId" :range="shfuewnsdnsddssOption" placeholder="请输入运输起点" @change="handlerstartAddressId"></pickers>
 				</uni-forms-item>
 
 				<uni-forms-item required name="startAddressWlId" label="接单电子围栏" v-if="form.startAddressId" class="border-bottom">
-					<pickers v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择电子围栏'></pickers>
+					<pickers :disabled="!!cbData" v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
 				</uni-forms-item>
 
 				<!--  -->
 				<uni-forms-item required name="aliasName" label="运输起点别名">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.aliasName"
+					<uni-easyinput :maxlength="30" type="text" :inputBorder="false" :clearable="false" v-model="form.aliasName"
 						placeholder="请输入运输起点别名" />
 				</uni-forms-item>
 			</view>
@@ -118,20 +132,20 @@
 				<uni-forms-item required name="endAddressId" label="运输终点">
 					<!-- <uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.endplace"
 						placeholder="请输入运输终点别名" /> -->
-						<pickers v-model="form.endAddressId" :range="shfuewnsdnsddssOption" placeholder="请输入运输起点" @change="handlerendAddressId"></pickers>
+						<pickers :disabled="!!cbData" v-model="form.endAddressId" :range="shfuewnsdnsddssOption" placeholder="请输入运输终点" @change="handlerendAddressId"></pickers>
 				</uni-forms-item>
 
 				<template v-if="form.endAddressId">
-					<u-alert v-if='form.type == 0' type="error" :description="description" fontSize='1'></u-alert>
+					<!-- <u-alert v-if='form.type == 0' type="error" :description="description" fontSize='1'></u-alert> -->
 
-					<uni-forms-item v-else required name="endAddressWlId" label="接单电子围栏">
-						<pickers v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择电子围栏'></pickers>
+					<uni-forms-item required name="endAddressWlId" label="接单电子围栏">
+						<pickers :disabled="!!cbData" v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
 					</uni-forms-item>
 				</template>
 
 
 				<uni-forms-item required name="unAliasName" label="运输终点别名">
-					<uni-easyinput type="text" :inputBorder="false" :clearable="false" v-model="form.unAliasName" placeholder="请输入运输终点别名" />
+					<uni-easyinput :maxlength="30" type="text" :inputBorder="false" :clearable="false" v-model="form.unAliasName" placeholder="请输入运输终点别名" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -148,7 +162,7 @@
 
 
 		</uni-forms>
-		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center mt">
+		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
 			<view class="reset" @click="handleCancle('form')">{{ cbData?'取消':'重置' }}</view>
 			<view class="submit" @click="handleSubmit('form')">{{ cbData?'确认修改': '确认创建' }}</view>
 		</view>
@@ -166,13 +180,15 @@
 </template>
 
 <script>
+
+	import HeaderBar from '@/components/Building/HeaderBar2.vue'
 	import { listInfo, orderInfoList, tenantCompanyInfoList, getDispatcherTeam, tenantCompanyAddressInfoList, 
 	tenantGoodsPolicyInfo,
 	getEffectiveGoodsList as goodspriceList,
 	orderPlanFreightList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoDetatil } from "@/config/service/transportPlan/transportationPlan.js"
 
 	// import { orderPlanInfoList as getList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoUpdateStatus, teamSelectTeamListByCodes } from '@/config/service/transportPlan/transportationPlan.js'
-	
+	import NumberBox from '@/components/number-box/number-box'
 	import TeamList from '@/pages/capacity/components/teamList.vue'
 
 	import jsfunPicker from '@/components/jsfun-picker/jsfun-picker.vue'
@@ -188,7 +204,9 @@
 		components: {
 			pickers,
 			jsfunPicker,
-			TeamList
+			TeamList,
+			HeaderBar,
+			NumberBox
 		},
 		data() {
 			return {
@@ -205,7 +223,7 @@
 					isForever: [], // 转成 数字值 有长度为true 
 					transId: undefined,
 					orderInfoId: undefined,
-					du__snefniewew: '0',
+					unit: '1',
 					weight: undefined,
 					weightType: [],  // 有长度为true
 					startAddressId: undefined,
@@ -353,7 +371,9 @@
 
 				orderPolicyInfoOption: [], // 运价策略
 				goodsPolicyIdOption: [], // 货价策略
-				planFreightIdOption: [] // 计算公式
+				planFreightIdOption: [], // 计算公式
+
+				id: ''
 			}
 		},
 
@@ -375,12 +395,19 @@
 			},
 			'form.weightType': {
 				handler(val) {
-					console.log(888);
 					if(!(val && Array.isArray(val))) return
+
+					console.log(val.length>0);
 					if(val.length>0){
 						this.$set(this.form, 'weight', undefined)
+						this.$set(this.rules.weight,'rules', [
+							{ required: false, errorMessage: '请输入货品总量' }
+						])
 					} else {
 						this.$set(this.form, 'weight', this.olDweightType)
+						this.$set(this.rules.weight,'rules', [
+							{ required: true, errorMessage: '请输入货品总量' }
+						])
 					}
 				},
 				deep: true
@@ -391,9 +418,18 @@
 			...mapState({
 				headerInfo: state => state.header.headerInfo
 			}),
+			title(){
+				let text = ''
+				if(this.id){
+					text = this.form.type == 0?'编辑收货计划':'编辑发货计划'
+				} else {
+					text = this.form.type == 0?'创建收货计划':'创建发货计划'
+				}
+				return text
+			}
 		},
 		async onLoad(options) {
-			
+			this.id = options.id
 			uni.showLoading({
 				title: '加载中',
 				mask: true
@@ -401,7 +437,7 @@
 			this.form.type = options.type -0;
 			await this.gettransId();
 			await this.getorderInfoIdOption();
-			await this.getTransceiverAddress();
+			
 			await this.getOrderPlanTeanRelList();
 			await this.getshfuewnsdnsddssOption();
 			await this.getorderPolicyInfoOption();
@@ -419,7 +455,8 @@
 			])
 
 			if(options.id){
-				const { data } = await orderPlanInfoDetatil(options.id)
+				
+				const { data } = await orderPlanInfoDetatil(options.id, this.headerInfo)
 				this.cbData = data
 
 				this.handlerstartAddressId(this.cbData.startAddressId);
@@ -440,10 +477,12 @@
 					effectiveDate: this.oldDatePicker,
 					isForever: this.cbData.isForever === 1? ['']: [],
 					weightType: this.cbData.weightType === 1? ['']: [],
-					du__snefniewew: '0'
+					unit: this.cbData.unit === 1? '1':'2' // todo
 				};
 				this.formsUpdate = Date.now()
 			}
+
+			await this.getTransceiverAddress();
 
 			uni.hideLoading();
 
@@ -451,26 +490,40 @@
 			
 		},
 
+		
 		methods: {
 			// 获取运输公司
 			async gettransId() {
-				const _data = (await listInfo({ delFlag: 0 })).list;
+
+				const que = {
+					'delFlag': 0
+				}
+				if(this.cbData){
+					delete que.delFlag
+				}
+
+				const _data = (await listInfo(que,this.headerInfo)).list;
 				this.transIdOption = _data.map(e => {
 					return {
 						dictLabel: e.transName,
 						dictValue: e.id,
-						disable: e.delFlag !== 0
+						disable: e.delFlag !== '0'
 					};
 				});
+				console.log('获取运输公司: ',JSON.stringify(this.transIdOption));
 			},
 			// 获取货源列表
 			async getorderInfoIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
+					'status': 0
 				};
+				if (this.id) {
+					delete que.status;
+				}
 
-				const _data = (await orderInfoList(que)).data.list;
+				const _data = (await orderInfoList(que, this.headerInfo)).data.list;
 				this.orderInfoIdOption = _data.map(e => {
 					return {
 						dictLabel: e.orderName,
@@ -481,8 +534,7 @@
 			},
 			// 获取收发企业
 			async getTransceiverAddress() {
-				console.log(this.form.type == 0);
-				if (this.form.type == 0) {
+				if (this.form.type == 1) {
 					return this.getrecCompnayInfoIdOption();
 				} else {
 					return this.getsedCompnayInfoIdOption();
@@ -492,17 +544,22 @@
 			async getrecCompnayInfoIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
+					'status': 0
 				};
+				if (this.id) {
+					delete que.status;
+				}
 
-				const _data = (await tenantCompanyInfoList(que)).data.list;
+				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
+				
 				this.recCompnayInfoIdOption = _data.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.sedCompnayInfoId = e.id;
 						this.transceiverAddress = e.companyName;
 					}
 					return {
-						dictLabel: e.companyName,
+						dictLabel: e.companyAbbreviation || e.companyName,
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
@@ -513,10 +570,16 @@
 			async getsedCompnayInfoIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
+					'status': 0
 				};
+				if (this.id) {
+					delete que.status;
+				}
 
-				const _data = (await tenantCompanyInfoList(que)).data.list;
+				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
+
+				console.log(_data,' 88887');
 				this.sedCompnayInfoIdOption = _data.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.recCompnayInfoId = e.id;
@@ -524,7 +587,7 @@
 					}
 
 					return {
-						dictLabel: e.companyName,
+						dictLabel: e.companyAbbreviation || e.companyName,
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
@@ -535,9 +598,13 @@
 			async getOrderPlanTeanRelList(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10
+					'pageSize': 1000,
+					'status': 0
 				};
-				const _data = (await getDispatcherTeam(que)).list
+				if (this.id) {
+					delete que.status;
+				}
+				const _data = (await getDispatcherTeam(que, this.headerInfo)).list
 
 				this.teamList = _data.map(e => {
 					return {
@@ -546,16 +613,21 @@
 						dictValue: e.id
 					};
 				});
+				// console.log('调度者:',this.teamList );
 			},
 
 			// 获取运输起点
 			async getshfuewnsdnsddssOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10
+					'pageSize': 1000,
+					'status': 0
 				};
+				if (this.id) {
+					delete que.status;
+				}
 
-				const _data = (await tenantCompanyAddressInfoList(que)).data.list;
+				const _data = (await tenantCompanyAddressInfoList(que, this.headerInfo)).data.list;
 
 				this.shfuewnsdnsddssOption = _data.map(e => {
 					return {
@@ -572,8 +644,10 @@
 			handlerstartAddressId(m_id) {
 				this.form.startAddressWlId = undefined;
 				const m_findData = this.shfuewnsdnsddssOption.find(e => e.id === m_id);
+
+				console.log(m_findData);
 				if (m_findData) {
-					this.startAddressIdOption = m_findData.tenantAddressWlInfoList.map(e => {
+					this.startAddressIdOption = m_findData.zjFenceList.map(e => {
 						return {
 							dictLabel: e.name,
 							dictValue: e.id,
@@ -587,7 +661,7 @@
 				this.form.endAddressWlId = undefined;
 				const m_findData = this.shfuewnsdnsddssOption.find(e => e.id === m_id);
 				if (m_findData) {
-					this.endAddressIdOption = m_findData.tenantAddressWlInfoList.map(e => {
+					this.endAddressIdOption = m_findData.zjFenceList.map(e => {
 					return {
 						dictLabel: e.name,
 						dictValue: e.id,
@@ -601,9 +675,11 @@
 			async getorderPolicyInfoOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
+					'policyType': this.form.unit === '1' ? 1 : 2
 				};
-				const _data = (await tenantGoodsPolicyInfo(que)).data;
+				
+				const _data = (await tenantGoodsPolicyInfo(que, this.headerInfo)).data;
 
 				this.orderPolicyInfoOption = _data.map(e => {
 					return {
@@ -617,9 +693,10 @@
 			async getgoodsPolicyIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000
 				};
-				const _data = (await goodspriceList(que)).data;
+				
+				const _data = (await goodspriceList(que, this.headerInfo)).data;
 
 				this.goodsPolicyIdOption = _data.map(e => {
 					return {
@@ -633,9 +710,10 @@
 			async getplanFreightIdOption(queData) {
 				const que = {
 					'pageNum': queData?.page || 1,
-					'pageSize': 10,
+					'pageSize': 1000,
 				};
-				const _data = (await orderPlanFreightList(que)).data.list;
+				
+				const _data = (await orderPlanFreightList(que, this.headerInfo)).data.list;
 				this.planFreightIdOption = _data.map(e => {
 					return {
 						dictLabel: e.name,
@@ -647,21 +725,62 @@
 
 			// e= 初始数据结束
 
+			// 选择单位
+			handlerunit(_uit){
+				// console.log(_uit);
+				this.getorderPolicyInfoOption()
+			},
+
+
 			// s=其他
 
 			// 更改选中的调度者
 			changeTeamCodes(data) {
+
+				const cb = this.cbData ? this.cbData.teamCodeList: null
 				this.form.orderPlanTeanRelList = []
 				this.teamCodes = data;
-				this.teamList.forEach(e=>{
-					this.teamCodes.forEach(ee=>{
-						if(ee === e.code){
-							this.form.orderPlanTeanRelList.push(
-								{objCode: ee, isDel: 0, type: 1, name: e.name}
-							)
+
+				// 编辑要添加调度者id
+				if(cb){
+					const newArr = this.teamCodes.map(e=>{
+						for (let i = 0; i < cb.length; i++) {
+							const ee = cb[i];
+							if (ee.objCode === e) {
+								return ee
+							}
+						}
+						return {
+							objCode: e
 						}
 					})
-				})
+
+					this.teamList.forEach(e=>{
+						for (let i = 0; i < newArr.length; i++) {
+							const ee = newArr[i];
+							if(ee.objCode === e.code){
+								this.form.orderPlanTeanRelList.push(
+									{ ...ee, id:ee.id, objCode: ee.objCode, isDel: 0, type: 1, name: e.name}
+								)
+								return
+							}
+						}
+					})
+
+				} else {
+					this.teamList.forEach(e=>{
+						for (let i = 0; i < this.teamCodes.length; i++) {
+							const ee = this.teamCodes[i];
+							if(ee === e.code){
+								this.form.orderPlanTeanRelList.push(
+									{ objCode: ee, isDel: 0, type: 1, name: e.name}
+								)
+								return
+							}
+						}
+					})
+				}
+				console.log('更改选中的调度者', this.form.orderPlanTeanRelList);
 
 			},
 
@@ -707,7 +826,7 @@
 					isForever: [], // 转成 数字值 有长度为true 
 					transId: undefined,
 					orderInfoId: undefined,
-					du__snefniewew: '0',
+					unit: '1',
 					weight: undefined,
 					weightType: [],  // 有长度为true
 					startAddressId: undefined,
@@ -738,7 +857,10 @@
 
 				// s= 判断一下电子围栏是否重复
 				if (this.form.startAddressId === this.form.endAddressId && this.form.startAddressWlId === this.form.endAddressWlId) {
-					this.msgError(`接单电子围栏 和 卸货电子围栏 不能相同`);
+					uni.showToast({
+						title: '接单电子围栏 和 卸货电子围栏 不能相同',
+						icon: 'none'
+					});
 					return;
 				}
 				// e=
@@ -761,7 +883,8 @@
 						// 	{objCode: "517a12b2f4db4270866d2132bd878cef", isDel: 0, type: 1}
 						// ], // 调度者
 						teamCodes: undefined,
-						du__snefniewew: undefined, // 单位不用
+						teamCodeList: undefined,
+						unit: this.form.unit === '1'? 1 : 2, // 单位不用
             			status: this.form.status - 0, // 默认: 0
 						receiveType: (this.form.type - 0) + 1, // 1发 2收
 						type: undefined
@@ -784,10 +907,12 @@
 					...data
 				};
 
+				console.log(que);
+
 				if (isEdit) {
-					await orderPlanInfoUpdate(que);
+					await orderPlanInfoUpdate(que, this.headerInfo);
 				} else {
-					await orderPlanInfoAdd(que);
+					await orderPlanInfoAdd(que, this.headerInfo);
 				}
 
 				uni.hideLoading();
@@ -837,23 +962,48 @@
 				}
 
 				return true
-			}
+			},
+
+			// handleInput(e) {
+			// 	let val = e.target.value;
+			// 	val = val.replace(/^./g, "");
+			// 	val = val.replace(/[^\d.]/g, ""); //清除"数字"和"."以外的字符
+			// 	val = val.replace(/.{2,}/g, "."); //只保留第一个. 清除多余的
+			// 	val = val.replace(/^0+./g, "0.");
+			// 	val = val.match(/^0+[1-9]+/) ? (val = val.replace(/^0+/g, "")) : val;
+			// 	val = val.match(/^\d*(.?\d{0,2})/g)[0] || "";
+			// 	val = val
+			// 	.replace(".", "")
+			// 	.replace(/./g, "")
+			// 	.replace("", ".");
+			// 	if (val.includes(".")) {
+			// 	let numDian = val.toString().split(".")[1].length;
+			// 	if (numDian === 2) {
+			// 	this.moneyMaxLeng = val.length;
+			// 	}
+			// 	} else {
+			// 	this.moneyMaxLeng = 8;
+			// 	}
+			// 	this.fee = val;
+			// }
+
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-
+	.u-page{
+		padding-bottom: 128upx;
+	}
+	.uni-forms-item{
+		overflow: hidden;
+	}
 	.ml10 {
 		margin-left: 10px;
 	}
 
 	.g-color-gray {
 		color: #999999;
-	}
-	.ly-form-button.mt{
-		position: static;
-		padding-bottom: 20upx;
 	}
 	.yangiwiss{
 		margin-left: 13upx;

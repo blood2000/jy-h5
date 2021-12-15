@@ -1,12 +1,6 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			:title="this.form.code?'编辑司机':'新增司机'"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		></u-navbar>
+		<HeaderBar :title="title" @back="navigateBack"></HeaderBar>
 		
 		<uni-forms ref="form" :modelValue="form" label-width="150">
 			<view class="ly-form-card">
@@ -22,21 +16,7 @@
 					<uni-easyinput type="password" :inputBorder="false" :clearable="false" v-model="form.password" :disabled="disabled" :placeholder="form.id?'密码未修改可不填写':'初始密码abcd1234@'" />
 				</uni-forms-item>
 				<uni-forms-item required name="isDriverFreeze" label="账号状态">
-					<picker
-					 :value="form.isDriverFreeze"
-					 :range="isFreezeOptions"
-					 range-key="dictLabel"
-					 :disabled="disabled"
-					 @change="(e)=>pickerChange(isFreezeOptions, 'isDriverFreeze', e)">
-						<view v-if="form.isDriverFreeze || form.isDriverFreeze === 0" class="picker-input text-right">
-							{{ isFreezeOptions[isFreezeOptions.findIndex(res => res.dictValue===form.isDriverFreeze)].dictLabel }}
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-						<view class="picker-placeholder text-right" v-else>
-							请选择账号状态
-							<uni-icons custom-prefix="custom-icon" type="arrowright" size="16" color="#999999"></uni-icons>
-						</view>
-					</picker>
+					<pickers v-model="form.isDriverFreeze" :range="isFreezeOptions" placeholder='请选择账号状态' :disabled="disabled"></pickers>
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -99,10 +79,14 @@
 	import { phoneReg } from '@/utils/validate.js';
 	import TeamList from '@/pages/capacity/components/teamList.vue'
 	import VehicleList from '@/pages/capacity/components/vehicleList.vue'
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
+	import pickers from '../components/picker.vue';
 	export default {
 		components: {
 			TeamList,
-			VehicleList
+			VehicleList,
+			HeaderBar,
+			pickers
 		},
 		computed: {
 			...mapState({
@@ -133,7 +117,8 @@
 				teamCodes: [],
 				// 选择车辆列表
 				vehicleListShow: false,
-				vehicleInfoList: []
+				vehicleInfoList: [],
+				title: ''
 			}
 		},
 		onLoad(options){
@@ -141,6 +126,7 @@
 				'Authorization': options.token
 			});
 			this.form.code = options.code;
+			this.title = options.title;
 			if (options.code) {
 				this.getInfoData(options.code);
 			}
@@ -165,10 +151,6 @@
 				if (this.form.teamCodes) {
 					this.teamCodes = this.form.teamCodes.split(',');
 				}
-			},
-			// picker选中
-			pickerChange(arr, key, e) {
-				this.$set(this.form, key, arr[e.detail.value].dictValue);
 			},
 			// 确认创建
 			handleSubmit() {
@@ -236,7 +218,7 @@
 			},
 			/** 绑定司机和租户的关系 */
 			setRel(params) {
-				addTenantRel(params, this.headerInfo).then(result => {
+				addTenantRel({isArrayQuery: JSON.stringify(params)}, this.headerInfo).then(result => {
 					uni.hideLoading();
 					uni.showToast({
 						title: '保存成功',
@@ -260,6 +242,7 @@
 						icon: 'none',
 						duration: 2000
 					});
+					res.data.isChyDriver = 1;
 					this.setForm(res.data);
 				  } else {
 					// 不存在
@@ -274,6 +257,7 @@
 			resetIdAndCode() {
 			  this.form.id = null;
 			  this.form.code = null;
+			  this.form.authStatus = 0;
 			  this.form.teamCodes = null;
 			  this.teamCodes = [];
 			  this.vehicleInfoList = [];
@@ -332,6 +316,6 @@
 
 <style lang="scss" scoped>
 	.u-page{
-		padding-bottom: 154upx;
+		padding-bottom: 128upx;
 	}
 </style>

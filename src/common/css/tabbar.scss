@@ -1,0 +1,28 @@
+.bar-frame{
+	font-family: 'PingFang Regular';
+	position: fixed;
+	bottom: 0;
+	z-index: 10;
+	width: 100%;
+	color: #BCC4E3;
+	font-size: 20upx;
+	border-top: 1upx solid #F0F0F0;
+	.bar-icon{
+		margin-bottom: 6upx;
+		margin-top: 2upx;
+		width: 48upx;
+		height: 48upx;
+	}
+	.bar-ontitle{
+		color: #3A65FF;
+	}
+	.bar-workframe{
+		width: 150upx;
+		.bar-work{
+			height: 80upx;
+			width: 80upx;
+			position: relative;
+			bottom: 15px;
+		}
+	}
+}

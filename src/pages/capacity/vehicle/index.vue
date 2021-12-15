@@ -1,14 +1,8 @@
 <template>
 	<view class="u-page">
-		<u-navbar
-			title="车辆管理"
-			@leftClick="navigateBack"
-			safeAreaInsetTop
-			fixed
-			placeholder
-		>
-			<view slot="right" @click="handleAdd">新增车辆</view>
-		</u-navbar>
+		<HeaderBar title="车辆管理" @back="navigateBack">
+			<text slot="right" @click="handleAdd">新增车辆</text>
+		</HeaderBar>
 		
 		<view class="card-list" v-if="dataList && dataList.length > 0">
 			<view v-for="(item, index) in dataList" :key="index" class="card-item">
@@ -51,9 +45,12 @@
 	import { getDicts } from '@/config/service/common.js';
 	import { selectDictLabel } from '@/utils/ddc.js';
 	import { getFile } from '@/config/service/common.js'
+	import uniData from '@/utils/uni.webview.1.5.2.js';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
 		components: {
-			NonePage
+			NonePage,
+			HeaderBar
 		},
 		computed: {
 			...mapState({
@@ -94,6 +91,7 @@
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': options.token
 			});
+			options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
 			this.getDictsList();
 			this.getList();
 		},
@@ -110,7 +108,14 @@
 		},
 		methods: {
 			navigateBack() {
-				uni.navigateBack();
+				const pages = getCurrentPages().length;
+				if (pages === 1) {
+					uni.webView.navigateBack();
+				} else {
+					uni.webView.switchTab({
+						url: '/pages/applicate/index'
+					})
+				}
 			},
 			/** 查询字典 */
 			getDictsList() {
@@ -165,13 +170,13 @@
 			// 新增
 			handleAdd() {
 				uni.navigateTo({
-				    url: '/pages/capacity/vehicle/add?token='+this.headerInfo.Authorization
+				    url: '/pages/capacity/vehicle/add?token='+this.headerInfo.Authorization+'&title=新增车辆'
 				});
 			},
 			// 编辑
 			handleUpdate(row) {
 				uni.navigateTo({
-				    url: '/pages/capacity/vehicle/add?token='+this.headerInfo.Authorization+'&code='+row.code
+				    url: '/pages/capacity/vehicle/add?token='+this.headerInfo.Authorization+'&code='+row.code+'&title=编辑车辆'
 				});
 			},
 			// 删除
