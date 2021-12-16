@@ -98,6 +98,12 @@
 						this.reset();
 						this.setForm();
 						this.handleQuery();
+						this.nowPhoneHeight = window.innerHeight
+						window.onresize = ()=>{
+							this.nowPhoneHeight = window.innerHeight
+						}
+					} else {
+						window.onresize = null;
 					}
 				},
 				immediate: true
@@ -115,9 +121,6 @@
 		mounted() {
 			//监听软键盘获取当前屏幕高度的事件
 			this.defaultPhoneHeight = window.innerHeight
-			window.onresize = ()=>{
-				this.nowPhoneHeight = window.innerHeight
-			}
 		},
 		methods: {
 			close() {
