@@ -230,7 +230,7 @@
 					} else {
 						this.cardList = [...this.cardList, ...res.data.list];
 					}
-				}).catch(() => { this.loading = false; });
+				}).catch(() => { this.loading = false;uni.hideLoading(); });
 			},
 			// e=
 
