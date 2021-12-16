@@ -1,6 +1,6 @@
 <template>
 	<u-popup :show="show" round :closeable="true" :closeOnClickOverlay="false" @close="close" @open="open">
-		<view class="popup-box">
+		<view class="popup-box" :style="{height: contentHeight}">
 			<view class="title">选择车辆</view>
 			<view class="search">
 				<uni-easyinput
@@ -82,7 +82,10 @@
 					contentdown: '上拉加载更多',
 					contentrefresh: '加载中',
 					contentnomore: '没有更多了'
-				}
+				},
+				contentHeight: '860upx',
+				defaultPhoneHeight:'', //屏幕默认高度
+				nowPhoneHeight:'', //屏幕现在的高度
 			}
 		},
 		watch: {
@@ -95,6 +98,22 @@
 					}
 				},
 				immediate: true
+			},
+			nowPhoneHeight(){
+				if(this.defaultPhoneHeight != this.nowPhoneHeight){
+					//手机键盘被唤起了。
+					this.contentHeight = '500upx'
+				}else{
+					//手机键盘被关闭了。
+					this.contentHeight = '860upx'
+				}
+			}
+		},
+		mounted() {
+			//监听软键盘获取当前屏幕高度的事件
+			this.defaultPhoneHeight = window.innerHeight
+			window.onresize = ()=>{
+				this.nowPhoneHeight = window.innerHeight
 			}
 		},
 		methods: {
@@ -184,6 +203,7 @@
 	.popup-box{
 		height: 860upx;
 		padding: 30upx 0 44upx;
+		overflow: hidden;
 		>.title{
 			line-height: 36upx;
 			font-size: 32upx;
