@@ -158,6 +158,10 @@
 			window.getData = function() {
 				that.getInfo();
 			}
+
+			if (option.token) {
+				that.getInfo();
+			}
 		},
 		// onShow() {
 		// 	this.getList();
