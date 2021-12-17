@@ -1,20 +1,24 @@
 <!-- 场区管理 -->
 <template>
   <view class="content-page">
-	<HeaderBar title="选择物料" @back="navigateBack">
-			<text slot="right" @click="handleAdd">添加</text>
+	<HeaderBar title="货品维护" @back="navigateBack">
+			<text style="color:#3A65FF" slot="right" @click="handleAdd">新增</text>
 	</HeaderBar>
     <!-- main -->
     <view class="mainsieejiwjfiw">
     	<!-- 搜索框 -->
-		<u-search shape="square" bgColor="#fff" :showAction="false" placeholder="请输入物料名称" v-model="sfaijidsss"></u-search>
+		<view>
+			<u-search shape="square" bgColor="#fff" :showAction="false" placeholder="请输入运输商品小类名称" v-model="queryParams.goodsTypeName" 
+			@clear="loadmore('init')" 
+			@search="loadmore('init')"></u-search>
+		</view>
 		
-		<template v-if="true">
+		<template>
 			<view class="sifhwiwiewewe">
-				共 <text class="hfehiehwweee">3</text> 条记录
+				共 <text class="hfehiehwweee">{{ total }}</text> 条记录
 			</view>
 			<!-- 列表 -->
-			<view class="lsit-box">
+			<view class="lsit-box" v-if="!!indexList.length">
 				<view class="sfwefwfewefwsddd">
 					<u-list
 						@scrolltolower="scrolltolower"
@@ -23,42 +27,77 @@
 						<u-list-item
 							v-for="(item, index) in indexList"
 							:key="index"
+							
 						>
+
 							<u-cell
-								:title="`列表长度-${index + 1}`"
-							>
-								<u-avatar
+								@click="handlerEdit(item)"
+								:title="`${item.goodsBigTypeName} -- ${item.goodsTypeName} -- ${item.standardsName}`"
+							>	
+							  <view slot="right-icon" @click.stop="handlerDelete(item)">
+								<u-icon name="trash-fill" color="#E55E50" size="24"></u-icon>
+							  </view>
+							</u-cell>
+								<!-- <u-avatar
 									slot="icon"
 									shape="square"
 									size="35"
 									:src="item.url"
 									customStyle="margin: -3px 5px -3px 0"
-								></u-avatar>
-							</u-cell>
+								></u-avatar> -->
+								<!-- 
+
+									code: "5c39e9d5edc948a09486554dd1376ca9"
+									delFlag: 0
+									goodsBigType: "0100"
+									goodsBigTypeName: "煤炭及制品"
+									goodsType: "0100004"
+									goodsTypeName: "焦煤"
+									id: 30
+									standards: 1
+									standardsName: "块"
+									tenantCode: "b1d93e730331434d941873d660a08433"
+								 -->
 						</u-list-item>
 					</u-list>
 				</view>
 			</view>
+			<NonePage v-else></NonePage>
 		</template>
 		
-		<NonePage v-else></NonePage>
     </view>
+	
   </view>
 </template>
 
 <script>
+
+import {tenantGoodsRelList, tenantGoodsRelDelete} from '../../config/service/material/index'
 import { mapState } from "vuex";
 import mockData from "./mockData.js";
 import uniData from '@/utils/uni.webview.1.5.2.js';
 import HeaderBar from '@/components/Building/HeaderBar2.vue';
 import SiderBar from "../../components/Building/SiderBar.vue";
+import { removePropertyOfNull } from '@/utils/ddc';
 export default {
+  name:'material',
   data() {
     return {
-	  wdheight: '',
-      sfaijidsss:'',
-	  
+	  queryParams: { // 请求参数
+        pageNum: 1,
+        pageSize: 10,
+
+        goodsTypeName: undefined // 定价策略
+      },
 	  indexList: [],
+	  total: 0,
+	  cbData: null,
+
+	  wdheight: '',
+      
+
+	  
+	  
 		urls: [
 			'https://cdn.uviewui.com/uview/album/1.jpg',
 			'https://cdn.uviewui.com/uview/album/2.jpg',
@@ -82,34 +121,35 @@ export default {
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
+
+	que(){
+		return {
+			...removePropertyOfNull(this.queryParams) 
+		}
+	}
   },
   async onLoad(options) {
-	this.$store.dispatch('getLoginInfoAction', {
-		'Authorization': options.token
-	});
-	options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
-	// this.getList();
-
-    // await this.$onLaunched;
-	// let _this = this
-	// uni.getSystemInfo({
-	// 	success: function (res) {
-	// 		// console.log(res.windowHeight);
-	// 		_this.wdheight = (res.windowHeight -122 -44)*2 +"upx" // 502
-	// 	}
-	// });
-	
-	
-	this.loadmore()
+	if(options.token){
+		this.$store.dispatch('getLoginInfoAction', {
+			'Authorization': options.token
+		});
+		options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
+		
+	}
+	if(this.headerInfo.Authorization){
+		this.loadmore('init')
+	}
   },
   onShow() {
+	  
   },
 
-  onPullDownRefresh() {
-    console.log("下拉刷新");
+  async onPullDownRefresh() {
+    // console.log("下拉刷新");
+	await this.loadmore('init')
     setTimeout(() => {
       uni.stopPullDownRefresh(); //停止下拉刷新动画
-    }, 1000);
+    }, 700);
   },
 
   methods: {
@@ -123,22 +163,83 @@ export default {
 			})
 		}
     },
+	
+	// s= 列表相关
+	scrolltolower() {
+		this.loadmore()
+	},
+
+	loadmore(status) {
+		if(status && status === 'init'){
+			this.queryParams.pageNum = 1
+		} else {
+			this.queryParams.pageNum++
+		}
+
+		// console.log( status, '触发!!!');
+		// console.log( tenantGoodsRelList, '触发!!!');
+		// console.log( this.que, '触发!!!');
+		uni.showLoading();
+		return tenantGoodsRelList(this.que, this.headerInfo).then(res=>{
+			uni.hideLoading();
+			console.log(res);
+			this.total = res.data.total - 0
+
+			if(status && status === 'init'){
+				this.indexList = res.data.list
+			} else {
+				if (res.data.list.length === 0) {
+					return;
+				}
+				// if(res.data.list.length < this.queryParams.pageSize){
+				// 	this.status = 'noMore';
+				// }
+				this.indexList = [...this.indexList, ...res.data.list];
+			}
+			
+		})
+
+
+
+
+		
+
+		// for (let i = 0; i < 30; i++) {
+		// 	this.indexList.push({
+		// 		url: this.urls[uni.$u.random(0, this.urls.length - 1)]
+		// 	})
+		// }
+	},
 	// 新增
 	handleAdd() {
 		uni.navigateTo({
 			url: '/pages/material/materialCategory'
 		});
 	},
-	// s= 列表相关
-	scrolltolower() {
-		this.loadmore()
+	// 编辑
+	handlerEdit(row){
+		uni.navigateTo({
+			url: '/pages/material/materialCategory?cbData=' + JSON.stringify(row)
+		});
 	},
-	loadmore() {
-		for (let i = 0; i < 30; i++) {
-			this.indexList.push({
-				url: this.urls[uni.$u.random(0, this.urls.length - 1)]
-			})
-		}
+
+	// 删除
+	handlerDelete(row){
+		uni.showModal({
+			title: '温馨提示',
+			content: '确定要删除"'+ row.goodsTypeName +'"吗？',
+			success: async res => {
+				if (res.confirm) {
+					await tenantGoodsRelDelete(row.id, this.headerInfo);
+					this.queryParams.goodsTypeName = undefined
+					this.loadmore('init')
+					uni.showToast({
+						title: '删除成功'
+					});
+				}
+			}
+		})
+		
 	},
 	
 	// e=

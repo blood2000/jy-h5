@@ -1,219 +1,230 @@
-<!-- 场区管理 -->
 <template>
-  <view class="building-content">
-	<u-navbar title="选择物料" @leftClick="navigateBack" safeAreaInsetTop fixed placeholder />
-    <!-- <HeaderBar :title="title" @back="back"></HeaderBar> -->
-    <!-- main -->
-    <div class="building-main material-main">
-      <div class="building-main-side">
-        <!-- 菜单栏 -->
-        <SiderBar :siderList="buildingList" @changeBuilding="changeBuilding" />
-        <div class="building-main-side-add" @click="toAddBuildingType">
-          <uni-icons type="plus-filled" color="#3A65FF" size="30"></uni-icons>
-        </div>
-      </div>
-      <!-- 内容区域 -->
-      <div class="building-main-content material-box">
-        <div class="building-box-1 building-bottom-line">
-          <div class="building-box-left flex-1">
-            共  <text class="record-number"> {{ activeBuilding.num }} </text> 条记录
-          </div>
-          <div class="building-box-right">
-            <div class="btn-mat building-as-btn building-default">编辑分类</div>
-            <div class="btn-mat building-as-btn" @click="addBuilding">确认创建</div>
-          </div>
-        </div>
-
-        <div class="building-main-content-body material-main-content-body">
-          <div
-            class="building-item-box"
-            v-for="(item, index) in activeBuilding.list"
-            :key="index"
-          >
-            <div class="building-item-box-title">{{ item.name }}</div>
-            <div class="building-item-box-content activeed">
-				<u-icon class='checked-mark' name="checkbox-mark" color="#fff" size="20"></u-icon>
-			</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </view>
+	<view class="u-page">
+		<HeaderBar :title="cbData? '编辑物料类型' : '创建物料类型'" @back="navigateBack"></HeaderBar>
+		
+		<uni-forms ref="form" v-model="form" :rules="rules" label-width="150">
+			<view class="ly-form-card">
+				<!-- <uni-forms-item required name="telphone" label="司机手机号" class="border-bottom">
+					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.telphone" placeholder="请输入司机手机号" @blur="getUserAlreadyExist" />
+				</uni-forms-item>-->
+				<uni-forms-item required name="goodsBigType" label="商品大类" class="border-bottom">
+					<pickers v-model="form.goodsBigType" :range="goodsBigTypeOption" placeholder='请选择商品大类' @change="changeGoodsBigType"></pickers>
+				</uni-forms-item> 
+				<uni-forms-item required name="goodsType" label="商品小类" class="border-bottom">
+					<pickers v-model="form.goodsType" :range="goodsTypeOption" placeholder='请选择商品小类' @change="(_data)=>binddata('goodsType',_data,'form')"></pickers>
+				</uni-forms-item> 
+				<uni-forms-item required name="standards" label="物料规格">
+					<pickers v-model="form.standards" :range="standardsOption" placeholder='请选择物料规格' @change="(_data)=>binddata('standards',_data,'form')"></pickers>
+				</uni-forms-item> 
+			</view>
+			
+		</uni-forms>
+		
+		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
+			<view class="reset" @click="navigateBack">取消</view>
+			<view class="submit" @click="handleSubmit">{{ cbData?'确认修改':'确认创建'}}</view>
+		</view>
+		
+	</view>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import mockData from "./mockData.js";
-import SiderBar from "../../components/Building/SiderBar.vue";
-import HeaderBar from "../../components/Building/HeaderBar.vue";
-export default {
-  data() {
-    return {
-      buildingList: [],
-      activeIndex: 0,
-      activeBuilding: {},
-    };
-  },
+	import {tenantGoodsRelUpdate, tenantGoodsRelAdd} from '@/config/service/material'
+	// import { getInfo, addInfo, updateInfo, selectInfo } from '@/config/service/capacity/driver.js';
+	// import { addTenantRel } from '@/config/service/capacity/rel';
+	// import { phoneReg } from '@/utils/validate.js';
+	// import TeamList from '@/pages/capacity/components/teamList.vue'
+	// import VehicleList from '@/pages/capacity/components/vehicleList.vue'
+	import { removePropertyOfNull } from '@/utils/ddc';
+	import { mapState } from 'vuex';
+	import HeaderBar from '@/components/Building/HeaderBar2.vue';
+	import pickers from './picker.vue';
+	export default {
+		components: {
+			// TeamList,
+			// VehicleList,
+			HeaderBar,
+			pickers
+		},
+		computed: {
+			...mapState({
+				headerInfo: state => state.header.headerInfo
+			}),
+		},
+		data() {
+			// console.log(this.binddata);
+			
+			return {
+				cbData: null,
 
-  components: { SiderBar, HeaderBar },
-  computed: {
-    ...mapState({
-      headerInfo: (state) => state.header.headerInfo,
-      isAndroid: (state) => state.header.isAndroid,
-      isiOS: (state) => state.header.isiOS,
-      statusBarHeight: (state) => state.header.statusBarHeight,
-    }),
-  },
-  async onLoad() {
-    await this.$onLaunched;
-  },
-  onShow() {
-    this.getBuildingList();
-  },
-
-  onPullDownRefresh() {
-    console.log("下拉刷新");
-    setTimeout(() => {
-      uni.stopPullDownRefresh(); //停止下拉刷新动画
-    }, 1000);
-  },
-
-  methods: {
-    navigateBack() {
-    	uni.navigateBack({
-    		delta: 1
-    	})
-    },
-    //获取场区数据
-    getBuildingList() {
-      this.buildingList = mockData.buildingList;
-      this.renderBuilding();
-    },
-
-    //场区数据显示
-    renderBuilding() {
-      this.activeBuilding = this.buildingList[this.activeIndex];
-    },
-
-    changeBuilding(index) {
-      console.log(index), (this.activeIndex = index);
-      this.renderBuilding();
-    },
-
-    // 添加场区分类
-    toAddBuildingType() {
-      uni.navigateTo({
-        url: "./buildingType",
-      });
-    },
-
-    // 添加场区
-    addBuilding() {
-      uni.navigateTo({
-          url: "./addBuilding?type=" + this.activeIndex,
-        });
-    },
-  },
-};
-</script>
-<style lang='scss' scoped>
-	.material-main{
-		border-top: 1upx solid #EDEDED;
-		
-		.building-box-left{
-			font-size: 26upx;
-			font-weight: 500;
-			color: #999999;
-			.record-number{
-				color: #333333;
-				padding: 0 10upx;
-			}
-		}
-		
-		.btn-mat{
-			border: 1px solid #3A65FF;
-			font-size: 26upx;
-			font-weight: bold;
-			padding: 0 38upx;
-		}
-		
-		.building-main-side{
-			border-right: none;
-		}
-		::v-deep {
-			.building-siderBar .active-sider{
-				background-color: #F3F7FF;
-				color:#3A65FF  ;
-			} 
-			.building-siderBar-item{
-				background-color: #fff;
-				color: #999999;
-			}			
-		}
-	}
-	
-	.material-box{
-		padding: 0 24upx;
-		.building-box-1{
-			padding: 0;
-		}
-		.building-bottom-line::after{
-			display: none;
-		}
-		
-		.material-main-content-body{
-			margin-top:10upx ;
-			width: 100%;
-			background: #FFFFFF;
-			box-shadow: 5upx 0upx 28upx 1upx rgba(181, 181, 181, 0.13);
-			border-radius: 20upx;
-			.building-item-box{
-				height:193upx ;
-				border: 2upx solid #DCE3FC;
-				display: flex;
-				flex-direction: column;
-				.building-item-box-title{
-					background: #F0F3FF;
-					font-size: 26upx;
-					font-weight: bold;
-					color: #3A65FF;
-					border-bottom: none;
-				}
-				.building-item-box-content{
-					flex: 1;
-					position: relative;	
-					overflow: hidden;
-				}
-				.building-item-box-content::after{
-					content: '';
-					position: absolute;
-					bottom: 0;
-					right: 0;
-					width: 41upx;
-					height: 33upx;
-					background: #DCE3FC;
-					border-radius: 10upx 0upx 10upx 0upx;
+				form: {
+					goodsBigType: undefined, 
+					goodsType: undefined, 
+					standards: undefined, 
 					
-				}
-				.checked-mark{
-					position: absolute;
-					bottom: -4upx;
-					right: 0;
-					z-index: 1;
-					display: none;
-				}
-				.activeed.building-item-box-content::after{
-					background: #3A65FF;
-				}
-				.activeed .checked-mark{
-					display: block;
+				},
+
+				rules: {
+					goodsBigType:{
+						rules:[
+							{ required: true, errorMessage: '请选择商品大类'}
+						]
+					},
+					goodsType:{
+						rules:[
+							{ required: true, errorMessage: '请选择商品小类' }
+						]
+					},
+					standards:{
+						rules:[
+							{ required: true, errorMessage: '请选择物料规格' }
+						]
+					},
+				},
+				// // 状态字典
+				// isFreezeOptions: [
+				// 	{ dictLabel: '正常', dictValue: 0 },
+				// 	{ dictLabel: '冻结', dictValue: 1 }
+				// ],
+				// // 选择调度列表
+				// teamListShow: false,
+				// teamCodes: [],
+				// // 选择车辆列表
+				// vehicleListShow: false,
+				// vehicleInfoList: [],
+				
+
+				// 字典值
+				goodsBigTypeOption:[],
+				goodsTypeOption:[],
+				standardsOption:[],
+			}
+		},
+		async onLoad(options){
+			await this.initData()
+			if(options && options.cbData){
+				this.cbData = JSON.parse(options.cbData)
+
+				await this.changeGoodsBigType(this.cbData.goodsBigType)
+				this.form = {
+					...this.form,
+					...this.cbData,
+					standards: this.cbData.standards + ''
 				}
 				
 			}
+		},
+		methods: {
+			navigateBack() {
+				uni.navigateBack();
+			},
+			// 初始化数据
+			async initData(){
+				uni.showLoading();
+				// 获取商品大类
+				const { data } = await this.listByDict({
+					dictPid: '0',
+					dictType: 'goodsType'
+				}, this.headerInfo);
+				this.goodsBigTypeOption = data;
+				// 获取物料规格
+				const res = await this.getDicts('jyz_goods_spec', this.headerInfo);
+				this.standardsOption = res.data;
+
+				uni.hideLoading();
+			},
+
+			// 选中大类请求小类
+			async changeGoodsBigType(_data){
+				console.log(_data);
+
+				this.binddata('goodsBigType',_data,'form')
+				
+				const findData = this.goodsBigTypeOption.find(e => e.dictValue === _data);
+				if (findData) {
+					const { data } = await this.listByDict({
+						dictPid: findData.dictCode,
+						dictType: 'goodsType'
+					}, this.headerInfo);
+					this.goodsTypeOption = data;
+					this.form.goodsType = undefined;
+					this.$refs.form.clearValidate('goodsType');
+				}
+			},
+
+			// 确认创建/编辑
+			handleSubmit() {
+				
+				// 手动验证空值
+				// if(!this.noValidate()) return
+				this.$refs.form.validate().then(async res=>{
+					// 提示(编辑/ 新增)
+					uni.showLoading()
+					// 请求
+					const que = {
+						...removePropertyOfNull(this.form) 
+					};
+
+					if (!!this.cbData) {
+						await tenantGoodsRelUpdate(que, this.headerInfo);
+					} else {
+						await tenantGoodsRelAdd(que, this.headerInfo);
+					}
+
+					// 返回
+					uni.hideLoading();
+					uni.showToast({
+						title: `${this.cbData ? '修改' : '新增'}成功`,
+						icon: 'none'
+					});
+					this.cbData = null
+					setTimeout(()=>{
+						uni.redirectTo({
+							url: '/pages/material/index'
+						});
+					}, 700)
+				})
+			},
+
+			// 手动验证空
+			noValidate(formName='form', rulesName='rules' ){
+				for (const key in this[rulesName]) {
+					if (Object.hasOwnProperty.call(this[rulesName], key)) {
+						const rule = this[rulesName][key];
+						for (let index = 0; index < rule.rules.length; index++) {
+							const r = rule.rules[index];
+							if(r.required){
+								if(r.type === 'array' && this[formName][key].length <=0 ){
+									uni.showToast({
+										title: r.errorMessage,
+										icon: 'none'
+									});
+									return false
+								}
+
+								// 去掉空格
+								if(!this[formName][key] && typeof this[formName][key] !== 'boolean' && this[formName][key] !== 0){
+									uni.showToast({
+										title: r.errorMessage,
+										icon: 'none'
+									});
+									return false
+								} 
+							}
+						}
+					}
+				}
+
+				return true
+			},
 		}
 	}
-.detail-container {
-  overflow-y: hidden;
-  padding-bottom: 0;
-}
+</script>
+
+<style lang="scss" scoped>
+	.u-page{
+		padding-bottom: 128upx;
+		overflow-y: auto;
+		height: 100%;
+	}
 </style>

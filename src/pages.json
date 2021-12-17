@@ -5,22 +5,13 @@
 	"pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     // 启动页
-
+	
 	{
-		"path": "pages/material/index",
+		"path": "pages/workbench/index",
 		"style": {
-		  "navigationBarTitleText": "物料管理",
-		  "navigationStyle": "custom",
-		  "enablePullDownRefresh": true,
-		  "navigationBarBackgroundColor":"#ffffff"
-		}
-	},
-	{
-		"path": "pages/transportPlan/index",
-		"style": {
-		  "navigationStyle": "custom",
-		  "navigationBarTitleText": "运输计划",
-		  "enablePullDownRefresh": true
+			"navigationBarTitleText": "工作台",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": true
 		}
 	},
     {
@@ -106,24 +97,35 @@
 	    "enablePullDownRefresh": false
 	  }
 	},
+	
+
 	{
-		"path": "pages/workbench/index",
+		"path": "pages/material/index",
 		"style": {
-			"navigationBarTitleText": "工作台",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": true
+		  "navigationBarTitleText": "物料管理",
+		  "navigationStyle": "custom",
+		  "enablePullDownRefresh": true,
+		  "navigationBarBackgroundColor":"#ffffff"
 		}
 	},
-	
 	{
 	  "path": "pages/material/materialCategory",
 	  "style": {
-	    "navigationBarTitleText": "物料管理",
+	    "navigationBarTitleText": "新增物料",
 	    "navigationStyle": "custom",
 	    "enablePullDownRefresh": true,
 	    "navigationBarBackgroundColor":"#ffffff"
 	  }
-	},{
+	},
+	{
+		"path": "pages/transportPlan/index",
+		"style": {
+		  "navigationStyle": "custom",
+		  "navigationBarTitleText": "运输计划",
+		  "enablePullDownRefresh": true
+		}
+	},
+	{
 		"path": "pages/transportPlan/add",
 		"style": {
 			"navigationBarTitleText": "创建收货计划",

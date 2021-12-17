@@ -821,12 +821,12 @@
 				this.oldDatePicker = []
 				this.olDweightType = undefined
 				this.form = {
+					...this.form,
 					name: undefined,
 					effectiveDate: [], // 转成 开始时间 和 结束时间
 					isForever: [], // 转成 数字值 有长度为true 
 					transId: undefined,
 					orderInfoId: undefined,
-					unit: '1',
 					weight: undefined,
 					weightType: [],  // 有长度为true
 					startAddressId: undefined,
@@ -842,9 +842,6 @@
 					orderPolicyId: undefined,
 					goodsPolicyId: undefined,
 					planFreightId: undefined,
-					receiveType: this.sOr,
-					status: '0',
-					type: 0
 				},
 				this.formsUpdate = Date.now()
 				this.oldDatePicker1 = Date.now()
@@ -923,7 +920,7 @@
 				this.cbData = null
 				setTimeout(()=>{
 					uni.redirectTo({
-						url: '/pages/transportPlan/index'
+						url: '/pages/transportPlan/index?id=ejwfw'
 					});
 				}, 700)
 
