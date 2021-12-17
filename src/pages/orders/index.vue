@@ -36,21 +36,6 @@
 							>
 								<view class="title-style">{{item.orderName}}</view>
 
-								<!-- <view class="tag-box">
-									<u-tag
-										:text="item.orderName"
-										plain
-										size="mini"
-									>
-									</u-tag>
-									<u-tag
-										:text="item.standardsName"
-										plain
-										size="mini"
-										type="warning"
-									>
-									</u-tag>
-								</view> -->
 							</view>
 
 							  <view slot="right-icon" @click.stop="()=>{}">
@@ -135,7 +120,6 @@ export default {
 	}
 
 	this.statusBar12 = this.statusBarHeight - 0
-
 	let platform=uni.getSystemInfoSync().platform
 	if(platform=='ios'){
 		this.statusBar12 -= 10
@@ -187,7 +171,7 @@ export default {
 			})
 
 			if(status && status === 'init'){
-				this.indexList = _data
+				this.indexList = _data.concat(_data).concat(_data).concat(_data).concat(_data).concat(_data).concat(_data)
 			} else {
 				if (_data.length === 0) {
 					return;
@@ -237,7 +221,7 @@ export default {
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 100vh;
+		height: calc(100vh - 20upx);
 		display: felx;
 		flex-direction: column;
 	}
@@ -266,6 +250,7 @@ export default {
 	
 	.lsit-box{
 		max-height: calc(100% - 150upx);
+		overflow: hidden;
 		width: 100%;
 		padding: 22upx;
 		background: #FFFFFF;
@@ -277,6 +262,7 @@ export default {
 	}
 	.u-list{
 		height: calc(100vh - 334upx) !important;
+		
 	}
 	
 	.title-style{

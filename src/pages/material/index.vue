@@ -259,7 +259,7 @@ export default {
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 100%;
+		height: calc(100vh - 20upx);
 		display: felx;
 		flex-direction: column;
 	}
@@ -288,6 +288,7 @@ export default {
 	
 	.lsit-box{
 		max-height: calc(100% - 150upx);
+		overflow: hidden;
 		width: 100%;
 		padding: 22upx;
 		background: #FFFFFF;
