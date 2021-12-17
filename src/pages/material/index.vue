@@ -1,11 +1,11 @@
 <!-- 场区管理 -->
 <template>
-  <view class="content-page">
-	<HeaderBar title="货品维护" @back="navigateBack">
+  <view class="content-page" :style="{'--statusBar12': (statusBarHeight) + 'px' }">
+	<HeaderBar title="物料管理" @back="navigateBack">
 			<text style="color:#3A65FF" slot="right" @click="handleAdd">新增</text>
 	</HeaderBar>
     <!-- main -->
-    <view class="mainsieejiwjfiw">
+    <view class="main-box">
     	<!-- 搜索框 -->
 		<view>
 			<u-search shape="square" bgColor="#fff" :showAction="false" placeholder="请输入运输商品小类名称" v-model="queryParams.goodsTypeName" 
@@ -14,12 +14,12 @@
 		</view>
 		
 		<template>
-			<view class="sifhwiwiewewe">
-				共 <text class="hfehiehwweee">{{ total }}</text> 条记录
+			<view class="totl-box">
+				共 <text class="totl-text">{{ total }}</text> 条记录
 			</view>
 			<!-- 列表 -->
 			<view class="lsit-box" v-if="!!indexList.length">
-				<view class="sfwefwfewefwsddd">
+				<view class="list-view">
 					<u-list
 						@scrolltolower="scrolltolower"
 						preLoadScreen="1.5"
@@ -30,34 +30,34 @@
 							
 						>
 
-							<u-cell
-								@click="handlerEdit(item)"
-								:title="`${item.goodsBigTypeName} -- ${item.goodsTypeName} -- ${item.standardsName}`"
-							>	
+							<u-cell @click="handlerEdit(item)">	
+							  <view
+								slot="title"
+							>
+								<!-- <view class="title-style">{{item.goodsBigTypeName}}</view> -->
+								<view class="title-style">{{item.goodsTypeName}}</view>
+
+								<!-- <view class="tag-box">
+									<u-tag
+										:text="item.goodsTypeName"
+										plain
+										size="mini"
+									>
+									</u-tag>
+									<u-tag
+										:text="item.standardsName"
+										plain
+										size="mini"
+										type="warning"
+									>
+									</u-tag>
+								</view> -->
+							</view>
+
 							  <view slot="right-icon" @click.stop="handlerDelete(item)">
 								<u-icon name="trash-fill" color="#E55E50" size="24"></u-icon>
 							  </view>
 							</u-cell>
-								<!-- <u-avatar
-									slot="icon"
-									shape="square"
-									size="35"
-									:src="item.url"
-									customStyle="margin: -3px 5px -3px 0"
-								></u-avatar> -->
-								<!-- 
-
-									code: "5c39e9d5edc948a09486554dd1376ca9"
-									delFlag: 0
-									goodsBigType: "0100"
-									goodsBigTypeName: "煤炭及制品"
-									goodsType: "0100004"
-									goodsTypeName: "焦煤"
-									id: 30
-									standards: 1
-									standardsName: "块"
-									tenantCode: "b1d93e730331434d941873d660a08433"
-								 -->
 						</u-list-item>
 					</u-list>
 				</view>
@@ -92,24 +92,6 @@ export default {
 	  indexList: [],
 	  total: 0,
 	  cbData: null,
-
-	  wdheight: '',
-      
-
-	  
-	  
-		urls: [
-			'https://cdn.uviewui.com/uview/album/1.jpg',
-			'https://cdn.uviewui.com/uview/album/2.jpg',
-			'https://cdn.uviewui.com/uview/album/3.jpg',
-			'https://cdn.uviewui.com/uview/album/4.jpg',
-			'https://cdn.uviewui.com/uview/album/5.jpg',
-			'https://cdn.uviewui.com/uview/album/6.jpg',
-			'https://cdn.uviewui.com/uview/album/7.jpg',
-			'https://cdn.uviewui.com/uview/album/8.jpg',
-			'https://cdn.uviewui.com/uview/album/9.jpg',
-			'https://cdn.uviewui.com/uview/album/10.jpg',
-		]
     };
   },
 
@@ -139,6 +121,7 @@ export default {
 	if(this.headerInfo.Authorization){
 		this.loadmore('init')
 	}
+	console.log('----------------------',this.statusBarHeight);
   },
   onShow() {
 	  
@@ -182,7 +165,6 @@ export default {
 		uni.showLoading();
 		return tenantGoodsRelList(this.que, this.headerInfo).then(res=>{
 			uni.hideLoading();
-			console.log(res);
 			this.total = res.data.total - 0
 
 			if(status && status === 'init'){
@@ -293,8 +275,8 @@ export default {
 		font-weight: 400;
 		color: #3A65FF;
 	}
-	.mainsieejiwjfiw{
-		height: calc(100% - 44px) ;
+	.main-box{
+		height: calc(100% - 100upx - var(--statusBar12));
 		padding: 24upx 32upx;
 		background: #F5F5F5;
 		display: flex;
@@ -302,27 +284,39 @@ export default {
 		overflow: hidden;
 	}
 	
-	.sifhwiwiewewe{
+	.totl-box{
 		font-weight: bold;
 		margin: 24upx 0;
 		color: #878787;
-		.hfehiehwweee{
+		.totl-text{
 			color: #333333;
 			padding: 0 10upx;
 		}
 	}
 	
 	.lsit-box{
-		max-height: calc(100% - 75px) ;
+		max-height: calc(100% - 150upx);
 		width: 100%;
 		padding: 22upx;
 		background: #FFFFFF;
-		border-radius: 16px;
-		.sfwefwfewefwsddd{
+		border-radius: 16upx;
+		.list-view{
 			height: 100%;
 			overflow: hidden;
 		}
 	}
+	.u-list{
+		height: calc(100vh - 334upx) !important;
+	}
 	
+	.title-style{
+		font-size: 28upx;
+		font-weight: bold;
+		color: #333333;
+	}
+	.tag-box{
+		display: flex;
+		
+	}
 	
 </style>
