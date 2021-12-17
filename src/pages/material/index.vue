@@ -104,21 +104,6 @@ export default {
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
-
-	// statusBar12(){
-	// 	// console.log('高度-----', this.statusBarHeight);
-	// 	// console.log('isAndroid高度-----', this.isAndroid);
-	// 	// console.log('isiOS高度-----', this.isiOS);
-	// 	let height = this.statusBarHeight - 0
-
-	// 	let platform=uni.getSystemInfoSync().platform
-	// 	if(platform=='ios'){
-	// 		height -= 10
-	// 	}
-	// 	// console.log('isiOS高度', height);
-	// 	return height
-	// },
-
 	que(){
 		return {
 			...removePropertyOfNull(this.queryParams) 
@@ -142,8 +127,6 @@ export default {
 	if(platform=='ios'){
 		this.statusBar12 -= 10
 	}
-
-	console.log('----------------------',this.statusBarHeight);
   },
   onShow() {
 	  
@@ -181,9 +164,6 @@ export default {
 			this.queryParams.pageNum++
 		}
 
-		// console.log( status, '触发!!!');
-		// console.log( tenantGoodsRelList, '触发!!!');
-		// console.log( this.que, '触发!!!');
 		uni.showLoading();
 		return tenantGoodsRelList(this.que, this.headerInfo).then(res=>{
 			uni.hideLoading();
@@ -203,16 +183,6 @@ export default {
 			
 		})
 
-
-
-
-		
-
-		// for (let i = 0; i < 30; i++) {
-		// 	this.indexList.push({
-		// 		url: this.urls[uni.$u.random(0, this.urls.length - 1)]
-		// 	})
-		// }
 	},
 	// 新增
 	handleAdd() {

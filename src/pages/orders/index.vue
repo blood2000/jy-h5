@@ -92,7 +92,8 @@ export default {
 	  cbData: null,
 
 	  // 追加
-	  status: true // 0启用 1禁用
+	  status: true, // 0启用 1禁用
+	  statusBar12: 0
     };
   },
 
@@ -104,19 +105,15 @@ export default {
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
-	statusBar12(){
-		// console.log('高度-----', this.statusBarHeight);
-		// console.log('isAndroid高度-----', this.isAndroid);
-		// console.log('isiOS高度-----', this.isiOS);
-		let height = this.statusBarHeight - 0
+	// statusBar12(){
+	// 	let height = this.statusBarHeight - 0
 
-		let platform=uni.getSystemInfoSync().platform
-		if(platform=='ios'){
-			height -= 10
-		}
-		console.log('isiOS高度', height);
-		return height
-	},	
+	// 	let platform=uni.getSystemInfoSync().platform
+	// 	if(platform=='ios'){
+	// 		height -= 10
+	// 	}
+	// 	return height
+	// },	
 	
 
 	que(){
@@ -136,10 +133,15 @@ export default {
 	if(this.headerInfo.Authorization){
 		this.loadmore('init')
 	}
+
+	this.statusBar12 = this.statusBarHeight - 0
+
+	let platform=uni.getSystemInfoSync().platform
+	if(platform=='ios'){
+		this.statusBar12 -= 10
+	}
   },
-  onShow() {
-	  
-  },
+  onShow() {},
 
   async onPullDownRefresh() {
 	await this.loadmore('init')
@@ -190,9 +192,7 @@ export default {
 				if (_data.length === 0) {
 					return;
 				}
-				// if(_data.length < this.queryParams.pageSize){
-				// 	this.status = 'noMore';
-				// }
+			
 				this.indexList = [...this.indexList, ..._data];
 			}
 			
@@ -223,26 +223,6 @@ export default {
 		uni.showToast({
 			title: _data._status? '启用成功': '禁用成功'
 		});
-		// this.loadmore('init')
-	},
-
-	// 删除
-	handlerDelete(row){
-		// uni.showModal({
-		// 	title: '温馨提示',
-		// 	content: '确定要删除"'+ row.orderName +'"吗？',
-		// 	success: async res => {
-		// 		if (res.confirm) {
-		// 			await tenantGoodsRelDelete(row.id, this.headerInfo);
-		// 			this.queryParams.orderName = undefined
-		// 			this.loadmore('init')
-		// 			uni.showToast({
-		// 				title: '删除成功'
-		// 			});
-		// 		}
-		// 	}
-		// })
-		
 	},
 	
 	// e=

@@ -26,19 +26,14 @@
 	import { orderInfoAdd, orderInfoUpdate, orderInfoUpdateStatus} from '@/config/service/orders/index'
 
 	import {tenantGoodsRelList} from '@/config/service/material/index'
-	// import { getInfo, addInfo, updateInfo, selectInfo } from '@/config/service/capacity/driver.js';
-	// import { addTenantRel } from '@/config/service/capacity/rel';
-	// import { phoneReg } from '@/utils/validate.js';
-	// import TeamList from '@/pages/capacity/components/teamList.vue'
-	// import VehicleList from '@/pages/capacity/components/vehicleList.vue'
+	
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { mapState } from 'vuex';
 	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	import pickers from './picker.vue';
 	export default {
 		components: {
-			// TeamList,
-			// VehicleList,
+		
 			HeaderBar,
 			pickers
 		},
@@ -48,8 +43,6 @@
 			}),
 		},
 		data() {
-			// console.log(this.binddata);
-			
 			return {
 				cbData: null,
 
@@ -86,9 +79,7 @@
 			if(options && options.cbData){
 				this.cbData = JSON.parse(options.cbData)
 
-				
 				this.handlerChange(this.cbData.tenantGoodsRelId)
-
 				this.form = {
 					...this.form,
 					...this.cbData
@@ -116,7 +107,6 @@
 					return e;
 				});
 
-
 				uni.hideLoading();
 			},
 
@@ -140,16 +130,13 @@
 
 			// 确认创建/编辑
 			handleSubmit() {
-				
 				this.$refs.form.validate().then(async res=>{
-
 					// 提示(编辑/ 新增)
 					uni.showLoading()
 					// 请求
 					const que = {
 						...removePropertyOfNull(this.form) 
 					};
-
 
 					if (!!this.cbData) {
 						await orderInfoUpdate(que, this.headerInfo);
