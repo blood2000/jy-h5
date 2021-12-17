@@ -1,14 +1,14 @@
 <!-- 场区管理 -->
 <template>
   <view class="content-page" :style="{'--statusBar12': (statusBar12) + 'px' }">
-	<HeaderBar title="物料管理" @back="navigateBack">
+	<HeaderBar title="货源管理" @back="navigateBack">
 			<text style="color:#3A65FF" slot="right" @click="handleAdd">新增</text>
 	</HeaderBar>
     <!-- main -->
     <view class="main-box">
     	<!-- 搜索框 -->
 		<view>
-			<u-search shape="square" bgColor="#fff" :showAction="false" placeholder="请输入运输商品小类名称" v-model="queryParams.goodsTypeName" 
+			<u-search shape="square" bgColor="#fff" :showAction="false" placeholder="请输入货源名称" v-model="queryParams.orderName" 
 			@clear="loadmore('init')" 
 			@search="loadmore('init')"></u-search>
 		</view>
@@ -34,12 +34,11 @@
 							  <view
 								slot="title"
 							>
-								<!-- <view class="title-style">{{item.goodsBigTypeName}}</view> -->
-								<view class="title-style">{{item.goodsTypeName}}</view>
+								<view class="title-style">{{item.orderName}}</view>
 
 								<!-- <view class="tag-box">
 									<u-tag
-										:text="item.goodsTypeName"
+										:text="item.orderName"
 										plain
 										size="mini"
 									>
@@ -54,8 +53,8 @@
 								</view> -->
 							</view>
 
-							  <view slot="right-icon" @click.stop="handlerDelete(item)">
-								<u-icon name="trash-fill" color="#E55E50" size="24"></u-icon>
+							  <view slot="right-icon" @click.stop="()=>{}">
+								<u-switch v-model="item._status" size="20" @change="changeStatus(item)"></u-switch>
 							  </view>
 							</u-cell>
 						</u-list-item>
@@ -72,52 +71,53 @@
 
 <script>
 
-import {tenantGoodsRelList, tenantGoodsRelDelete} from '../../config/service/material/index'
 import { mapState } from "vuex";
-import mockData from "./mockData.js";
-import uniData from '@/utils/uni.webview.1.5.2.js';
 import HeaderBar from '@/components/Building/HeaderBar2.vue';
-import SiderBar from "../../components/Building/SiderBar.vue";
 import { removePropertyOfNull } from '@/utils/ddc';
+
+// 请求接口
+import {orderInfoList, orderInfoUpdateStatus} from '@/config/service/orders/index'
 export default {
-  name:'material',
+  name:'orders',
   data() {
     return {
 	  queryParams: { // 请求参数
         pageNum: 1,
         pageSize: 10,
 
-        goodsTypeName: undefined // 定价策略
+        orderName: undefined // 定价策略
       },
 	  indexList: [],
 	  total: 0,
 	  cbData: null,
-	  statusBar12: 0
+
+	  // 追加
+	  status: true // 0启用 1禁用
     };
   },
 
-  components: { SiderBar, HeaderBar },
+  components: { HeaderBar },
   computed: {
     ...mapState({
       headerInfo: (state) => state.header.headerInfo,
-      isAndroid: (state) => state.header.isAndroid,
+	  isAndroid: (state) => state.header.isAndroid,
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
+	statusBar12(){
+		// console.log('高度-----', this.statusBarHeight);
+		// console.log('isAndroid高度-----', this.isAndroid);
+		// console.log('isiOS高度-----', this.isiOS);
+		let height = this.statusBarHeight - 0
 
-	// statusBar12(){
-	// 	// console.log('高度-----', this.statusBarHeight);
-	// 	// console.log('isAndroid高度-----', this.isAndroid);
-	// 	// console.log('isiOS高度-----', this.isiOS);
-	// 	let height = this.statusBarHeight - 0
-
-	// 	let platform=uni.getSystemInfoSync().platform
-	// 	if(platform=='ios'){
-	// 		height -= 10
-	// 	}
-	// 	// console.log('isiOS高度', height);
-	// 	return height
-	// },
+		let platform=uni.getSystemInfoSync().platform
+		if(platform=='ios'){
+			height -= 10
+		}
+		console.log('isiOS高度', height);
+		return height
+	},	
+	
 
 	que(){
 		return {
@@ -136,21 +136,12 @@ export default {
 	if(this.headerInfo.Authorization){
 		this.loadmore('init')
 	}
-
-	this.statusBar12 = this.statusBarHeight - 0
-	let platform=uni.getSystemInfoSync().platform
-	if(platform=='ios'){
-		this.statusBar12 -= 10
-	}
-
-	console.log('----------------------',this.statusBarHeight);
   },
   onShow() {
 	  
   },
 
   async onPullDownRefresh() {
-    // console.log("下拉刷新");
 	await this.loadmore('init')
     setTimeout(() => {
       uni.stopPullDownRefresh(); //停止下拉刷新动画
@@ -181,103 +172,80 @@ export default {
 			this.queryParams.pageNum++
 		}
 
-		// console.log( status, '触发!!!');
-		// console.log( tenantGoodsRelList, '触发!!!');
-		// console.log( this.que, '触发!!!');
 		uni.showLoading();
-		return tenantGoodsRelList(this.que, this.headerInfo).then(res=>{
+		return orderInfoList(this.que, this.headerInfo).then(res=>{
 			uni.hideLoading();
+
+			
 			this.total = res.data.total - 0
 
+			const _data = res.data.list.map(e=> {
+			    e._status = e.status === 0
+				return e
+			})
+
 			if(status && status === 'init'){
-				this.indexList = res.data.list
+				this.indexList = _data
 			} else {
-				if (res.data.list.length === 0) {
+				if (_data.length === 0) {
 					return;
 				}
-				// if(res.data.list.length < this.queryParams.pageSize){
+				// if(_data.length < this.queryParams.pageSize){
 				// 	this.status = 'noMore';
 				// }
-				this.indexList = [...this.indexList, ...res.data.list];
+				this.indexList = [...this.indexList, ..._data];
 			}
 			
 		})
-
-
-
-
-		
-
-		// for (let i = 0; i < 30; i++) {
-		// 	this.indexList.push({
-		// 		url: this.urls[uni.$u.random(0, this.urls.length - 1)]
-		// 	})
-		// }
 	},
 	// 新增
 	handleAdd() {
 		uni.navigateTo({
-			url: '/pages/material/materialCategory'
+			url: '/pages/orders/add'
 		});
 	},
 	// 编辑
 	handlerEdit(row){
 		uni.navigateTo({
-			url: '/pages/material/materialCategory?cbData=' + JSON.stringify(row)
+			url: '/pages/orders/add?cbData=' + JSON.stringify(row)
 		});
+	},
+
+	// 启用/禁用
+	async changeStatus(_data){
+		const que = {
+			status: _data._status? 0 : 1,
+			id: [_data.id]
+		};
+
+		await orderInfoUpdateStatus( {isArrayQuery: JSON.stringify(que)},this.headerInfo);
+
+		uni.showToast({
+			title: _data._status? '启用成功': '禁用成功'
+		});
+		// this.loadmore('init')
 	},
 
 	// 删除
 	handlerDelete(row){
-		uni.showModal({
-			title: '温馨提示',
-			content: '确定要删除"'+ row.goodsTypeName +'"吗？',
-			success: async res => {
-				if (res.confirm) {
-					await tenantGoodsRelDelete(row.id, this.headerInfo);
-					this.queryParams.goodsTypeName = undefined
-					this.loadmore('init')
-					uni.showToast({
-						title: '删除成功'
-					});
-				}
-			}
-		})
+		// uni.showModal({
+		// 	title: '温馨提示',
+		// 	content: '确定要删除"'+ row.orderName +'"吗？',
+		// 	success: async res => {
+		// 		if (res.confirm) {
+		// 			await tenantGoodsRelDelete(row.id, this.headerInfo);
+		// 			this.queryParams.orderName = undefined
+		// 			this.loadmore('init')
+		// 			uni.showToast({
+		// 				title: '删除成功'
+		// 			});
+		// 		}
+		// 	}
+		// })
 		
 	},
 	
 	// e=
-	
-	
-    //获取场区数据
-    getBuildingList() {
-      this.buildingList = mockData.buildingList;
-      this.renderBuilding();
-    },
-
-    //场区数据显示
-    renderBuilding() {
-      this.activeBuilding = this.buildingList[this.activeIndex];
-    },
-
-    changeBuilding(index) {
-      console.log(index), (this.activeIndex = index);
-      this.renderBuilding();
-    },
-
-    // 添加场区分类
-    toAddBuildingType() {
-      uni.navigateTo({
-        url: "./buildingType",
-      });
-    },
-
-    // 添加场区
-    addBuilding() {
-      uni.navigateTo({
-          url: "./addBuilding?type=" + this.activeIndex,
-        });
-    },
   },
 };
 </script>
@@ -289,7 +257,7 @@ export default {
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 100%;
+		height: 100vh;
 		display: felx;
 		flex-direction: column;
 	}
