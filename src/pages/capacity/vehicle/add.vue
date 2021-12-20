@@ -61,7 +61,7 @@
 			</view>
 		</uni-forms>
 		
-		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
+		<view v-if="buttonShow" class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
 			<view class="reset" @click="navigateBack">取消</view>
 			<view class="submit" @click="handleSubmit">{{this.form.code?'确认修改':'确认创建'}}</view>
 		</view>
@@ -127,8 +127,46 @@
 				// 选择调度列表
 				teamListShow: false,
 				teamCodes: [],
-				title: ''
+				title: '',
+				defaultPhoneHeight:'', //屏幕默认高度
+				nowPhoneHeight:'', //屏幕现在的高度
+				buttonShow: true
 			}
+		},
+		watch: {
+			teamListShow: {
+				handler(val) {
+					if (val) {
+						window.onresize = null;
+					} else {
+						this.$nextTick(() => {
+							window.onresize = ()=>{
+								this.nowPhoneHeight = window.innerHeight
+							}
+						})
+					}
+				},
+				immediate: true
+			},
+			nowPhoneHeight(){
+				if(this.defaultPhoneHeight != this.nowPhoneHeight){
+					//手机键盘被唤起了。
+					this.buttonShow = false
+				}else{
+					//手机键盘被关闭了。
+					this.buttonShow = true
+				}
+			}
+		},
+		mounted() {
+			//监听软键盘获取当前屏幕高度的事件
+			this.defaultPhoneHeight = window.innerHeight
+			window.onresize = ()=>{
+				this.nowPhoneHeight = window.innerHeight
+			}
+		},
+		beforeDestroy() {
+			window.onresize = null;
 		},
 		onLoad(options){
 			this.$store.dispatch('getLoginInfoAction', {

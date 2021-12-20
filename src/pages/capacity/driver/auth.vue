@@ -5,7 +5,7 @@
 		<div class="notify-msg">提交S认证并通过后，该车辆可以承接无车承运开票运单</div>
 		<uni-forms ref="form" :modelValue="form" label-width="160">
 			<view class="ly-form-card">
-				<uni-forms-item required label="请上传身份证件" label-position="top">
+				<uni-forms-item label="请上传身份证件" label-position="top">
 					<view class="upload-msg">上传身份证照片，图片大小不能超过3M</view>
 					<uni-row class="demo-uni-row" :gutter="32">
 					    <uni-col :span="12">
@@ -67,7 +67,7 @@
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="请上传驾驶证件" label-position="top">
+				<uni-forms-item label="请上传驾驶证件" label-position="top">
 					<view class="upload-msg">上传驾驶证照片，图片大小不能超过3M</view>
 					<uni-row class="demo-uni-row" :gutter="32">
 					    <uni-col :span="12">
@@ -128,7 +128,7 @@
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
-				<uni-forms-item required label="请上传从业资格证" label-position="top">
+				<uni-forms-item label="请上传从业资格证" label-position="top">
 					<view class="upload-msg">上传从业资格证，图片大小不能超过3M</view>
 					<uni-row class="demo-uni-row" :gutter="32">
 					    <uni-col :span="12">
@@ -339,13 +339,13 @@
 			},
 			// 校验
 			noValidate() {
-				if (!this.form.identificationImage || !this.form.identificationBackImage) {
-					uni.showToast({
-						title: '请上传身份证件',
-						icon: 'none'
-					});
-					return true;
-				}
+				// if (!this.form.identificationImage || !this.form.identificationBackImage) {
+				// 	uni.showToast({
+				// 		title: '请上传身份证件',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
 				if (!this.form.identificationNumber) {
 					uni.showToast({
 						title: '身份证号不能为空',
@@ -370,20 +370,20 @@
 					});
 					return true;
 				}
-				if (!this.form.driverLicenseImage) {
-					uni.showToast({
-						title: '请上传驾驶证件',
-						icon: 'none'
-					});
-					return true;
-				}
-				if (!this.form.peopleImage) {
-					uni.showToast({
-						title: '请上传司机照片',
-						icon: 'none'
-					});
-					return true;
-				}
+				// if (!this.form.driverLicenseImage) {
+				// 	uni.showToast({
+				// 		title: '请上传驾驶证件',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
+				// if (!this.form.peopleImage) {
+				// 	uni.showToast({
+				// 		title: '请上传司机照片',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
 				if (!this.form.issuingOrganizations) {
 					uni.showToast({
 						title: '驾驶证发证机关不能为空',
@@ -401,13 +401,13 @@
 					});
 					return true;
 				}
-				if (!this.form.workLicenseImage) {
-					uni.showToast({
-						title: '请上传从业资格证',
-						icon: 'none'
-					});
-					return true;
-				}
+				// if (!this.form.workLicenseImage) {
+				// 	uni.showToast({
+				// 		title: '请上传从业资格证',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
 			},
 			/** 图片识别后回填 */
 			fillForm(type, data, side) {

@@ -4,6 +4,8 @@ import './common/css/index.scss'
 import "./common/css/building.scss";
 //引入vuex
 import store from './store'
+
+import { getDicts, listByDict, getDictsByType } from '@/config/service/data';
 //与app桥接
 // import './config/bridge.js'
 //自定义指令
@@ -45,6 +47,9 @@ Vue.prototype.numberFormatUnit = numberFormatUnit;
 Vue.prototype.selectDictLabel = selectDictLabel;
 Vue.prototype.$store = store;
 Vue.config.productionTip = false;
+Vue.prototype.getDicts = getDicts;
+Vue.prototype.listByDict = listByDict;
+Vue.prototype.getDictsByType = getDictsByType;
 
 App.mpType = 'app'
 

@@ -5,14 +5,15 @@
 	"pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     // 启动页
+	
 	{
-		"path": "pages/transportPlan/index",
+		"path": "pages/workbench/index",
 		"style": {
-		  "navigationStyle": "custom",
-		  "navigationBarTitleText": "运输计划",
-		  "enablePullDownRefresh": true
+			"navigationBarTitleText": "工作台",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": true
 		}
-	  },
+	},
     {
       "path": "pages/generalTable/index",
       "style": {
@@ -96,32 +97,53 @@
 	    "enablePullDownRefresh": false
 	  }
 	},
+	
+
 	{
-		"path": "pages/workbench/index",
+		"path": "pages/material/index",
 		"style": {
-			"navigationBarTitleText": "工作台",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": true
+		  "navigationBarTitleText": "物料管理",
+		  "navigationStyle": "custom",
+		  "enablePullDownRefresh": true,
+		  "navigationBarBackgroundColor":"#ffffff"
 		}
-	},
-	{
-	  "path": "pages/material/index",
-	  "style": {
-	    "navigationBarTitleText": "物料管理",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": true,
-	    "navigationBarBackgroundColor":"#ffffff"
-	  }
 	},
 	{
 	  "path": "pages/material/materialCategory",
 	  "style": {
-	    "navigationBarTitleText": "物料管理",
+	    "navigationBarTitleText": "新增物料",
 	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": true,
-	    "navigationBarBackgroundColor":"#ffffff"
+	    "navigationBarBackgroundColor":"#ffffff",
+		"enablePullDownRefresh": false
 	  }
-	},{
+	},
+	{
+		"path": "pages/orders/index",
+		"style": {
+		  "navigationBarTitleText": "货源管理",
+		  "navigationStyle": "custom",
+		  "enablePullDownRefresh": true,
+		  "navigationBarBackgroundColor":"#ffffff"
+		}
+	},
+	{
+	  "path": "pages/orders/add",
+	  "style": {
+	    "navigationBarTitleText": "新增货源",
+	    "navigationStyle": "custom",
+	    "navigationBarBackgroundColor":"#ffffff",
+		"enablePullDownRefresh": false
+	  }
+	},
+	{
+		"path": "pages/transportPlan/index",
+		"style": {
+		  "navigationStyle": "custom",
+		  "navigationBarTitleText": "运输计划",
+		  "enablePullDownRefresh": true
+		}
+	},
+	{
 		"path": "pages/transportPlan/add",
 		"style": {
 			"navigationBarTitleText": "创建收货计划",

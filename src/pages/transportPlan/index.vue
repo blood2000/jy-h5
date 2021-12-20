@@ -169,6 +169,7 @@
         },
 
 		async onShow(){
+			console.log('我触发了!!!');
 			if(this.ifOnShow){
 				this.queryParams.pageNum = 1
 				// 是否无数据了
@@ -201,8 +202,13 @@
 				}catch(e){
 					//TODO handle the exception
 				}
-			
-				this.getList();
+			}
+
+			if(this.headerInfo.Authorization){
+				this.queryParams.pageNum = 1
+				this.isEnd = false,
+				this.status = 'more',
+				this.getList('2')
 			}
 		},
 
@@ -230,7 +236,7 @@
 					} else {
 						this.cardList = [...this.cardList, ...res.data.list];
 					}
-				}).catch(() => { this.loading = false; });
+				}).catch(() => { this.loading = false;uni.hideLoading(); });
 			},
 			// e=
 
