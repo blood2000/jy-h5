@@ -1,4 +1,4 @@
-<!-- 场区管理 -->
+<!-- 货源管理 -->
 <template>
   <view class="content-page" :style="{'--statusBar12': (statusBar12) + 'px' }">
 	<HeaderBar title="货源管理" @back="navigateBack">
@@ -171,7 +171,7 @@ export default {
 			})
 
 			if(status && status === 'init'){
-				this.indexList = _data.concat(_data).concat(_data).concat(_data).concat(_data).concat(_data).concat(_data)
+				this.indexList = _data
 			} else {
 				if (_data.length === 0) {
 					return;
@@ -221,7 +221,8 @@ export default {
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: calc(100vh - 20upx);
+		height: calc(100vh);
+		overflow: hidden;
 		display: felx;
 		flex-direction: column;
 	}
