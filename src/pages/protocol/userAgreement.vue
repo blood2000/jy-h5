@@ -150,7 +150,7 @@
 			font-size: 36rpx;
 			font-weight: bold;
 			line-height: 100rpx;
-			padding-top: 30rpx;
+			padding-top: 60rpx;
 			color: #333;
 		}
 		&__title{
