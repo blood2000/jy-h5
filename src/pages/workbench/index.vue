@@ -45,20 +45,19 @@
 					</view>
 				</view>
 			</view>
-			<!-- 通知 -->
-			<view class="app-container margin-mtop padding-m flex align-center justify-between" @click="navToNotice">
+			<!-- 通知 @click="navToNotice" -->
+			<view class="app-container margin-mtop padding-m flex align-center justify-between">
 				<image class="notice-img" src="/static/workbench/icon_notice.png" mode=""></image>
 				<view style="width: calc(100vw - 220upx);padding-left: 20upx;border-left: 1upx solid #EEEEEE;">
 					 <!-- v-for="(item,index) in noticeList" :key="index" -->
-					<view class="flex align-center justify-between size26">
-						<view class="todo-title">暂无消息</view>
-						<!-- new Date(item.createTime) -->
-						<!-- <l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date() "></l-time> -->
-					</view>
 					<!-- <view class="flex align-center justify-between size26">
-						<view class="todo-title">运输计划名称</view>
-						<l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date() "></l-time>
+						<view class="todo-title">您有新的运输计划</view>
+						<l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date()"></l-time>
 					</view> -->
+					<view class="flex align-center justify-between size26">
+						<view class="todo-title">您有新的运输计划</view>
+						<l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date() "></l-time>
+					</view>
 				</view>
 			</view>
 			<!-- 待办 -->
@@ -68,10 +67,33 @@
 					<view class="todo-title">今日事项</view>
 					<!-- <view class="text-gray" @click="navToUpcoming">更多<text class="cuIcon-right"></text></view> -->
 				</view>
-				<view class="flex align-center justify-center" style="height: 500upx;">
-					<NonePage :msg="'暂无数据'" />
-					<!-- <image class="todo-img" src="/static/workbench/icon_expect.png" mode=""></image> -->
+				<view class="todo-frame flex align-center justify-between">
+					<view class="flex align-center">
+						<view class="todo-type" :style="{background: '#51A3F7' }">
+							待办
+						</view>
+						<view class="margin-mleft" style="max-width: 450upx;">
+							<view class="text-bold ellipsis">请根据当天收发合同情况核对运输计划</view>
+							<view class="size24 text-tag margin-stop">12/11 15:33</view>
+						</view>
+					</view>
+					<!-- <l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date()"></l-time> -->
 				</view>
+				<view class="todo-frame flex align-center justify-between">
+					<view class="flex align-center">
+						<view class="todo-type" :style="{background: '#51A3F7' }">
+							待办
+						</view>
+						<view class="margin-mleft" style="max-width: 450upx;">
+							<view class="text-bold ellipsis">今日如有新增车辆，请预先在运力管理中进行创建</view>
+							<view class="size24 text-tag margin-stop">12/11 15:33</view>
+						</view>
+					</view>
+					<!-- <l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date()"></l-time> -->
+				</view>
+				<!-- <view class="flex align-center justify-center" style="height: 500upx;">
+					<image class="todo-img" src="/static/workbench/icon_expect.png" mode=""></image>
+				</view> -->
 			</view>
 		</view>
 		
@@ -85,14 +107,12 @@
 	import { listUsually, listNews, userNotice, applicateList, getInfo }from "@/config/service/workbench.js"
 	import uniData from '@/utils/uni.webview.1.5.2.js'
 	import Tabbar from '@/components/Tabbar/Tabbar.vue';
-	import NonePage from "@/components/NonePage/NonePage.vue"
 
 	// 待办事项
 	// import { todoList } from "@/config/service/flowable/process";
 	export default {
 		components: {
-			Tabbar,
-			NonePage
+			Tabbar
 		},
 		computed: {
 			...mapState({
