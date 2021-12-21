@@ -69,7 +69,8 @@
 					<!-- <view class="text-gray" @click="navToUpcoming">更多<text class="cuIcon-right"></text></view> -->
 				</view>
 				<view class="flex align-center justify-center" style="height: 500upx;">
-					<image class="todo-img" src="/static/workbench/icon_expect.png" mode=""></image>
+					<NonePage :msg="'暂无数据'" />
+					<!-- <image class="todo-img" src="/static/workbench/icon_expect.png" mode=""></image> -->
 				</view>
 			</view>
 		</view>
@@ -84,12 +85,14 @@
 	import { listUsually, listNews, userNotice, applicateList, getInfo }from "@/config/service/workbench.js"
 	import uniData from '@/utils/uni.webview.1.5.2.js'
 	import Tabbar from '@/components/Tabbar/Tabbar.vue';
+	import NonePage from "@/components/NonePage/NonePage.vue"
 
 	// 待办事项
 	// import { todoList } from "@/config/service/flowable/process";
 	export default {
 		components: {
-			Tabbar
+			Tabbar,
+			NonePage
 		},
 		computed: {
 			...mapState({
