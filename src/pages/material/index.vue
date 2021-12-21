@@ -1,4 +1,4 @@
-<!-- 场区管理 -->
+<!-- 物料管理 -->
 <template>
   <view class="content-page" :style="{'--statusBar12': (statusBar12) + 'px' }">
 	<HeaderBar title="物料管理" @back="navigateBack">
@@ -259,7 +259,8 @@ export default {
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: calc(100vh - 20upx);
+		height: calc(100vh);
+		overflow: hidden;
 		display: felx;
 		flex-direction: column;
 	}
