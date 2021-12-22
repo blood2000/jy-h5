@@ -55,7 +55,7 @@
 						<l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date()"></l-time>
 					</view> -->
 					<view class="flex align-center justify-between size26">
-						<view class="todo-title">您有新的运输计划</view>
+						<view class="todo-title">至简集运1.0版本正式投入使用 </view>
 						<l-time class="margin-mleft" color="#999" computeMax="MM" :dateFormat="'MM/dd hh:mm'" :text="new Date() "></l-time>
 					</view>
 				</view>
