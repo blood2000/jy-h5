@@ -407,7 +407,7 @@
 }
 .home-page{
 	width: 100vw;
-	height: 100%;
+	height: 100vh;
 	padding: 0 0 30upx;
 	font-family: 'PingFang Regular';
 	overflow: scroll;
