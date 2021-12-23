@@ -25,7 +25,7 @@
 						<view class="name g-single-row">
 							<image v-if="!!checkMap[item.code]" class="icon-check" src="~@/static/capacity/check.png" @click="handleCheck(item)"></image>
 							<image v-else class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck(item)"></image>
-							{{ item.name }}
+							{{ (isFilter&&item.isTeamFreeze==1?'(已禁用)':'')+item.name }}
 						</view>
 						<view class="leader g-single-row">调度者：{{ item.teamLeaderName }}</view>
 					</view>
@@ -60,6 +60,10 @@
 				default: () => {
 					return [];
 				}
+			},
+			isFilter: {
+				type: Boolean,
+				default: false
 			}
 		},
 		computed: {
@@ -197,6 +201,7 @@
 				if (!!this.checkMap[item.code]) {
 					delete this.checkMap[item.code];
 				} else {
+					if (this.isFilter && item.isTeamFreeze == 1) return;
 					this.checkMap[item.code] = true;
 				}
 				this.$forceUpdate();
