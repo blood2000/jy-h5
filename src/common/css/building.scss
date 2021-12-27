@@ -11,6 +11,16 @@
 	width: 100%;
 }
 
+/* 两行溢出 */
+.g-double-row{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
 .building-bottom-line::after {
   position: absolute;
   content: '';
