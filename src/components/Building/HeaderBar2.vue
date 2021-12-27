@@ -52,8 +52,11 @@ export default {
 	}
   
   /* #ifdef H5 */
+  .uni-navbar__header-btns-left{
+    width: 160upx;
+  }
   .uni-navbar__header-btns-right{
-    width: 180upx;
+    width: 160upx;
   }
   /* #endif */
 }
