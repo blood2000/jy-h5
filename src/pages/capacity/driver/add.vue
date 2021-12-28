@@ -318,6 +318,6 @@
 	.u-page{
 		padding-bottom: 128upx;
 		overflow-y: auto;
-		height: 100%;
+		height: 100vh;
 	}
 </style>

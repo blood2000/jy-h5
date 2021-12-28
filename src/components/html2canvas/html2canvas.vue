@@ -25,6 +25,7 @@
 				}
 			},
 			showLoading() {
+				
 				uni.showToast({
 					title: "正在生成中...",
 					icon: "none",
@@ -46,6 +47,7 @@ import html2canvas from 'html2canvas';
 export default {
 	methods: {
 		async create(domId) {
+			if(!domId) return
 			try {
 				this.$ownerInstance.callMethod('showLoading', true);
 				const timeout = setTimeout(async ()=> {
