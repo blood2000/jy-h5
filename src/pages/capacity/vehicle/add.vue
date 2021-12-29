@@ -34,7 +34,7 @@
 				<uni-forms-item required name="vehicleLoadWeight" label="车辆可载重量" class="border-bottom">
 					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleLoadWeight" :disabled="disabled" placeholder="请输入车辆可载重量" />
 				</uni-forms-item>
-				<uni-forms-item required name="vehicleRemainingLoadVolume" label="车辆可载立方">
+				<uni-forms-item :required='false' name="vehicleRemainingLoadVolume" label="车辆可载立方">
 					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleRemainingLoadVolume" :disabled="disabled" placeholder="请输入车辆可载立方" />
 				</uni-forms-item>
 			</view>
@@ -359,13 +359,13 @@
 					});
 					return true;
 				}
-				if (!this.form.vehicleRemainingLoadVolume) {
-					uni.showToast({
-						title: '车辆可载立方不能为空',
-						icon: 'none'
-					});
-					return true;
-				}
+				// if (!this.form.vehicleRemainingLoadVolume) {
+				// 	uni.showToast({
+				// 		title: '车辆可载立方不能为空',
+				// 		icon: 'none'
+				// 	});
+				// 	return true;
+				// }
 			},
 			// 打开调度列表
 			handleOpenTeamList() {
