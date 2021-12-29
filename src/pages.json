@@ -113,8 +113,26 @@
 	  "style": {
 	    "navigationBarTitleText": "新增物料",
 	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": true,
-	    "navigationBarBackgroundColor":"#ffffff"
+	    "navigationBarBackgroundColor":"#ffffff",
+		"enablePullDownRefresh": false
+	  }
+	},
+	{
+		"path": "pages/orders/index",
+		"style": {
+		  "navigationBarTitleText": "货源管理",
+		  "navigationStyle": "custom",
+		  "enablePullDownRefresh": true,
+		  "navigationBarBackgroundColor":"#ffffff"
+		}
+	},
+	{
+	  "path": "pages/orders/add",
+	  "style": {
+	    "navigationBarTitleText": "新增货源",
+	    "navigationStyle": "custom",
+	    "navigationBarBackgroundColor":"#ffffff",
+		"enablePullDownRefresh": false
 	  }
 	},
 	{
@@ -194,6 +212,30 @@
 			"navigationBarTitleText": "用户协议",
 			"navigationStyle": "custom",
 			"enablePullDownRefresh": false
+		}
+	},{
+		"path": "pages/weighRecord/index",
+		"style": {
+			"navigationBarTitleText": "过磅记录",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#3a65ff"
+		}
+	},{
+		"path": "pages/weighRecord/list",
+		"style": {
+			"navigationBarTitleText": "过磅记录",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#3a65ff"
+		}
+	},{
+		"path": "pages/weighRecord/detail",
+		"style": {
+			"navigationBarTitleText": "过磅记录详情",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#3a65ff"
 		}
 	}
   ],

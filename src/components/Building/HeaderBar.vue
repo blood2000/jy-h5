@@ -10,6 +10,7 @@
       color="#ffffff"
       :title="title"
       backgroundColor="#3A65FF"
+			:border="border"
       @clickLeft="back"
     ></uni-nav-bar>
   </div>
@@ -27,6 +28,10 @@ export default {
       type: String,
       default: "",
     },
+		border: {
+			type: Boolean,
+			default: true
+		}
   },
 
   computed: {

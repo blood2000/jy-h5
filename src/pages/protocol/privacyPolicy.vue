@@ -6,6 +6,8 @@
 		
 		<view class="user-page__header">隐私政策</view>
 		
+		<view class="user-page__content">2021年12月22日版本</view>
+		<view class="user-page__content">2021年12月22日生效</view>
 		<view class="user-page__content">“至简集运”是由福建至简至一信息科技有限公司（“我们”）运营的能够为您提供集运站管理的SaaS平台。本隐私政策适用于至简集运手机客户端、网页端、微信端和其他开放平台产品及服务。请您务必认真阅读本隐私政策，在确认充分了解并同意后使用至简集运。如果您不同意本隐私政策的任何内容，您应该立即停止使用至简集运。当您开始使用至简集运服务，即表示您已经同意我们按照本政策来收集、保存、使用、共享、保护您的个人信息。</view>
 		<view class="user-page__title">我们个人信息安全投诉、举报、保护联系人：信息安全组</view>
 		<view class="user-page__title">联系方式：400-827-0535</view>
@@ -438,7 +440,7 @@
 			font-size: 36rpx;
 			font-weight: bold;
 			line-height: 100rpx;
-			padding-top: 30rpx;
+			padding-top: 60rpx;
 			color: #333;
 		}
 		&__title{

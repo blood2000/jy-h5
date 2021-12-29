@@ -37,7 +37,7 @@
 				<uni-forms-item required name="orderPlanTeanRelList" label="指定调度者">
 					<view v-if="form.orderPlanTeanRelList && form.orderPlanTeanRelList.length > 0" style="width:100% ;flex-direction: row-reverse;" class="ly-flex-align-center picker-input text-right" @click="teamListShow = true">
 						<u-icon name="arrow-down-fill" size='7' color="#999999" class="yangiwiss"></u-icon>
-						{{ form.orderPlanTeanRelList.map(e=>e.name).join(',') }}
+						<view class="g-single-row" style="width: 250upx;">{{ form.orderPlanTeanRelList.map(e=>e.name+(e.isTeamFreeze==1?'(已禁用)':'')).join(',') }}</view>
 					</view>
 					<view v-else style="width:100%; flex-direction: row-reverse;" class="ly-flex-align-center picker-placeholder text-right" @click="teamListShow = true">
 						<u-icon name="arrow-down-fill" size='7' color="#999999" class="yangiwiss"></u-icon>
@@ -172,6 +172,7 @@
 			ref="teamListRef"
 			:show="teamListShow"
 			:teamCodes="teamCodes"
+			:isFilter="true"
 			@close="teamListShow = false"
 			@changeTeamCodes="changeTeamCodes"
 		/>
@@ -186,7 +187,7 @@
 	tenantGoodsPolicyInfo,
 	getEffectiveGoodsList as goodspriceList,
 	orderPlanFreightList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoDetatil } from "@/config/service/transportPlan/transportationPlan.js"
-
+	
 	// import { orderPlanInfoList as getList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoUpdateStatus, teamSelectTeamListByCodes } from '@/config/service/transportPlan/transportationPlan.js'
 	import NumberBox from '@/components/number-box/number-box'
 	import TeamList from '@/pages/capacity/components/teamList.vue'
@@ -597,13 +598,9 @@
 			// 调度者
 			async getOrderPlanTeanRelList(queData) {
 				const que = {
-					'pageNum': queData?.page || 1,
-					'pageSize': 1000,
-					'status': 0
+					'pageNum': 1,
+					'pageSize': 1000
 				};
-				if (this.id) {
-					delete que.status;
-				}
 				const _data = (await getDispatcherTeam(que, this.headerInfo)).list
 
 				this.teamList = _data.map(e => {
@@ -760,7 +757,7 @@
 							const ee = newArr[i];
 							if(ee.objCode === e.code){
 								this.form.orderPlanTeanRelList.push(
-									{ ...ee, id:ee.id, objCode: ee.objCode, isDel: 0, type: 1, name: e.name}
+									{ ...ee, id:ee.id, objCode: ee.objCode, isDel: 0, type: 1, name: e.name, isTeamFreeze: e.isTeamFreeze}
 								)
 								return
 							}

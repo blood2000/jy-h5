@@ -4,14 +4,11 @@
 		
 		<uni-forms ref="form" v-model="form" :rules="rules" label-width="150">
 			<view class="ly-form-card">
-				<!-- <uni-forms-item required name="telphone" label="司机手机号" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.telphone" placeholder="请输入司机手机号" @blur="getUserAlreadyExist" />
-				</uni-forms-item>-->
 				<uni-forms-item required name="goodsBigType" label="商品大类" class="border-bottom">
 					<pickers v-model="form.goodsBigType" :range="goodsBigTypeOption" placeholder='请选择商品大类' @change="changeGoodsBigType"></pickers>
 				</uni-forms-item> 
 				<uni-forms-item required name="goodsType" label="商品小类" class="border-bottom">
-					<pickers v-model="form.goodsType" :range="goodsTypeOption" placeholder='请选择商品小类' @change="(_data)=>binddata('goodsType',_data,'form')"></pickers>
+					<pickers :disabled="!form.goodsBigType" v-model="form.goodsType" :range="goodsTypeOption" placeholder='请选择商品小类' @change="(_data)=>binddata('goodsType',_data,'form')"></pickers>
 				</uni-forms-item> 
 				<uni-forms-item required name="standards" label="物料规格">
 					<pickers v-model="form.standards" :range="standardsOption" placeholder='请选择物料规格' @change="(_data)=>binddata('standards',_data,'form')"></pickers>
@@ -30,19 +27,12 @@
 
 <script>
 	import {tenantGoodsRelUpdate, tenantGoodsRelAdd} from '@/config/service/material'
-	// import { getInfo, addInfo, updateInfo, selectInfo } from '@/config/service/capacity/driver.js';
-	// import { addTenantRel } from '@/config/service/capacity/rel';
-	// import { phoneReg } from '@/utils/validate.js';
-	// import TeamList from '@/pages/capacity/components/teamList.vue'
-	// import VehicleList from '@/pages/capacity/components/vehicleList.vue'
 	import { removePropertyOfNull } from '@/utils/ddc';
 	import { mapState } from 'vuex';
 	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	import pickers from './picker.vue';
 	export default {
 		components: {
-			// TeamList,
-			// VehicleList,
 			HeaderBar,
 			pickers
 		},
@@ -52,7 +42,6 @@
 			}),
 		},
 		data() {
-			// console.log(this.binddata);
 			
 			return {
 				cbData: null,
@@ -81,18 +70,6 @@
 						]
 					},
 				},
-				// // 状态字典
-				// isFreezeOptions: [
-				// 	{ dictLabel: '正常', dictValue: 0 },
-				// 	{ dictLabel: '冻结', dictValue: 1 }
-				// ],
-				// // 选择调度列表
-				// teamListShow: false,
-				// teamCodes: [],
-				// // 选择车辆列表
-				// vehicleListShow: false,
-				// vehicleInfoList: [],
-				
 
 				// 字典值
 				goodsBigTypeOption:[],
@@ -136,7 +113,6 @@
 
 			// 选中大类请求小类
 			async changeGoodsBigType(_data){
-				console.log(_data);
 
 				this.binddata('goodsBigType',_data,'form')
 				
@@ -154,7 +130,6 @@
 
 			// 确认创建/编辑
 			handleSubmit() {
-				
 				// 手动验证空值
 				// if(!this.noValidate()) return
 				this.$refs.form.validate().then(async res=>{

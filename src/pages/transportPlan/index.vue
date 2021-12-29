@@ -34,25 +34,36 @@
 		<uni-load-more v-if="cardList && cardList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
 
 			<!-- html -->
-		<html2canvas ref="html2canvas" :domId="domId" @renderFinish="renderFinish" v-if="cbData">
+		<html2canvas ref="html2canvas" :domId="domId" @renderFinish="renderFinish" >
 
-			<u-overlay :show="show" @click="()=>{show = false; cbData = null}" >
+			<u-overlay :show="show" @click="()=>{show = false; cbData = null; domId = ''}" >
 
-				<view class="qrcode ly-flex-v ly-flex-align-center" id="poster">
-					<view class="title">
-						<image src="../../static/transportPlan/title.png" mode="aspectFill" style="height:50px;width:250px">
-						</image>
+				<view class="qrcode ly-flex-v ly-flex-align-center">
+					<view class="poster ly-flex-v ly-flex-align-center" id="poster">
+						<view>
+							<image src="../../static/transportPlan/title.png" mode="aspectFill" style="height:34upx;width:388upx;margin:36upx 0;">
+							</image>
+						</view>
+						<view class="qr" :class="cbData && cbData.transRelType == 'chy' ? 'chy' : ''" @tap.stop >
+							<image :src="qrcode.src" mode="aspectFill" style="height:400upx;width:400upx"></image>
+							<tki-qrcode :show="false" cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
+								:foreground="qrcode.foreground" :pdground="qrcode.pdground" :icon="qrcode.icon" :iconSize="qrcode.iconsize" :lv="qrcode.lv"
+								:onval="qrcode.onval" :loadMake="qrcode.loadMake" :usingComponents="true" @result="result" />
+						</view>
+						<view class="contents">
+							<view class="contents-top ly-flex ly-flex-pack-justify ly-flex-align-start">
+								<view class="tag">{{ cbData && cbData.receiveType === 1?'收货':'发货' }}</view>
+								<view class="name g-double-row">{{ cbData && cbData.name }}</view>
+							</view>
+							<view class="contents-bottom ly-flex ly-flex-pack-justify ly-flex-align-center">
+								<view class="g-single-row text">{{ cbData && cbData.scompanyName }}</view>
+								<image class="img" src="../../static/transportPlan/separate2.png"></image>
+								<view class="g-single-row text">{{ cbData && cbData.fcompanyName }}</view>
+							</view>
+						</view>
+						<view class="message">【微信扫码即可接单或卸货】</view>
 					</view>
-					<view class="qr" @tap.stop >
-						<image :src="qrcode.src" mode="aspectFill" style="height:460upx;width:460upx"></image>
-						<tki-qrcode :show="false" cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
-							:foreground="qrcode.foreground" :pdground="qrcode.pdground" :icon="qrcode.icon" :iconSize="qrcode.iconsize" :lv="qrcode.lv"
-							:onval="qrcode.onval" :loadMake="qrcode.loadMake" :usingComponents="true" @result="result" />
-					</view>
-					<view class="message mb10 mt10">
-						司机扫码即可接单，您也可以分享链接到微信中让司机点击接单
-					</view>
-					<view class="btn ly-flex-pack-around">
+					<view class="btn ly-flex ly-flex-pack-justify">
 						<button @click.stop="saveImg">保存到手机</button>
 						<button @click.stop="wxshare">分享链接到微信</button>
 					</view>
@@ -72,7 +83,7 @@
 	import TransportCard from './components/TransportCard.vue'
 	import { pathToBase64, base64ToPath } from 'image-tools'
 	import { saveHeadImgFile } from '@/common/js/saveHeadImgFile'
-	import { orderPlanInfoList as getList} from '@/config/service/transportPlan/transportationPlan.js'
+	import { orderPlanInfoList as getList, buildQrCode} from '@/config/service/transportPlan/transportationPlan.js'
 	export default {
 		components: {
 			TransportCard,
@@ -101,7 +112,6 @@
 
 				cbData: null,
 
-
 				loading: false,
 				queryParams: { // 请求参数
 					pageNum: 1,
@@ -113,13 +123,13 @@
 				
 				qrcode: {
 					val: '', // 要生成的二维码值
-					size: 460, // 二维码大小
+					size: 400, // 二维码大小
 					unit: 'upx', // 单位
 					background: '#FFFFFF', // 背景色
 					foreground: '#000000', // 前景色
 					pdground: '#000000', // 角标色
 					icon: '../../static/jylogo.png', // 二维码中心图标
-					iconsize: 80, // 二维码图标大小
+					iconsize: 53, // 二维码图标大小
 					lv: 3, // 二维码容错级别 ， 一般不用设置，默认就行
 					onval: true, // val值变化时自动重新生成二维码
 					loadMake: true, // 组件加载完成后自动生成二维码
@@ -196,12 +206,13 @@
 				// 转成线上地址
 				try{
 					const imgInfo = await uni.getImageInfo({
-						src: "../../static/jylogo.png"
+						src: "../../static/jylogo.jpg"
 					});
 					this.logoBase64 = imgInfo[1].path
 				}catch(e){
 					//TODO handle the exception
 				}
+
 			}
 
 			if(this.headerInfo.Authorization){
@@ -312,16 +323,34 @@
 			// 分享到微信
 			wxshare(){
 
-				// console.log('分享的连接是:' , this.qrcode.val);
-				this.sendOption('onShare', {
-					shareUrl: this.qrcode.val, // 分享连接
-					shareTitle:"承运链接", // 分享的标题
-					shareContent: `点此接【${ this.cbData.name }】的运单`, // 分享的描述
-					shareImg: this.logoBase64 || "http://qn.kemean.cn//upload/202004/18/1587189024467w6xj18b1.jpg",
-					appId: undefined, // 默认不传type的时候，必须传appId和appPath才会显示小程序图标
-					appPath: undefined,
-					appWebUrl: undefined
+				
+				const que = {
+					path: 'pages/startPage/startPage',
+					query: `code=${this.cbData.orderPlanCode}&type=1`
+				};
+
+				// console.log(que);
+
+				// 请求一下地址
+				buildQrCode(que, this.headerInfo).then(res=>{
+					// console.log(res);
+					if (res.data.errmsg === 'ok') {
+						
+						// console.log('分享的连接是:' , this.qrcode.val);
+						this.sendOption('onShare', {
+							shareUrl: res.data.url_link, // 分享连接
+							shareTitle:"承运链接", // 分享的标题
+							shareContent: `点此接【${ this.cbData.name }】的运单`, // 分享的描述
+							shareImg: this.logoBase64 || "http://qn.kemean.cn//upload/202004/18/1587189024467w6xj18b1.jpg",
+							appId: undefined, // 默认不传type的时候，必须传appId和appPath才会显示小程序图标
+							appPath: undefined,
+							appWebUrl: undefined
+						})
+					}
+
 				})
+
+
 			},
 
 			// 应用交互
@@ -373,43 +402,109 @@
 		background-size:200rpx
 	}
 	.qrcode {
-		width: 600rpx;
-		height: 850rpx;
+		width: 580rpx;
+		height: auto;
 		background-color: #3c65fd;
 		margin: auto;
 		border-radius: 30rpx;
+		padding-bottom: 40upx;
+		>.poster{
+			width: 100%;
+			height: auto;
+			background-color: #3c65fd;
+			margin: auto;
+			border-radius: 30rpx;
+			padding-bottom: 38upx;
+		}
 
 		.qr {
-			border-radius: 20rpx;
-			width: 500rpx;
-			height: 500rpx;
+			border-radius: 12rpx;
+			width: 480rpx;
+			height: 470rpx;
 			background-color: #FFFFFF;
-			// display: flex;
-			// align-content: center;
-			// justify-content: center;
-			padding: 20upx;
+			padding: 35upx 40upx;
+			&.chy{
+				width: 480upx;
+				height: 520upx;
+				background: url('../../static/transportPlan/box-bg.png') no-repeat;
+				background-size: 100% 100%;
+				padding: 94upx 40upx 26upx 40upx;
+			}
+		}
+		
+		.contents{
+			width: 480upx;
+			background: rgba(255, 255, 255, 0.2);
+			box-shadow: 0upx 5upx 6upx 0upx rgba(3, 21, 84, 0.08);
+			border-radius: 12upx;
+			margin-top: 38upx;
+			padding: 0 22upx;
+			.contents-top{
+				font-size: 24upx;
+				font-family: PingFang SC;
+				font-weight: bold;
+				color: #FFFFFF;
+				line-height: 38upx;
+				margin: 22upx 0;
+				.tag{
+					width: 60upx;
+					height: 27upx;
+					line-height: 27upx;
+					text-align: center;
+					background: #FFFFFF;
+					border-radius: 16upx 14upx 14upx 0upx;
+					font-size: 20upx;
+					font-family: PingFang SC;
+					font-weight: bold;
+					color: #3A65FF;
+					margin-top: 5upx;
+				}
+				.name{
+					width: calc(100% - 68upx);
+				}
+			}
+			.contents-bottom{
+				font-size: 28upx;
+				font-family: PingFang SC;
+				font-weight: bold;
+				color: #FFFFFF;
+				padding: 24upx 0 26upx;
+				border-top: 2upx solid rgba(255, 255, 255, 0.15);
+				.img{
+					height: 16upx;
+					width: 64upx;
+					margin: 0 22upx;
+				}
+				.text{
+					width: calc(50% - 40upx);
+					text-align: center;
+				}
+			}
 		}
 
 		.message {
-			width: 80%;
 			color: #FFFFFF;
 			line-height: 50rpx;
+			text-align: center;
+			margin: 32upx 0 0;
+			font-size: 28upx;
 		}
 
 		.btn {
-			width: 90%;
-
+			width: 500upx;
 			button {
-				width: 240upx;
+				width: 230upx;
 				height: 80upx;
 				line-height: 80upx;
-				font-size: 24upx;
+				font-size: 28upx;
 				font-weight: bold;
+				padding: 0;
 
 				&:first-child {
 					color: #FFFFFF;
-					background-color: #7897ff;
-
+					background-color: transparent;
+					border: 2upx solid #FFFFFF;
+					line-height: 76upx;
 					&:active {
 						background-color: #6c88e5;
 					}
