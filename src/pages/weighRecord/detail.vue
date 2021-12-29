@@ -89,6 +89,14 @@
 			return {
 				statusBar12: 0
 			}
+		},
+		methods: {
+			/**
+			 * 返回上一页
+			 */
+			navigateBack() {
+				uni.navigateBack();
+			}
 		}
 	}
 </script>
