@@ -151,3 +151,13 @@ export function orderPlanFreightList(query, config) {
   });
 }
 
+// 链接地址
+export function buildQrCode(data, config) {
+  return request({
+    url: `/jyz/wx/buildQrCode`,
+    method: 'post',
+    headers: config,
+    data: data
+  });
+}
+

@@ -81,7 +81,7 @@
 	import TransportCard from './components/TransportCard.vue'
 	import { pathToBase64, base64ToPath } from 'image-tools'
 	import { saveHeadImgFile } from '@/common/js/saveHeadImgFile'
-	import { orderPlanInfoList as getList} from '@/config/service/transportPlan/transportationPlan.js'
+	import { orderPlanInfoList as getList, buildQrCode} from '@/config/service/transportPlan/transportationPlan.js'
 	export default {
 		components: {
 			TransportCard,
@@ -204,12 +204,13 @@
 				// 转成线上地址
 				try{
 					const imgInfo = await uni.getImageInfo({
-						src: "../../static/jylogo.png"
+						src: "../../static/jylogo.jpg"
 					});
 					this.logoBase64 = imgInfo[1].path
 				}catch(e){
 					//TODO handle the exception
 				}
+
 			}
 
 			if(this.headerInfo.Authorization){
@@ -320,16 +321,43 @@
 			// 分享到微信
 			wxshare(){
 
-				// console.log('分享的连接是:' , this.qrcode.val);
-				this.sendOption('onShare', {
-					shareUrl: this.qrcode.val, // 分享连接
-					shareTitle:"承运链接", // 分享的标题
-					shareContent: `点此接【${ this.cbData.name }】的运单`, // 分享的描述
-					shareImg: this.logoBase64 || "http://qn.kemean.cn//upload/202004/18/1587189024467w6xj18b1.jpg",
-					appId: undefined, // 默认不传type的时候，必须传appId和appPath才会显示小程序图标
-					appPath: undefined,
-					appWebUrl: undefined
+				
+				const que = {
+					path: 'pages/startPage/startPage',
+					query: `code=${this.cbData.orderPlanCode}&type=1`
+				};
+
+				console.log(que);
+
+				// 请求一下地址
+				buildQrCode(que, this.headerInfo).then(res=>{
+					console.log(res);
+					if (res.data.errmsg === 'ok') {
+						console.log({
+							shareUrl: res.data.url_link, // 分享连接
+							shareTitle:"承运链接", // 分享的标题
+							shareContent: `点此接【${ this.cbData.name }】的运单`, // 分享的描述
+							shareImg: this.logoBase64 || "http://qn.kemean.cn//upload/202004/18/1587189024467w6xj18b1.jpg",
+							appId: undefined, // 默认不传type的时候，必须传appId和appPath才会显示小程序图标
+							appPath: undefined,
+							appWebUrl: undefined
+						}); 
+						
+						// console.log('分享的连接是:' , this.qrcode.val);
+						this.sendOption('onShare', {
+							shareUrl: res.data.url_link, // 分享连接
+							shareTitle:"承运链接", // 分享的标题
+							shareContent: `点此接【${ this.cbData.name }】的运单`, // 分享的描述
+							shareImg: this.logoBase64 || "http://qn.kemean.cn//upload/202004/18/1587189024467w6xj18b1.jpg",
+							appId: undefined, // 默认不传type的时候，必须传appId和appPath才会显示小程序图标
+							appPath: undefined,
+							appWebUrl: undefined
+						})
+					}
+
 				})
+
+
 			},
 
 			// 应用交互
