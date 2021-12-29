@@ -242,7 +242,10 @@
 	}
 	.list-wrap {
 		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+		margin: 0 -30upx;
 		margin-top: 28upx;
+		padding: 0 30upx;
 	}
 	.list-record {
 		.item-record {
