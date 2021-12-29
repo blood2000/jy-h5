@@ -21,45 +21,48 @@
 					<input type="text" placeholder="输入车牌或司机名字或手机号" class="input-search" />
 				</view>
 			</view>
-			<view class="list-record">
-				<view class="item-record">
-					<view class="item-head building-bottom-line">
-						<text class="item-title">运输计划名称</text>
-						<view class="item-head-right">
-							<img src="@/static/weighRecord/logo_ji.png" alt="" class="item-logo">
-							<i class="icon-arrow"></i>
-						</view>
-					</view>
-					<view class="item-route building-bottom-line">
-						<view class="route">
-							<i class="icon-route delivery"></i>
-							<text>衢州宝红建材有限公司</text>
-						</view>
-						<view class="route">
-							<i class="icon-route receipt"></i>
-							<text>浙江宝红商品砼有限公司</text>
-						</view>
-					</view>
-					<view class="item-info">
-						<view class="item-info-name">
-							<view>
-								<text class="label">货物：</text>
-								<text class="val">小石头</text>
-							</view>
-							<view>
-								<text class="label">过磅类型：</text>
-								<text class="val">皮重</text>
+			<view class="list-wrap">
+				<view class="list-record" @click="navigateToDetail">
+					<view class="item-record" v-for="(item, index) in dataList" :key="index" :data-id="index">
+						<view class="item-head building-bottom-line">
+							<text class="item-title">运输计划名称</text>
+							<view class="item-head-right">
+								<img src="@/static/weighRecord/logo_ji.png" alt="" class="item-logo">
+								<i class="icon-arrow"></i>
 							</view>
 						</view>
-						<view class="item-info-number">
-							<view class="car-no">闽A12345</view>
-							<view class="tel">兔斯基 13700000000</view>
+						<view class="item-route building-bottom-line">
+							<view class="route">
+								<i class="icon-route delivery"></i>
+								<text>衢州宝红建材有限公司</text>
+							</view>
+							<view class="route">
+								<i class="icon-route receipt"></i>
+								<text>浙江宝红商品砼有限公司</text>
+							</view>
 						</view>
-						<view class="item-info-time">
-							过磅时间：2021-12-12 18:18:40
+						<view class="item-info">
+							<view class="item-info-name">
+								<view>
+									<text class="label">货物：</text>
+									<text class="val">小石头</text>
+								</view>
+								<view>
+									<text class="label">过磅类型：</text>
+									<text class="val">皮重</text>
+								</view>
+							</view>
+							<view class="item-info-number">
+								<view class="car-no">闽A12345</view>
+								<view class="tel">兔斯基 13700000000</view>
+							</view>
+							<view class="item-info-time">
+								过磅时间：2021-12-12 18:18:40
+							</view>
 						</view>
 					</view>
 				</view>
+				<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
 			</view>
 		</view>
 	</view>
@@ -73,7 +76,22 @@
 			},
 			data() {
 				return {
-					statusBar12: 0
+					statusBar12: 0,
+					dataList: [{
+						id: 1
+					},{
+						id: 2
+					},{
+						id: 3
+					}],
+					// 是否无数据了
+					isEnd: false,
+					status: 'loading',
+					contentText: {
+						contentdown: '上拉加载更多',
+						contentrefresh: '加载中',
+						contentnomore: '没有更多了'
+					},
 				}
 			},
 			async onLoad(options) {
@@ -88,6 +106,23 @@
 					this.statusBar12 -= 10
 				}
 			},
+			onReachBottom() {
+				console.log('到底了')
+			},
+			methods: {
+				/**
+				 * 跳转至过磅详情
+				 * @param {Object} e 当前点击对象
+				 */
+				navigateToDetail(e) {
+					if(e.target.dataset.id >= 0) {
+						console.log('sss')
+						uni.navigateTo({
+							url: `/pages/weighRecord/detail?id=${e.target.dataset.id}`
+						});
+					}
+				},
+			}
 		}
 </script>
 
@@ -111,15 +146,16 @@
 		flex-direction: column;
 	}
 	.main-box{
-		height: calc(100% - 100upx);
-		padding: 24upx 30upx;
+		height: calc(100% - 88upx);
+		padding: 24upx 30upx 0;
 		background: url(../../static/weighRecord/bg.png) #f5f5f5 no-repeat;
 		background-size: contain;
+		overflow: hidden;
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
 	}
 	.filter-wrap {
+		width: 100%;
 		.item-filter {
 			display: flex;
 			align-items: center;
@@ -200,11 +236,28 @@
 			}
 		}
 	}
+	.filter-wrap-fixed {
+		height: 150upx;
+		width: 100%;
+	}
+	.list-wrap {
+		overflow-y: auto;
+		margin-top: 28upx;
+	}
 	.list-record {
 		.item-record {
+			position: relative;
 			background-color: #fff;
 			border-radius: 24upx;
-			margin-top: 24upx;
+			margin-bottom: 24upx;
+			&::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+			}
 			.item-head {
 				height: 80upx;
 				display: flex;
