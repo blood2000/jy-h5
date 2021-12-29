@@ -144,6 +144,30 @@
 		}
 	},
 	{
+		"path": "pages/address/index",
+		"style": {
+		  "navigationStyle": "custom",
+		  "navigationBarTitleText": "地址管理",
+		  "enablePullDownRefresh": true
+		}
+	},
+	{
+		"path": "pages/address/edit",
+		"style": {
+		  "navigationStyle": "custom",
+		  "navigationBarTitleText": "新增地址",
+		  "enablePullDownRefresh": false
+		}
+	},
+	{
+		"path": "pages/address/map",
+		"style": {
+		  "navigationStyle": "custom",
+		  "navigationBarTitleText": "新增电子围栏",
+		  "enablePullDownRefresh": false
+		}
+	},
+	{
 		"path": "pages/transportPlan/add",
 		"style": {
 			"navigationBarTitleText": "创建收货计划",
