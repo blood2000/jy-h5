@@ -38,29 +38,31 @@
 
 			<u-overlay :show="show" @click="()=>{show = false; cbData = null; domId = ''}" >
 
-				<view class="qrcode ly-flex-v ly-flex-align-center" id="poster">
-					<view class="title">
-						<image src="../../static/transportPlan/title.png" mode="aspectFill" style="height:34upx;width:388upx;margin:36upx 0;">
-						</image>
-					</view>
-					<view class="qr" :class="cbData && cbData.transRelType == 'chy' ? 'chy' : ''" @tap.stop >
-						<image :src="qrcode.src" mode="aspectFill" style="height:400upx;width:400upx"></image>
-						<tki-qrcode :show="false" cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
-							:foreground="qrcode.foreground" :pdground="qrcode.pdground" :icon="qrcode.icon" :iconSize="qrcode.iconsize" :lv="qrcode.lv"
-							:onval="qrcode.onval" :loadMake="qrcode.loadMake" :usingComponents="true" @result="result" />
-					</view>
-					<view class="contents">
-						<view class="contents-top ly-flex ly-flex-pack-justify ly-flex-align-start">
-							<view class="tag">{{ cbData && cbData.receiveType === 1?'收货':'发货' }}</view>
-							<view class="name g-double-row">{{ cbData && cbData.name }}</view>
+				<view class="qrcode ly-flex-v ly-flex-align-center">
+					<view class="poster ly-flex-v ly-flex-align-center" id="poster">
+						<view>
+							<image src="../../static/transportPlan/title.png" mode="aspectFill" style="height:34upx;width:388upx;margin:36upx 0;">
+							</image>
 						</view>
-						<view class="contents-bottom ly-flex ly-flex-pack-justify ly-flex-align-center">
-							<view class="g-single-row text">{{ cbData && cbData.scompanyName }}</view>
-							<image class="img" src="../../static/transportPlan/separate2.png"></image>
-							<view class="g-single-row text">{{ cbData && cbData.fcompanyName }}</view>
+						<view class="qr" :class="cbData && cbData.transRelType == 'chy' ? 'chy' : ''" @tap.stop >
+							<image :src="qrcode.src" mode="aspectFill" style="height:400upx;width:400upx"></image>
+							<tki-qrcode :show="false" cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
+								:foreground="qrcode.foreground" :pdground="qrcode.pdground" :icon="qrcode.icon" :iconSize="qrcode.iconsize" :lv="qrcode.lv"
+								:onval="qrcode.onval" :loadMake="qrcode.loadMake" :usingComponents="true" @result="result" />
 						</view>
+						<view class="contents">
+							<view class="contents-top ly-flex ly-flex-pack-justify ly-flex-align-start">
+								<view class="tag">{{ cbData && cbData.receiveType === 1?'收货':'发货' }}</view>
+								<view class="name g-double-row">{{ cbData && cbData.name }}</view>
+							</view>
+							<view class="contents-bottom ly-flex ly-flex-pack-justify ly-flex-align-center">
+								<view class="g-single-row text">{{ cbData && cbData.scompanyName }}</view>
+								<image class="img" src="../../static/transportPlan/separate2.png"></image>
+								<view class="g-single-row text">{{ cbData && cbData.fcompanyName }}</view>
+							</view>
+						</view>
+						<view class="message">【微信扫码即可接单或卸货】</view>
 					</view>
-					<view class="message">【微信扫码即可接单或卸货】</view>
 					<view class="btn ly-flex ly-flex-pack-justify">
 						<button @click.stop="saveImg">保存到手机</button>
 						<button @click.stop="wxshare">分享链接到微信</button>
@@ -415,6 +417,14 @@
 		margin: auto;
 		border-radius: 30rpx;
 		padding-bottom: 40upx;
+		>.poster{
+			width: 100%;
+			height: auto;
+			background-color: #3c65fd;
+			margin: auto;
+			border-radius: 30rpx;
+			padding-bottom: 38upx;
+		}
 
 		.qr {
 			border-radius: 12rpx;
@@ -485,13 +495,12 @@
 			color: #FFFFFF;
 			line-height: 50rpx;
 			text-align: center;
-			margin: 32upx 0 38upx;
+			margin: 32upx 0 0;
 			font-size: 28upx;
 		}
 
 		.btn {
 			width: 500upx;
-
 			button {
 				width: 230upx;
 				height: 80upx;

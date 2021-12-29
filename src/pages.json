@@ -189,6 +189,30 @@
 			"navigationStyle": "custom",
 			"enablePullDownRefresh": false
 		}
+	},{
+		"path": "pages/weighRecord/index",
+		"style": {
+			"navigationBarTitleText": "过磅记录",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#3a65ff"
+		}
+	},{
+		"path": "pages/weighRecord/list",
+		"style": {
+			"navigationBarTitleText": "过磅记录",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#3a65ff"
+		}
+	},{
+		"path": "pages/weighRecord/detail",
+		"style": {
+			"navigationBarTitleText": "过磅记录详情",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#3a65ff"
+		}
 	}
   ],
   "globalStyle": {
