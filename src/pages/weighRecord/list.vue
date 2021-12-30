@@ -15,12 +15,13 @@
 						<i class="icon-select"></i>
 					</view>
 					<!-- 筛选条件 -->
-					<view class="btn-filter">筛选</view>
+					<view class="btn-filter" @click="openPopFilter">筛选</view>
 				</view>
 				<view class="item-filter input">
 					<input type="text" placeholder="输入车牌或司机名字或手机号" class="input-search" />
 				</view>
 			</view>
+			<!-- 过磅记录 -->
 			<view class="list-wrap">
 				<view class="list-record" @click="navigateToDetail">
 					<view class="item-record" v-for="(item, index) in dataList" :key="index" :data-id="index">
@@ -65,6 +66,79 @@
 				<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
 			</view>
 		</view>
+		<!-- 筛选弹出窗 -->
+		<uni-popup ref="popup" :mask-click="false" type="bottom">
+			<view class="pop-filter">
+				<view class="pop-filter-title">
+					<text>选择筛选条件</text>
+					<i class="icon-close" @click="closePopFilter()"></i>
+				</view>
+				<view class="pop-filter-content">
+					<view class="form-group">
+						<!-- 过磅类型 -->
+						<view class="form-item">
+							<view class="form-label">过磅类型</view>
+							<view class="form-cont">
+								<view class="radio-group" @click="onChangeFilterForm">
+									<view class="item-radio" :class="{'active': filterForm.weighType == 1}" data-value="1" data-formName="weighType">皮重过磅</view>
+									<view class="item-radio" :class="{'active': filterForm.weighType == 2}" data-value="2" data-formName="weighType">毛重过磅</view>
+								</view>
+							</view>
+						</view>
+						<!-- 收发企业 -->
+						<view class="form-item">
+							<view class="form-label">
+								<text>收发企业</text>
+								<text class="more">更多企业</text>
+							</view>
+							<view class="form-cont">
+								<view class="radio-group" @click="onChangeFilterForm">
+									<view class="item-radio fill" :class="{'active': filterForm.companyId == item.id}" :data-value="item.id" data-formName="companyId" v-for="item in company" :key="item.id">{{ item.name }}</view>
+								</view>
+							</view>
+						</view>
+						<!-- 收发企业 -->
+						<view class="form-item">
+							<view class="form-label">
+								<text>运输计划</text>
+								<text class="more">更多运输计划</text>
+							</view>
+							<view class="form-cont">
+								<view class="radio-group" @click="onChangeFilterForm">
+									<view class="item-radio fill" :class="{'active': filterForm.transportPlanId == item.id}" :data-value="item.id" data-formName="transportPlanId" v-for="item in transportPlan" :key="item.id">{{ item.name }}</view>
+								</view>
+							</view>
+						</view>
+						<!-- 地磅 -->
+						<view class="form-item">
+							<view class="form-label">
+								<text>地磅</text>
+							</view>
+							<view class="form-cont">
+								<view class="radio-group" @click="onChangeFilterForm">
+									<view class="item-radio" :class="{'active': filterForm.weighbridgeId == item.id}" :data-value="item.id" data-formName="weighbridgeId" v-for="item in weighbridge" :key="item.id">{{ item.name }}</view>
+								</view>
+							</view>
+						</view>
+						<!-- 称重状况 -->
+						<view class="form-item">
+							<view class="form-label">
+								<text>称重状况</text>
+							</view>
+							<view class="form-cont">
+								<view class="radio-group" @click="onChangeFilterForm">
+									<view class="item-radio" :class="{'active': filterForm.weighStatusId == item.id}" :data-value="item.id" data-formName="weighStatusId" v-for="item in weighStatus" :key="item.id">{{ item.name }}</view>
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="btn-group">
+						<view class="btn btn-cancel">清空</view>
+						<view class="btn btn-comfirm">确定(28条过磅记录）</view>
+					</view>
+				</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -92,6 +166,44 @@
 						contentrefresh: '加载中',
 						contentnomore: '没有更多了'
 					},
+					filterForm: {
+						weighType: 1, // 1皮重过磅 2 毛重过磅
+						companyId: 1, // 收发企业
+						transportPlanId: 1, // 运输计划
+						weighbridgeId: 1, // 地磅
+						weighStatusId: 1 // 称重状况
+					},
+					company: [{ // 收发企业
+						name: '衢州宝红建材有限公司',
+						id: 1
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: 2
+					}],
+					transportPlan: [{ // 运输计划
+						name: '东坡收原煤路线1',
+						id: 1
+					}, {
+						name: '东坡收原煤路线2',
+						id: 2
+					}],
+					weighbridge: [{ // 地磅
+						name: '1号地磅',
+						id: 1
+					}, {
+						name: '2号地磅',
+						id: 2
+					}, {
+						name: '3号地磅',
+						id: 3
+					}],
+					weighStatus: [{ // 称重状况
+						name: '已完成',
+						id: 1
+					}, {
+						name: '未完成',
+						id: 2
+					}]
 				}
 			},
 			async onLoad(options) {
@@ -105,6 +217,8 @@
 				if(uni.getSystemInfoSync().platform == 'ios'){
 					this.statusBar12 -= 10
 				}
+			},
+			onReady() {
 			},
 			onReachBottom() {
 				console.log('到底了')
@@ -122,6 +236,27 @@
 						});
 					}
 				},
+				/**
+				 * 打开筛选弹出窗
+				 */
+				openPopFilter() {
+					this.$refs.popup.open()
+				},
+				/**
+				 * 关闭筛选弹出窗
+				 */
+				closePopFilter() {
+					this.$refs.popup.close()
+				},
+				/**
+				 * 选择类型
+				 */
+				onChangeFilterForm(e) {
+					console.log(e.target.dataset.value)
+					if(e.target.dataset.value) {
+						this.filterForm[e.target.dataset.formName] = e.target.dataset.value;
+					}
+				}
 			}
 		}
 </script>
@@ -242,7 +377,10 @@
 	}
 	.list-wrap {
 		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+		margin: 0 -30upx;
 		margin-top: 28upx;
+		padding: 0 30upx;
 	}
 	.list-record {
 		.item-record {
@@ -364,6 +502,109 @@
 				&-time {
 					color: #878787;
 					margin-top: 25upx;
+				}
+			}
+		}
+	}
+	.pop-filter {
+		background-color: #fff;
+		border-radius: 25upx 25upx 0px 0px;
+		padding: 40upx 36upx;
+		&-title {
+			text-align: center;
+			font-size: 33upx;
+			position: relative;
+			.icon-close {
+				position: absolute;
+				right: 0;
+				top: 0;
+				width: 32upx;
+				height: 32upx;
+				background: url(../../static/weighRecord/icon_close.png) no-repeat;
+				background-size: contain;
+				display: block;
+			}
+		}
+		.form-group {
+			.form-item {
+				margin-bottom: 30upx;
+				.form-label {
+					position: relative;
+					margin-bottom: 25upx;
+					.more {
+						position: absolute;
+						right: 0;
+						top: 0;
+						font-size: 29upx;
+						color: #878787;
+						display: flex;
+						align-items: center;
+						&::after {
+							content: '';
+							display: block;
+							width: 18upx;
+							height: 26upx;
+							background: url(../../static/weighRecord/arrow_left.png) no-repeat;
+							background-size: contain;
+							margin-left: 15upx;
+						}
+					}
+				}
+			}
+		}
+		.radio-group {
+			display: flex;
+			flex-wrap: wrap;
+			margin: 0 -15upx;
+			.item-radio {
+				position: relative;
+				height: 70upx;
+				line-height: 70upx;
+				font-size: 29upx;
+				color: #333;
+				padding: 0 28upx;
+				border-radius: 6upx;
+				margin: 0 15upx 15upx;
+				background-color: rgba($color: #ccc, $alpha: 0.18);
+				&::after {
+					content: "";
+					position: absolute;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					top: 0;
+				}
+				&.active {
+					background-color: rgba($color: #3a65ff, $alpha: 0.12);
+					color: #3a65ff;
+					font-weight: bold;
+				}
+				&.fill {
+					width: 100%;
+				}
+			}
+		}
+		.btn-group {
+			display: flex;
+			justify-content: space-between;
+			margin: 50upx -15upx 0;
+			.btn {
+				padding: 0 78upx;
+				height: 80upx;
+				border-radius: 10upx;
+				border: solid 1upx #3a65ff;
+				margin: 0 15upx;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 30upx;
+				&.btn-cancel {
+					color: #3a65ff;
+					background-color: #fff;
+				}
+				&.btn-comfirm {
+					color: #fff;
+					background-color: #3a65ff;
 				}
 			}
 		}
