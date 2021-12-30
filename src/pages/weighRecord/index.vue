@@ -80,7 +80,7 @@
 
 <script>
 	import HeaderBar from '@/components/Building/HeaderBar.vue';
-	import datetimerangePicker from './inc/datetimerangePicker.vue'
+	import datetimerangePicker from './inc/DatetimerangePicker.vue'
 	export default {
 		components: {
 			HeaderBar,
@@ -271,7 +271,8 @@
 				.item-logo-route {
 					width: 35upx;
 					height:35upx;
-					margin-left: 19upx;
+					margin-left: 20upx;
+					object-fit: contain;
 				}
 			}
 			.item-info {
