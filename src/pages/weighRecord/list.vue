@@ -7,18 +7,7 @@
 			<view class="filter-wrap">
 				<view class="item-filter select">
 					<!-- 选择时间 -->
-					<view class="filter-date">
-						<i class="icon-calendar"></i>
-						<uni-datetime-picker
-							class="datetime-picker"
-							:key='oldDatePicker1' 
-							ref='datepick' 
-							:border="false" 
-							v-model="filterForm.effectiveDate"
-							type="daterange" 
-							rangeSeparator="至" 
-							@change="handlerPick" />
-					</view>
+					<datetimerangePicker v-model="filterForm.effectiveDate" />
 					<!-- 筛选条件 -->
 					<view class="btn-filter" @click="openPopFilter">筛选</view>
 				</view>
@@ -192,9 +181,11 @@
 
 <script>
 		import HeaderBar from '@/components/Building/HeaderBar.vue';
+		import datetimerangePicker from './inc/datetimerangePicker.vue';
 		export default {
 			components: {
-				HeaderBar
+				HeaderBar,
+				datetimerangePicker
 			},
 			data() {
 				return {
@@ -204,6 +195,18 @@
 					statusBar12: 0,
 					dataList: [{
 						id: 1
+					},{
+						id: 2
+					},{
+						id: 3
+					},{
+						id: 4
+					},{
+						id: 5
+					},{
+						id: 6
+					},{
+						id: 7
 					}],
 					// 是否无数据了
 					isEnd: false,
@@ -306,7 +309,6 @@
 				}
 			},
 			onReady() {
-				this.openPopFilter()
 			},
 			onReachBottom() {
 				console.log('到底了')
@@ -473,6 +475,7 @@
 				padding: 0 8upx;
 				font-size: 28upx;
 				height: 30upx;
+				line-height: 30upx;
 			}
 		}
 	}
