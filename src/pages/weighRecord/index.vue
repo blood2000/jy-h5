@@ -13,8 +13,8 @@
 			<!-- 磅房列表 -->
 			<view class="list-wrap">
 				<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltolower="scrolltolower">
-					<view class="list-record">
-						<view class="item-record" v-for="item in dataList" :key="item.id">
+					<view class="list-record" @click="navigateToDetail">
+						<view class="item-record" v-for="item in dataList" :key="item.id" :data-id="item.id">
 							<!-- 磅房标题 -->
 							<view class="item-head">
 								<text class="item-title">磅房A-地磅1</text>
@@ -39,7 +39,7 @@
 								</view>
 								</view>
 							</view>
-							<view class="item-route">
+							<view class="item-route building-top-line">
 								<view class="item-route-lastTime">
 									<text>最近一个过磅:</text>
 									<text>2021-12-12 18:18:40</text>
@@ -58,14 +58,16 @@
 											<text class="item-info-lable">毛重：</text>
 											<text class="item-info-value">8.23吨</text>
 										</view>
+									</view>
+									<view class="item-info-driver">
 										<view>
 											<text class="item-info-lable">车牌：</text>
 											<text class="item-info-value">闽A54772</text>
 										</view>
-									</view>
-									<view class="item-info-driver">
+										<view>
 											<text class="item-info-lable">司机：</text>
 											<text class="item-info-value">兔斯基</text>
+										</view>
 										</view>
 								</view>
 							</view>
@@ -120,6 +122,18 @@
 			}
 		},
 		methods: {
+			/**
+			 * 跳转至过磅详情
+			 * @param {Object} e 当前点击对象
+			 */
+			navigateToDetail(e) {
+				console.log(11111)
+				if(e.target.dataset.id >= 0) {
+					uni.navigateTo({
+						url: `/pages/weighRecord/list?code=${e.target.dataset.id}`
+					});
+				}
+			},
 			// 触底
 			scrolltolower(e) {
 				console.log('触达底部')
@@ -173,8 +187,17 @@
 		height: 100%;
 	}	
 	.item-record {
+		position: relative;
 		background-color: #fff;
 		border-radius: 24upx;
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			top: 0;
+		}
 		&:not(:last-child) {
 			margin-bottom: 24upx;
 		}
@@ -229,23 +252,33 @@
 			}
 		}
 		.item-route {
+			position: relative;
 			margin-top: 40upx;
-			padding: 0, 20upx;
+			padding: 24upx;
 			background-color: rgba($color: #d6ddf5, $alpha: .2);
+			&::before {
+				position: absolute;
+				content: '';
+				width: 100%;
+				height: 1px;
+				left: 0;
+				top: 0;
+				background-color: #f0f0f0;
+				transform: scaleY(.5);
+			}
 			&-lastTime {
 				display: flex;
 				justify-content: space-between;
-				padding: 24upx 24upx 0;
 				font-size: 24rpx;
 				color: #878787;
 			}
 			&-name {
 				display: flex;
 				align-items: center;
-				height: 60upx;
-				margin: 24upx;
+				padding: 15upx 20upx;
 				background-color:rgba(204, 204, 204, .18);
-				border-radius: 6rpx;
+				border-radius: 6upx;
+				margin-top: 12upx;
 				.item-route-place {
 					display: flex;
 					justify-content: space-between;
@@ -276,9 +309,7 @@
 				}
 			}
 			.item-info {
-				display: flex;
-				justify-content: space-between;
-				padding: 0 24upx;
+				margin-top: 15upx;
 				&-lable {
 					font-size: 24rpx;
 					color: #878787;
@@ -288,9 +319,10 @@
 					color: #333333;
 				}
 				&-driver {
-					padding-top: 15upx;
-					margin-top: 25upx;
-					margin-bottom: 25upx;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-top: 10upx;
 				}
 			}
 		}

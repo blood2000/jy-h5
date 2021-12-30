@@ -27,7 +27,7 @@
 									<i class="icon-arrow"></i>
 								</view>
 							</view>
-							<view class="item-route building-bottom-line">
+							<view class="item-route">
 								<view class="route">
 									<i class="icon-route delivery"></i>
 									<text>衢州宝红建材有限公司</text>
@@ -221,6 +221,12 @@
 				console.log('到底了')
 			},
 			methods: {
+				/**
+				 * 返回上一页
+				 */
+				navigateBack() {
+					uni.navigateBack();
+				},
 				/**
 				 * 跳转至过磅详情
 				 * @param {Object} e 当前点击对象
