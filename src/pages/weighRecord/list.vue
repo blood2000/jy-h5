@@ -75,7 +75,8 @@
 		</view>
 		<!-- 筛选弹出窗 -->
 		<uni-popup ref="popup" :mask-click="false" type="bottom">
-			<view class="pop-filter">
+			<!-- 选择筛选 -->
+			<view class="pop-filter" v-show="!isShowMoreCompany && !isShowMoretransportPlan">
 				<view class="pop-filter-title">
 					<text>选择筛选条件</text>
 					<i class="icon-close" @click="closePopFilter()"></i>
@@ -96,7 +97,7 @@
 						<view class="form-item">
 							<view class="form-label">
 								<text>收发企业</text>
-								<text class="more">更多企业</text>
+								<text class="more" @click="isShowMoreCompany=true">更多企业</text>
 							</view>
 							<view class="form-cont">
 								<view class="radio-group" @click="onChangeFilterForm">
@@ -104,11 +105,11 @@
 								</view>
 							</view>
 						</view>
-						<!-- 收发企业 -->
+						<!-- 运输计划 -->
 						<view class="form-item">
 							<view class="form-label">
 								<text>运输计划</text>
-								<text class="more">更多运输计划</text>
+								<text class="more" @click="isShowMoretransportPlan=true">更多运输计划</text>
 							</view>
 							<view class="form-cont">
 								<view class="radio-group" @click="onChangeFilterForm">
@@ -142,6 +143,46 @@
 					<view class="btn-group">
 						<view class="btn btn-cancel" @click="clearAllFormData">清空</view>
 						<view class="btn btn-comfirm">确定(28条过磅记录）</view>
+					</view>
+				</view>
+			</view>
+			<!-- 更多收发企业 -->
+			<view class="pop-filter-company" v-show="isShowMoreCompany">
+				<view class="pop-filter-company-title">
+					<i class="icon-back" @click="isShowMoreCompany=false"></i>
+					<text>收发企业</text>
+				</view>
+				<view class="pop-filter-company-content">
+					<input type="text" placeholder="输入企业名称" class="input-search" />
+					<view class="list-company">
+						<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y">
+							<view class="radio-group" @click="onChangeFilterForm">
+								<view class="item-radio fill" :class="{'active': filterForm.companyId == item.id}" :data-value="item.id" data-formName="companyId" v-for="item in companyList" :key="item.id">{{ item.name }}</view>
+							</view>
+						</scroll-view>
+					</view>
+					<view class="btn-group">
+						<view class="btn-primary">确定</view>
+					</view>
+				</view>
+			</view>
+			<!-- 更多运输计划 -->
+			<view class="pop-filter-company" v-show="isShowMoretransportPlan">
+				<view class="pop-filter-company-title">
+					<i class="icon-back" @click="isShowMoretransportPlan=false"></i>
+					<text>运输计划</text>
+				</view>
+				<view class="pop-filter-company-content">
+					<input type="text" placeholder="输入运输计划名称" class="input-search" />
+					<view class="list-company">
+						<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y">
+							<view class="radio-group" @click="onChangeFilterForm">
+								<view class="item-radio fill" :class="{'active': filterForm.transportPlanId == item.id}" :data-value="item.id" data-formName="transportPlanId" v-for="item in transportPlan" :key="item.id">{{ item.name }}</view>
+							</view>
+						</scroll-view>
+					</view>
+					<view class="btn-group">
+						<view class="btn-primary">确定</view>
 					</view>
 				</view>
 			</view>
@@ -210,7 +251,46 @@
 					}, {
 						name: '未完成',
 						id: 2
-					}]
+					}],
+					companyList: [{
+						name: '衢州宝红建材有限公司',
+						id: '1'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '2'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '3'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '4'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '5'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '6'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '7'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '8'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '9'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '10'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '11'
+					}, {
+						name: '浙江宝红商品砼有限公司',
+						id: '12'
+					}],
+					isShowMoreCompany: false, // 是否显示更多收发企业
+					isShowMoretransportPlan: false // 是否显示更多运输计划
 				}
 			},
 			async onLoad(options) {
@@ -226,6 +306,7 @@
 				}
 			},
 			onReady() {
+				this.openPopFilter()
 			},
 			onReachBottom() {
 				console.log('到底了')
@@ -283,6 +364,9 @@
 						this.status = 'loading';
 					}
 				},
+				scrolltolowerListCompany() {
+					console.log('触达底部')
+				},
 				// 时间控件
 				handlerPick(arr){
 					if(arr[0] && arr[1]){
@@ -304,6 +388,65 @@
 </script>
 
 <style lang="scss" scoped>
+	.radio-group {
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0 -15upx;
+		.item-radio {
+			position: relative;
+			height: 70upx;
+			line-height: 70upx;
+			font-size: 29upx;
+			color: #333;
+			padding: 0 28upx;
+			border-radius: 6upx;
+			margin: 0 15upx 15upx;
+			background-color: rgba($color: #ccc, $alpha: 0.18);
+			&::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+			}
+			&.active {
+				background-color: rgba($color: #3a65ff, $alpha: 0.12);
+				color: #3a65ff;
+				font-weight: bold;
+			}
+			&.fill {
+				width: 100%;
+			}
+		}
+	}
+	.input-search {
+		height: 72upx;
+		background-color: #fff;
+		border-radius: 10upx;
+		width: 100%;
+		padding: 0 16upx;
+		font-size: 28upx;
+		/deep/ .uni-input-wrapper {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: row;
+			&::before {
+				content: '';
+				display: block;
+				width: 32upx;
+				height: 32upx;
+				background: url(../../static/weighRecord/icon_search.png) no-repeat;
+				background-size: contain;
+				margin-right: 10upx;
+			}
+			.uni-input-placeholder {
+				left: 42upx;
+				width: calc(100% - 42upx);
+			}
+		}
+	}
 	.datetime-picker {
 		width: 380upx;
 		margin: 0 -8upx;
@@ -413,33 +556,6 @@
 			}
 			&.input {
 				margin-top: 40upx;
-				.input-search {
-					height: 72upx;
-					background-color: #fff;
-					border-radius: 10upx;
-					width: 100%;
-					padding: 0 16upx;
-					font-size: 28upx;
-					/deep/ .uni-input-wrapper {
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						flex-direction: row;
-						&::before {
-							content: '';
-							display: block;
-							width: 32upx;
-							height: 32upx;
-							background: url(../../static/weighRecord/icon_search.png) no-repeat;
-							background-size: contain;
-							margin-right: 10upx;
-						}
-						.uni-input-placeholder {
-							left: 42upx;
-							width: calc(100% - 42upx);
-						}
-					}
-				}
 			}
 		}
 	}
@@ -629,38 +745,6 @@
 				}
 			}
 		}
-		.radio-group {
-			display: flex;
-			flex-wrap: wrap;
-			margin: 0 -15upx;
-			.item-radio {
-				position: relative;
-				height: 70upx;
-				line-height: 70upx;
-				font-size: 29upx;
-				color: #333;
-				padding: 0 28upx;
-				border-radius: 6upx;
-				margin: 0 15upx 15upx;
-				background-color: rgba($color: #ccc, $alpha: 0.18);
-				&::after {
-					content: "";
-					position: absolute;
-					left: 0;
-					right: 0;
-					bottom: 0;
-					top: 0;
-				}
-				&.active {
-					background-color: rgba($color: #3a65ff, $alpha: 0.12);
-					color: #3a65ff;
-					font-weight: bold;
-				}
-				&.fill {
-					width: 100%;
-				}
-			}
-		}
 		.btn-group {
 			display: flex;
 			justify-content: space-between;
@@ -683,6 +767,58 @@
 					color: #fff;
 					background-color: #3a65ff;
 				}
+			}
+		}
+	}
+	.pop-filter-company {
+		background-color: #fff;
+		border-radius: 25upx 25upx 0px 0px;
+		padding: 40upx 36upx;
+		&-title {
+			text-align: center;
+			font-size: 33upx;
+			position: relative;
+			margin-bottom: 30upx;
+			font-weight: bold;
+			.icon-back {
+				position: absolute;
+				left: 0;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 32upx;
+				height: 32upx;
+				background: url(../../static/weighRecord/icon_back.png) no-repeat;
+				background-size: contain;	
+				display: block;
+			}
+		}
+		&-content {
+			overflow: hidden;
+			.input-search {
+				background-color: #f5f5f5;
+			}
+			.list-company {
+				margin-top: 35upx;
+				height: 600upx;
+				overflow: hidden;
+				overflow-y: scroll;
+				.scroll-Y {
+					height: 100%;
+				}	
+			}
+			.btn-group {
+				margin-top: 20upx;
+				background-color: #fff;
+			}
+			.btn-primary {
+				height: 80upx;
+				background-color: #3a65ff;
+				border-radius: 10upx;
+				color: #fff;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 30upx;
 			}
 		}
 	}
