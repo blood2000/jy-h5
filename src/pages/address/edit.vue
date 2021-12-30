@@ -86,7 +86,7 @@
 			if(options.data){
 				this.form = JSON.parse(options.data);
 				this.form.zjFenceList = this.form.zjFenceList || []
-				console.log(this.form);
+				// console.log(this.form);
 				this.center = [this.form.lng,this.form.lat];
 				this.marker.position = [this.form.lng,this.form.lat]
 			}else{

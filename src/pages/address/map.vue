@@ -237,7 +237,7 @@
 					})
 					this.polygon.setPath(_lnglat.filter(res => res !== undefined))
 				}
-				console.log(this.form);
+				// console.log(this.form);
 			},
 			// 画多边形
 			drawPolygon() {
