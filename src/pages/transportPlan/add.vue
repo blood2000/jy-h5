@@ -2,7 +2,7 @@
 	<view class="u-page">
 		<HeaderBar :title="title" @back="navigateBack"></HeaderBar>
 		
-		<uni-forms :key="formsUpdate" ref='form' :rules="rules" :modelValue="form" label-width="150" err-show-type="toast">
+		<uni-forms :key="formsUpdate" ref='form' :rules="rules" :modelValue="form" label-width="100" err-show-type="toast">
 			
 			<view class="ly-form-card">
 
