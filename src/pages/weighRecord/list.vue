@@ -9,10 +9,15 @@
 					<!-- 选择时间 -->
 					<view class="filter-date">
 						<i class="icon-calendar"></i>
-						<text>2021-11-26</text>
-						<text class="to">到</text>
-						<text>2021-12-03</text>
-						<i class="icon-select"></i>
+						<uni-datetime-picker
+							class="datetime-picker"
+							:key='oldDatePicker1' 
+							ref='datepick' 
+							:border="false" 
+							v-model="filterForm.effectiveDate"
+							type="daterange" 
+							rangeSeparator="至" 
+							@change="handlerPick" />
 					</view>
 					<!-- 筛选条件 -->
 					<view class="btn-filter" @click="openPopFilter">筛选</view>
@@ -152,6 +157,8 @@
 			},
 			data() {
 				return {
+					range: ["2021-03-8", "2021-4-20"],
+					oldDatePicker1: Date.now(), // 改变key值重新渲染
 					scrollTop: 0,
 					statusBar12: 0,
 					dataList: [{
@@ -166,6 +173,7 @@
 						contentnomore: '没有更多了'
 					},
 					filterForm: {
+						effectiveDate: [], // 转成 开始时间 和 结束时间
 						weighType: 1, // 1皮重过磅 2 毛重过磅
 						companyId: 1, // 收发企业
 						transportPlanId: 1, // 运输计划
@@ -275,11 +283,56 @@
 						this.status = 'loading';
 					}
 				},
+				// 时间控件
+				handlerPick(arr){
+					if(arr[0] && arr[1]){
+						if(arr[0] === arr[1]){
+							// 日期加一天
+							const time1 = new Date(arr[1]).getTime() + (1000 * 60 * 60 * 24);
+							setTimeout(()=>{
+								this.$set(this.form, 'effectiveDate', [arr[0], this.parseTime(time1, '{y}-{m}-{d}') ]);
+								this.oldDatePicker1 = Date.now()
+							}, 100)
+							return
+						} else {
+							this.oldDatePicker = arr
+						}
+					}
+				},
 			}
 		}
 </script>
 
 <style lang="scss" scoped>
+	.datetime-picker {
+		width: 380upx;
+		margin: 0 -8upx;
+		//
+		/deep/ .uni-date-editor--x:hover .uni-date__icon-clear {
+			right: -46upx;
+			top: 2upx;
+			border: 0;
+		}
+		/deep/ .uni-date-x {
+			background-color: transparent;
+			color: #fff;
+			font-size: 28upx;
+			padding: 0;
+			width: 380upx;
+			.uni-input-placeholder {
+				color: #e1e1e1;
+				font-size: 28upx;
+			}
+			.uni-date__icon-logo {
+				display: none;
+			}
+			.uni-date__input {
+				padding: 0 8upx;
+				font-size: 28upx;
+				height: 30upx;
+			}
+		}
+	}
 	/deep/ .uni-load-more__text {
 		font-size: 28upx;
 	}
@@ -315,7 +368,6 @@
 			align-items: center;
 			&.select {
 				font-size: 28upx;
-				color: #fff;
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
@@ -347,6 +399,7 @@
 					display: flex;
 					align-items: start;
 					line-height: 1;
+					color: #fff;
 					&::after {
 						content: '';
 						display: block;
