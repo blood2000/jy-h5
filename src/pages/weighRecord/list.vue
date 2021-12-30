@@ -23,47 +23,49 @@
 			</view>
 			<!-- 过磅记录 -->
 			<view class="list-wrap">
-				<view class="list-record" @click="navigateToDetail">
-					<view class="item-record" v-for="(item, index) in dataList" :key="index" :data-id="index">
-						<view class="item-head building-bottom-line">
-							<text class="item-title">运输计划名称</text>
-							<view class="item-head-right">
-								<img src="@/static/weighRecord/logo_ji.png" alt="" class="item-logo">
-								<i class="icon-arrow"></i>
-							</view>
-						</view>
-						<view class="item-route building-bottom-line">
-							<view class="route">
-								<i class="icon-route delivery"></i>
-								<text>衢州宝红建材有限公司</text>
-							</view>
-							<view class="route">
-								<i class="icon-route receipt"></i>
-								<text>浙江宝红商品砼有限公司</text>
-							</view>
-						</view>
-						<view class="item-info">
-							<view class="item-info-name">
-								<view>
-									<text class="label">货物：</text>
-									<text class="val">小石头</text>
-								</view>
-								<view>
-									<text class="label">过磅类型：</text>
-									<text class="val">皮重</text>
+				<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltolower="scrolltolower">
+					<view class="list-record" @click="navigateToDetail">
+						<view class="item-record" v-for="(item, index) in dataList" :key="index" :data-id="index">
+							<view class="item-head building-bottom-line">
+								<text class="item-title">运输计划名称</text>
+								<view class="item-head-right">
+									<img src="@/static/weighRecord/logo_ji.png" alt="" class="item-logo">
+									<i class="icon-arrow"></i>
 								</view>
 							</view>
-							<view class="item-info-number">
-								<view class="car-no">闽A12345</view>
-								<view class="tel">兔斯基 13700000000</view>
+							<view class="item-route building-bottom-line">
+								<view class="route">
+									<i class="icon-route delivery"></i>
+									<text>衢州宝红建材有限公司</text>
+								</view>
+								<view class="route">
+									<i class="icon-route receipt"></i>
+									<text>浙江宝红商品砼有限公司</text>
+								</view>
 							</view>
-							<view class="item-info-time">
-								过磅时间：2021-12-12 18:18:40
+							<view class="item-info">
+								<view class="item-info-name">
+									<view>
+										<text class="label">货物：</text>
+										<text class="val">小石头</text>
+									</view>
+									<view>
+										<text class="label">过磅类型：</text>
+										<text class="val">皮重</text>
+									</view>
+								</view>
+								<view class="item-info-number">
+									<view class="car-no">闽A12345</view>
+									<view class="tel">兔斯基 13700000000</view>
+								</view>
+								<view class="item-info-time">
+									过磅时间：2021-12-12 18:18:40
+								</view>
 							</view>
 						</view>
 					</view>
-				</view>
-				<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
+					<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
+				</scroll-view>
 			</view>
 		</view>
 		<!-- 筛选弹出窗 -->
@@ -133,7 +135,7 @@
 						</view>
 					</view>
 					<view class="btn-group">
-						<view class="btn btn-cancel">清空</view>
+						<view class="btn btn-cancel" @click="clearAllFormData">清空</view>
 						<view class="btn btn-comfirm">确定(28条过磅记录）</view>
 					</view>
 				</view>
@@ -150,17 +152,14 @@
 			},
 			data() {
 				return {
+					scrollTop: 0,
 					statusBar12: 0,
 					dataList: [{
 						id: 1
-					},{
-						id: 2
-					},{
-						id: 3
 					}],
 					// 是否无数据了
 					isEnd: false,
-					status: 'loading',
+					status: '',
 					contentText: {
 						contentdown: '上拉加载更多',
 						contentrefresh: '加载中',
@@ -256,12 +255,34 @@
 					if(e.target.dataset.value) {
 						this.filterForm[e.target.dataset.formName] = e.target.dataset.value;
 					}
-				}
+				},
+				/**
+				 * 清空
+				 */
+				clearAllFormData() {
+					this.filterForm = {
+						weighType: '', // 1皮重过磅 2 毛重过磅
+						companyId: '', // 收发企业
+						transportPlanId: '', // 运输计划
+						weighbridgeId: '', // 地磅
+						weighStatusId: '' // 称重状况
+					}
+				},
+				// 触底
+				scrolltolower(e) {
+					console.log('触达底部')
+					if(!this.isEnd) {
+						this.status = 'loading';
+					}
+				},
 			}
 		}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+	/deep/ .uni-load-more__text {
+		font-size: 28upx;
+	}
 	.building-bottom-line {
 		position: relative;
 		&::after {
@@ -275,10 +296,8 @@
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: calc(100vh);
+		height: 100vh;
 		overflow: hidden;
-		display: felx;
-		flex-direction: column;
 	}
 	.main-box{
 		height: calc(100% - 88upx);
@@ -381,13 +400,18 @@
 		margin: 0 -30upx;
 		margin-top: 28upx;
 		padding: 0 30upx;
+		.scroll-Y {
+			height: 100%;
+		}	
 	}
 	.list-record {
 		.item-record {
 			position: relative;
 			background-color: #fff;
 			border-radius: 24upx;
-			margin-bottom: 24upx;
+			&:not(:last-child) {
+				margin-bottom: 24upx;
+			}
 			&::after {
 				content: "";
 				position: absolute;
