@@ -65,9 +65,9 @@
 			this.handleQuery()
 		},
 		onLoad(options){
-			// this.$store.dispatch('getLoginInfoAction', {
-			// 	'Authorization': options.token
-			// });
+			this.$store.dispatch('getLoginInfoAction', {
+				'Authorization': options.token
+			});
 			options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
 			// this.getList();
 		},
