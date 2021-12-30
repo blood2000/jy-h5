@@ -64,7 +64,7 @@
 		</view>
 		<!-- 筛选弹出窗 -->
 		<uni-popup ref="popup" :mask-click="false" type="bottom">
-			<PopFilter 
+			<PopFilter
 				v-model="filterForm"
 				:weighbridgeList="weighbridgeList"
 				:weighStatusList="weighStatusList"
@@ -83,7 +83,7 @@
 		import HeaderBar from '@/components/Building/HeaderBar.vue';
 		import datetimerangePicker from './inc/DatetimerangePicker.vue';
 		import PopFilter from './inc/PopFilter.vue';
-		import { findList, login } from "@/config/service/weighRecord/index.js"
+		// import { findList, login } from "@/config/service/weighRecord/index.js"
 		import { mapState} from 'vuex';
 		export default {
 			components: {
@@ -458,7 +458,7 @@
 		padding: 0 30upx;
 		.scroll-Y {
 			height: 100%;
-		}	
+		}
 	}
 	.list-record {
 		.item-record {
