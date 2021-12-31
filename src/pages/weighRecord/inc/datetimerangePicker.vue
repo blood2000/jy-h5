@@ -17,6 +17,7 @@
 
 <script>
   export default {
+    name: 'DatetimerangePicker',
     props: {
       value: {
         default: []
@@ -57,7 +58,7 @@
   justify-content: space-between;
   align-items: center;
   .icon-calendar {
-    background: url(../../../static/weighRecord/icon_calendar.png);
+    background: url(@/static/weighRecord/icon_calendar.png);
     background-size: contain;
     width: 30upx;
     height: 30upx;
@@ -67,7 +68,7 @@
   .icon-select {
     width: 30upx;
     height: 16upx;
-    background: url(../../../static/weighRecord/icon_select.png) no-repeat;
+    background: url(@/static/weighRecord/icon_select.png) no-repeat;
     background-size: contain;
     margin-left: 10upx;
   }
