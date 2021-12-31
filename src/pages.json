@@ -14,7 +14,7 @@
     {
       "path": "pages/building/v1/index",
       "style": {
-        "navigationBarTitleText": "厂区管理",
+        "navigationBarTitleText": "场区管理",
         "navigationStyle": "custom",
         "enablePullDownRefresh": true,
         "navigationBarBackgroundColor": "#3A65FF",
@@ -99,6 +99,18 @@
       "path": "pages/building/v1/check",
       "style": {
         "navigationBarTitleText": "申请审核",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/apportion",
+      "style": {
+        "navigationBarTitleText": "仓储分配",
         "navigationStyle": "custom",
         "enablePullDownRefresh": false,
         "navigationBarBackgroundColor": "#3A65FF",

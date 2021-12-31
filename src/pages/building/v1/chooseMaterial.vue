@@ -9,8 +9,8 @@
         <!-- 内容区域 -->
       </div>
       <div class="building-main-content">
-        <div class="building-box-1 building-bottom-line">
-          <div class="building-box-left flex-1">共{{ total }}条记录</div>
+        <div class="building-box-1 ">
+          <div class="building-box-left flex-1">共 <span>{{ total }}</span> 条记录</div>
         </div>
 
         <div class="building-main-content-body">
@@ -25,16 +25,14 @@
                 {{ item.dict_label }}
               </div>
               <div class="building-item-box-content">
+                <div class="building-item-img">
+                  <img :src="goodsImg" alt="">
+                </div>
                 <div
                   class="building-item-ascheck"
-                  :class="item.checked ? 'checked' : ''"
                 >
-                  <uni-icons
-                    v-show="item.checked"
-                    type="checkmarkempty"
-                    size="16"
-                    color="#3a65ff"
-                  ></uni-icons>
+                  <img v-show="item.checked" :src="checkImg" alt="">
+                  <img v-show="!item.checked" :src="noCheckImg" alt="">
                 </div>
               </div>
             </div>
@@ -67,6 +65,9 @@ export default {
       choosedCount: 0,
       insertList: [], //新勾选物料
       delList: [], //取消勾选的物料
+      goodsImg: '../../../static/building/goods.png',
+      checkImg: '../../../static/building/check.png',
+      noCheckImg: '../../../static/building/no-check.png',
     };
   },
 
@@ -204,5 +205,18 @@ export default {
 <style lang='scss' scoped>
 .building-btn {
   width: 100%;
+}
+.building-item-box {
+  border: 2rpx solid #DCE3FC;
+}
+.building-item-box-content {
+  height: 140rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .building-item-img {
+    width: 156rpx;
+    height: 74rpx;
+  }
 }
 </style>

@@ -58,7 +58,8 @@ export default {
     width: 100rpx;
     padding: 20rpx 0;
     margin: 0 auto 20rpx;
-    background: #ddd;
+    // background: #ddd;
+    color: #999;
     border-radius: 10rpx;
     display: flex;
     flex-direction: column;
@@ -72,8 +73,8 @@ export default {
   }
 
   .active-sider {
-    background: #3A65FF;
-    color: #fff;
+    background: #F3F7FF;
+    color: #3A65FF;
   }
 }
 </style>

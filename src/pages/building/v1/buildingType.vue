@@ -1,4 +1,4 @@
-<!--  -->
+<!-- 添加场区分类 -->
 <template>
   <div class="building-content">
     <HeaderBar :title="title" @back="back"></HeaderBar>
@@ -13,6 +13,7 @@
             mode="selector"
             :range="buildingTypes"
             :range-key="'name'"
+            :value="buildingTypeIndex"
             @change="changeTypes"
           >
             <view class="building-picker-btn">
@@ -57,7 +58,7 @@
       </div>
     </div>
     <div class="building-btn-box">
-      <div class="building-btn" @click="addBuilding">添加</div>
+      <div class="building-btn" @click="addOrEditBuilding"> {{isEdit ? '编辑' : '添加'}} </div>
     </div>
   </div>
 </template>
@@ -75,6 +76,8 @@ export default {
       title: "添加场区分类",
       buildingTypes: [],
       buildingTypeIndex: 0,
+      curBuilding: {},
+      isEdit: false,
       noChoose: true,
       buildingMsg: {
         buildingType: "",
@@ -99,8 +102,30 @@ export default {
     }),
   },
 
+  onLoad(options) {
+    if (options.curBuilding) {
+      this.title = '编辑场区分类';
+      this.isEdit = true;
+      this.curBuilding = JSON.parse(options.curBuilding);
+      console.log(this.curBuilding)
+      this.buildingMsg = this.curBuilding;
+      buildingTypes.map((item, index) => {
+        if (item.type === this.buildingMsg.buildingType) {
+          this.buildingTypeIndex = index;
+          this.noChoose = false;
+        }
+      })
+
+    } else {
+      this.title = '添加场区分类';
+      this.isEdit = false;
+    }
+    
+  },
+
   onShow() {
     this.buildingTypes = buildingTypes;
+    
     // this.getLocationInfo();
   },
 
@@ -129,6 +154,13 @@ export default {
         },
       });
     },
+    addOrEditBuilding() {
+      if (this.isEdit) {
+        this.eidtBuilding();
+      } else {
+        this.addBuilding();
+      }
+    },
     addBuilding() {
       console.log("添加场区参数", this.buildingMsg);
       if (!this.validParams()) return;
@@ -153,7 +185,31 @@ export default {
         });
       });
     },
-
+    //编辑
+    eidtBuilding() {
+      console.log('编辑分类参数',this.buildingMsg);
+      if (!this.validParams()) return;
+      const config = {
+        url: "editBuilding",
+        header: this.headerInfo,
+        method: "PUT",
+        data: this.buildingMsg,
+      };
+      buildingRequest(config).then(res => {
+        console.log("更新场区分类请求", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success:  (res) => {
+            if (res.confirm) {
+              //点击确认
+              this.back();
+            }
+          },
+        });
+      })
+    },
     validParams() {
       if (this.noChoose) {
         uni.showToast({

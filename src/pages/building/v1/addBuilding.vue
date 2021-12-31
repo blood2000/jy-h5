@@ -44,7 +44,7 @@
           </div>
         </div>
         <!-- 显示框 -->
-        <div class="building-input-content">
+        <div class="building-input-content" v-if="choosedMaterial.length > 0">
           <div
             class="building-input-content-item"
             v-for="(item, index) in choosedMaterial"

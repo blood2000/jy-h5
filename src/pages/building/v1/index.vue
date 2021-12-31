@@ -20,19 +20,19 @@
         <!-- 菜单栏 -->
         <SiderBar :siderList="buildingList" @changeSiderBar="changeBuilding" />
         <div class="building-main-side-add" @click="toAddBuildingType">
-          <uni-icons type="plus-filled" color="#3A65FF" size="30"></uni-icons>
+          <uni-icons type="plusempty" color="#fff" size="30"></uni-icons>
         </div>
       </div>
       <!-- 内容区域 -->
       <div class="building-main-content">
-        <div class="building-box-1 building-bottom-line">
+        <div class="building-box-1 ">
           <div class="building-box-left flex-1">
-            共{{ buildingCount }}条记录
+            共 <span>{{ buildingCount }}</span> 条记录
           </div>
           <div class="building-box-right">
             <div
               class="building-as-btn building-default"
-              @click="buildingManage"
+              @click="toEditBuildingType"
             >
               编辑分类
             </div>
@@ -42,8 +42,9 @@
 
         <div class="building-main-content-body">
           <div class="building-main-content-body-container">
+            <div v-if="activeBuilding.length === 0" class="no-item" @click="addBuilding">暂无场区，点击添加</div>
             <div
-              class="building-item-box "
+              class="building-item-box"
               v-for="(item, index) in activeBuilding"
               :key="index"
               @click="editBuilding(item)"
@@ -51,7 +52,9 @@
               <div class="building-item-box-title me-text-beyond">
                 {{ item.buildingName }}
               </div>
-              <div class="building-item-box-content"></div>
+              <div class="building-item-box-content">
+                <img :src="buildingImg" alt="">
+              </div>
             </div>
           </div>
         </div>
@@ -74,6 +77,7 @@ export default {
       buildingCount: 0,
       activeIndex: 0,
       activeBuilding: [], //子类
+      buildingImg: '../../../static/building/building.png'
     };
   },
 
@@ -116,7 +120,7 @@ export default {
       };
       buildingRequest(config).then((res) => {
         console.log("获取所有物料", res);
-        
+
         if (res.code === 200) {
           this.$store.commit("getMaterialList", res.data);
         }
@@ -140,6 +144,7 @@ export default {
     //场区子类数据显示
     renderBuilding() {
       // this.activeBuilding = this.buildingList[this.activeIndex];
+      if (this.buildingList.length === 0) return;
       this.buildingCount = this.buildingList[this.activeIndex].count;
       let buildingId = this.buildingList[this.activeIndex].id;
       //获取子类
@@ -170,14 +175,36 @@ export default {
         url: "./buildingType",
       });
     },
-
+    //编辑场区分类
+    toEditBuildingType() {
+      let curBuilding = this.buildingList[this.activeIndex];
+      console.log(curBuilding)
+      uni.navigateTo({
+        url: "./buildingType?curBuilding=" + JSON.stringify(curBuilding),
+      });
+    },
     // 添加场区
     addBuilding() {
       //isEdit: 0-添加，1-编辑
+      if (this.buildingList.length === 0) {
+        uni.showModal({
+          title: "提示",
+          content: "暂无场区分类，请添加",
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              uni.navigateTo({
+                url: "./buildingType",
+              });
+            }
+          },
+        });
+        return;
+      }
       let data = {
         type: this.buildingList[this.activeIndex].buildingType,
-        pid: this.buildingList[this.activeIndex].id
-      }
+        pid: this.buildingList[this.activeIndex].id,
+      };
       uni.navigateTo({
         url: `./addBuilding?data=${JSON.stringify(data)}`,
       });
@@ -189,7 +216,7 @@ export default {
         type: this.buildingList[this.activeIndex].buildingType,
         pid: this.buildingList[this.activeIndex].id,
         id: item.id,
-      }
+      };
       uni.navigateTo({
         url: `./editBuilding?data=${JSON.stringify(data)}`,
       });

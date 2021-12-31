@@ -7,10 +7,9 @@
     ></view>
     <uni-nav-bar
       left-icon="arrowleft"
-      color="#333333"
+      :color="barStyle.color"
       :title="title"
-      
-      backgroundColor="#ffffff"
+      :backgroundColor="barStyle.background"
       @clickLeft="back"
     >
       <view class="nav-right" slot="right" @click="jump"> {{rightText}} </view>
@@ -34,6 +33,15 @@ export default {
     rightText: {
       type: String,
       default: '',
+    },
+    barStyle: {
+      type: Object,
+      default() {
+        return {
+          color: '#333333',
+          background: '#ffffff'
+        };
+      },
     },
   },
 

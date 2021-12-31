@@ -16,3 +16,4 @@ export const buildingTypes = [{
   },
 ]
 
+export const buildingUnit = ['吨', '方'];
