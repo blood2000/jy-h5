@@ -11,6 +11,7 @@
       :title="title"
       backgroundColor="#3A65FF"
 			:border="border"
+			:fixed="fixed"
       @clickLeft="back"
     ></uni-nav-bar>
   </div>
@@ -31,6 +32,10 @@ export default {
 		border: {
 			type: Boolean,
 			default: true
+		},
+		fixed: {
+			type: Boolean,
+			default: false
 		}
   },
 
