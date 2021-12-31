@@ -102,6 +102,12 @@
 </script>
 
 <style lang="scss" scoped>
+  // Color Palette
+  $gray-1: #333;
+  $gray-2: #878787;
+  // Component Colors
+  $text-color: $gray-1;
+  $label-color: $gray-2;
 	.detail-info {
 		background-color: #fff;
 		padding: 40upx;
@@ -111,7 +117,7 @@
 			align-items: center;
 			.title {
 				font-size: 32upx;
-				color: #333;
+				color: $text-color;
 				font-weight: bold;
 			}
 			.type {
@@ -128,10 +134,10 @@
 			margin-top: 24upx;
 			.item-price {
 				.label {
-					color: #878787;
+					color: $label-color;
 				}
 				.val {
-					color: #333;
+					color: $text-color;
 					font-weight: bold;
 				}
 			}
@@ -143,7 +149,7 @@
 				display: flex;
 				align-items: center;
 				font-size: 28upx;
-				color: #333;
+				color: $text-color;
 				margin: 10upx 0;
 				.icon-route {
 					width: 30upx;
@@ -185,10 +191,10 @@
 					margin-top: 30upx;
 				}
 				.label {
-					color: #878787;
+					color: $label-color;
 				}
 				.val {
-					color: #333;
+					color: $text-color;
 					font-weight: bold;
 				}
 				.item-logo {
@@ -202,7 +208,7 @@
 		padding: 30upx;
 		.record-title {
 			font-size: 28upx;
-			color: #333;
+			color: $text-color;
 			margin-bottom: 20upx;
 			font-weight: bold;
 		}
@@ -215,7 +221,7 @@
 				justify-content: space-between;
 				align-items: center;
 				.label {
-					color: #878787;
+					color: $label-color;
 				}
 				.val {
 					font-weight: bold;
@@ -238,7 +244,7 @@
 						display: block;
 						width: 34upx;
 						height: 34upx;
-						background: url(../../static/weighRecord/icon_tare.png) no-repeat;
+						background: url(@/static/weighRecord/icon_tare.png) no-repeat;
 						background-size: contain;
 						margin-right: 20upx;
 					}
@@ -257,7 +263,7 @@
 				}
 			}
 			.record-time {
-				color: #878787;
+				color: $label-color;
 				margin-top: 25upx;
 			}
 		}

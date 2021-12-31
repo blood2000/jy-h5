@@ -1,8 +1,8 @@
 <template>
 	<view class="u-page" style="height: 100%;">
-		
+
 		<HeaderBar title="运输计划" @back="navigateBack"></HeaderBar>
-		
+
 		<view class="ly-flex-pack-around">
 			<view class="sendPlan box-comm" @click="receivePlan">
 				<view class="ly-flex-align-center">
@@ -56,9 +56,9 @@
 								<view class="name g-double-row">{{ cbData && cbData.name }}</view>
 							</view>
 							<view class="contents-bottom ly-flex ly-flex-pack-justify ly-flex-align-center">
-								<view class="g-single-row text">{{ cbData && cbData.scompanyName }}</view>
-								<image class="img" src="../../static/transportPlan/separate2.png"></image>
 								<view class="g-single-row text">{{ cbData && cbData.fcompanyName }}</view>
+								<image class="img" src="../../static/transportPlan/separate2.png"></image>
+								<view class="g-single-row text">{{ cbData && cbData.scompanyName }}</view>
 							</view>
 						</view>
 						<view class="message">【微信扫码即可接单或卸货】</view>
@@ -120,7 +120,7 @@
 
 				// 二维码配置
 				//二维码 D:\my\zjjy-h5\src\static\download\driver.png
-				
+
 				qrcode: {
 					val: '', // 要生成的二维码值
 					size: 400, // 二维码大小
@@ -161,7 +161,7 @@
 			await this.getList('2')
 			console.log('下拉刷新关闭');
 			uni.stopPullDownRefresh();
-			
+
 		},
 
 		// 触底加载
@@ -318,12 +318,12 @@
 					})
 				}
 			},
-			
-			
+
+
 			// 分享到微信
 			wxshare(){
 
-				
+
 				const que = {
 					path: 'pages/startPage/startPage',
 					query: `code=${this.cbData.orderPlanCode}&type=1`
@@ -335,7 +335,7 @@
 				buildQrCode(que, this.headerInfo).then(res=>{
 					// console.log(res);
 					if (res.data.errmsg === 'ok') {
-						
+
 						// console.log('分享的连接是:' , this.qrcode.val);
 						this.sendOption('onShare', {
 							shareUrl: res.data.url_link, // 分享连接
@@ -355,11 +355,11 @@
 
 			// 应用交互
 			sendOption(action, obj){
-				uni.webView.postMessage({  
-					data: {  
+				uni.webView.postMessage({
+					data: {
 						action: action,
 						data: obj
-					}  
+					}
 				});
 			}
 			// e=
@@ -384,7 +384,7 @@
 			font-weight: bold;
 			color: #FFFFFF;
 		}
-		
+
 		.text-description{
 			margin-top: 12upx;
 			font-size: 24upx;
@@ -431,7 +431,7 @@
 				padding: 94upx 40upx 26upx 40upx;
 			}
 		}
-		
+
 		.contents{
 			width: 480upx;
 			background: rgba(255, 255, 255, 0.2);

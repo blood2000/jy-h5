@@ -123,7 +123,12 @@
 				plugins: ['ToolBar',
 					{
 					pName:'Geolocation',
+					enableHighAccuracy: true,
+					useNative:true,
 					events:{
+						init: o => {
+							// console.log(o.options);
+						},
 						complete: (result) => {
 							// console.log(result);
 							// const {lng,lat} = result.position

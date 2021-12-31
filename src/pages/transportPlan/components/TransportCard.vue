@@ -22,21 +22,21 @@
 			<view class="scompanyName-box ly-flex-pack-justify ly-flex-align-center">
 				<view class="address-name">
 					<view class="address-name-text g-single-row">
-						{{ _cardList.scompanyName }}
+						{{ _cardList.fcompanyName }}
 					</view>
 				</view>
 				<view class="middle-box">
 					<image v-if="_cardList.receiveType === 1" class="middle-walk-img" src="@/static/transportPlan/separate.png" mode=""></image>
 					<image v-else class="middle-walk-img" src="@/static/transportPlan/separate1.png" mode=""></image>
-					
+
 					<text v-if="_cardList.transRelType !== 'chy'" class="trans-name">{{ _cardList.transName }}</text>
 					<image v-else class="trans-name-img" src="@/static/transportPlan/chy.png" mode=""></image>
 				</view>
-				
-				
+
+
 				<view class="address-name">
 					<view class="address-name-text g-single-row">
-						{{ _cardList.fcompanyName }}
+						{{ _cardList.scompanyName }}
 					</view>
 				</view>
 			</view>
@@ -47,11 +47,11 @@
 				</view>
 				<view class="quantity-box">
 					<text v-if="_cardList.weightType === 1">不限</text>
-					<text v-else><text>{{ _cardList.loadedWeight? _cardList.loadedWeight + '/': '0/' }}</text>{{ _cardList.weight }}<text class="unit">吨</text></text> 
+					<text v-else><text>{{ _cardList.loadedWeight? _cardList.loadedWeight + '/': '0/' }}</text>{{ _cardList.weight }}<text class="unit">吨</text></text>
 				</view>
 			</view>
 		</view>
-		
+
 	</view>
 </template>
 
@@ -117,7 +117,7 @@
 			width: 26upx;
 			height: 26upx;
 		}
-		
+
 		.scompanyName-box{
 			margin-top: 10upx;
 			.address-name{
@@ -154,7 +154,7 @@
 				}
 			}
 		}
-		
+
 		.commodity-box{
 			width: 100%;
 			height: 66upx;
@@ -170,7 +170,7 @@
 				color: #000000;
 				line-height: 1;
 			}
-			
+
 			.commodity-box-img{
 				width: 30upx;
 				height: 30upx;
@@ -184,5 +184,5 @@
 			}
 		}
 	}
-	
+
 </style>
