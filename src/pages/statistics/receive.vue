@@ -105,6 +105,7 @@
 				queryParams: {
 					startCreateTime: '',
 					endCreateTime: '',
+					isInvalid: 0,
 					receiveType: 1,
 					pageNum: 1,
 					pageSize: 10

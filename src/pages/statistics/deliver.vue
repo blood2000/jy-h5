@@ -105,6 +105,7 @@
 					startCreateTime: '',
 					endCreateTime: '',
 					receiveType: 2,
+					isInvalid: 0,
 					pageNum: 1,
 					pageSize: 10
 				},
