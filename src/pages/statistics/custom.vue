@@ -30,7 +30,7 @@
 					</view>
 				</picker>
 				<view class="text-grey" style="margin: 0 10upx;">|</view>
-				<input class="search-input" v-model="queryParams.goodsTypeName" placeholder="按查询条件输入商品名称" name="input" @blur="changeName"></input>
+				<input class="search-input" v-model="queryParams.goodsTypeName" placeholder="按查询条件输入商品名称" name="input" @blur="changeName" />
 				<view v-if="queryParams.receiveType || queryParams.endCreateTime" class="cuIcon-roundclose text-grey margin-mleft" @click="handleCleartype"></view>
 			</view>
 		</view>
@@ -119,8 +119,8 @@
 					contentnomore: '没有更多了'
 				},
 				queryParams: {
-					startCreateTime: '',
-					endCreateTime: '',
+					startCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
+					endCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
 					receiveType: '',
 					goodsTypeName: '',
 					isInvalid: 0,
