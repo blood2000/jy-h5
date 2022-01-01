@@ -64,8 +64,8 @@
 					<view class="list-numtitle margin-stop">总皮重</view>
 				</view>
 				<view class="list-numlist">
-					<view class="list-numcont">{{item.lossWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">亏涨吨</view>
+					<view class="list-numcont">{{item.overloadRemark || 0}}</view>
+					<view class="list-numtitle margin-stop">备注</view>
 				</view>
 			</view>
 		</view>

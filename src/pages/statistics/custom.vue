@@ -70,9 +70,13 @@
 					<view class="list-numcont">{{item.realWeight || 0}}</view>
 					<view class="list-numtitle margin-stop">总实重（吨）</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.lossWeight || 0}}</view>
+				<view v-if="item.receiveType == 1" class="list-numlist">
+					<view class="list-numcont">{{item.lossWeight || '0'}}</view>
 					<view class="list-numtitle margin-stop">亏涨吨</view>
+				</view>
+				<view v-if="item.receiveType == 2" class="list-numlist">
+					<view class="list-numcont">{{item.overloadRemark || '无'}}</view>
+					<view class="list-numtitle margin-stop">备注</view>
 				</view>
 			</view>
 		</view>
