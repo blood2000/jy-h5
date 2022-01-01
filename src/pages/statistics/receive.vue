@@ -87,8 +87,19 @@
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
-			})
+			}),
+			quer(){
+				// startCreateTime: this.parseTime(getTodayUnix(), '{y}-{m}-{d} {h}:{i}:{s}'),
+				// endCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d} {h}:{i}:{s}'),
+
+				return {
+					...this.queryParams,
+					startCreateTime: this.queryParams.startCreateTime?this.queryParams.startCreateTime + ' 00:00:00' : '',
+					endCreateTime: this.queryParams.endCreateTime?this.queryParams.endCreateTime + ' 23:59:59' : '',
+				}
+			}
 		},
+		
 		data() {
 			return {
 				system: null,
@@ -103,8 +114,8 @@
 					contentnomore: '没有更多了'
 				},
 				queryParams: {
-					startCreateTime: '',
-					endCreateTime: '',
+					startCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
+					endCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
 					isInvalid: 0,
 					receiveType: 1,
 					pageNum: 1,
@@ -151,7 +162,7 @@
 				uni.webView.navigateBack();
 			},
 			getList() {
-				planStatisticsList(this.queryParams, this.headerInfo).then(res => {
+				planStatisticsList(this.quer, this.headerInfo).then(res => {
 					if(res.rows.length === 0) {
 						this.isEnd = true;
 						this.status = 'noMore';

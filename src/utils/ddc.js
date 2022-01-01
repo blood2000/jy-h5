@@ -41,6 +41,14 @@ export function parseTime(time, pattern) {
 }
 
 
+	
+//获取当天0点0分0秒时间戳
+export function getTodayUnix() {
+	let date= new Date();
+	let myDate = `${date.getFullYear()}/${(date.getMonth() + 1)}/${date.getDate()} 00:00:00`;
+	return new Date(myDate).getTime();
+}
+
 export function numberFormat(val){
 	let num = 0;
 	if(typeof val === "number"){
@@ -143,4 +151,4 @@ export function isPeriodFormate(date) {
   } else {
     return '';
   }
-}
+}
