@@ -136,6 +136,24 @@
 	  }
 	},
 	{
+		"path": "pages/enterprise/index",
+		"style": {
+		  "navigationBarTitleText": "企业管理",
+		  "navigationStyle": "custom",
+		  "enablePullDownRefresh": true,
+		  "navigationBarBackgroundColor":"#ffffff"
+		}
+	},
+	// {
+	//   "path": "pages/enterprise/add",
+	//   "style": {
+	//     "navigationBarTitleText": "新增企业",
+	//     "navigationStyle": "custom",
+	//     "navigationBarBackgroundColor":"#ffffff",
+	// 	"enablePullDownRefresh": false
+	//   }
+	// },
+	{
 		"path": "pages/transportPlan/index",
 		"style": {
 		  "navigationStyle": "custom",
