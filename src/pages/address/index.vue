@@ -50,6 +50,7 @@
 				list:[],
 				status:'more',
 				isEnd:false,
+				location:undefined,
 				contentText: {
 					contentdown: '上拉加载更多',
 					contentrefresh: '加载中',
@@ -64,11 +65,13 @@
 		onShow(){
 			this.handleQuery()
 		},
-		onLoad(options){
+		onLoad(option){
 			this.$store.dispatch('getLoginInfoAction', {
-				'Authorization': options.token
+				'Authorization': option.token
 			});
-			options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
+			this.location = option.location
+			option.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', option.statusBarHeight);
+			
 			// this.getList();
 		},
 		onPullDownRefresh() {
@@ -130,7 +133,7 @@
 			},
 			handleAdd(){
 				uni.navigateTo({
-					url:"/pages/address/edit"
+					url:"/pages/address/edit?location=" + this.location
 				})
 			},
 			handleEdit(item){
@@ -150,13 +153,13 @@
 		padding: 0;
 		height: 100vh;
 		.main{
-			height: calc(100% - 44px) ;
+			// height: calc(100% - 44px) ;
 			padding: 24upx 32upx;
 			background: #F5F5F5;
 			.card-list{
 				position: relative;
 				padding: 20rpx;
-				max-height: calc(100% - 75px) ;
+				// max-height: calc(100% - 75px) ;
 				width: 100%;
 				background: #FFFFFF;
 				margin-bottom: 22rpx;

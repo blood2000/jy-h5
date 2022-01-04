@@ -1,5 +1,5 @@
 <template>
-	<view class="">
+	<view :style="{'--statusBar': statusBarHeight + 'px'}">
 		<HeaderBar :title="title" @back="navigateBack">
 			<text slot="right" @click="submit">确定</text>
 		</HeaderBar>
@@ -333,7 +333,7 @@
 <style lang="scss" scoped>
 	.map-content {
 		position: relative;
-		height: calc(100vh - 88rpx);
+		height: calc(100vh - 88rpx - var(--statusBar));
 		width: 100%;
 
 		::v-deep .amap-marker .amap-icon img {
@@ -343,13 +343,13 @@
 
 		.name {
 			input{
-				position: fixed;
+				position: absolute;
 				width: 70%;
 				height:80rpx ;
 				line-height: 80rpx;
 				left: 0;
 				right: 0;
-				top: 100rpx;
+				top: 50rpx;
 				margin: auto;
 				border: 1px solid black;
 				border-radius: 40rpx;
