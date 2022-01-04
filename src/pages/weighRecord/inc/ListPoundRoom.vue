@@ -1,0 +1,241 @@
+<template>
+  <view class="list-record" @click="navigateToDetail">
+    <view class="item-record" v-for="item in list" :key="item.id" :data-id="item.id">
+      <!-- 磅房标题 -->
+      <view class="item-head">
+        <text class="item-title">磅房A-地磅1</text>
+        <view class="item-head-right">
+          <i class="icon-arrow"></i>
+        </view>
+      </view>
+      <!-- 收发货统计 -->
+      <view class="item-weigh">
+        <view class="weigh-green">
+        <image src="@/static/weighRecord/icon_receipt.png" class="item-logo-green"></image>
+        <view class="wrapper-detail">
+          <view class="weigh-lable">收货：</view>
+          <view class="weigh-value">2车-26吨</view>
+        </view>
+        </view>
+        <view class="weigh-blue">
+        <image src="@/static/weighRecord/icon_delivery.png" class="item-logo-blue"></image>
+        <view class="wrapper-detail">
+          <view class="weigh-lable">发货：</view>
+          <view class="weigh-value">2车-26吨</view>
+        </view>
+        </view>
+      </view>
+      <view class="item-route building-top-line">
+        <view class="item-route-lastTime">
+          <text>最近一个过磅:</text>
+          <text>2021-12-12 18:18:40</text>
+        </view>
+        <view class="item-route-name">
+          <image src="@/static/weighRecord/icon_route.png" class="item-logo-route"></image>
+          <view class="item-route-place">
+            <text class="item-route-star">五福洗煤</text>
+            <i class="icon-logo-line"></i>
+            <text class="item-route-end">六福洗煤</text>
+          </view>
+        </view>
+        <view class="item-info">
+          <view class="item-info-car">
+            <view>
+              <text class="item-info-lable">毛重：</text>
+              <text class="item-info-value">8.23吨</text>
+            </view>
+          </view>
+          <view class="item-info-driver">
+            <view>
+              <text class="item-info-lable">车牌：</text>
+              <text class="item-info-value">闽A54772</text>
+            </view>
+            <view>
+              <text class="item-info-lable">司机：</text>
+              <text class="item-info-value">兔斯基</text>
+            </view>
+            </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  export default {
+    name: 'ListPoundRoom',
+    props: {
+      list: {
+        type: Array,
+        default: []
+      }
+    },
+    methods: {
+      /**
+			 * 跳转至过磅详情
+			 * @param {Object} e 当前点击对象
+			 */
+			navigateToDetail(e) {
+				if(e.target.dataset.id >= 0) {
+					uni.navigateTo({
+						url: `/pages/weighRecord/list?code=${e.target.dataset.id}`
+					});
+				}
+			},
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  // Color Palette
+  $gray-1: #333;
+  $gray-2: #878787;
+  // Component Colors
+  $text-color: $gray-1;
+  $label-color: $gray-2;
+  .list-record {
+    .scroll-Y {
+      height: 100%;
+    }	
+    .item-record {
+      position: relative;
+      background-color: #fff;
+      border-radius: 24upx;
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+      }
+      &:not(:last-child) {
+        margin-bottom: 24upx;
+      }
+      .item-head {
+        height: 80upx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 28upx;
+        font-size: 32rpx;
+        .item-title {
+          font-weight: bold;
+        }
+        .icon-arrow {
+          width: 18upx;
+          height: 26upx;
+          background: url(@/static/weighRecord/arrow_left.png) no-repeat;
+          background-size: contain;
+          display: block;
+          margin-left: 10upx;
+        }
+      }
+      .item-weigh {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 28upx;
+        margin-top: 20upx;
+        .item-logo-green {
+          display: inline-block;
+          width: 70upx;
+          height: 70upx;
+          margin-right: 17upx;
+        }
+        .item-logo-blue {
+          display: inline-block;
+          width: 70upx;
+          height: 70upx;
+          margin-right: 17upx;
+        }
+        .wrapper-detail {
+          display: inline-block;
+        }
+        .weigh-blue {
+          margin-right: 60upx;
+        }
+        .weigh-lable {
+          font-size: 24upx;
+          color: $label-color;
+        }
+        .weigh-value {
+          font-weight: bold;
+        }
+      }
+      .item-route {
+        position: relative;
+        margin-top: 40upx;
+        padding: 24upx;
+        background-color: rgba($color: #d6ddf5, $alpha: .2);
+        &::before {
+          position: absolute;
+          content: '';
+          width: 100%;
+          height: 1px;
+          left: 0;
+          top: 0;
+          background-color: #f0f0f0;
+          transform: scaleY(.5);
+        }
+        &-lastTime {
+          display: flex;
+          justify-content: space-between;
+          font-size: 24rpx;
+          color: $label-color;
+        }
+        &-name {
+          display: flex;
+          align-items: center;
+          padding: 15upx 20upx;
+          background-color:rgba(204, 204, 204, .18);
+          border-radius: 6upx;
+          margin-top: 12upx;
+          .item-route-place {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .item-route-star {
+              margin-left: 80upx;
+              margin-right: 50upx;
+              font-weight:bold;
+            }
+            .icon-logo-line {
+              width: 50upx;
+              height: 22upx;
+              background: url(@/static/weighRecord/icon_line.png) no-repeat;
+              background-size: contain;
+              display: block;
+              margin-left: 50upx;
+            }
+            .item-route-end {
+              margin-left: 80upx;
+              font-weight:bold;
+            }
+          }
+          .item-logo-route {
+            width: 35upx;
+            height:35upx;
+            margin-left: 20upx;
+            object-fit: contain;
+          }
+        }
+        .item-info {
+          margin-top: 15upx;
+          &-lable {
+            font-size: 24rpx;
+            color: $label-color;
+          }
+          &-value {
+            font-size: 24rpx;
+          }
+          &-driver {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10upx;
+          }
+        }
+      }
+    }
+  }
+</style>

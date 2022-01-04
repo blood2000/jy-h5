@@ -213,7 +213,8 @@
 			"navigationStyle": "custom",
 			"enablePullDownRefresh": false
 		}
-	},{
+	},
+	{
 		"path": "pages/weighRecord/index",
 		"style": {
 			"navigationBarTitleText": "过磅记录",
@@ -221,7 +222,8 @@
 			"enablePullDownRefresh": false,
 			"navigationBarBackgroundColor": "#3a65ff"
 		}
-	},{
+	},
+	{
 		"path": "pages/weighRecord/list",
 		"style": {
 			"navigationBarTitleText": "过磅记录",

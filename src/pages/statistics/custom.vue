@@ -30,7 +30,7 @@
 					</view>
 				</picker>
 				<view class="text-grey" style="margin: 0 10upx;">|</view>
-				<input class="search-input" v-model="queryParams.goodsTypeName" placeholder="按查询条件输入商品名称" name="input" @blur="changeName"></input>
+				<input class="search-input" v-model="queryParams.goodsTypeName" placeholder="按查询条件输入商品名称" name="input" @blur="changeName" />
 				<view v-if="queryParams.receiveType || queryParams.endCreateTime" class="cuIcon-roundclose text-grey margin-mleft" @click="handleCleartype"></view>
 			</view>
 		</view>
@@ -70,9 +70,13 @@
 					<view class="list-numcont">{{item.realWeight || 0}}</view>
 					<view class="list-numtitle margin-stop">总实重（吨）</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.lossWeight || 0}}</view>
+				<view v-if="item.receiveType == 1" class="list-numlist">
+					<view class="list-numcont">{{item.lossWeight || '0'}}</view>
 					<view class="list-numtitle margin-stop">亏涨吨</view>
+				</view>
+				<view v-if="item.receiveType == 2" class="list-numlist">
+					<view class="list-numcont">{{item.overloadRemark || '无'}}</view>
+					<view class="list-numtitle margin-stop">备注</view>
 				</view>
 			</view>
 		</view>
@@ -93,7 +97,17 @@
 		computed: {
 			...mapState({
 				headerInfo: state => state.header.headerInfo
-			})
+			}),
+			quer(){
+				// startCreateTime: this.parseTime(getTodayUnix(), '{y}-{m}-{d} {h}:{i}:{s}'),
+				// endCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d} {h}:{i}:{s}'),
+
+				return {
+					...this.queryParams,
+					startCreateTime: this.queryParams.startCreateTime?this.queryParams.startCreateTime + ' 00:00:00' : '',
+					endCreateTime: this.queryParams.endCreateTime?this.queryParams.endCreateTime + ' 23:59:59' : '',
+				}
+			}
 		},
 		data() {
 			return {
@@ -109,10 +123,11 @@
 					contentnomore: '没有更多了'
 				},
 				queryParams: {
-					startCreateTime: '',
-					endCreateTime: '',
+					startCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
+					endCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
 					receiveType: '',
 					goodsTypeName: '',
+					isInvalid: 0,
 					pageNum: 1,
 					pageSize: 10
 				},
@@ -163,7 +178,7 @@
 				uni.webView.navigateBack();
 			},
 			getList() {
-				statisticsList(this.queryParams, this.headerInfo).then(res => {
+				statisticsList(this.quer, this.headerInfo).then(res => {
 					if(res.rows.length === 0) {
 						this.isEnd = true;
 						this.status = 'noMore';

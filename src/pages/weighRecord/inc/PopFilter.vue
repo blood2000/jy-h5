@@ -209,6 +209,12 @@
 </script>
 
 <style lang="scss" scoped>
+  // Color Palette
+  $gray-1: #333;
+  $gray-2: #878787;
+  // Component Colors
+  $text-color: $gray-1;
+  $label-color: $gray-2;
   .radio-group {
     display: flex;
     flex-wrap: wrap;
@@ -218,7 +224,7 @@
       height: 70upx;
       line-height: 70upx;
       font-size: 29upx;
-      color: #333;
+      color: $text-color;
       padding: 0 28upx;
       border-radius: 6upx;
       margin: 0 15upx 15upx;
@@ -255,7 +261,7 @@
 				top: 0;
 				width: 32upx;
 				height: 32upx;
-				background: url(../../../static/weighRecord/icon_close.png) no-repeat;
+				background: url(@/static/weighRecord/icon_close.png) no-repeat;
 				background-size: contain;
 				display: block;
 			}
@@ -271,7 +277,7 @@
 						right: 0;
 						top: 0;
 						font-size: 29upx;
-						color: #878787;
+						color: $label-color;
 						display: flex;
 						align-items: center;
 						&::after {
@@ -279,7 +285,7 @@
 							display: block;
 							width: 18upx;
 							height: 26upx;
-							background: url(../../../static/weighRecord/arrow_left.png) no-repeat;
+							background: url(@/static/weighRecord/arrow_left.png) no-repeat;
 							background-size: contain;
 							margin-left: 15upx;
 						}
@@ -329,7 +335,7 @@
 				transform: translateY(-50%);
 				width: 32upx;
 				height: 32upx;
-				background: url(../../../static/weighRecord/icon_back.png) no-repeat;
+				background: url(@/static/weighRecord/icon_back.png) no-repeat;
 				background-size: contain;	
 				display: block;
 			}
