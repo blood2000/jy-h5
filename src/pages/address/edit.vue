@@ -93,6 +93,7 @@
 				
 				
 			}
+			this.location = options.location
 			// uni.getLocation({
 			//   // type: "wgs84",
 			//   type: "gcj02",
@@ -108,6 +109,7 @@
 		data() {
 			const _this = this
 			return{
+				location:undefined,
 				form:{
 					companyAddrName:'',
 					addressName: '', // 地址
@@ -120,27 +122,26 @@
 				citysearch:null, // 定位实例
 				zoom: 14,
 				center: [116.397497,39.906888],
-				plugins: ['ToolBar',
-					{
-					pName:'Geolocation',
-					enableHighAccuracy: true,
-					useNative:true,
-					events:{
-						init: o => {
-							// console.log(o.options);
-						},
-						complete: (result) => {
-							// console.log(result);
-							// const {lng,lat} = result.position
-							// console.log(wgs84_to_gcj02(lng,lat));
-							// _this.setFitView();
-						},
-						err: (err) => {
-							// console.log("err");
-						}
-					}
-				},
-				], // 
+				plugins: ['ToolBar'],
+					// {
+					// pName:'Geolocation',
+					// enableHighAccuracy: true,
+					// useNative:true,
+					// events:{
+					// 	init: o => {
+					// 		// console.log(o.options);
+					// 		},
+					// 	complete: (result) => {
+					// 		// console.log(result);
+					// 		// const {lng,lat} = result.position
+					// 		// console.log(wgs84_to_gcj02(lng,lat));
+					// 		// _this.setFitView();
+					// 		},
+					// 	err: (err) => {
+					// 		// console.log("err");
+					// 		}
+					// 	}
+					// }
 				events: {
 					init: (o) => {
 						_this.map = o
@@ -303,29 +304,31 @@
 			},
 			//获取用户所在城市信息
 			showCityInfo() {
-				const _this = this
-				//实例化城市查询类
-				this.citysearch = new AMap.CitySearch();
-				//自动获取用户IP，返回当前城市
-				this.citysearch.getLocalCity(function(status, result) {
-					if (status === 'complete' && result.info === 'OK') {
-						if (result && result.city && result.bounds) {
-							// _this.form.city = result.city
-							// _this.form.province = result.province
-							// _this.form.provinceCode = result.adcode.slice(0,2)
-							// _this.form.cityCode = result.adcode.slice(0,4)
-							const citybounds = result.bounds;
-							const center = citybounds.getCenter()
-							const {lng,lat} = center
-							_this.marker.position = [lng,lat]
-							_this.center = [lng,lat]
-							//地图显示当前城市
-							_this.map.setBounds(citybounds);
-						}
-					} else {
-						_this.msgSuccess('获取位置信息失败！')
-					}
-				});
+				// const _this = this
+				// //实例化城市查询类
+				// this.citysearch = new AMap.CitySearch();
+				// //自动获取用户IP，返回当前城市
+				// this.citysearch.getLocalCity(function(status, result) {
+				// 	if (status === 'complete' && result.info === 'OK') {
+				// 		if (result && result.city && result.bounds) {
+				// 			// _this.form.city = result.city
+				// 			// _this.form.province = result.province
+				// 			// _this.form.provinceCode = result.adcode.slice(0,2)
+				// 			// _this.form.cityCode = result.adcode.slice(0,4)
+				// 			const citybounds = result.bounds;
+				// 			const center = citybounds.getCenter()
+				// 			const {lng,lat} = center
+				// 			_this.marker.position = [lng,lat]
+				// 			_this.center = [lng,lat]
+				// 			//地图显示当前城市
+				// 			_this.map.setBounds(citybounds);
+				// 		}
+				// 	} else {
+				// 		_this.msgSuccess('获取位置信息失败！')
+				// 	}
+				// });
+				this.marker.position = this.location
+				this.center = this.location
 			},
 			// ListTouch触摸开始
 			ListTouchStart(e) {
@@ -369,16 +372,16 @@
 		}
 
 		.search-box {
-			position: fixed;
+			position: absolute;
 			width: 90%;
 			left: 0;
 			right: 0;
-			top: 100rpx;
+			top: 20rpx;
 			margin: auto;
 		}
 	}
 	.cu-list{
-		height: calc(50vh - 88upx - 100upx - 100upx);
+		// height: calc(50vh - 88upx - 100upx - 100upx);
 		overflow-y: auto;
 	}
 </style>
