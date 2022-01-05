@@ -188,7 +188,6 @@
 	getEffectiveGoodsList as goodspriceList,
 	orderPlanFreightList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoDetatil } from "@/config/service/transportPlan/transportationPlan.js"
 	
-	// import { orderPlanInfoList as getList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoUpdateStatus, teamSelectTeamListByCodes } from '@/config/service/transportPlan/transportationPlan.js'
 	import NumberBox from '@/components/number-box/number-box'
 	import TeamList from '@/pages/capacity/components/teamList.vue'
 
@@ -453,9 +452,9 @@
 			this.$set(this.rules.sedCompnayInfoId,'rules', [
 				{ required: this.form.type == 1, errorMessage: '请选择收货企业' }
 			])
-			this.$set(this.rules.endAddressWlId,'rules', [
-				{ required: this.form.type == 1, errorMessage: '请选择卸货电子围栏' }
-			])
+			// this.$set(this.rules.endAddressWlId,'rules', [
+			// 	{ required: this.form.type == 1, errorMessage: '请选择卸货电子围栏' }
+			// ])
 
 			if(options.id){
 				
@@ -938,6 +937,8 @@
 						const rule = this[rulesName][key];
 						for (let index = 0; index < rule.rules.length; index++) {
 							const r = rule.rules[index];
+
+							console.log(r);
 							if(r.required){
 								if(r.type === 'array' && this[formName][key].length <=0 ){
 									uni.showToast({
