@@ -251,7 +251,7 @@
 		width: 100%;
 		padding: 0 16upx;
 		font-size: 28upx;
-		/deep/ .uni-input-wrapper {
+		::v-deep .uni-input-wrapper {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -271,7 +271,7 @@
 			}
 		}
 	}
-	/deep/ .uni-load-more__text {
+	::v-deep .uni-load-more__text {
 		font-size: 28upx;
 	}
 	.filter-wrap {
