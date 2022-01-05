@@ -1,4 +1,4 @@
-<!-- 物料管理 -->
+<!-- 企业管理 -->
 <template>
   <view class="content-page">
 	<HeaderBar title="企业管理" @back="navigateBack">
@@ -10,9 +10,9 @@
 			<!-- 列表 -->
 			<view v-if="!!listData.length">
 				<view class="list-item" v-for="(row, index) in listData" :key="index">
-					<view class="title-abbreviation ellipsis">企业简称</view>
+					<view class="title-abbreviation ellipsis">{{ row.companyAbbreviation }}</view>
 					<view class="right-box">
-						<switch checked class="m-switch" color="#007aff" />
+						<switch :key="switchKey" :checked="row.status === 0" class="m-switch" @change="({ detail })=> handlerChange(row, detail.value)" />
 						<view class="vertical-line">|</view>
 						<view class="medit-button" @click="handlerEdit(row)">编辑</view>
 					</view>
@@ -32,16 +32,16 @@
 					<view class="title">新增/编辑企业</view>
 					
 					<view>
-						<uni-forms ref="form" v-model="form" :rules="rules" label-width="150">
-							<uni-forms-item required name="userName" label="企业简称" class="forms-item border-bottom">
+						<uni-forms :key="formKey" ref="form" v-model="form" :rules="rules" label-width="150">
+							<uni-forms-item required name="companyAbbreviation" label="企业简称" class="forms-item border-bottom">
 								<uni-easyinput
 									type="text"
 									:inputBorder="false"
 									:clearable="false"
 									:maxlength="10"
-									v-model="form.userName"
+									v-model="form.companyAbbreviation"
 									placeholder="请输入企业简称"
-									@input="(_data)=>binddata('userName',_data,'form')"
+									@input="(_data)=>binddata('companyAbbreviation',_data,'form')"
 								/>
 							</uni-forms-item> 
 							<uni-forms-item>
@@ -69,7 +69,12 @@
 
 <script>
 
-import {tenantGoodsRelList, tenantGoodsRelDelete} from '../../config/service/material/index'
+import {
+	tenantCompanyInfoList,
+	tenantCompanyInfoAdd,
+	tenantCompanyInfoUpdate,
+	tenantCompanyInfoUpdateStatus,
+} from '../../config/service/shipper'
 import { mapState } from "vuex";
 import HeaderBar from '@/components/Building/HeaderBar2.vue';
 import { removePropertyOfNull } from '@/utils/ddc';
@@ -93,15 +98,28 @@ export default {
 	  // 新
 	  show: false,
 	  form:{
-		  userName: undefined
+		"companyAbbreviation": undefined,
+		"companyName": "",
+		// "delFlag": 0,
+		// "id": 0,
+		// "isCurrent": 0,
+		// "linkName": "",
+		// "linkTel": "",
+		// "pageNum": 0,
+		// "pageSize": 0,
+		"status": 0,
+		// "tenantCode": ""
 	  },
 	  rules:{
-		  	userName:{
+		  	companyAbbreviation:{
 				rules:[
 					{ required: true, errorMessage: '请输入企业简称'}
 				]
 			},
-	  }
+	  },
+
+	  switchKey: Date.now(),
+	  formKey: Date.now(),
 
     };
   },
@@ -130,23 +148,21 @@ export default {
 	if(this.headerInfo.Authorization){
 		this.loadmore('init')
 	}
-
-	// this.statusBar12 = this.statusBarHeight - 0
-	// let platform=uni.getSystemInfoSync().platform
-	// if(platform=='ios'){
-	// 	this.statusBar12 -= 10
-	// }
   },
   onShow() {
 	  
   },
 
   async onPullDownRefresh() {
-    console.log("下拉刷新");
+    // console.log("下拉刷新");
 	await this.loadmore('init')
     setTimeout(() => {
       uni.stopPullDownRefresh(); //停止下拉刷新动画
     }, 700);
+  },
+
+  onReachBottom(){
+	  this.loadmore()
   },
 
   methods: {
@@ -156,15 +172,80 @@ export default {
 	},
 
 	close() {
+		this.cbData = null
 		this.show = false
 		this.$refs.form.resetFields()
-		this.binddata('userName', undefined,'form')
+		this.binddata('companyAbbreviation', undefined,'form')
 	},
 	
 	handleSubmit(){
-		this.$refs.form.validate().then(res=>{
-			console.log(res);
+		this.$refs.form.validate().then(async res=>{
+			uni.showLoading({mask:true})
+			// 开始
+			if(!!this.cbData){
+				
+				await tenantCompanyInfoUpdate(removePropertyOfNull(this.form), this.headerInfo)
+			} else {
+				const que = {
+					companyAbbreviation: this.form.companyAbbreviation,
+					companyName: this.form.companyAbbreviation,
+					status: 0
+				}
+				await tenantCompanyInfoAdd(removePropertyOfNull(que), this.headerInfo)
+			}
+
+			// 结束
+			uni.hideLoading();
+			uni.showToast({
+				title: `${!!this.cbData ? '修改' : '新增'}成功`,
+				icon: 'none',
+			});
+			setTimeout(()=>{
+				this.loadmore('init')
+				this.close()
+			}, 700)
+			
 		}).catch(()=> false)
+	},
+
+	// 启用|禁用
+	handlerChange(row, value){
+		// 提示
+		uni.showModal({
+			title: '提示',
+			content: `是否确定要${ value? '启用': '禁用'}`,
+			success: async (res)=> {
+				if (res.confirm) {
+					
+					const que = {
+						status: value? 0 : 1,
+						id: [row.id]
+					}
+					uni.showLoading({mask:true})
+
+					await tenantCompanyInfoUpdateStatus({isArrayQuery: JSON.stringify(que)}, this.headerInfo)
+					
+					uni.hideLoading();
+
+					uni.showToast({
+						title: `${value ? '启用' : '禁用'}成功`,
+						icon: 'none',
+					});
+
+					setTimeout(()=>{
+						this.loadmore('init')
+					}, 700)
+
+
+				} else if (res.cancel) {
+					this.switchKey = Date.now()
+				}
+			}
+		});
+
+		// 请求
+
+		// 告知
 	},
 	// e
 
@@ -192,7 +273,7 @@ export default {
 		uni.showLoading();
 		this.status = 'loading'
 
-		return tenantGoodsRelList(this.que, this.headerInfo).then(res=>{
+		return tenantCompanyInfoList(this.que, this.headerInfo).then(res=>{
 
 			uni.hideLoading();
 			this.status = 'more'
@@ -205,9 +286,9 @@ export default {
 			}
 
 			if(status && status === 'init'){
-				this.listData = res.data.list
+				this.listData = res.data.list.concat(res.data.list)
 			} else {
-				this.listData = [...this.listData, ...res.data.list];
+				this.listData = [...this.listData, ...res.data.list].concat([...this.listData, ...res.data.list]);
 			}
 			
 		})
@@ -221,7 +302,10 @@ export default {
 	// 编辑
 	handlerEdit(row){
 		this.cbData = row
-		console.log(row);
+		this.form = {
+			...this.form,
+			...this.cbData
+		}
 		this.show = true
 	},
 	
