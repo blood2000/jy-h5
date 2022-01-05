@@ -118,6 +118,18 @@
           "bounce": "none"
         }
       }
+    },
+    {
+      "path": "pages/manage/v1/index",
+      "style": {
+        "navigationBarTitleText": "入场预约系统",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
     }
   ],
   "globalStyle": {

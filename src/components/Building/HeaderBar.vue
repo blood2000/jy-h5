@@ -74,8 +74,4 @@ export default {
 }
 
 </style>
-<style>
->>> .uni-navbar--border {
-  border-bottom: none;
-}
-</style>
+
