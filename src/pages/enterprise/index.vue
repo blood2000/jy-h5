@@ -162,6 +162,7 @@ export default {
   },
 
   onReachBottom(){
+	  console.log('触底');
 	  this.loadmore()
   },
 
@@ -286,9 +287,9 @@ export default {
 			}
 
 			if(status && status === 'init'){
-				this.listData = res.data.list.concat(res.data.list)
+				this.listData = res.data.list;
 			} else {
-				this.listData = [...this.listData, ...res.data.list].concat([...this.listData, ...res.data.list]);
+				this.listData = [...this.listData, ...res.data.list];
 			}
 			
 		})
