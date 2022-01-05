@@ -184,8 +184,12 @@ export default {
 			uni.showLoading({mask:true})
 			// 开始
 			if(!!this.cbData){
+				const que = {
+					...this.form,
+					companyName: this.form.companyAbbreviation === this.cbData.companyAbbreviation ? this.form.companyName : this.form.companyAbbreviation
+				}
 				
-				await tenantCompanyInfoUpdate(removePropertyOfNull(this.form), this.headerInfo)
+				await tenantCompanyInfoUpdate(removePropertyOfNull(que), this.headerInfo)
 			} else {
 				const que = {
 					companyAbbreviation: this.form.companyAbbreviation,
