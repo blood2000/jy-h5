@@ -117,7 +117,7 @@
 				</uni-forms-item>
 
 				<uni-forms-item :required="false" name="startAddressWlId" label="接单电子围栏" v-if="form.startAddressId" class="border-bottom">
-					<pickers :disabled="!!cbData" v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
+					<pickers v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
 				</uni-forms-item>
 
 				<!--  -->
@@ -138,8 +138,8 @@
 				<template v-if="form.endAddressId">
 					<!-- <u-alert v-if='form.type == 0' type="error" :description="description" fontSize='1'></u-alert> -->
 
-					<uni-forms-item :required="false" name="endAddressWlId" label="接单电子围栏">
-						<pickers :disabled="!!cbData" v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
+					<uni-forms-item :required="false" name="endAddressWlId" label="卸货电子围栏">
+						<pickers v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择卸货电子围栏'></pickers>
 					</uni-forms-item>
 				</template>
 
