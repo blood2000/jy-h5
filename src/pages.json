@@ -260,7 +260,7 @@
 		}, {
 			"path": "pages/appointment/index",
 			"style": {
-				"navigationBarTitleText": "预约",
+				"navigationBarTitleText": "入场预约系统",
 				"enablePullDownRefresh": true
 			}
 		}
