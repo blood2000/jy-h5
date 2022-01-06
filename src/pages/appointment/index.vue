@@ -4,7 +4,9 @@
 			<view class="headerView">
 				<image class="top-avatar shadow-warp bg-white" :src="avatar" mode="aspectFill"></image>
 			</view>
-			<view class="scanView"></view>
+			<view class="scanView">
+				<image class="top-avatar shadow-warp bg-white" :src="avatar" mode="aspectFill"></image>
+			</view>
 		</view>
 	</view>
 </template>
@@ -36,15 +38,23 @@
 	margin-left: 20upx;
 	margin-right: 20upx;
 	margin-top: 20upx;
-	background: #FFFFFF;
-	height: 120upx;
-	border-radius: 10upx;
+	height: 140upx;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	justify-content: space-between;
 }
 .headerView{
-	
+	background: #FF0000;
+	height: 140upx;
+	border-radius: 10upx;
+	width: calc(100% - 160upx);
 }
 .scanView{
-	
+	background: #00FF00;
+	width: 140upx;
+	height: 140upx;
+	border-radius: 10upx;
 }
 .top-avatar{
 	height: 88upx;
