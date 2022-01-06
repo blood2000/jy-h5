@@ -76,12 +76,12 @@
 .datetime-picker-weigh {
 	width: 380upx;
 	margin: 0 -8upx;
-	/deep/ .uni-date-editor--x:hover .uni-date__icon-clear {
+	::v-deep .uni-date-editor--x:hover .uni-date__icon-clear {
 		right: -46upx;
 		top: 2upx;
 		border: 0;
 	}
-	/deep/ .uni-date-x {
+	::v-deep .uni-date-x {
 		background-color: transparent;
 		color: #fff;
 		font-size: 28upx;

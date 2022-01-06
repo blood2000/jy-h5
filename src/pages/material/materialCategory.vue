@@ -152,11 +152,12 @@
 						title: `${this.cbData ? '修改' : '新增'}成功`,
 						icon: 'none'
 					});
-					this.cbData = null
+					
 					setTimeout(()=>{
 						uni.redirectTo({
 							url: '/pages/material/index'
 						});
+						this.cbData = null
 					}, 700)
 				})
 			},
@@ -200,6 +201,6 @@
 	.u-page{
 		padding-bottom: 128upx;
 		overflow-y: auto;
-		height: 100%;
+		height: 100vh;
 	}
 </style>
