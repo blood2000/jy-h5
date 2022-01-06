@@ -261,7 +261,7 @@
 			"path": "pages/appointment/index",
 			"style": {
 				"navigationBarTitleText": "预约",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		}
 	],
