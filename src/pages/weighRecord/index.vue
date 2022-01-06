@@ -25,6 +25,8 @@
 	import HeaderBar from '@/components/Building/HeaderBar';
 	import datetimerangePicker from './inc/DatetimerangePicker'
 	import ListPoundRoom from './inc/ListPoundRoom'
+	import { buildInfoList } from '@/config/service/weighRecord/index.js'
+	import { mapState } from 'vuex';
 	export default {
 		components: {
 			HeaderBar,
@@ -37,13 +39,7 @@
 				statusBar12: 0,
 				oldDatePicker1: Date.now(), // 改变key值重新渲染
 				effectiveDate: [], // 转成 开始时间 和 结束时间
-				dataList: [{
-					id: 1
-				}, {
-					id: 2
-				}, {
-					id: 3
-				}],
+				dataList: [],
 				status: 'more',
 				contentText: {
 					contentdown: '上拉加载更多',
@@ -63,8 +59,20 @@
 			if(uni.getSystemInfoSync().platform == 'ios'){
 				this.statusBar12 -= 10
 			}
+
+			// 获取jyzCode
+			// const res = await queryUserInfo({ userCode: uni.getStorageSync('userInfo').userCode });
+			this.jyzCode = '62baa47ae922439fbf3c102774722e405';
+
+			this.getBuildInfoList();
 		},
 		methods: {
+			/**
+			 * 返回上一页
+			 */
+			navigateBack() {
+				uni.navigateBack();
+			},
 			// 触底
 			scrolltolower(e) {
 				console.log('触达底部')
@@ -72,6 +80,21 @@
 					this.status = 'loading';
 				}
 			},
+			getBuildInfoList() {
+				buildInfoList({
+					pageNum: 1,
+					pageSize: 10,
+					buildingType: 1,
+					jyzCode: this.jyzCode
+				}, this.headerInfo).then((res) => {
+					this.dataList = res.data.list;
+				})
+			}
+		},
+		computed: {
+			...mapState({
+				headerInfo: state => state.header.headerInfo
+			}),
 		}
 	}
 </script>

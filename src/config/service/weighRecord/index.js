@@ -10,3 +10,21 @@ export function findList(query, config) {
     params: query
   });
 }
+
+export function poundRoomList(query, config) {
+  return request({
+    url: `/poundRoomList`,
+    method: 'get',
+    headers: config,
+    params: query
+  });
+}
+
+export function buildInfoList(query, config) {
+  return request({
+    url: '/jyz/appWeighingRecord/buildInfoList',
+    method: 'get',
+    headers: config,
+    params: query
+  })
+}
