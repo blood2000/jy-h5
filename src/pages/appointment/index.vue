@@ -20,7 +20,15 @@
 			</view>
 		</view>
 		<view class="info-container">
-			
+
+		</view>
+		<view class="list-container">
+			<view class="switchHead">
+				<view v-for="(item,index) in tabTitleData" class="boxList" :class="{activeCss:activeIndex==index}"
+					:key="index">
+					<text @click="clickTab(index)">{{item.name}}</text>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -29,6 +37,9 @@
 	import {
 		mapState
 	} from 'vuex';
+	import {
+		getInfo
+	} from "@/config/service/workbench.js"
 	export default {
 		name: 'appointment',
 		components: {},
@@ -45,12 +56,55 @@
 					licenseNumber: '闽A54332'
 				},
 				avatar: '/static/avatar.png', // 默认头像
+				activeIndex: '0',
+				tabTitleData: [{
+						name: '可预约'
+					},
+					{
+						name: '已失效'
+					}
+				],
+				canAppointList: [{
+						nameStr: '山西五福洗煤厂 / 1 号堆'
+					},
+					{
+						nameStr: '山西五福洗煤厂 / 2 号堆'
+					},
+					{
+						nameStr: '山西五福洗煤厂 / 3 号堆'
+					},
+				],
+				invalidAppointList: [{
+						nameStr: '山西五福洗煤厂 / 4 号堆'
+					},
+					{
+						nameStr: '山西五福洗煤厂 / 5 号堆'
+					},
+				],
 			}
 		},
+		onLoad(option) {
+			this.getInfo();
+		},
+		onPullDownRefresh() {
+			this.getInfo();
+		},
 		methods: {
+			getInfo() {
+				// 获取用户信息
+				getInfo(this.headerInfo).then(res => {
+					this.userInfo = res.data;
+					uni.hideLoading();
+					uni.stopPullDownRefresh();
+				});
+				//this.getList();
+			},
 			onClickScanAction() {
 				console.log("点击了扫码");
 			},
+			clickTab(index) {
+				this.activeIndex = index;
+			}
 		}
 	}
 </script>
@@ -106,7 +160,7 @@
 		height: 68upx;
 		width: 68upx;
 	}
-	
+
 	.info-container {
 		background: #FFFFFF;
 		margin-left: 20upx;
@@ -117,5 +171,23 @@
 		align-items: center;
 		flex-direction: row;
 		justify-content: space-between;
+	}
+
+	.switchHead {
+		height: 35px;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		color: #FFFFFF;
+		background-color: #13D1BE;
+	}
+
+	.boxList {
+		height: 100%;
+	}
+
+	.activeCss {
+		border-bottom: 2px solid yellow;
+		color: yellow;
 	}
 </style>
