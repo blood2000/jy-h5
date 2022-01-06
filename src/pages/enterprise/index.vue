@@ -9,10 +9,10 @@
 		<template>
 			<!-- 列表 -->
 			<view v-if="!!listData.length">
-				<view class="list-item" v-for="(row, index) in listData" :key="index">
+				<view class="list-item" v-for="(row) in listData" :key="row.id">
 					<view class="title-abbreviation ellipsis">{{ row.companyAbbreviation }}</view>
 					<view class="right-box">
-						<switch :key="switchKey" :checked="row.status === 0" class="m-switch" @change="({ detail })=> handlerChange(row, detail.value)" />
+						<switch :key="switchKey" :checked="row.status === 0" class="m-switch" @change.stop="({ detail })=> handlerChange(row, detail.value)" />
 						<view class="vertical-line">|</view>
 						<view class="medit-button" @click="handlerEdit(row)">编辑</view>
 					</view>
@@ -27,36 +27,40 @@
 
 			<NonePage v-else></NonePage>
 
-			<u-popup :show="show" round :closeable="false" :closeOnClickOverlay="true" @close="close" @open="open">
-				<view class="popup-box" :style="{height: '488upx'}">
-					<view class="title">新增/编辑企业</view>
-					
-					<view>
-						<uni-forms :key="formKey" ref="form" v-model="form" :rules="rules" label-width="150">
-							<uni-forms-item required name="companyAbbreviation" label="企业简称" class="forms-item border-bottom">
-								<uni-easyinput
-									type="text"
-									:inputBorder="false"
-									:clearable="false"
-									:maxlength="10"
-									v-model="form.companyAbbreviation"
-									placeholder="请输入企业简称"
-									@input="(_data)=>binddata('companyAbbreviation',_data,'form')"
-								/>
-							</uni-forms-item> 
-							<uni-forms-item>
-								<view class="text-prompt">企业名称默认同简称，如需修改请到web端</view>
-							</uni-forms-item>
-							<uni-forms-item>
-								<view class="button-m-box">
-									<view class="button" @click="close">取消</view>
-									<view class="button success" @click="handleSubmit">确认</view>
-								</view>
-							</uni-forms-item>
-						</uni-forms>
+			<view>
+				<u-popup :show="show" round :closeable="false" :closeOnClickOverlay="true" @close="close" @open="open">
+					<view class="popup-box" :style="{height: '488upx'}">
+						<view class="title">新增/编辑企业</view>
+						
+						<view>
+							<uni-forms :key="formKey" ref="form" v-model="form" :rules="rules" label-width="150">
+								<uni-forms-item required name="companyAbbreviation" label="企业简称" class="forms-item border-bottom">
+									<uni-easyinput
+										type="text"
+										:inputBorder="false"
+										:clearable="false"
+										:maxlength="10"
+										cursorSpacing="10"
+										v-model="form.companyAbbreviation"
+										placeholder="请输入企业简称"
+										@input="(_data)=>binddata('companyAbbreviation',_data,'form')"
+									/>
+								</uni-forms-item> 
+								<uni-forms-item>
+									<view class="text-prompt">企业名称默认同简称，如需修改请到web端</view>
+								</uni-forms-item>
+								<uni-forms-item>
+									<view class="button-m-box">
+										<view class="button" @click="close">取消</view>
+										<view class="button success" @click="handleSubmit">确认</view>
+									</view>
+								</uni-forms-item>
+							</uni-forms>
+						</view>
 					</view>
-				</view>
-			</u-popup>
+				</u-popup>
+			</view>
+
 			
 		</template>
 		
@@ -237,9 +241,9 @@ export default {
 						icon: 'none',
 					});
 
-					setTimeout(()=>{
-						this.loadmore('init')
-					}, 700)
+					this.loadmore('init')
+					// setTimeout(()=>{
+					// }, 700)
 
 
 				} else if (res.cancel) {
@@ -290,11 +294,14 @@ export default {
 				this.status = 'noMore';
 			}
 
+			let listData = []
 			if(status && status === 'init'){
-				this.listData = res.data.list;
+				listData = res.data.list;
 			} else {
-				this.listData = [...this.listData, ...res.data.list];
+				listData = [...this.listData, ...res.data.list];
 			}
+
+			this.listData = listData.sort((a,b)=> a.id - b.id)
 			
 		})
 
