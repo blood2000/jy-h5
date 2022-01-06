@@ -1,7 +1,7 @@
 <!-- 管理端TAB页面 -->
 <template>
   <div class="manage-content">
-    <HeaderBar :title="title" @back="back"></HeaderBar>
+    <HeaderBar :title="title" @back="back" ></HeaderBar>
     <!-- 工作台组件 -->
     <scroll-view class="manage-main" :scroll-y='isScroll' @scroll='scroll' v-if="tabIndex === 0">
       <work-bench  :isScroll='isScroll' @showTop='showTop'></work-bench>
@@ -36,6 +36,10 @@ import WorkBench from "./components/WorkBench.vue";
 export default {
   data() {
     return {
+      // barStyle: {
+      //   color: '#333',
+      //   background: '#f5f5f5'
+      // },
       title: "入场预约系统",
       isScroll: true,
       tabs: [

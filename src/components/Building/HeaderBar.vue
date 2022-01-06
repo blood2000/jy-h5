@@ -3,7 +3,7 @@
   <div>
     <view
       class="status-bar"
-      :style="{ height: statusBarHeight * 2 + 'rpx' }"
+      :style="{ height: statusBarHeight * 2 + 'rpx', background: barStyle.background}"
     ></view>
     <uni-nav-bar
       left-icon="arrowleft"
