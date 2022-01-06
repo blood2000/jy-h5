@@ -921,11 +921,12 @@
 					title: `${isEdit ? '修改' : '新增'}成功`,
 					icon: 'none'
 				});
-				this.cbData = null
+				
 				setTimeout(()=>{
 					uni.redirectTo({
 						url: '/pages/transportPlan/index?id=ejwfw'
 					});
+					this.cbData = null
 				}, 700)
 
 			},
