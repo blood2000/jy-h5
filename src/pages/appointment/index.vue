@@ -29,6 +29,21 @@
 					<text @click="clickTab(index)">{{item.name}}</text>
 				</view>
 			</view>
+			<view class="canAppointView" v-for="(sub, index) in canAppointList" v-bind:key="index">
+				<view class="canAppointViewLeft">
+					<image class="history-icon bg-white" :src="avatar"
+						mode="aspectFill"></image>
+				</view>
+				<view class="canAppointViewCenter">
+					<text class="canAppointViewCenterLabel">预约场站：{{sub.nameStr}}</text>
+					<text class="canAppointViewCenterLabel">预约场站2：{{sub.nameStr}}</text>
+					<text class="canAppointViewCenterLabel">预约场站3：{{sub.nameStr}}</text>
+					<text class="canAppointViewCenterLabel">预约场站4：{{sub.nameStr}}</text>
+				</view>
+				<view class="canAppointViewRight">
+					<text class="canAppointViewRightLabel">预约</text>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -189,5 +204,69 @@
 	.activeCss {
 		border-bottom: 2px solid yellow;
 		color: yellow;
+	}
+	
+	.canAppointView {
+		background-color: #FFFFFF;
+		border-radius: 15upx;
+		margin-left: 20upx;
+		margin-right: 20upx;
+		margin-top: 15upx;
+		height: 200upx;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	
+	.canAppointViewLeft {
+		background-color: #13D1BE;
+		height: 200upx;
+		width: 50upx;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+		border-radius: 15upx 0upx 0upx 15upx;
+		float: left;
+	}
+	
+	.history-icon {
+		height: 30upx;
+		width: 30upx;
+		border-radius: 50%;
+		margin-left: 10upx;
+	}
+	
+	.canAppointViewRight {
+		background-color: #13D1BE;
+		height: 200upx;
+		width: 80upx;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+		border-radius: 0upx 15upx 15upx 0upx;
+		float: right;
+	}
+	
+	.canAppointViewRightLabel {
+		font-size: 20upx;
+		color: #FFFFFF;
+		padding-left: 20upx;
+	}
+	
+	.canAppointViewCenter {
+		background-color: #FFFFFF;
+		width: 100%;
+		height: 200upx;
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.canAppointViewCenterLabel {
+		font-size: 20upx;
+		color: #000000;
+		padding-left: 15upx;
 	}
 </style>
