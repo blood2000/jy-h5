@@ -150,13 +150,12 @@
 						icon: 'none'
 					});
 					uni.hideLoading();
-					this.cbData = null
-
 					// 返回
 					setTimeout(()=>{
 						uni.redirectTo({
 							url: '/pages/orders/index'
 						});
+						this.cbData = null
 					}, 700)
 				})
 			},
