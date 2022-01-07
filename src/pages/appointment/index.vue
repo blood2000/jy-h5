@@ -18,7 +18,7 @@
 					<view class="scanView_label">扫码预约</view>
 					<view class="scanView_arrow_right"></view>
 				</view>
-				<image class="top-scaner shadow-warp bg-white" src="/static/icon_station.png" mode="aspectFit"></image>
+				<image class="scanView_icon" src="/static/appointment/appointment_scan.png" mode="aspectFit"></image>
 			</view>
 		</view>
 		<view class="info-container">
@@ -32,18 +32,16 @@
 					<view v-if="activeIndex==index" class="switchLine"></view>
 				</view>
 			</view>
-			<view class="canAppointView" v-for="(sub, index) in canAppointList" v-bind:key="index">
+			<view class="canAppointView" v-for="(sub, index) in activeIndex==0?canAppointList:invalidAppointList" v-bind:key="index">
 				<view class="canAppointViewLeft">
-					<image class="history-icon bg-white" :src="avatar" mode="aspectFill"></image>
+					<text class="canAppointViewLeftLabel">预约场站：{{sub.nameStr}}</text>
+					<text class="canAppointViewLeftLabel">预约场站2：{{sub.nameStr}}</text>
+					<text class="canAppointViewLeftLabel">预约场站3：{{sub.nameStr}}</text>
+					<text class="canAppointViewLeftLabel">预约场站4：{{sub.nameStr}}</text>
 				</view>
-				<view class="canAppointViewCenter">
-					<text class="canAppointViewCenterLabel">预约场站：{{sub.nameStr}}</text>
-					<text class="canAppointViewCenterLabel">预约场站2：{{sub.nameStr}}</text>
-					<text class="canAppointViewCenterLabel">预约场站3：{{sub.nameStr}}</text>
-					<text class="canAppointViewCenterLabel">预约场站4：{{sub.nameStr}}</text>
-				</view>
-				<view class="canAppointViewRight">
-					<text class="canAppointViewRightLabel">预约</text>
+				<view :class="activeIndex==0?'canAppointViewRight':'canAppointViewRight2'">
+					<text v-if="activeIndex==0" class="canAppointViewRightLabel">预约</text>
+					<text v-else class="canAppointViewRightLabel">详情</text>
 				</view>
 			</view>
 		</view>
@@ -82,6 +80,22 @@
 					}
 				],
 				canAppointList: [{
+						nameStr: '山西五福洗煤厂 / 1 号堆'
+					},
+					{
+						nameStr: '山西五福洗煤厂 / 2 号堆'
+					},
+					{
+						nameStr: '山西五福洗煤厂 / 3 号堆'
+					},{
+						nameStr: '山西五福洗煤厂 / 1 号堆'
+					},
+					{
+						nameStr: '山西五福洗煤厂 / 2 号堆'
+					},
+					{
+						nameStr: '山西五福洗煤厂 / 3 号堆'
+					},{
 						nameStr: '山西五福洗煤厂 / 1 号堆'
 					},
 					{
@@ -194,6 +208,7 @@
 		font-weight: bold;
 		color: #333333;
 		padding-left: 16upx;
+		padding-top: 10upx;
 	}
 
 	.scanView_arrow_right {
@@ -205,14 +220,14 @@
 		font-size: 0;
 		line-height: 0;
 		transform: rotate(90deg);
+		margin-top: 10upx;
 	}
 
-	.top-scaner {
+	.scanView_icon {
 		height: 141upx;
-		width: 141upx;
-		position: absolute;
-		margin-top: 50upx;
-		right: 30upx;
+		width: 100%;
+		margin-top: 0upx;
+		padding-left: 80upx;
 	}
 
 	.info-container {
@@ -269,29 +284,26 @@
 		justify-content: space-between;
 	}
 
+
 	.canAppointViewLeft {
-		background-color: #13D1BE;
+		background-color: #FFFFFF;
+		width: 100%;
 		height: 200upx;
-		width: 50upx;
 		display: flex;
-		align-items: center;
-		flex-direction: row;
-		justify-content: space-between;
+		flex-direction: column;
 		border-radius: 15upx 0upx 0upx 15upx;
-		float: left;
 	}
 
-	.history-icon {
-		height: 30upx;
-		width: 30upx;
-		border-radius: 50%;
-		margin-left: 10upx;
+	.canAppointViewLeftLabel {
+		font-size: 28upx;
+		color: #333333;
+		padding-left: 15upx;
 	}
-
+	
 	.canAppointViewRight {
-		background-color: #13D1BE;
+		background-color: #2366F2;
 		height: 200upx;
-		width: 80upx;
+		width: 138upx;
 		display: flex;
 		align-items: center;
 		flex-direction: row;
@@ -300,23 +312,23 @@
 		float: right;
 	}
 
-	.canAppointViewRightLabel {
-		font-size: 20upx;
-		color: #FFFFFF;
-		padding-left: 20upx;
-	}
-
-	.canAppointViewCenter {
-		background-color: #FFFFFF;
-		width: 100%;
+	.canAppointViewRight2 {
+		background-color: #24B2B4;
 		height: 200upx;
+		width: 138upx;
 		display: flex;
-		flex-direction: column;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+		border-radius: 0upx 15upx 15upx 0upx;
+		float: right;
+	}
+	
+	.canAppointViewRightLabel {
+		font-size: 32upx;
+		font-weight: bold;
+		color: #FFFFFF;
+		padding-left: 30upx;
 	}
 
-	.canAppointViewCenterLabel {
-		font-size: 20upx;
-		color: #000000;
-		padding-left: 15upx;
-	}
 </style>
