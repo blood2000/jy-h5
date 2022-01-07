@@ -1,6 +1,6 @@
 <template>
   <view class="list-record" @click="navigateToDetail">
-    <view class="item-record" v-for="item in list" :key="item.waybillNo" :data-waybillNo="item.waybillNo">
+    <view class="item-record" v-for="item in list" :key="item.waybillNo" :data-waybillNo="item.waybillNo" :data-deviceNo="deviceNo">
       <view class="item-head building-bottom-line">
         <text class="item-title">{{ item.orderPlanInfoName }}</text>
         <view class="item-head-right">
@@ -47,7 +47,11 @@
       list: {
         type: Array,
         default: []
-      }
+      },
+			deviceNo: {
+				type: String,
+        default: ''
+			}
     },
     methods: {
       /**
@@ -55,9 +59,9 @@
        * @param {Object} e 当前点击对象
        */
       navigateToDetail(e) {
-        if(e.target.dataset.id >= 0) {
+        if(e.target.dataset.waybillNo >= 0) {
           uni.navigateTo({
-            url: `/pages/weighRecord/detail?id=${e.target.dataset.id}`
+            url: `/pages/weighRecord/detail?waybillNo=${e.target.dataset.waybillNo}&deviceNo=${this.deviceNo}`
           });
         }
       }

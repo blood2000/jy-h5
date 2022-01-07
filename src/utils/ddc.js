@@ -152,3 +152,38 @@ export function isPeriodFormate(date) {
     return '';
   }
 }
+
+/**
+ * 节流
+ * @param {*} callback 
+ * @param {*} time 毫秒
+ * @returns 
+ */
+ export function ThrottleFun(callback, time) {
+  let canFlag = true;
+  return function(...argument) {
+    if (!canFlag) return;
+    canFlag = false;
+    setTimeout(function() {
+      canFlag = true;
+      callback(...argument);
+    }, time);
+  };
+}
+
+/**
+ * 防抖
+ * @param {*} callback 
+ * @param {*} time 毫秒
+ * @returns 
+ */
+export function DebounceFun(fun, delay) {
+  return function(args) {
+    let that = this;
+    let _args = args;
+    clearTimeout(fun.id);
+    fun.id = setTimeout(function() {
+      fun.call(that, _args);
+    }, delay);
+  };
+}
