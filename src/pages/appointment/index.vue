@@ -22,8 +22,36 @@
 			</view>
 		</view>
 		<view class="info-container">
-			<view class="info_noContentView">
-				<image class="noContent_icon" src="/static/appointment/appointment_noContent.png" mode="aspectFill"></image>
+			<view v-if="appointmentInfo.station">
+				<view class="info_station">
+					<image class="info_icon_station" src="/static/appointment/appointment_station.png" mode="aspectFit">
+					</image>
+					<view class="info_station_content">
+						<view class="info_station_content_value">{{appointmentInfo.station}}</view>
+						<view class="info_station_content_navigation">导航</view>
+						<view class="info_station_content_name">预约场站</view>
+					</view>
+				</view>
+				<view class="info_company">
+					<image class="info_icon_company" src="/static/appointment/appointment_company.png" mode="aspectFit">
+					</image>
+					<view class="info_station_content">
+						<view class="info_station_content_value">{{appointmentInfo.companyName}}</view>
+						<view class="info_station_content_name">货主名称</view>
+					</view>
+				</view>
+				<view class="info_date">
+					<image class="info_icon_time" src="/static/appointment/appointment_time.png" mode="aspectFit">
+					</image>
+					<view class="info_station_content">
+						<view class="info_station_content_value">{{appointmentInfo.date}}</view>
+						<view class="info_station_content_name">预约时间</view>
+					</view>
+				</view>
+			</view>
+			<view v-else class="info_noContentView">
+				<image class="noContent_icon" src="/static/appointment/appointment_noContent.png" mode="aspectFill">
+				</image>
 				<text class="noContent_label">暂无预约信息哦</text>
 			</view>
 		</view>
@@ -35,7 +63,8 @@
 					<view v-if="activeIndex==index" class="switchLine"></view>
 				</view>
 			</view>
-			<view class="canAppointView" v-for="(sub, index) in activeIndex==0?canAppointList:invalidAppointList" v-bind:key="index">
+			<view class="canAppointView" v-for="(sub, index) in activeIndex==0?canAppointList:invalidAppointList"
+				v-bind:key="index">
 				<view class="canAppointViewLeft">
 					<text class="canAppointViewLeftLabel">预约场站：{{sub.nameStr}}</text>
 					<text class="canAppointViewLeftLabel">预约场站2：{{sub.nameStr}}</text>
@@ -73,6 +102,12 @@
 					userName: '张三',
 					licenseNumber: '闽A*888SW'
 				},
+				appointmentInfo: {
+					station: '五福洗煤厂/32号堆',
+					companyName: '山西华汇通商贸无限公司',
+					date: '2021/01/05',
+					time: '08:00',
+				},
 				avatar: '/static/appointment/appointment_avatar.png', // 默认头像
 				activeIndex: '0',
 				tabTitleData: [{
@@ -90,7 +125,7 @@
 					},
 					{
 						nameStr: '山西五福洗煤厂 / 3 号堆'
-					},{
+					}, {
 						nameStr: '山西五福洗煤厂 / 1 号堆'
 					},
 					{
@@ -98,7 +133,7 @@
 					},
 					{
 						nameStr: '山西五福洗煤厂 / 3 号堆'
-					},{
+					}, {
 						nameStr: '山西五福洗煤厂 / 1 号堆'
 					},
 					{
@@ -171,7 +206,7 @@
 		display: flex;
 		align-items: center;
 	}
-	
+
 	.top-avatar {
 		height: 120upx;
 		width: 120upx;
@@ -202,7 +237,7 @@
 		width: 256upx;
 		height: 206upx;
 		border-radius: 20upx;
- 		display: flex;
+		display: flex;
 		flex-direction: column;
 	}
 
@@ -241,25 +276,95 @@
 		margin-bottom: 40upx;
 		height: 400upx;
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		flex-direction: column;
 		justify-content: space-between;
 		border-radius: 16upx;
 	}
+
+	.info_station {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: flex-start;
+		margin-left: 32upx;
+		margin-top: 32upx;
+	}
+
+	.info_company {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: flex-start;
+		margin-left: 32upx;
+		margin-top: 32upx;
+	}
+
+	.info_date {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: flex-start;
+		margin-left: 32upx;
+		margin-top: 32upx;
+	}
+
+	.info_icon_station {
+		width: 58upx;
+		height: 58upx;
+	}
 	
+	.info_station_content_value {
+		font-size: 32upx;
+		font-weight: bold;
+		color: #333333;
+	}
+	
+	.info_station_content_name {
+		font-size: 24upx;
+		color: #999999;
+	}
+	
+	.info_station_content_navigation {
+		font-size: 24upx;
+		color: #2366F2;
+		border: solid #2366F2 1upx;
+		padding-left: 9upx;
+		padding-right: 9upx;
+		border-radius: 4upx;
+	}
+
+	.info_station_content {
+		display: flex;
+		align-items: flex-start;
+		flex-direction: column;
+		justify-content: space-between;
+		margin-left: 12upx;
+	}
+
+	.info_icon_company {
+		width: 58upx;
+		height: 58upx;
+	}
+
+	.info_icon_time {
+		width: 58upx;
+		height: 58upx;
+	}
+
 	.info_noContentView {
 		display: flex;
 		align-items: center;
 		flex-direction: column;
 		justify-content: space-between;
-				padding-top: 60upx;
+		padding-top: 60upx;
 	}
-	
+
 	.noContent_icon {
 		width: 362upx;
 		height: 203upx;
 	}
-	
+
 	.noContent_label {
 		font-size: 32upx;
 		color: #121212;
@@ -268,7 +373,7 @@
 	}
 
 	.switchHead {
-		height: 50px;
+		height: 35px;
 		display: flex;
 		justify-content: flex-start;
 		align-items: baseline;
@@ -281,7 +386,7 @@
 		margin-right: 68upx;
 		font-size: 30upx;
 	}
-	
+
 	.switchLine {
 		width: 58upx;
 		height: 6upx;
@@ -321,8 +426,12 @@
 		font-size: 28upx;
 		color: #333333;
 		padding-left: 15upx;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		word-break: break-all;
 	}
-	
+
 	.canAppointViewRight {
 		background-color: #2366F2;
 		height: 200upx;
@@ -346,12 +455,11 @@
 		border-radius: 0upx 15upx 15upx 0upx;
 		float: right;
 	}
-	
+
 	.canAppointViewRightLabel {
 		font-size: 32upx;
 		font-weight: bold;
 		color: #FFFFFF;
 		padding-left: 30upx;
 	}
-
 </style>
