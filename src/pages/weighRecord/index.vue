@@ -7,14 +7,14 @@
 			<view class="filter-wrap">
 				<view class="item-filter">
 					<!-- 选择时间 -->
-					<datetimerangePicker v-model="effectiveDate" />
+					<datetimerangePicker v-model="effectiveDate" @getList="getList" />
 				</view>
 			</view>
 			<!-- 磅房列表 -->
 			<view class="list-wrap">
 				<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltolower="scrolltolower">
 					<ListPoundRoom :list="dataList" />
-					<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
+					<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 				</scroll-view>
 			</view>
 		</view>
@@ -45,7 +45,8 @@
 					contentdown: '上拉加载更多',
 					contentrefresh: '加载中',
 					contentnomore: '没有更多了'
-				}
+				},
+				pageNum: 1
 			}
 		},
 		async onLoad(options) {
@@ -62,9 +63,9 @@
 
 			// 获取jyzCode
 			// const res = await queryUserInfo({ userCode: uni.getStorageSync('userInfo').userCode });
-			this.jyzCode = '62baa47ae922439fbf3c102774722e405';
+			this.jyzCode = '170234e12abb405aa0cd475e7c824866';
 
-			this.getBuildInfoList();
+			this.getList();
 		},
 		methods: {
 			/**
@@ -75,20 +76,44 @@
 			},
 			// 触底
 			scrolltolower(e) {
-				console.log('触达底部')
 				if(!this.isEnd) {
-					this.status = 'loading';
+					this.pageNum++;
 				}
 			},
-			getBuildInfoList() {
+			/**
+			 * 获取磅房列表
+			 */
+			getList(isRefresh=false) {
+				if(isRefresh) {
+					this.resetLoadMoreData();
+				}
+				this.status = 'loading';
 				buildInfoList({
-					pageNum: 1,
+					pageNum: this.pageNum,
 					pageSize: 10,
 					buildingType: 1,
-					jyzCode: this.jyzCode
+					jyzCode: this.jyzCode,
+					startTime: this.parseTime(this.effectiveDate[0], '{y}-{m}-{d} {h}:{i}:{s}') || '',
+					endTime: this.parseTime(this.effectiveDate[1], '{y}-{m}-{d} {h}:{i}:{s}') || ''
 				}, this.headerInfo).then((res) => {
 					this.dataList = res.data.list;
+					if(!res.data.hasNextPage) {
+						this.isEnd = !res.data.hasNextPage;
+						this.status = 'noMore'
+					}
+					else {
+						this.isEnd = false;
+						this.status = 'more';
+					}
 				})
+			},
+			/**
+			 * 重置分页数据
+			 */
+			resetLoadMoreData() {
+				this.isEnd = false;
+				this.pageNum = 1;
+				this.dataList = [];
 			}
 		},
 		computed: {
@@ -100,6 +125,9 @@
 </script>
 
 <style lang="scss" scoped>
+/deep/ .uni-load-more__text {
+	font-size: 24upx;
+}
 .content-page {
 	font-size: 28upx;
 	font-family: PingFang SC;

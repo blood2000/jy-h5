@@ -9,7 +9,8 @@
       :border="false" 
       v-model="datetimerange"
       type="daterange" 
-      rangeSeparator="至" 
+      return-type="timestamp"
+      rangeSeparator="至"
       @change="handlerPick" />
     <i class="icon-select"></i>
   </view>
@@ -32,12 +33,13 @@
     methods: {
       // 时间控件
 			handlerPick(arr){
+        console.log(arr)
 				if(arr[0] && arr[1]){
 					if(arr[0] === arr[1]){
 						// 日期加一天
             this.$nextTick(function() {
-              const time1 = new Date(arr[1]).getTime() + (1000 * 60 * 60 * 24);
-              const newDateArr = [arr[0], this.parseTime(time1, '{y}-{m}-{d}') ];
+              const time1 = arr[1] + (1000 * 60 * 60 * 24);
+              const newDateArr = [arr[0], time1];
               this.datetimerange = newDateArr;
               this.oldDatePicker1 = Date.now()
               this.$emit('input', newDateArr)
@@ -46,6 +48,9 @@
 						this.oldDatePicker = arr
             this.$emit('input', arr)
 					}
+          this.$nextTick(() => {
+            this.$emit('getList', true);
+          })
 				}
 			},
     }

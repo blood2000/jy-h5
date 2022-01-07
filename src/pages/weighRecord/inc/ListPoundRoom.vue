@@ -1,6 +1,6 @@
 <template>
   <view class="list-record" @click="navigateToDetail">
-    <view class="item-record" v-for="item in list" :key="item.id" :data-id="item.id">
+    <view class="item-record" v-for="item in list" :key="item.id" :data-id="item.deviceNo">
       <!-- 磅房标题 -->
       <view class="item-head">
         <text class="item-title">{{ item.buildingName }}</text>
@@ -28,7 +28,7 @@
       <view class="item-route building-top-line">
         <view class="item-route-lastTime">
           <text>最近一个过磅:</text>
-          <text>{{ item.lastWeighTime }}</text>
+          <text>{{ item.finishTime }}</text>
         </view>
         <view class="item-route-name">
           <image src="@/static/weighRecord/icon_route.png" class="item-logo-route"></image>
@@ -48,11 +48,11 @@
           <view class="item-info-driver">
             <view>
               <text class="item-info-lable">车牌：</text>
-              <text class="item-info-value">{{ item.temporaryLicenseNumber }}</text>
+              <text class="item-info-value">{{ item.licenseNumber }}</text>
             </view>
             <view>
               <text class="item-info-lable">司机：</text>
-              <text class="item-info-value">{{ item.temporaryDriverName }}</text>
+              <text class="item-info-value">{{ item.driverName }}</text>
             </view>
             </view>
         </view>
@@ -136,6 +136,10 @@
         justify-content: space-between;
         padding: 0 28upx;
         margin-top: 20upx;
+        .weigh-green, .weigh-blue {
+          width: 100%;
+          display: flex;
+        }
         .item-logo-green {
           display: inline-block;
           width: 70upx;
@@ -150,9 +154,6 @@
         }
         .wrapper-detail {
           display: inline-block;
-        }
-        .weigh-blue {
-          margin-right: 60upx;
         }
         .weigh-lable {
           font-size: 24upx;
