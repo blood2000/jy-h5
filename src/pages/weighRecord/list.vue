@@ -7,7 +7,7 @@
 			<view class="filter-wrap">
 				<view class="item-filter select">
 					<!-- 选择时间 -->
-					<datetimerangePicker v-model="effectiveDate" />
+					<datetimerangePicker v-model="effectiveDate" @getList="getList" />
 					<!-- 筛选条件 -->
 					<view class="btn-filter" @click="openPopFilter">筛选</view>
 				</view>
@@ -20,7 +20,7 @@
 				<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltolower="scrolltolower">
 					<!-- 记录列表 -->
 					<ListRecord :list="dataList" />
-					<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
+					<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 				</scroll-view>
 			</view>
 		</view>
@@ -47,6 +47,7 @@
 		import ListRecord from './inc/ListRecord';
 		import PopFilter from './inc/PopFilter';
 		import { mapState} from 'vuex';
+		import { findList } from '@/config/service/weighRecord/index.js'
 		export default {
 			components: {
 				HeaderBar,
@@ -58,29 +59,16 @@
 				return {
 					scrollTop: 0,
 					statusBar12: 0,
-					dataList: [{ // 过磅记录
-						id: 1
-					},{
-						id: 2
-					},{
-						id: 3
-					},{
-						id: 4
-					},{
-						id: 5
-					},{
-						id: 6
-					},{
-						id: 7
-					}],
+					dataList: [],
 					// 是否无数据了
 					isEnd: false,
-					status: '',
+					status: 'more',
 					contentText: {
 						contentdown: '上拉加载更多',
 						contentrefresh: '加载中',
 						contentnomore: '没有更多了'
 					},
+					pageNum: 1,
 					effectiveDate: [], // 转成 开始时间 和 结束时间
 					filterForm: {
 						weighType: '', // 1皮重过磅 2 毛重过磅
@@ -177,6 +165,12 @@
 				if(uni.getSystemInfoSync().platform == 'ios'){
 					this.statusBar12 -= 10
 				}
+
+				// 获取jyzCode
+				// const res = await queryUserInfo({ userCode: uni.getStorageSync('userInfo').userCode });
+				this.jyzCode = '170234e12abb405aa0cd475e7c824866';
+				this.deviceNo = options.deviceNo; // 设备编号
+				this.getList();
 			},
 			onReady() {
 			},
@@ -202,18 +196,59 @@
 				closePopFilter() {
 					this.$refs.popup.close()
 				},
-				// 触底
-				scrolltolower(e) {
-					console.log('触达底部')
-					if(!this.isEnd) {
-						this.status = 'loading';
-					}
-				},
 				/**
 				 * 确认筛选
 				 */
 				doFilter() {
 					this.closePopFilter();
+				},
+				// 触底
+				scrolltolower(e) {
+					if(!this.isEnd) {
+						this.pageNum++;
+						this.getList();
+					}
+				},
+				/**
+				 * 获取磅房列表
+				 */
+				getList(isRefresh=false) {
+					if(isRefresh) {
+						this.resetLoadMoreData();
+					}
+					this.status = 'loading';
+					findList({
+						deviceNo: this.deviceNo,
+						pageNum: this.pageNum,
+						pageSize: 10,
+						buildingType: 1,
+						jyzCode: this.jyzCode,
+						startCreateTime: this.parseTime(this.effectiveDate[0], '{y}-{m}-{d} {h}:{i}:{s}') || '',
+						endCreateTime: this.parseTime(this.effectiveDate[1], '{y}-{m}-{d} {h}:{i}:{s}') || ''
+					}, this.headerInfo).then((res) => {
+						if(res.rows.length == 0) {
+							this.isEnd = true;
+							this.status = 'noMore'
+						}
+						else {
+							this.isEnd = false;
+							this.status = 'more';
+							if(isRefresh) {
+								this.dataList = res.rows;
+							}
+							else {
+								this.dataList = [...this.dataList, ...res.rows];
+							}
+						}
+					})
+				},
+				/**
+				 * 重置分页数据
+				 */
+				resetLoadMoreData() {
+					this.isEnd = false;
+					this.pageNum = 1;
+					this.dataList = [];
 				}
 			},
 			computed: {

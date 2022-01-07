@@ -1,6 +1,6 @@
 <template>
   <view class="list-record" @click="navigateToDetail">
-    <view class="item-record" v-for="item in list" :key="item.id" :data-id="item.deviceNo">
+    <view class="item-record" v-for="item in list" :key="item.id" :data-deviceNo="item.deviceNo">
       <!-- 磅房标题 -->
       <view class="item-head">
         <text class="item-title">{{ item.buildingName }}</text>
@@ -76,9 +76,9 @@
 			 * @param {Object} e 当前点击对象
 			 */
 			navigateToDetail(e) {
-				if(e.target.dataset.id >= 0) {
+				if(e.target.dataset.deviceNo >= 0) {
 					uni.navigateTo({
-						url: `/pages/weighRecord/list?code=${e.target.dataset.id}`
+						url: `/pages/weighRecord/list?deviceNo=${e.target.dataset.deviceNo}`
 					});
 				}
 			},
