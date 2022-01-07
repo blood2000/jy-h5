@@ -14,10 +14,11 @@
 				</view>
 			</view>
 			<view class="scanView" @click="onClickScanAction()">
-				<image class="top-scaner shadow-warp bg-white" src="/static/icon_station.png" mode="aspectFit"></image>
-				<view class="text-tag size20 margin-stop">
-					扫码预约
+				<view class="flex align-center">
+					<view class="scanView_label">扫码预约</view>
+					<view class="scanView_arrow_right"></view>
 				</view>
+				<image class="top-scaner shadow-warp bg-white" src="/static/icon_station.png" mode="aspectFit"></image>
 			</view>
 		</view>
 		<view class="info-container">
@@ -152,6 +153,13 @@
 		display: flex;
 		align-items: center;
 	}
+	
+	.top-avatar {
+		height: 120upx;
+		width: 120upx;
+		border-radius: 50%;
+		margin-left: 22upx;
+	}
 
 	.licenseNumberBgView {
 		background-image: linear-gradient(#FFF4DB, #FFDB8F);
@@ -176,22 +184,37 @@
 		width: 256upx;
 		height: 206upx;
 		border-radius: 20upx;
-		display: flex;
+ 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-content: center;
+/* 		align-items: baseline;
+		justify-content: center; */
+		
 	}
 
-	.top-avatar {
-		height: 120upx;
-		width: 120upx;
-		border-radius: 50%;
-		margin-left: 22upx;
+	.scanView_label {
+		font-size: 28upx;
+		font-weight: bold;
+		color: #333333;
+		padding-left: 16upx;
+	}
+
+	.scanView_arrow_right {
+		width: 0;
+		height: 0;
+		border-left: 8.3upx solid transparent;
+		border-right: 8.3upx solid transparent;
+		border-bottom: 8.3upx solid #000000;
+		font-size: 0;
+		line-height: 0;
+		transform: rotate(90deg);
 	}
 
 	.top-scaner {
-		height: 68upx;
-		width: 68upx;
+		height: 141upx;
+		width: 141upx;
+		position: absolute;
+		margin-top: 50upx;
+		right: 30upx;
 	}
 
 	.info-container {
