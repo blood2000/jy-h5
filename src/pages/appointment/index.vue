@@ -22,7 +22,10 @@
 			</view>
 		</view>
 		<view class="info-container">
-
+			<view class="info_noContentView">
+				<image class="noContent_icon" src="/static/appointment/appointment_noContent.png" mode="aspectFill"></image>
+				<text class="noContent_label">暂无预约信息哦</text>
+			</view>
 		</view>
 		<view class="list-container">
 			<view class="switchHead">
@@ -232,16 +235,36 @@
 
 	.info-container {
 		background: #FFFFFF;
-		margin-left: 20upx;
-		margin-right: 20upx;
-		margin-top: 20upx;
-		margin-bottom: 20upx;
-		height: 200upx;
+		margin-left: 24upx;
+		margin-right: 24upx;
+		margin-top: 40upx;
+		margin-bottom: 40upx;
+		height: 400upx;
 		display: flex;
 		align-items: center;
-		flex-direction: row;
+		flex-direction: column;
 		justify-content: space-between;
 		border-radius: 16upx;
+	}
+	
+	.info_noContentView {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: space-between;
+				padding-top: 60upx;
+	}
+	
+	.noContent_icon {
+		width: 362upx;
+		height: 203upx;
+	}
+	
+	.noContent_label {
+		font-size: 32upx;
+		color: #121212;
+		padding-top: 70upx;
+		opacity: 0.5;
 	}
 
 	.switchHead {
