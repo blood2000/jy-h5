@@ -29,6 +29,7 @@
 				<view v-for="(item,index) in tabTitleData" class="boxList" :class="{activeCss:activeIndex==index}"
 					:key="index">
 					<text @click="clickTab(index)">{{item.name}}</text>
+					<view v-if="activeIndex==index" class="switchLine"></view>
 				</view>
 			</view>
 			<view class="canAppointView" v-for="(sub, index) in canAppointList" v-bind:key="index">
@@ -186,9 +187,6 @@
 		border-radius: 20upx;
  		display: flex;
 		flex-direction: column;
-/* 		align-items: baseline;
-		justify-content: center; */
-		
 	}
 
 	.scanView_label {
@@ -222,29 +220,40 @@
 		margin-left: 20upx;
 		margin-right: 20upx;
 		margin-top: 20upx;
+		margin-bottom: 20upx;
 		height: 200upx;
 		display: flex;
 		align-items: center;
 		flex-direction: row;
 		justify-content: space-between;
+		border-radius: 16upx;
 	}
 
 	.switchHead {
-		height: 35px;
+		height: 50px;
 		display: flex;
-		justify-content: space-around;
-		align-items: center;
-		color: #FFFFFF;
-		background-color: #13D1BE;
+		justify-content: flex-start;
+		align-items: baseline;
+		color: #333333;
+		margin-left: 50upx;
 	}
 
 	.boxList {
 		height: 100%;
+		margin-right: 68upx;
+		font-size: 30upx;
+	}
+	
+	.switchLine {
+		width: 58upx;
+		height: 6upx;
+		margin-left: 14upx;
+		border-top: solid #2366F2 6upx;
 	}
 
 	.activeCss {
-		border-bottom: 2px solid yellow;
-		color: yellow;
+		font-size: 32upx;
+		font-weight: bold;
 	}
 
 	.canAppointView {
