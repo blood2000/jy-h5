@@ -78,9 +78,12 @@
 				v-bind:key="index">
 				<view class="canAppointViewLeft">
 					<text class="canAppointViewLeftLabel">预约场站：{{sub.nameStr}}</text>
-					<text class="canAppointViewLeftLabel">预约场站2：{{sub.nameStr}}</text>
-					<text class="canAppointViewLeftLabel">预约场站3：{{sub.nameStr}}</text>
-					<text class="canAppointViewLeftLabel">预约场站4：{{sub.nameStr}}</text>
+					<text class="canAppointViewLeftLabel">货主名称：{{sub.companyName}}</text>
+					<view class="canAppointViewLeft_canAppointCountAndHaveSendCount">
+						<text class="canAppointViewLeftLabel">可预约数：{{sub.canAppointCount}}</text>
+						<text class="canAppointViewLeft_haveSendCount">已承运数：{{sub.haveSendCount}}</text>
+					</view>
+					<text class="canAppointViewLeftLabel">预约时段：{{sub.appointDate}}</text>
 				</view>
 				<view :class="activeIndex==0?'canAppointViewRight':'canAppointViewRight2'">
 					<text v-if="activeIndex==0" class="canAppointViewRightLabel">预约</text>
@@ -114,8 +117,8 @@
 					licenseNumber: '闽A*888SW'
 				},
 				appointmentInfo: {
-					station: '五福洗煤厂/32号堆 五福洗煤厂/32号堆 五福洗煤厂/32号堆',
-					companyName: '山西华汇通商贸无限公司 山西华汇通商贸无限公司 山西华汇通商贸无限公司',
+					station: '五福洗煤厂/32号堆',
+					companyName: '山西华汇通商贸无限公司',
 					date: '2021/01/05',
 					time: '08:00',
 				},
@@ -129,36 +132,82 @@
 					}
 				],
 				canAppointList: [{
-						nameStr: '山西五福洗煤厂 / 1 号堆'
+						nameStr: '山西五福洗煤厂 / 1 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
 					},
 					{
-						nameStr: '山西五福洗煤厂 / 2 号堆'
+						nameStr: '山西五福洗煤厂 / 2 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
 					},
 					{
-						nameStr: '山西五福洗煤厂 / 3 号堆'
-					}, {
-						nameStr: '山西五福洗煤厂 / 1 号堆'
+						nameStr: '山西五福洗煤厂 / 3 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
 					},
 					{
-						nameStr: '山西五福洗煤厂 / 2 号堆'
+						nameStr: '山西五福洗煤厂 / 4 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
 					},
 					{
-						nameStr: '山西五福洗煤厂 / 3 号堆'
-					}, {
-						nameStr: '山西五福洗煤厂 / 1 号堆'
+						nameStr: '山西五福洗煤厂 / 5 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
 					},
 					{
-						nameStr: '山西五福洗煤厂 / 2 号堆'
+						nameStr: '山西五福洗煤厂 / 6 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
 					},
 					{
-						nameStr: '山西五福洗煤厂 / 3 号堆'
+						nameStr: '山西五福洗煤厂 / 7 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
+					},
+					{
+						nameStr: '山西五福洗煤厂 / 8 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
+					},
+					{
+						nameStr: '山西五福洗煤厂 / 9 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
 					},
 				],
 				invalidAppointList: [{
-						nameStr: '山西五福洗煤厂 / 4 号堆'
+						nameStr: '山西五福洗煤厂 / 1 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
 					},
 					{
-						nameStr: '山西五福洗煤厂 / 5 号堆'
+						nameStr: '山西五福洗煤厂 / 2 号堆',
+						companyName: '山西火火兔贸易无限公司',
+						canAppointCount: '110',
+						haveSendCount: '66',
+						appointDate: '2021/12/23~2021/12/23',
 					},
 				],
 			}
@@ -396,8 +445,7 @@
 	}
 
 	.info_bottom {
-		width: 100%;
-		height: 80upx;
+		width: calc(100vw - 48upx);
 		margin-top: 38upx;
 		background-color: #2366F2;
 		border-radius: 0upx 0upx 16upx 16upx;
@@ -405,12 +453,16 @@
 		align-items: flex-start;
 		flex-direction: row;
 		justify-content: space-between;
+		left: 0;
+		right: 0;
+		position: static;
 	}
 
 	.info_station_bottom_carTime {
 		padding-left: 20upx;
 		padding-top: 17upx;
 		padding-right: 70upx;
+		padding-bottom: 27upx;
 		color: #FFFFFF;
 	}
 
@@ -419,6 +471,7 @@
 		height: 54upx;
 		margin-top: 14upx;
 		margin-right: 23upx;
+		flex-shrink: 0;
 	}
 
 	.noContent_icon {
@@ -466,48 +519,67 @@
 		margin-left: 20upx;
 		margin-right: 20upx;
 		margin-top: 15upx;
-		height: 200upx;
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
+		position: relative;
 		flex-direction: row;
 		justify-content: space-between;
 	}
 
-
 	.canAppointViewLeft {
 		background-color: #FFFFFF;
-		width: 100%;
-		height: 200upx;
+		width: 70%;
 		display: flex;
 		flex-direction: column;
 		border-radius: 15upx 0upx 0upx 15upx;
+		margin-left: 24upx;
+		margin-top: 25upx;
+		margin-bottom: 25upx;
 	}
 
 	.canAppointViewLeftLabel {
 		font-size: 28upx;
 		color: #333333;
 		padding-left: 15upx;
-		white-space: nowrap;
+		padding-top: 11upx;
+/* 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		word-break: break-all;
+		word-break: break-all; */
+	}
+	
+	.canAppointViewLeft_haveSendCount {
+		font-size: 28upx;
+		color: #333333;
+		padding-left: 15upx;
+		padding-top: 11upx;
+		margin-left: 77upx;
+	}
+
+	.canAppointViewLeft_canAppointCountAndHaveSendCount {
+		display: flex;
+		flex-direction: row;
 	}
 
 	.canAppointViewRight {
 		background-color: #2366F2;
-		height: 200upx;
 		width: 138upx;
+		height: 100%;
+		min-height: 100%;
 		display: flex;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
 		align-items: center;
 		flex-direction: row;
 		justify-content: space-between;
 		border-radius: 0upx 15upx 15upx 0upx;
-		float: right;
 	}
 
 	.canAppointViewRight2 {
 		background-color: #24B2B4;
-		height: 200upx;
+		height: 100%;
 		width: 138upx;
 		display: flex;
 		align-items: center;
