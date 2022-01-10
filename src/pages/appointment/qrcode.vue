@@ -30,20 +30,12 @@
 						</view>
 						<view class="contents">
 							<view class="contents-top ly-flex ly-flex-pack-justify ly-flex-align-start">
-								<view class="tag">{{ cbData && cbData.receiveType === 1?'收货':'发货' }}</view>
-								<view class="name g-double-row">{{ cbData && cbData.name }}</view>
+								<view class="name g-double-row">{{ qrcodeInfo.companyName }}</view>
 							</view>
 							<view class="contents-bottom ly-flex ly-flex-pack-justify ly-flex-align-center">
-								<view class="g-single-row text">{{ cbData && cbData.fcompanyName }}</view>
-								<image class="img" src="../../static/transportPlan/separate2.png"></image>
-								<view class="g-single-row text">{{ cbData && cbData.scompanyName }}</view>
+								<view class="g-single-row text">{{ qrcodeInfo.dateStr }}</view>
 							</view>
 						</view>
-						<view class="message">【微信扫码即可接单或卸货】</view>
-					</view>
-					<view class="btn ly-flex ly-flex-pack-justify">
-						<button @click.stop="saveImg">保存到手机</button>
-						<button @click.stop="wxshare">分享链接到微信</button>
 					</view>
 				</view>
 
@@ -391,24 +383,26 @@
 		align-items: center;
 		flex-direction: row;
 		justify-content: space-between;
-		// position: relative;
 	}
 	
 	.licenseNumberValue {
-		// position: absolute;
-		// left: -190upx;
-		// top: 0;
 		font-size: 28upx;
 		font-weight: bold;
 		color: #FFFFFF;
+		position: relative;
+		left: -120upx;
 	}
 	
 	.heapNumberValue {
-		// position: relative;
-		// right: -180upx;
-		// top: 0;
 		font-size: 24upx;
 		color: #FFFFFF;
+		text-align: right;
+		border-radius: 17upx;
+		border: 2upx solid #FFFFFF;
+		padding-left: 14upx;
+		padding-right: 14upx;
+		position: relative;
+		right: -120upx;
 	}
 	
 	.qrcode {
@@ -417,7 +411,7 @@
 		background-color: #3c65fd;
 		margin: auto;
 		border-radius: 30rpx;
-		padding-bottom: 40upx;
+		padding-bottom: 0upx;
 
 		>.poster {
 			width: 100%;
@@ -446,14 +440,13 @@
 
 		.contents {
 			width: 480upx;
-			background: rgba(255, 255, 255, 0.2);
-			box-shadow: 0upx 5upx 6upx 0upx rgba(3, 21, 84, 0.08);
+			background: rgba(255, 255, 255, 0);
 			border-radius: 12upx;
-			margin-top: 38upx;
+			margin-top: 35upx;
 			padding: 0 22upx;
 
 			.contents-top {
-				font-size: 24upx;
+				font-size: 26upx;
 				font-family: PingFang SC;
 				font-weight: bold;
 				color: #FFFFFF;
@@ -484,7 +477,7 @@
 				font-family: PingFang SC;
 				font-weight: bold;
 				color: #FFFFFF;
-				padding: 24upx 0 26upx;
+				padding: 24upx 0 10upx;
 				border-top: 2upx solid rgba(255, 255, 255, 0.15);
 
 				.img {
@@ -494,8 +487,7 @@
 				}
 
 				.text {
-					width: calc(50% - 40upx);
-					text-align: center;
+					width: calc(100% - 68upx);
 				}
 			}
 		}
