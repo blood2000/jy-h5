@@ -7,10 +7,18 @@
 
 				<view class="qrcode ly-flex-v ly-flex-align-center">
 					<view class="poster ly-flex-v ly-flex-align-center" id="poster">
-						<view>
-							<image src="../../static/transportPlan/title.png" mode="aspectFill"
-								style="height:34upx;width:388upx;margin:36upx 0;">
+						<view class="titleView">
+							<image src="../../static/appointment/qrTitle_left.png" mode="aspectFill"
+								style="height:2upx;width:90upx;">
 							</image>
+							<text class="titleView_stationName">{{qrcodeInfo.stationName}}</text>
+							<image src="../../static/appointment/qrTitle_right.png" mode="aspectFill"
+								style="height:2upx;width:90upx;">
+							</image>
+						</view>
+						<view class="licenseNumberView  ly-flex ly-flex-pack-justify ly-flex-align-start">
+							<view class="licenseNumberValue">{{qrcodeInfo.licenseNumber}}</view>
+							<view class="heapNumberValue">{{qrcodeInfo.heapNumber}}</view>
 						</view>
 						<view class="qr" :class="cbData && cbData.transRelType == 'chy' ? 'chy' : ''" @tap.stop>
 							<image :src="qrcode.src" mode="aspectFill" style="height:400upx;width:400upx"></image>
@@ -67,7 +75,6 @@
 			TransportCard,
 			TkiQrcode,
 			html2canvas,
-			HeaderBar
 		},
 		data() {
 			return {
@@ -86,6 +93,14 @@
 					contentnomore: '没有更多了'
 				},
 
+				qrcodeInfo: {
+					stationName: '五福洗煤场',
+					licenseNumber: '闽A15235',
+					heapNumber: '32号堆',
+					companyName: '山西汇通上报有限公司',
+					dateStr: '2021-12-29～2021-12-29',
+				},
+				
 				domId: '',
 
 				cbData: null,
@@ -352,6 +367,50 @@
 </script>
 
 <style lang="scss" scoped>
+	
+	.titleView {
+		margin-top: 36upx;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	
+	.titleView_stationName {
+		font-size: 36upx;
+		font-weight: bold;
+		color: #FFFFFF;
+		padding-left: 15upx;
+		padding-right: 15upx;
+	}
+	
+	.licenseNumberView {
+		margin-top: 27upx;
+		margin-bottom: 19upx;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+		// position: relative;
+	}
+	
+	.licenseNumberValue {
+		// position: absolute;
+		// left: -190upx;
+		// top: 0;
+		font-size: 28upx;
+		font-weight: bold;
+		color: #FFFFFF;
+	}
+	
+	.heapNumberValue {
+		// position: relative;
+		// right: -180upx;
+		// top: 0;
+		font-size: 24upx;
+		color: #FFFFFF;
+	}
+	
 	.qrcode {
 		width: 580rpx;
 		height: auto;
