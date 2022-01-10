@@ -5,7 +5,7 @@
       <div class="manage-box work-header-box">
         <div class="work-title-line">
           <div class="work-title"></div>
-          <div class="work-set"></div>
+          <div class="work-set" @click="openSet"></div>
         </div>
         <div class="work-title-line">
           <div class="work-title-line-long">
@@ -66,7 +66,7 @@
           <view class="enter" @click="searchDriver"></view>
         </div>
         <div class="scan-code">
-          <img src="../../../../static/manage/code.png" alt="">
+          <img src="../../../../static/manage/code.png" alt="" />
           <div class="scan-code-name">出入场扫码</div>
         </div>
       </div>
@@ -99,36 +99,42 @@
           :show-loading-more-no-more-line="false"
         >
           <div v-if="noData" class="no-data">暂无预约记录</div>
-          <block
-            v-for="(item, index) in reserveData"
-            :key="index"
-          >
+          <block v-for="(item, index) in reserveData" :key="index">
             <reserve-card :cardData="item"></reserve-card>
           </block>
         </z-paging>
       </div>
 
       <div class="work-main-content" v-else>
-        <block
-            v-for="(item, index) in reserveData"
-            :key="index"
-          >
-            <reserve-card :cardData="item"></reserve-card>
-          </block>
+        <block v-for="(item, index) in reserveData" :key="index">
+          <reserve-card :cardData="item"></reserve-card>
+        </block>
       </div>
     </div>
+    <picker-modal
+      :pickerData="pickerData"
+      :showModal="showPickerModal"
+      @cancelModal="cancelPickerModal"
+    ></picker-modal>
   </div>
 </template>
 
 <script>
 import ZPagingMixin from "@/uni_modules/z-paging/components/z-paging/js/z-paging-mixin";
 import format from "../../../../utils/format";
-import ReserveCard from './ReserveCard.vue';
+import ReserveCard from "./ReserveCard.vue";
+import PickerModal from "./PickerModal.vue";
 export default {
   mixins: [ZPagingMixin], // 使用mixin
   data() {
     return {
       searchKey: "",
+      pickerData: [
+        {name: '今日预约调号', url: 'jryyth'},
+        {name: '场区阈值设置', url: 'cqyzsz'},
+        {name: '预约规则设置', url: 'yygzsz'},
+      ],
+      showPickerModal: false,
       overviewData: { yyhl: 620, yyy: 132, yrc: 78, ycc: 50 },
       vehicleData: [
         { num: "闽A112233", name: "辛弃疾", date: "12.28 12:32" },
@@ -175,12 +181,19 @@ export default {
     this.query();
   },
 
-  components: {ReserveCard},
+  components: { ReserveCard, PickerModal },
 
   computed: {},
-    
 
   methods: {
+    //入场预约设置
+    openSet() {
+      console.log("set");
+      this.showPickerModal = true;
+    },
+    cancelPickerModal() {
+      this.showPickerModal = false;
+    },
     showTop() {
       this.$emit("showTop");
     },
@@ -236,19 +249,22 @@ export default {
       }
       return new Promise((resolve) => {
         setTimeout(() => {
-          let createDate = format.dateFormat(new Date(),'{y}-{m}-{d} {h}:{i}:{s}');
+          let createDate = format.dateFormat(
+            new Date(),
+            "{y}-{m}-{d} {h}:{i}:{s}"
+          );
           for (let i = 0; i < len; i++) {
-            
-            let obj = { 
-              company: '山西华汇通商贸有限公司',
-              goodsType: '石渣土',
+            let obj = {
+              company: "山西华汇通商贸有限公司",
+              goodsType: "石渣土",
               status: this.tabIndex,
               date: createDate,
-              time: '08:00',
-              enterArea: this.pageNum + '站台',
-              licenseNumber: '闽A123123',
-              driver: '辛弃疾',
-
+              time: "08:00",
+              enterArea: this.pageNum + "站台",
+              licenseNumber: "闽A123123",
+              driver: "辛弃疾",
+              enterDate: format.dateFormat(new Date(), "{m}-{d} {h}:{i}"),
+              outDate: format.dateFormat(new Date(), "{m}-{d} {h}:{i}"),
             };
             reserveData.push(obj);
           }
@@ -432,6 +448,7 @@ export default {
   align-items: center;
   .search-input-box {
     border-radius: 10rpx;
+    border: none;
     flex: 1;
     margin-right: 20rpx;
   }

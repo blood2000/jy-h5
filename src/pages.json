@@ -130,6 +130,55 @@
           "bounce": "none"
         }
       }
+    },
+    {
+      "path": "pages/manage/v1/jryyth",
+      "style": {
+        "navigationBarTitleText": "今日预约调号",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/cqyzsz",
+      "style": {
+        "navigationBarTitleText": "场区阈值设置",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    
+    {
+      "path": "pages/manage/v1/yygzsz",
+      "style": {
+        "navigationBarTitleText": "预约规则设置",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/cjyygz",
+      "style": {
+        "navigationBarTitleText": "创建预约规则",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
     }
   ],
   "globalStyle": {

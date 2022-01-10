@@ -1,74 +1,72 @@
-<!-- 预约记录卡片组件 -->
+<!-- 预约规则卡片组件 -->
 <template>
   <div class="manage-box card-box">
     <div class="card-line">
-      <div class="manage-title3">{{ cardData.company }}</div>
-      <div class="card-title-time">
-        <img src="../../../../static/manage/time.png" alt="" />
-        <span>{{ cardData.time }}</span>
+      <div class="manage-title3">{{ cardData.name }}</div>
+      <div class="switch-box">
+        <span v-show="cardData.isInvalid">启用</span>
+        <span v-show="!cardData.isInvalid">禁用</span>
+        <switch
+          class="my-switch"
+          color="#3a65ff"
+          :checked="cardData.isInvalid"
+          @change="switchInvalid($event)"
+        />
       </div>
     </div>
     <div class="manage-splite-line"></div>
     <div class="card-line">
       <div class="card-line-item">
-        <div class="card-line-value">货品类型:</div>
-        <div class="manage-title2">{{ cardData.goodsType }}</div>
+        <div class="card-line-value">预约时段:</div>
+        <div class="manage-title2">{{ cardData.reserveTimeNums }}</div>
       </div>
       <div class="card-line-item">
-        <div class="card-line-value">入场区域:</div>
-        <div class="manage-title2 card-line-text">{{ cardData.enterArea }}</div>
+        <div class="card-line-value">总预约数:</div>
+        <div class="manage-title2 card-line-text">
+          {{ cardData.reserveNums }}
+        </div>
       </div>
     </div>
     <div class="card-line card-bg-line">
       <div class="card-line-item">
-        <div class="card-line-item-icon card-line-item-mr">
-          <img src="../../../../static/manage/car.png" alt="" />
-        </div>
-        <div class="manage-title2">{{ cardData.licenseNumber }}</div>
+        <div class="card-line-item-icon card-line-item-start">始</div>
+        <div class="manage-title2">{{ cardData.startDate }}</div>
       </div>
       <div class="card-line-item">
-        <div class="manage-title2">{{ cardData.driver }}</div>
-        <div class="card-line-item-icon card-line-item-ml">
-          <img src="../../../../static/manage/tel.png" alt="" />
-        </div>
+        <div class="card-line-item-icon card-line-item-end">终</div>
+        <div class="manage-title2">{{ cardData.endDate }}</div>
       </div>
     </div>
-    <div class="card-line" v-if="cardData.status !== 2">
+    <div class="card-line">
+      <!-- <div class="card-line-date">{{ cardData.date }}</div> -->
+
+      <div class="card-line-day">
+        排除天数: <span> {{ cardData.exDays }} </span> 天
+      </div>
+      <div class="card-line-day">
+        实际天数: <span> {{ cardData.acDays }} </span>天
+      </div>
+    </div>
+    <div class="card-line">
       <div class="card-line-date">{{ cardData.date }}</div>
     </div>
     <div class="manage-splite-line top-border"></div>
-    <div class="card-line" v-if="cardData.status === 0">
+    <div class="card-line">
       <div class="card-bottom-item">
-        <div class="card-line-item-icon">
-          <img src="../../../../static/manage/enter.png" alt="" />
-        </div>
-        <div class="manage-title2 card-line-item-ml">已入场</div>
+        <uni-icons type="checkbox" size="16"></uni-icons>
+        <div class="manage-title2 card-line-item-ml">派号</div>
       </div>
       <div class="card-bottom-item">
-        <div class="card-line-item-icon">
-          <img src="../../../../static/manage/void.png" alt="" />
-        </div>
-        <div class="manage-title2 card-line-item-ml">废号</div>
+        <uni-icons type="compose" size="16"></uni-icons>
+        <div class="manage-title2 card-line-item-ml">编辑</div>
       </div>
-    </div>
-    <div class="card-line" v-if="cardData.status === 1">
       <div class="card-bottom-item">
-        <div class="card-line-item-icon">
-          <img src="../../../../static/manage/enter.png" alt="" />
-        </div>
-        <div class="manage-title2 card-line-item-ml">标记出场</div>
+        <uni-icons type="trash" color="red" size="16"></uni-icons>
+        <div class="manage-title2 card-line-item-ml manage-delete">删除</div>
       </div>
     </div>
-    <div class="card-line" v-if="cardData.status === 2">
-      <div class="card-date-item">
-        <div class="card-line-value">入场时间:</div>
-        <div class="manage-title2 card-line-text">{{ cardData.enterDate }}</div>
-      </div>
-      <div class="card-date-item">
-        <div class="card-line-value">出场时间:</div>
-        <div class="manage-title2 card-line-text">{{ cardData.outDate }}</div>
-      </div>
-    </div>
+    
+    
   </div>
 </template>
 
@@ -93,6 +91,10 @@ export default {
       type: Object,
       required: true,
     },
+    cardIndex: {
+      type: Number,
+      required: true,
+    },
   },
 
   components: {},
@@ -103,7 +105,18 @@ export default {
     console.log("Card Show");
   },
 
-  methods: {},
+  methods: {
+    switchInvalid(e) {
+      console.log(e);
+      let value = e.target.value;
+      // Vue.set(item, "isInvalid", !value * 1);
+      let obj = {
+        isInvalid: value,
+        index: this.cardIndex,
+      };
+      this.$emit("changeUse", obj);
+    },
+  },
 };
 </script>
 <style lang='scss' scoped>
@@ -134,6 +147,29 @@ export default {
     &-ml {
       margin-left: 10rpx;
     }
+
+    &-start {
+      width: 30rpx;
+      height: 30rpx;
+      text-align: center;
+      line-height: 30rpx;
+      background: #3a65ff;
+      color: #fff;
+      font-size: 20rpx;
+      border-radius: 4rpx;
+      margin-right: 10rpx;
+    }
+    &-end {
+      width: 30rpx;
+      height: 30rpx;
+      text-align: center;
+      line-height: 30rpx;
+      background: #59be32;
+      color: #fff;
+      font-size: 20rpx;
+      border-radius: 4rpx;
+      margin-right: 10rpx;
+    }
   }
   &-value {
     color: #878787;
@@ -145,6 +181,17 @@ export default {
     font-size: 24rpx;
     color: #878787;
     font-weight: normal;
+  }
+
+  &-day {
+    font-size: 24rpx;
+    color: #878787;
+    font-weight: normal;
+    > span {
+      padding: 0 10rpx;
+      color: #333;
+      font-weight: bold;
+    }
   }
 
   &-text {
