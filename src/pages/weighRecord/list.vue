@@ -9,17 +9,17 @@
 					<!-- 选择时间 -->
 					<datetimerangePicker v-model="effectiveDate" @getList="getList" />
 					<!-- 筛选条件 -->
-					<view class="btn-filter" @click="openPopFilter">筛选</view>
+					<view class="btn-filter" @click="openPopFilter" :filterForm="filterForm">筛选</view>
 				</view>
 				<view class="item-filter input">
-					<input type="text" placeholder="输入车牌或司机名字或手机号" class="input-search" />
+					<input type="text" placeholder="输入车牌或司机名字或手机号" class="input-search" v-model="searchKey" @input="onInputSearchKey" />
 				</view>
 			</view>
 			<!-- 过磅记录 -->
 			<view class="list-wrap">
 				<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltolower="scrolltolower">
 					<!-- 记录列表 -->
-					<ListRecord :list="dataList" />
+					<ListRecord :list="dataList" :deviceNo="deviceNo" />
 					<uni-load-more :status="status" :icon-size="16" :content-text="contentText" />
 				</scroll-view>
 			</view>
@@ -27,15 +27,17 @@
 		<!-- 筛选弹出窗 -->
 		<uni-popup ref="popup" :mask-click="false" type="bottom">
 			<PopFilter
-				v-model="filterForm"
+				:filterForm="filterForm"
 				:weighbridgeList="weighbridgeList"
 				:weighStatusList="weighStatusList"
-				:transportPlanList="transportPlanList"
+				:orderPlanList="orderPlanList"
 				:companyList="companyList"
 				:weighTypeList="weighTypeList"
 				@closePopFilter="closePopFilter"
 				@doFilter="doFilter"
+				@clearAllFormData="clearAllFormData"
 				ref="pop_filter"
+				v-if="showPopFilter"
 				 />
 		</uni-popup>
 	</view>
@@ -47,7 +49,8 @@
 		import ListRecord from './inc/ListRecord';
 		import PopFilter from './inc/PopFilter';
 		import { mapState} from 'vuex';
-		import { findList } from '@/config/service/weighRecord/index.js'
+		import { findList, getTenantCompanyInfoList, getOrderPlanInfoList } from '@/config/service/weighRecord/index.js'
+		import { DebounceFun, ThrottleFun } from '@/utils/ddc'
 		export default {
 			components: {
 				HeaderBar,
@@ -71,19 +74,11 @@
 					pageNum: 1,
 					effectiveDate: [], // 转成 开始时间 和 结束时间
 					filterForm: {
-						weighType: '', // 1皮重过磅 2 毛重过磅
-						companyId: '', // 收发企业
-						transportPlanId: '', // 运输计划
-						weighbridgeId: '', // 地磅
-						weighStatusId: '' // 称重状况
+						weighingType: '', // 1皮重过磅 2 毛重过磅
+						compnayInfoId: '', // 收发企业
+						orderPlanInfoCode: '', // 运输计划
+						completeFlag: '' // 称重状况
 					},
-					companyList: [{ // 收发企业
-						name: '衢州宝红建材有限公司',
-						id: 1
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 2
-					}],
 					weighbridgeList: [{ // 地磅
 						name: '1号地磅',
 						id: 1
@@ -99,59 +94,18 @@
 						id: 1
 					}, {
 						name: '未完成',
-						id: 2
+						id: 0
 					}],
-					companyList: [{ // 全部收发企业
-						name: '衢州宝红建材有限公司',
-						id: 1
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 2
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 3
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 4
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 5
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 6
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 7
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 8
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 9
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 10
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 11
-					}, {
-						name: '浙江宝红商品砼有限公司',
-						id: 12
-					}],
-					transportPlanList: [{ // 运输计划
-						name: '东坡收原煤路线1',
-						id: 1
-					}, {
-						name: '东坡收原煤路线2',
-						id: 2
-					}],
-					weighTypeList: [{ // 过磅类型
+					weighTypeList: [{
 						name: '皮重过磅',
 						id: 1
 					}, {
 						name: '毛重过磅',
 						id: 2
-					}]
+					}],
+					companyList: [],
+					searchKey: '', // 搜搜关键字
+					showPopFilter: false
 				}
 			},
 			async onLoad(options) {
@@ -171,8 +125,14 @@
 				this.jyzCode = '170234e12abb405aa0cd475e7c824866';
 				this.deviceNo = options.deviceNo; // 设备编号
 				this.getList();
+				this.getTenantCompanyInfoList(); // 收发企业
+				this.getOrderPlanInfoList(); // 运输计划
 			},
 			onReady() {
+				let self = this;
+				this.DebounceSearch = DebounceFun(function(){
+					self.getList(true);
+				}, 1000);
 			},
 			onReachBottom() {
 				console.log('到底了')
@@ -189,6 +149,10 @@
 				 */
 				openPopFilter() {
 					this.$refs.popup.open()
+					this.showPopFilter = false;
+					this.$nextTick(() => {
+						this.showPopFilter = true;
+					})
 				},
 				/**
 				 * 关闭筛选弹出窗
@@ -201,6 +165,7 @@
 				 */
 				doFilter() {
 					this.closePopFilter();
+					this.getList(true);
 				},
 				// 触底
 				scrolltolower(e) {
@@ -223,8 +188,10 @@
 						pageSize: 10,
 						buildingType: 1,
 						jyzCode: this.jyzCode,
+						searchKey: this.searchKey,
 						startCreateTime: this.parseTime(this.effectiveDate[0], '{y}-{m}-{d} {h}:{i}:{s}') || '',
-						endCreateTime: this.parseTime(this.effectiveDate[1], '{y}-{m}-{d} {h}:{i}:{s}') || ''
+						endCreateTime: this.parseTime(this.effectiveDate[1], '{y}-{m}-{d} {h}:{i}:{s}') || '',
+						...this.filterForm
 					}, this.headerInfo).then((res) => {
 						if(res.rows.length == 0) {
 							this.isEnd = true;
@@ -249,6 +216,42 @@
 					this.isEnd = false;
 					this.pageNum = 1;
 					this.dataList = [];
+				},
+				/**
+				 * 搜索关键字
+				 */
+				onInputSearchKey(e) {
+					this.DebounceSearch();
+				},
+				/**
+				 * 获取收发企业列表
+				 */
+				getTenantCompanyInfoList() {
+					getTenantCompanyInfoList({
+						pageNum: 1,
+						pageSize: 100
+					}, this.headerInfo).then((res) => {
+						this.companyList = res.data.list;
+					})
+				},
+				/**
+				 * 获取运输计划列表
+				 */
+				getOrderPlanInfoList() {
+					getOrderPlanInfoList(null, this.headerInfo).then(res => {
+						this.orderPlanList = res.data.list;
+					})
+				},
+				/**
+				 * 清空
+				 */
+				clearAllFormData() {
+					this.filterForm = {
+						weighingType: '', // 1皮重过磅 2 毛重过磅
+						compnayInfoId: '', // 收发企业
+						orderPlanInfoCode: '', // 运输计划
+						completeFlag: '' // 称重状况
+					}
 				}
 			},
 			computed: {

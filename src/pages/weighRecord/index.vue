@@ -26,6 +26,7 @@
 	import datetimerangePicker from './inc/DatetimerangePicker'
 	import ListPoundRoom from './inc/ListPoundRoom'
 	import { buildInfoList } from '@/config/service/weighRecord/index.js'
+	import { queryUserInfo } from '@/config/service/user/index.js'
 	import { mapState } from 'vuex';
 	export default {
 		components: {
@@ -62,7 +63,8 @@
 			}
 
 			// 获取jyzCode
-			// const res = await queryUserInfo({ userCode: uni.getStorageSync('userInfo').userCode });
+			//console.log(JSON.parse(uni.getStorageSync('userInfo')))
+			// const res = await queryUserInfo({ userCode: .data.userCode });
 			this.jyzCode = '170234e12abb405aa0cd475e7c824866';
 
 			this.getList();
@@ -125,7 +127,7 @@
 </script>
 
 <style lang="scss" scoped>
-::v-deep .uni-load-more__text {
+/deep/ .uni-load-more__text {
 	font-size: 24upx;
 }
 .content-page {

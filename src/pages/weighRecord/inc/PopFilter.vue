@@ -13,7 +13,7 @@
             <view class="form-label">过磅类型</view>
             <view class="form-cont">
               <view class="radio-group" @click="onChangeFilterForm">
-                <view class="item-radio" :class="{'active': filterForm.weighType == item.id}" :data-value="item.id" data-formName="weighType" v-for="item in weighTypeList" :key="item.id">{{ item.name }}</view>
+                <view class="item-radio" :class="{'active': filterForm.weighingType == item.id}" :data-value="item.id" data-formName="weighingType" v-for="item in weighTypeList" :key="item.id">{{ item.name }}</view>
               </view>
             </view>
           </view>
@@ -25,7 +25,7 @@
             </view>
             <view class="form-cont">
               <view class="radio-group" @click="onChangeFilterForm">
-                <view class="item-radio fill" :class="{'active': filterForm.companyId == item.id}" :data-value="item.id" data-formName="companyId" v-for="item in companyListNew" :key="item.id">{{ item.name }}</view>
+                <view class="item-radio fill" :class="{'active': filterForm.compnayInfoId == item.id}" :data-value="item.id" data-formName="compnayInfoId" v-for="item in companyListNew" :key="item.id">{{ item.companyName }}</view>
               </view>
             </view>
           </view>
@@ -37,12 +37,12 @@
             </view>
             <view class="form-cont">
               <view class="radio-group" @click="onChangeFilterForm">
-                <view class="item-radio fill" :class="{'active': filterForm.transportPlanId == item.id}" :data-value="item.id" data-formName="transportPlanId" v-for="item in transportPlanList" :key="item.id">{{ item.name }}</view>
+                <view class="item-radio fill" :class="{'active': filterForm.orderPlanInfoCode == item.orderPlanCode}" :data-value="item.orderPlanCode" data-formName="orderPlanInfoCode" v-for="item in orderPlanListNew" :key="item.orderPlanCode">{{ item.name }}</view>
               </view>
             </view>
           </view>
           <!-- 地磅 -->
-          <view class="form-item">
+<!--           <view class="form-item">
             <view class="form-label">
               <text>地磅</text>
             </view>
@@ -51,7 +51,7 @@
                 <view class="item-radio" :class="{'active': filterForm.weighbridgeId == item.id}" :data-value="item.id" data-formName="weighbridgeId" v-for="item in weighbridgeList" :key="item.id">{{ item.name }}</view>
               </view>
             </view>
-          </view>
+          </view> -->
           <!-- 称重状况 -->
           <view class="form-item">
             <view class="form-label">
@@ -59,7 +59,7 @@
             </view>
             <view class="form-cont">
               <view class="radio-group" @click="onChangeFilterForm">
-                <view class="item-radio" :class="{'active': filterForm.weighStatus == item.id}" :data-value="item.id" data-formName="weighStatus" v-for="item in weighStatusList" :key="item.id">{{ item.name }}</view>
+                <view class="item-radio" :class="{'active': filterForm.completeFlag === item.id}" :data-value="item.id" data-formName="completeFlag" v-for="item in weighStatusList" :key="item.id">{{ item.name }}</view>
               </view>
             </view>
           </view>
@@ -81,7 +81,7 @@
         <view class="list-company">
           <scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y">
             <view class="radio-group" @click="onChangeFilterForm">
-              <view class="item-radio fill" :class="{'active': filterForm.companyId == item.id}" :data-value="item.id" data-formName="companyId" v-for="item in companyList" :key="item.id">{{ item.name }}</view>
+              <view class="item-radio fill" :class="{'active': filterForm.compnayInfoId == item.id}" :data-value="item.id" data-formName="compnayInfoId" v-for="item in companyList" :key="item.id">{{ item.companyName }}</view>
             </view>
           </scroll-view>
         </view>
@@ -101,7 +101,7 @@
         <view class="list-company">
           <scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y">
             <view class="radio-group" @click="onChangeFilterForm">
-              <view class="item-radio fill" :class="{'active': filterForm.transportPlanId == item.id}" :data-value="item.id" data-formName="transportPlanId" v-for="item in transportPlanList" :key="item.id">{{ item.name }}</view>
+              <view class="item-radio fill" :class="{'active': filterForm.orderPlanInfoCode == item.orderPlanCode}" :data-value="item.orderPlanCode" data-formName="orderPlanInfoCode" v-for="item in orderPlanList" :key="item.orderPlanCode">{{ item.name }}</view>
             </view>
           </scroll-view>
         </view>
@@ -117,8 +117,16 @@
   export default {
     name: 'PopFilter',
     props: {
-      value: {
-        default: []
+      filterForm: {
+        type: Object,
+        default: () => {
+          return {
+            'weighingType': '',
+            'compnayInfoId': '', // 收发企业
+            'orderPlanInfoCode': '', // 运输计划
+            'completeFlag': '' // 称重状况
+          }
+        }
       },
       weighTypeList: { // 过磅类型（皮重过磅、毛重过磅）
         type: Array,
@@ -128,7 +136,7 @@
         type: Array,
         default: []
       },
-      transportPlanList: { // 运输计划
+      orderPlanList: { // 运输计划
         type: Array,
         default: []
       },
@@ -144,16 +152,12 @@
     data () {
       return {
         scrollTop: 0,
-        filterForm: {
-          weighType: 1, // 1皮重过磅 2 毛重过磅
-          companyId: 1, // 收发企业
-          transportPlanId: 1, // 运输计划
-          weighbridgeId: 1, // 地磅
-          weighStatus: 1 // 称重状况
-        },
         isShowMoreCompany: false, // 是否显示更多收发企业
-        isShowMoretransportPlan: false // 是否显示更多运输计划
+        isShowMoretransportPlan: false, // 是否显示更多运输计划
       }
+    },
+    onReady(){
+      console.log(111)
     },
     methods: {
       closePopFilter() {
@@ -163,22 +167,20 @@
        * 选择类型
        */
       onChangeFilterForm(e) {
-        console.log(e.target.dataset.value)
-        if(e.target.dataset.value) {
-          this.filterForm[e.target.dataset.formName] = e.target.dataset.value;
+        if(e.target.dataset.formName) {
+          if(this.filterForm[e.target.dataset.formName] === e.target.dataset.value) {
+            this.filterForm[e.target.dataset.formName] = '';
+          }
+          else {
+            this.filterForm[e.target.dataset.formName] = e.target.dataset.value;
+          }
         }
       },
       /**
        * 清空
        */
       clearAllFormData() {
-        this.filterForm = {
-          weighType: '', // 1皮重过磅 2 毛重过磅
-          companyId: '', // 收发企业
-          transportPlanId: '', // 运输计划
-          weighbridgeId: '', // 地磅
-          weighStatusId: '' // 称重状况
-        }
+        this.$emit('clearAllFormData')
       },
       /**
        * 确定操作
@@ -203,6 +205,9 @@
     computed: {
       companyListNew() {
         return this.companyList.slice(0,2);
+      },
+      orderPlanListNew() {
+        return this.orderPlanList.slice(0,2);
       }
     }
   }
@@ -249,7 +254,7 @@
   }
   .pop-filter {
 		background-color: #fff;
-		border-radius: 25upx 25upx 0px 0px;
+		border-radius: 25upx 25upx 0rem 0rem;
 		padding: 40upx 36upx;
 		&-title {
 			text-align: center;
@@ -320,7 +325,7 @@
 	}
   .pop-filter-company {
 		background-color: #fff;
-		border-radius: 25upx 25upx 0px 0px;
+		border-radius: 25upx 25upx 0rem 0rem;
 		padding: 40upx 36upx;
 		&-title {
 			text-align: center;
@@ -343,8 +348,32 @@
 		&-content {
 			overflow: hidden;
 			.input-search {
-				background-color: #f5f5f5;
-			}
+        height: 72upx;
+        background-color: #f5f5f5;
+        border-radius: 10upx;
+        width: 100%;
+        padding: 0 16upx;
+        font-size: 28upx;
+        ::v-deep .uni-input-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: row;
+          &::before {
+            content: '';
+            display: block;
+            width: 32upx;
+            height: 32upx;
+            background: url(@/static/weighRecord/icon_search.png) no-repeat;
+            background-size: contain;
+            margin-right: 10upx;
+          }
+          .uni-input-placeholder {
+            left: 42upx;
+            width: calc(100% - 42upx);
+          }
+        }
+      }
 			.list-company {
 				margin-top: 35upx;
 				height: 600upx;
