@@ -63,9 +63,8 @@
 			}
 
 			// 获取jyzCode
-			//console.log(JSON.parse(uni.getStorageSync('userInfo')))
-			// const res = await queryUserInfo({ userCode: .data.userCode });
-			this.jyzCode = '170234e12abb405aa0cd475e7c824866';
+			const res = await queryUserInfo({ userCode: uni.getStorageSync('userInfo').userCode }, this.headerInfo);
+			this.jyzCode = res.data.jyzCode;
 
 			this.getList();
 		},

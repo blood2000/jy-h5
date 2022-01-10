@@ -66,7 +66,7 @@
         </view>
         <view class="btn-group">
           <view class="btn btn-cancel" @click="clearAllFormData">清空</view>
-          <view class="btn btn-comfirm" @click="comfirm">确定(28条过磅记录）</view>
+          <view class="btn btn-comfirm" @click="comfirm">确定</view>
         </view>
       </view>
     </view>
@@ -77,11 +77,11 @@
         <text>收发企业</text>
       </view>
       <view class="pop-filter-company-content">
-        <input type="text" placeholder="输入企业名称" class="input-search" />
+        <input type="text" placeholder="输入企业名称" class="input-search" v-model="searchCompanyName" />
         <view class="list-company">
           <scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y">
             <view class="radio-group" @click="onChangeFilterForm">
-              <view class="item-radio fill" :class="{'active': filterForm.compnayInfoId == item.id}" :data-value="item.id" data-formName="compnayInfoId" v-for="item in companyList" :key="item.id">{{ item.companyName }}</view>
+              <view class="item-radio fill" :class="{'active': filterForm.compnayInfoId == item.id}" :data-value="item.id" data-formName="compnayInfoId" v-for="item in companyListFiltter" :key="item.id">{{ item.companyName }}</view>
             </view>
           </scroll-view>
         </view>
@@ -97,11 +97,11 @@
         <text>运输计划</text>
       </view>
       <view class="pop-filter-company-content">
-        <input type="text" placeholder="输入运输计划名称" class="input-search" />
+        <input type="text" placeholder="输入运输计划名称" class="input-search" v-model="searchOrderPlan" />
         <view class="list-company">
           <scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y">
             <view class="radio-group" @click="onChangeFilterForm">
-              <view class="item-radio fill" :class="{'active': filterForm.orderPlanInfoCode == item.orderPlanCode}" :data-value="item.orderPlanCode" data-formName="orderPlanInfoCode" v-for="item in orderPlanList" :key="item.orderPlanCode">{{ item.name }}</view>
+              <view class="item-radio fill" :class="{'active': filterForm.orderPlanInfoCode == item.orderPlanCode}" :data-value="item.orderPlanCode" data-formName="orderPlanInfoCode" v-for="item in orderPlanListFiltter" :key="item.orderPlanCode">{{ item.name }}</view>
             </view>
           </scroll-view>
         </view>
@@ -154,10 +154,9 @@
         scrollTop: 0,
         isShowMoreCompany: false, // 是否显示更多收发企业
         isShowMoretransportPlan: false, // 是否显示更多运输计划
+        searchOrderPlan: '', // 实时搜索运输计划
+        searchCompanyName: '' // 实时搜索企业名称
       }
-    },
-    onReady(){
-      console.log(111)
     },
     methods: {
       closePopFilter() {
@@ -194,20 +193,48 @@
        */
       doComfirmCompany() {
         this.isShowMoreCompany = !this.isShowMoreCompany;
+        this.searchCompanyName = '';
       },
       /**
        * 确定选择的收发企业
        */
       doComfirmTransportPlan() {
         this.isShowMoretransportPlan = !this.isShowMoretransportPlan;
+        this.searchOrderPlan = '';
       }
     },
     computed: {
       companyListNew() {
-        return this.companyList.slice(0,2);
+        const { companyList } = this;
+        const len = companyList && companyList.length >= 3 ? 3 : companyList.length;
+        return companyList.slice(0, len);
       },
       orderPlanListNew() {
-        return this.orderPlanList.slice(0,2);
+        const { orderPlanList } = this;
+        const len = orderPlanList && orderPlanList.length >= 3 ? 3 : orderPlanList.length;
+        return orderPlanList.slice(0, len);
+      },
+      /**
+       * 根据实时搜索框返回最终更多运输计划列表
+       */
+      orderPlanListFiltter() {
+        const { searchOrderPlan, orderPlanList } = this;
+        let orderPlanListFiltter;
+        if(orderPlanList && orderPlanList.length > 0) {
+          orderPlanListFiltter = orderPlanList.filter(item => item.name.indexOf(searchOrderPlan) !== -1);
+        }
+        return orderPlanListFiltter;
+      },
+      /**
+       * 根据实时搜索框返回最终更多收发企业列表
+       */
+      companyListFiltter() {
+        const { searchCompanyName, companyList } = this;
+        let companyListFiltter;
+        if(companyList && companyList.length > 0) {
+          companyListFiltter = companyList.filter(item => item.companyName.indexOf(searchCompanyName) !== -1);
+        }
+        return companyListFiltter;
       }
     }
   }
@@ -303,7 +330,6 @@
 			justify-content: space-between;
 			margin: 50upx -15upx 0;
 			.btn {
-				padding: 0 78upx;
 				height: 80upx;
 				border-radius: 10upx;
 				border: solid 1upx #3a65ff;
@@ -315,10 +341,12 @@
 				&.btn-cancel {
 					color: #3a65ff;
 					background-color: #fff;
+          width: 350upx;
 				}
 				&.btn-comfirm {
 					color: #fff;
 					background-color: #3a65ff;
+          width: 350upx;
 				}
 			}
 		}

@@ -50,6 +50,7 @@
 		import PopFilter from './inc/PopFilter';
 		import { mapState} from 'vuex';
 		import { findList, getTenantCompanyInfoList, getOrderPlanInfoList } from '@/config/service/weighRecord/index.js'
+		import { queryUserInfo } from '@/config/service/user/index.js'
 		import { DebounceFun, ThrottleFun } from '@/utils/ddc'
 		export default {
 			components: {
@@ -121,8 +122,8 @@
 				}
 
 				// 获取jyzCode
-				// const res = await queryUserInfo({ userCode: uni.getStorageSync('userInfo').userCode });
-				this.jyzCode = '170234e12abb405aa0cd475e7c824866';
+				const res = await queryUserInfo({ userCode: uni.getStorageSync('userInfo').userCode }, this.headerInfo);
+				this.jyzCode = res.data.jyzCode;
 				this.deviceNo = options.deviceNo; // 设备编号
 				this.getList();
 				this.getTenantCompanyInfoList(); // 收发企业
@@ -133,9 +134,6 @@
 				this.DebounceSearch = DebounceFun(function(){
 					self.getList(true);
 				}, 1000);
-			},
-			onReachBottom() {
-				console.log('到底了')
 			},
 			methods: {
 				/**
@@ -263,6 +261,9 @@
 </script>
 
 <style lang="scss" scoped>
+	/deep/ .uni-load-more__text {
+		font-size: 24upx;
+	}
 	.content-page {
 		font-size: 28upx;
 		font-family: PingFang SC;
@@ -308,9 +309,6 @@
 				width: calc(100% - 42upx);
 			}
 		}
-	}
-	::v-deep .uni-load-more__text {
-		font-size: 28upx;
 	}
 	.filter-wrap {
 		width: 100%;
