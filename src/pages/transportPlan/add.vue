@@ -2,7 +2,7 @@
 	<view class="u-page">
 		<HeaderBar :title="title" @back="navigateBack"></HeaderBar>
 		
-		<uni-forms :key="formsUpdate" ref='form' :rules="rules" :modelValue="form" label-width="100" err-show-type="toast">
+		<uni-forms :key="formsUpdate" ref='form' :rules="rules" :modelValue="form" label-width="120" err-show-type="toast">
 			
 			<view class="ly-form-card">
 
@@ -96,13 +96,13 @@
 						<uni-easyinput type="text" :inputBorder="false" disabled :clearable="false" v-model="transceiverAddress" />
 					</uni-forms-item>
 					<uni-forms-item required name="sedCompnayInfoId" label="发货企业" class="border-bottom">
-						<pickers v-model="form.sedCompnayInfoId" :range="sedCompnayInfoIdOption" placeholder='请选择发货企业'></pickers>
+						<pickers v-model="form.sedCompnayInfoId" :range="sedCompnayInfoIdOption" placeholder='请选择发货企业' @change="(_data)=>handlerChange(_data, 'sedCompnayList')"></pickers>
 					</uni-forms-item>
 				</template>
 
 				<template v-else>
 					<uni-forms-item required name="recCompnayInfoId" label="收货企业" >
-						<pickers v-model="form.recCompnayInfoId" :range="recCompnayInfoIdOption" placeholder='请选择收货企业'></pickers>
+						<pickers v-model="form.recCompnayInfoId" :range="recCompnayInfoIdOption" placeholder='请选择收货企业' @change="(_data)=>handlerChange(_data, 'recCompnayList')"></pickers>
 					</uni-forms-item>
 					<uni-forms-item required label="发货企业" class="border-bottom">
 						<uni-easyinput type="text" :inputBorder="false" disabled :clearable="false" v-model="transceiverAddress" />
@@ -116,8 +116,8 @@
 					<pickers :disabled="!!cbData" v-model="form.startAddressId" :range="shfuewnsdnsddssOption" placeholder="请输入运输起点" @change="handlerstartAddressId"></pickers>
 				</uni-forms-item>
 
-				<uni-forms-item required name="startAddressWlId" label="接单电子围栏" v-if="form.startAddressId" class="border-bottom">
-					<pickers :disabled="!!cbData" v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
+				<uni-forms-item :required="false" name="startAddressWlId" label="接单电子围栏" v-if="form.startAddressId" class="border-bottom">
+					<pickers v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
 				</uni-forms-item>
 
 				<!--  -->
@@ -138,8 +138,8 @@
 				<template v-if="form.endAddressId">
 					<!-- <u-alert v-if='form.type == 0' type="error" :description="description" fontSize='1'></u-alert> -->
 
-					<uni-forms-item required name="endAddressWlId" label="接单电子围栏">
-						<pickers :disabled="!!cbData" v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
+					<uni-forms-item :required="false" name="endAddressWlId" label="卸货电子围栏">
+						<pickers v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择卸货电子围栏'></pickers>
 					</uni-forms-item>
 				</template>
 
@@ -188,7 +188,6 @@
 	getEffectiveGoodsList as goodspriceList,
 	orderPlanFreightList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoDetatil } from "@/config/service/transportPlan/transportationPlan.js"
 	
-	// import { orderPlanInfoList as getList, orderPlanInfoAdd, orderPlanInfoUpdate, orderPlanInfoUpdateStatus, teamSelectTeamListByCodes } from '@/config/service/transportPlan/transportationPlan.js'
 	import NumberBox from '@/components/number-box/number-box'
 	import TeamList from '@/pages/capacity/components/teamList.vue'
 
@@ -298,7 +297,7 @@
 					},
 					startAddressWlId:{
 						rules:[
-							{ required: true, errorMessage: '请选择接单电子围栏' }
+							{ required: false, errorMessage: '请选择接单电子围栏' }
 						]
 					},
 					
@@ -322,7 +321,7 @@
 
 					endAddressWlId:{
 						rules:[
-							{ required: true, errorMessage: '请选择卸货电子围栏' }
+							{ required: false, errorMessage: '请选择卸货电子围栏' }
 						]
 					},
 
@@ -366,6 +365,10 @@
 				orderInfoIdOption:[],
 				recCompnayInfoIdOption:[],
 				sedCompnayInfoIdOption:[],
+
+				recCompnayList: [],
+				sedCompnayList: [],
+
 				shfuewnsdnsddssOption:[],
 				startAddressIdOption: [],
 				endAddressIdOption:[],
@@ -381,7 +384,6 @@
 		watch: {
 			'form.isForever': {
 				handler(val,oval) {
-					console.log(this.oldDatePicker);
 					if(val === oval ) return
 					if(!(val && Array.isArray(val))) return
 					if(val.length>0){
@@ -398,7 +400,6 @@
 				handler(val) {
 					if(!(val && Array.isArray(val))) return
 
-					console.log(val.length>0);
 					if(val.length>0){
 						this.$set(this.form, 'weight', undefined)
 						this.$set(this.rules.weight,'rules', [
@@ -451,9 +452,9 @@
 			this.$set(this.rules.sedCompnayInfoId,'rules', [
 				{ required: this.form.type == 1, errorMessage: '请选择收货企业' }
 			])
-			this.$set(this.rules.endAddressWlId,'rules', [
-				{ required: this.form.type == 1, errorMessage: '请选择卸货电子围栏' }
-			])
+			// this.$set(this.rules.endAddressWlId,'rules', [
+			// 	{ required: this.form.type == 1, errorMessage: '请选择卸货电子围栏' }
+			// ])
 
 			if(options.id){
 				
@@ -511,7 +512,7 @@
 						disable: e.delFlag !== '0'
 					};
 				});
-				console.log('获取运输公司: ',JSON.stringify(this.transIdOption));
+				// console.log('获取运输公司: ',JSON.stringify(this.transIdOption));
 			},
 			// 获取货源列表
 			async getorderInfoIdOption(queData) {
@@ -553,11 +554,18 @@
 				}
 
 				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
+
+				this.recCompnayList = _data;
+
 				
 				this.recCompnayInfoIdOption = _data.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.sedCompnayInfoId = e.id;
 						this.transceiverAddress = e.companyName;
+
+						if(!this.id){
+							this.$set(this.form, 'aliasName', e.companyAbbreviation);
+						}
 					}
 					return {
 						dictLabel: e.companyAbbreviation || e.companyName,
@@ -580,11 +588,16 @@
 
 				const _data = (await tenantCompanyInfoList(que, this.headerInfo)).data.list;
 
-				console.log(_data,' 88887');
+				this.sedCompnayList = _data;
+
 				this.sedCompnayInfoIdOption = _data.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.recCompnayInfoId = e.id;
 						this.transceiverAddress = e.companyName;
+
+						if(!this.id){
+							this.$set(this.form, 'unAliasName', e.companyAbbreviation);
+						}
 					}
 
 					return {
@@ -634,7 +647,6 @@
 						disable: e.status !== 0
 					};
 				});
-				console.log(this.shfuewnsdnsddssOption);
 			},
 
 			// 处理地址下面的电子围栏数据
@@ -642,7 +654,6 @@
 				this.form.startAddressWlId = undefined;
 				const m_findData = this.shfuewnsdnsddssOption.find(e => e.id === m_id);
 
-				console.log(m_findData);
 				if (m_findData) {
 					this.startAddressIdOption = m_findData.zjFenceList.map(e => {
 						return {
@@ -724,7 +735,6 @@
 
 			// 选择单位
 			handlerunit(_uit){
-				// console.log(_uit);
 				this.getorderPolicyInfoOption()
 			},
 
@@ -777,7 +787,7 @@
 						}
 					})
 				}
-				console.log('更改选中的调度者', this.form.orderPlanTeanRelList);
+				// console.log('更改选中的调度者', this.form.orderPlanTeanRelList);
 
 			},
 
@@ -845,7 +855,6 @@
 			},
 			// 确认创建
 			handleSubmit(formName) {
-				console.log(this.form);
 				// 手动验证空值
 				if(!this.noValidate()) return
 
@@ -886,7 +895,7 @@
 
 					this.onSubmit(removePropertyOfNull(que))
 				}).catch(err =>{
-					console.log('表单错误信息：', err);
+					return false
 				})
 			},
 
@@ -901,8 +910,6 @@
 					...data
 				};
 
-				console.log(que);
-
 				if (isEdit) {
 					await orderPlanInfoUpdate(que, this.headerInfo);
 				} else {
@@ -914,11 +921,12 @@
 					title: `${isEdit ? '修改' : '新增'}成功`,
 					icon: 'none'
 				});
-				this.cbData = null
+				
 				setTimeout(()=>{
 					uni.redirectTo({
 						url: '/pages/transportPlan/index?id=ejwfw'
 					});
+					this.cbData = null
 				}, 700)
 
 			},
@@ -930,8 +938,9 @@
 						const rule = this[rulesName][key];
 						for (let index = 0; index < rule.rules.length; index++) {
 							const r = rule.rules[index];
+
+							console.log(r);
 							if(r.required){
-								// console.log(this[formName][key]);
 								if(r.type === 'array' && this[formName][key].length <=0 ){
 									uni.showToast({
 										title: r.errorMessage,
@@ -941,9 +950,8 @@
 								}
 
 								// 去掉空格
-								// console.log(this[formName][key]);
 								if(!this[formName][key] && typeof this[formName][key] !== 'boolean' && this[formName][key] !== 0){
-									console.log(r, '验证不通过 返回false');
+									// console.log(r, '验证不通过 返回false');
 									uni.showToast({
 										title: r.errorMessage,
 										icon: 'none'
@@ -958,28 +966,19 @@
 				return true
 			},
 
-			// handleInput(e) {
-			// 	let val = e.target.value;
-			// 	val = val.replace(/^./g, "");
-			// 	val = val.replace(/[^\d.]/g, ""); //清除"数字"和"."以外的字符
-			// 	val = val.replace(/.{2,}/g, "."); //只保留第一个. 清除多余的
-			// 	val = val.replace(/^0+./g, "0.");
-			// 	val = val.match(/^0+[1-9]+/) ? (val = val.replace(/^0+/g, "")) : val;
-			// 	val = val.match(/^\d*(.?\d{0,2})/g)[0] || "";
-			// 	val = val
-			// 	.replace(".", "")
-			// 	.replace(/./g, "")
-			// 	.replace("", ".");
-			// 	if (val.includes(".")) {
-			// 	let numDian = val.toString().split(".")[1].length;
-			// 	if (numDian === 2) {
-			// 	this.moneyMaxLeng = val.length;
-			// 	}
-			// 	} else {
-			// 	this.moneyMaxLeng = 8;
-			// 	}
-			// 	this.fee = val;
-			// }
+			// s=
+			// 选中企业后, 填自动填到起点别名上
+			handlerChange(_data, name) {
+				const res = this[name].find(e => e.id === _data) || {};
+
+				if (name === 'recCompnayList') {
+					this.$set(this.form, 'unAliasName', res.companyAbbreviation);
+				} else {
+					this.$set(this.form, 'aliasName', res.companyAbbreviation);
+				}
+			}
+
+			//
 
 		}
 	}

@@ -168,42 +168,6 @@
 		}
 	},
 	{
-	  "path": "pages/operate/pricingStrategy/index",
-	  "style": {
-	    "navigationBarTitleText": "运价策略",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": true
-	  }
-	},
-	{
-	  "path": "pages/operate/pricingStrategy/edit",
-	  "style": {
-	    "navigationBarTitleText": "新增运价策略",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": false
-	  }
-	},
-	{
-	  "path": "pages/operate/goodsPrice/index",
-	  "style": {
-	    "navigationBarTitleText": "货价策略",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": true
-	  }
-	},
-	{
-	  "path": "pages/operate/goodsPrice/edit",
-	  "style": {
-	    "navigationBarTitleText": "新增货价策略",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": false
-	  }
-	},
-	{
 		"path": "pages/transportPlan/add",
 		"style": {
 			"navigationBarTitleText": "创建收货计划",

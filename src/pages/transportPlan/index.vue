@@ -272,18 +272,18 @@
 			// 点击
 			handlerClick(_data){
 				const { receiveType, id } = _data
-				uni.navigateTo({
+				uni.redirectTo({
 					url: `./add?type=${receiveType - 1}&id=${id}`
 				})
 			},
 
 			sendPlan(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'./add?type=0'
 				})
 			},
 			receivePlan(){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'./add?type=1'
 				})
 			},

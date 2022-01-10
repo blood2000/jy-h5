@@ -68,7 +68,7 @@ export default {
     return {
 	  queryParams: { // 请求参数
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
 
         orderName: undefined // 定价策略
       },
@@ -108,6 +108,10 @@ export default {
 	}
   },
   async onLoad(options) {
+	  const pages = getCurrentPages();
+	console.log(pages, '当前页');
+	console.log(options, '几次');
+
 	if(options.token){
 		this.$store.dispatch('getLoginInfoAction', {
 			'Authorization': options.token
@@ -184,13 +188,13 @@ export default {
 	},
 	// 新增
 	handleAdd() {
-		uni.navigateTo({
+		uni.redirectTo({
 			url: '/pages/orders/add'
 		});
 	},
 	// 编辑
 	handlerEdit(row){
-		uni.navigateTo({
+		uni.redirectTo({
 			url: '/pages/orders/add?cbData=' + JSON.stringify(row)
 		});
 	},
