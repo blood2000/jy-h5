@@ -27,8 +27,10 @@
 					<image class="info_icon_station" src="/static/appointment/appointment_station.png" mode="aspectFit">
 					</image>
 					<view class="info_station_content">
-						<view class="info_station_content_value">{{appointmentInfo.station}}</view>
-						<view class="info_station_content_navigation">导航</view>
+						<view class="info_station_content_valueView">
+							<view class="info_station_content_value">{{appointmentInfo.station}}</view>
+							<view class="info_station_content_navigation">导航</view>
+						</view>
 						<view class="info_station_content_name">预约场站</view>
 					</view>
 				</view>
@@ -47,6 +49,11 @@
 						<view class="info_station_content_value">{{appointmentInfo.date}}</view>
 						<view class="info_station_content_name">预约时间</view>
 					</view>
+				</view>
+				<view class="info_bottom">
+					<view class="info_station_bottom_carTime">还有32辆车未入场，预计60分钟</view>
+					<image class="info_station_bottom_qr" src="/static/appointment/appointment_qr.png" mode="aspectFit">
+					</image>
 				</view>
 			</view>
 			<view v-else class="info_noContentView">
@@ -103,7 +110,7 @@
 					licenseNumber: '闽A*888SW'
 				},
 				appointmentInfo: {
-					station: '五福洗煤厂/32号堆',
+					station: '五福洗煤厂/32号堆 五福洗煤厂/32号堆 五福洗煤厂/32号堆',
 					companyName: '山西华汇通商贸无限公司',
 					date: '2021/01/05',
 					time: '08:00',
@@ -274,7 +281,7 @@
 		margin-right: 24upx;
 		margin-top: 40upx;
 		margin-bottom: 40upx;
-		height: 400upx;
+/* 		height: 400upx; */
 		display: flex;
 		align-items: flex-start;
 		flex-direction: column;
@@ -313,18 +320,18 @@
 		width: 58upx;
 		height: 58upx;
 	}
-	
+
 	.info_station_content_value {
 		font-size: 32upx;
 		font-weight: bold;
 		color: #333333;
 	}
-	
+
 	.info_station_content_name {
 		font-size: 24upx;
 		color: #999999;
 	}
-	
+
 	.info_station_content_navigation {
 		font-size: 24upx;
 		color: #2366F2;
@@ -332,6 +339,7 @@
 		padding-left: 9upx;
 		padding-right: 9upx;
 		border-radius: 4upx;
+		margin-left: 14upx;
 	}
 
 	.info_station_content {
@@ -340,6 +348,13 @@
 		flex-direction: column;
 		justify-content: space-between;
 		margin-left: 12upx;
+	}
+
+	.info_station_content_valueView {
+		display: flex;
+		align-items: flex-start;
+		flex-direction: row;
+		justify-content: space-between;
 	}
 
 	.info_icon_company {
@@ -360,6 +375,32 @@
 		padding-top: 60upx;
 	}
 
+	.info_bottom {
+		width: 100%;
+		height: 80upx;
+		margin-top: 38upx;
+		background-color: #2366F2;
+		border-radius: 0upx 0upx 16upx 16upx;
+		display: flex;
+		align-items: flex-start;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	
+	.info_station_bottom_carTime {
+		padding-left: 20upx;
+		padding-top: 17upx;
+		padding-right: 70upx;
+		color: #FFFFFF;
+	}
+	
+	.info_station_bottom_qr {
+		width: 54upx;
+		height: 54upx;
+		margin-top: 14upx;
+		margin-right: 23upx;
+	}
+	
 	.noContent_icon {
 		width: 362upx;
 		height: 203upx;
