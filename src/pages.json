@@ -240,6 +240,24 @@
 			"enablePullDownRefresh": false,
 			"navigationBarBackgroundColor": "#3a65ff"
 		}
+	},
+	{
+		"path": "pages/appointment/index",
+		"style": {
+			"navigationBarTitleText": "预约",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": true,
+			"navigationBarBackgroundColor": "#3a65ff"
+		}
+	},
+	{
+		"path": "pages/appointment/qrcode",
+		"style": {
+			"navigationBarTitleText": "QRCode",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": true,
+			"navigationBarBackgroundColor": "#3a65ff"
+		}
 	}
   ],
   "globalStyle": {

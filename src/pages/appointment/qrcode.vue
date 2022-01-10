@@ -50,7 +50,7 @@
 	} from 'vuex';
 	import html2canvas from '@/components/html2canvas/html2canvas.vue'
 	import TkiQrcode from '@/components/tki-qrcode/tki-qrcode.vue'
-	import TransportCard from './components/TransportCard.vue'
+	import TransportCard from 'pages/transportPlan/components/TransportCard.vue'
 	import {
 		pathToBase64,
 		base64ToPath
