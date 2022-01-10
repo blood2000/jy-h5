@@ -18,13 +18,14 @@
 					<view class="scanView_label">扫码预约</view>
 					<view class="scanView_arrow_right"></view>
 				</view>
-				<image class="scanView_icon" src="/static/appointment/appointment_scan.png" mode="aspectFit"></image>
+				<image class="scanView_icon" src="/static/appointment/appointment_scan.png" mode="aspectFit"
+					@click="onClickQR()"></image>
 			</view>
 		</view>
 		<view class="info-container">
 			<view v-if="appointmentInfo.station">
 				<view class="info_station">
-					<image class="info_icon_station" src="/static/appointment/appointment_station.png" mode="aspectFit">
+					<image class="info_icon_station" src="/static/appointment/appointment_station.png">
 					</image>
 					<view class="info_station_content">
 						<view class="info_station_content_valueView">
@@ -46,7 +47,10 @@
 					<image class="info_icon_time" src="/static/appointment/appointment_time.png" mode="aspectFit">
 					</image>
 					<view class="info_station_content">
-						<view class="info_station_content_value">{{appointmentInfo.date}}</view>
+						<view class="info_station_content_valueView">
+							<view class="info_station_content_value">{{appointmentInfo.date}}</view>
+							<view class="info_station_content_valueSub">{{appointmentInfo.time}}</view>
+						</view>
 						<view class="info_station_content_name">预约时间</view>
 					</view>
 				</view>
@@ -111,7 +115,7 @@
 				},
 				appointmentInfo: {
 					station: '五福洗煤厂/32号堆 五福洗煤厂/32号堆 五福洗煤厂/32号堆',
-					companyName: '山西华汇通商贸无限公司',
+					companyName: '山西华汇通商贸无限公司 山西华汇通商贸无限公司 山西华汇通商贸无限公司',
 					date: '2021/01/05',
 					time: '08:00',
 				},
@@ -180,7 +184,10 @@
 			},
 			clickTab(index) {
 				this.activeIndex = index;
-			}
+			},
+			onClickQR() {
+
+			},
 		}
 	}
 </script>
@@ -281,7 +288,6 @@
 		margin-right: 24upx;
 		margin-top: 40upx;
 		margin-bottom: 40upx;
-/* 		height: 400upx; */
 		display: flex;
 		align-items: flex-start;
 		flex-direction: column;
@@ -319,12 +325,23 @@
 	.info_icon_station {
 		width: 58upx;
 		height: 58upx;
+		flex-shrink: 0;
 	}
 
 	.info_station_content_value {
 		font-size: 32upx;
 		font-weight: bold;
 		color: #333333;
+	}
+
+	.info_station_content_valueSub {
+		font-size: 32upx;
+		color: #FFFFFF;
+		background-color: #7927CC;
+		padding-left: 9upx;
+		padding-right: 9upx;
+		border-radius: 6upx;
+		margin-left: 14upx;
 	}
 
 	.info_station_content_name {
@@ -340,6 +357,7 @@
 		padding-right: 9upx;
 		border-radius: 4upx;
 		margin-left: 14upx;
+		flex-shrink: 0;
 	}
 
 	.info_station_content {
@@ -360,11 +378,13 @@
 	.info_icon_company {
 		width: 58upx;
 		height: 58upx;
+		flex-shrink: 0;
 	}
 
 	.info_icon_time {
 		width: 58upx;
 		height: 58upx;
+		flex-shrink: 0;
 	}
 
 	.info_noContentView {
@@ -386,21 +406,21 @@
 		flex-direction: row;
 		justify-content: space-between;
 	}
-	
+
 	.info_station_bottom_carTime {
 		padding-left: 20upx;
 		padding-top: 17upx;
 		padding-right: 70upx;
 		color: #FFFFFF;
 	}
-	
+
 	.info_station_bottom_qr {
 		width: 54upx;
 		height: 54upx;
 		margin-top: 14upx;
 		margin-right: 23upx;
 	}
-	
+
 	.noContent_icon {
 		width: 362upx;
 		height: 203upx;

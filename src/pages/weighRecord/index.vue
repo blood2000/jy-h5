@@ -126,7 +126,7 @@
 </script>
 
 <style lang="scss" scoped>
-/deep/ .uni-load-more__text {
+::v-deep .uni-load-more__text {
 	font-size: 24upx;
 }
 .content-page {
