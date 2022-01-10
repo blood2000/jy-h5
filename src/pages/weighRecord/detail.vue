@@ -70,8 +70,8 @@
 						<view class="label">皮重</view>
 						<text>{{ weighRecord.tareWeight }}吨</text>
 					</view>
-					<view class="record-img">
-						<img src="@/static/weighRecord/img01.jpg" alt="" class="item-img" v-for="(item,index) in 3" :key="index">
+					<view class="record-img" v-if="weighRecord.imgs && weighRecord.imgs.length > 0">
+						<img :src="item" alt="" class="item-img" v-for="(item,index) in weighRecord.imgs" :key="index">
 					</view>
 					<view class="record-time">过磅时间：{{ weighRecord.finishTime}}</view>
 				</view>
@@ -84,6 +84,7 @@
 	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	import { getWaybillInfoByDeviceNo, findList } from '@/config/service/weighRecord/index.js'
 	import { mapState} from 'vuex';
+	import { queryUserInfo } from '@/config/service/user/index.js'
 	export default {
 		components: {
 			HeaderBar
@@ -95,8 +96,7 @@
 				weighRecord: {} // 过磅记录
 			}
 		},
-		onLoad(options){
-			console.log(123)
+		async onLoad(options){
 			if(options.token){
 				this.$store.dispatch('getLoginInfoAction', {
 					'Authorization': options.token
@@ -108,7 +108,9 @@
 				this.statusBar12 -= 10
 			}
 
-			this.jyzCode = '170234e12abb405aa0cd475e7c824866';
+			// 获取jyzCode
+			const res = await queryUserInfo({ userCode: uni.getStorageSync('userInfo').userCode }, this.headerInfo);
+			this.jyzCode = res.data.jyzCode;
 
 			this.deviceNo = options.deviceNo;
 			this.waybillNo = options.waybillNo;
@@ -157,20 +159,30 @@
   $label-color: $gray-2;
 	.detail-info {
 		background-color: #fff;
-		padding: 40upx;
+		padding: 30upx;
 		.info-title {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			height: 42upx;
 			.title {
 				font-size: 32upx;
 				color: $text-color;
 				font-weight: bold;
+				width: 60%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 			.type {
 				font-size: 28upx;
 				color: #3a65ff;
 				font-weight: bold;
+				width: 40%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				margin-left: 20upx;
 			}
 		}
 		.info-price {
@@ -192,6 +204,7 @@
 		.info-route {
 			position: relative;
 			margin-top: 35upx;
+			height: 86upx;
 			.item-route {
 				display: flex;
 				align-items: center;
