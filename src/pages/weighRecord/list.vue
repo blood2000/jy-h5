@@ -135,9 +135,6 @@
 					self.getList(true);
 				}, 1000);
 			},
-			onReachBottom() {
-				console.log('到底了')
-			},
 			methods: {
 				/**
 				 * 返回上一页

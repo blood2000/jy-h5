@@ -158,9 +158,6 @@
         searchCompanyName: '' // 实时搜索企业名称
       }
     },
-    onReady(){
-      console.log(111)
-    },
     methods: {
       closePopFilter() {
         this.$emit('closePopFilter')

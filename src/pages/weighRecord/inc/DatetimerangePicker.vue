@@ -33,7 +33,6 @@
     methods: {
       // 时间控件
 			handlerPick(arr){
-        console.log(arr)
 				if(arr[0] && arr[1]){
 					if(arr[0] === arr[1]){
 						// 日期加一天
