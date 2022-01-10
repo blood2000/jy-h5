@@ -45,7 +45,7 @@
 					</view>
 				</view>
 				<view class="move">
-					<view class="bg-grey" @tap="handleEdit(item)">编辑</view>
+					<view class="bg-grey" @tap="handleEdit(item,index)">编辑</view>
 					<view v-if="item.status === 1 " class="bg-blue" @tap="handleChange(item)">启用</view>
 					<view v-else class="bg-orange" @tap="handleChange(item)">禁用</view>
 					<view class="bg-red" @tap="handleDelete(item,index)">删除</view>
@@ -82,18 +82,16 @@
 			  }
 		  },
 		},
-		onLoad(options){
-			if(options.data){
-				this.form = JSON.parse(options.data);
+		onLoad(option){
+			if(option.data){
+				this.form = JSON.parse(option.data);
 				this.form.zjFenceList = this.form.zjFenceList || []
 				// console.log(this.form);
 				this.center = [this.form.lng,this.form.lat];
 				this.marker.position = [this.form.lng,this.form.lat]
 			}else{
-				
-				
+				this.location = JSON.parse(option.location)
 			}
-			this.location = options.location
 			// uni.getLocation({
 			//   // type: "wgs84",
 			//   type: "gcj02",
@@ -109,6 +107,7 @@
 		data() {
 			const _this = this
 			return{
+				shake:false,
 				location:undefined,
 				form:{
 					companyAddrName:'',
@@ -172,6 +171,7 @@
 		watch:{
 			center:{
 				handler(v){
+					// console.log(v);
 					this.form.lng = v[0];
 					this.form.lat = v[1]
 				}
@@ -179,10 +179,19 @@
 		},
 		methods:{
 			async submit(){
+				if(this.shake) return
+				// setTimeout(() => {
+				// 	this.shake = false
+				// },2000)
+				// 调用首页刷新
+				let pages = getCurrentPages()
+				let prePage = pages[pages.length - 2]
+				// 提交参数
 				await geocoder.getAddress([this.form.lng, this.form.lat], (status, result) => {
 				        if (status === 'complete' && result.info === 'OK') {
 				          if (result && result.regeocode) {
 							const addressInfo = result.regeocode.addressComponent
+							this.form.addressName = this.form.addressName || addressInfo.building
 							this.form.city = addressInfo.city
 							this.form.province = addressInfo.province
 							this.form.county = addressInfo.county
@@ -191,6 +200,7 @@
 							this.form.countyCode = addressInfo.adcode.slice(0,6)
 							this.form.detail = result.regeocode.formattedAddress
 							this.form.zjFenceBoList = this.form.zjFenceList ? this.form.zjFenceList.concat(this.isdelFlags) : []
+							// 去除null/undefined
 							Object.keys(this.form).forEach(item => {
 								if(this.form[item] === null || this.form[item] === undefined){
 									this.form[item] = ''
@@ -198,21 +208,25 @@
 							})
 							if(this.form.companyAddrName){
 								if(this.form.id){
+									this.shake = true
 									Edit(this.form,this.headerInfo).then(res => {
 										uni.showToast({title: '变更成功',icon: 'none', duration: 1000})
 										setTimeout(() => {
 											uni.navigateBack({
 												delta:1
 											})
+											prePage.handleQuery()
 										},1000)
 									})
 								}else{
+									this.shake = true
 									Add(this.form,this.headerInfo).then(res => {
 										uni.showToast({title: '新增成功',icon: 'none', duration: 1000})
 											setTimeout(() => {
 												uni.navigateBack({
 													delta:1
 												})
+												prePage.handleQuery()
 											},1000)
 									})
 								}
@@ -240,9 +254,9 @@
 				})
 			},
 			// 编辑
-			handleEdit(item){
+			handleEdit(item,index){
 				uni.navigateTo({
-					url:"/pages/address/map?data=" + JSON.stringify(item) + '&center=' + this.center
+					url:"/pages/address/map?data=" + JSON.stringify(item) + '&center=' + this.center + '&index=' + index
 				})
 			},
 			// 启用/禁用
@@ -256,28 +270,33 @@
 					content: '确定要删除"'+ item.name +'"吗？',
 					success: async res => {
 						if (res.confirm) {
-							const _cantDel = await cantDel(item.id,this.headerInfo)
-							// console.log(_cantDel);
-							if(_cantDel.data){
-								item.delFlag = 1
-								item.id && this.isdelFlags.push(item)
+							if(item.id){
+								const _cantDel = await cantDel(item.id,this.headerInfo)
+								if(_cantDel.data){
+									item.delFlag = 1
+									item.id && this.isdelFlags.push(item)
+									this.form.zjFenceList.splice(index,1)
+									uni.showToast({
+										title: '删除成功'
+									});
+								}else{
+									uni.showToast({
+										title: '该围栏已被使用,禁止删除',
+										icon:'none'
+									});
+								}
+							}else{
 								this.form.zjFenceList.splice(index,1)
 								uni.showToast({
 									title: '删除成功'
-								});
-							}else{
-								uni.showToast({
-									title: '该围栏已被使用,禁止删除',
-									icon:'none'
 								});
 							}
 						}
 					}
 				})
-				
 			},
 			addList(data){
-				if(data.id){
+				if(data.id || data.index){
 					this.form.zjFenceList.find((res,index) => {
 						if(res.id === data.id){
 							this.form.zjFenceList.splice(index,1,data)
@@ -298,7 +317,7 @@
 				// this.addressNamelnglat = [lng, lat];
 			},
 			init() {
-				if(!this.form.addressName){
+				if(!this.form.id){
 					this.showCityInfo()
 				}
 			},

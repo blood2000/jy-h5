@@ -16,16 +16,24 @@
 				<el-amap-marker :position="marker.position" :icon="marker.icon" />
 			</el-amap>
 			<view class="input-card">
-				<view v-if='isDraw&&isEdit' class="flex">
-					<u-button type="primary" style="width: 200rpx;margin:auto" text="绘制多边形" @tap="drawPolygon"></u-button>
-					<u-button type="primary" style="width: 200rpx;margin:auto" text="绘制矩形" @tap="drawRectangle"></u-button>
-					<u-button type="primary" style="width: 200rpx;margin:auto" text="绘制圆形" @tap="drawCircle"></u-button>
-				</view>
-				<view v-else>
-					<u-button v-if='isEdit' type="primary" style="width: 300rpx;margin:auto" text="确定" @tap="close"></u-button>
-					<u-button v-else type="primary" style="width: 300rpx;margin:auto" text="绘制围栏" @tap="reDraw"></u-button>
-				</view>
-				<!-- <u-button v-else type="primary" style="width: 300rpx;margin:24rpx auto" text="确定" @tap="close"></u-button> -->
+					<view v-if="isEditor">
+						<u-button v-if='isCheck' type="primary" style="width: 300rpx;margin:auto" text="确定" @tap="endEdit"></u-button>
+						<view v-else class="flex">
+							<u-button type="primary" style="width: 300rpx;margin:auto" text="重新绘制" @tap="reDraw"></u-button>
+							<u-button type="primary" style="width: 300rpx;margin:auto" text="编辑" @tap="eidtor"></u-button>
+						</view>
+					</view>
+					<view v-else>
+						<view v-if='isDraw&&isEdit' class="flex">
+							<u-button type="primary" style="width: 200rpx;margin:auto" text="绘制多边形" @tap="drawPolygon"></u-button>
+							<u-button type="primary" style="width: 200rpx;margin:auto" text="绘制矩形" @tap="drawRectangle"></u-button>
+							<u-button type="primary" style="width: 200rpx;margin:auto" text="绘制圆形" @tap="drawCircle"></u-button>
+						</view>
+						<view v-else>
+							<u-button v-if='isEdit' type="primary" style="width: 300rpx;margin:auto" text="确定" @tap="close"></u-button>
+							<u-button v-else type="primary" style="width: 300rpx;margin:auto" text="绘制围栏" @tap="reDraw"></u-button>
+						</view>
+					</view>
 			</view>
 		</view>
 	</view>
@@ -43,18 +51,20 @@
 		},
 		onShow() {
 		},
-		onLoad(options){
-			if(options.data){
-				this.form = JSON.parse(options.data)
-				this.title = '编辑电子围栏'
+		onLoad(option){
+			if(option.data){
+				this.form = JSON.parse(option.data)
+				this.title = '编辑电子围栏',
+				this.isEditor = true
 			}
-			this.center = options.center.split(',')
-			this.marker.position = options.center.split(',')
+			this.center = option.center.split(',')
+			this.marker.position = option.center.split(','),
+			this.form.index = option.index
 		},
 		computed: {
 			...mapState({
 				statusBarHeight: (state) => state.header.statusBarHeight,
-			}),
+			})
 		},
 		mounted() {},
 		data() {
@@ -76,16 +86,21 @@
 				circle:null, // 圆形实例
 				circleCenter:[], // 圆心
 				circleRadius:0, // 半径
+				CircleEditor:null,
 				
 				rectangle:null, // 矩形实例
 				rectanglelnglat:[], // 矩形第一个点
 				_rectanglelnglat:[], // 矩形第二个点
+				RectangleEditor:null,
 				
 				polygon:null, // 多边形实例
 				polygonPath:[], // 多边形路径
+				PolyEditor:null,
 				
 				isDraw:true, // 画图 
 				isEdit:false, // 编辑
+				isEditor:false,
+				isCheck:false,
 				addressName: '', // 地址
 				zoom: 14,
 				center: [116.397497,39.906888],
@@ -133,32 +148,42 @@
 				let prePage = pages[pages.length - 2]
 				// 圆形
 				if(this.form.geomType === 1){
-					this.form.geomText = [...this.circleCenter,Math.floor(this.circleRadius)].join()
-					this.form.centerLng = this.circleCenter[0]
-					this.form.centerLat = this.circleCenter[1]
+					const circleCenter = this.circle.getCenter()
+					// this.form.geomText = [...this.circleCenter,Math.floor(this.circleRadius)].join()
+					this.form.geomText = [circleCenter,this.circle.getRadius()].join()
+					this.form.centerLng = circleCenter.lng
+					this.form.centerLat = circleCenter.lat
 				}
 				// 矩形
 				if(this.form.geomType === 2){
-					this.form.geomText = [...this.rectanglelnglat,...this._rectanglelnglat].join()
-					const {lng,lat} = this.rectangle.getBounds().getCenter()
+					// this.form.geomText = [...this.rectanglelnglat,...this._rectanglelnglat].join()
+				    const Bounds = this.rectangle.getBounds()
+					this.form.geomText = [Bounds.northeast,Bounds.southwest].join()
+					const {lng,lat} = Bounds.getCenter()
 					this.form.centerLng = lng
 					this.form.centerLat = lat
 				}
 				// 多边形
 				if(this.form.geomType === 3){
-					this.form.geomText = this.polygonPath.join()
+					// this.form.geomText = this.polygonPath.join()
+					this.form.geomText = this.polygon.getPath()
+					console.log(this.polygon.getPath());
 					const {lng,lat} = this.polygon.getBounds().getCenter()
 					this.form.centerLng = lng
 					this.form.centerLat = lat
 				}
 				// console.log(this.form);
-				if(this.form.name){
+				if(this.form.name && this.form.geomText){
 					prePage.addList(this.form)
 					uni.navigateBack({
 						delta: 1
 					})
 				}else{
-					uni.showToast({title: '请输入名称',icon: 'none', duration: 1000})
+					if(this.form.geomText){
+						uni.showToast({title: '请输入名称',icon: 'none', duration: 1000})
+					}else{
+						uni.showToast({title: '请绘制围栏',icon: 'none', duration: 1000})
+					}
 				}
 			},
 			navigateBack(){
@@ -187,6 +212,8 @@
 					// path: this.polygonPath,
 					// zIndex: 100,
 				})
+				this.PolyEditor = new AMap.PolyEditor(this.map,this.polygon);
+				// this.PolyEditor.open(); 
 				this.circle = new AMap.Circle({
 					center:_this.circleCenter.length ? _this.circleCenter : null,
 					radius:_this.circleRadius,
@@ -199,6 +226,8 @@
 					// path: _this.polygonPath,
 					// zIndex: 100,
 				})
+				this.CircleEditor = new AMap.CircleEditor(this.map,this.circle); 
+				// this.circleEditor.open(); 
 				this.rectangle = new AMap.Rectangle({
 					// path: _this.polygonPath,
 					strokeColor: "#FF33FF", //线颜色
@@ -209,6 +238,8 @@
 					// draggable: true,
 					// zIndex: 100,
 				})
+				this.RectangleEditor = new AMap.RectangleEditor(this.map,this.rectangle);
+				// this.RectangleEditor.open();
 				
 				this.polygon.setMap(this.map)
 				this.circle.setMap(this.map)
@@ -241,6 +272,7 @@
 			},
 			// 画多边形
 			drawPolygon() {
+				this.msgSuccess('点击地图绘制多边形')
 				this.form.geomType = 3
 				// this.map.setStatus({dragEnable:true})
 				this.isDraw = false
@@ -248,6 +280,7 @@
 			},
 			// 画圆形
 			drawCircle(){
+				this.msgSuccess('点击地图拖动绘制圆形')
 				this.form.geomType = 1
 				this.isDraw = false
 				this.map.on('touchstart',this.eventListenCircle)
@@ -255,6 +288,7 @@
 			},
 			// 画矩形
 			drawRectangle(){
+				this.msgSuccess('请从左下角至右上角绘制')
 				this.form.geomType = 2
 				this.isDraw = false
 				this.map.on('touchstart',this.startEvent)
@@ -262,7 +296,6 @@
 			},
 			// 结束绘制
 			close(){
-				const _this = this
 				this.map.off('touchend',this.eventListen)
 				this.map.off('touchstart',this.eventListenCircle)
 				this.map.off('touchmove',this.circleEvent)
@@ -271,12 +304,14 @@
 				this.map.setStatus({dragEnable:true})
 				this.isDraw = true
 				this.isEdit = false
+				this.isEditor = true
 			},
 			// 重新绘制
 			reDraw(){
 				this.resetCover()
 				this.isDraw = true
 				this.isEdit = true
+				this.isEditor = false
 			},
 			
 			// 多边形绘制，监听回调函数
@@ -314,16 +349,50 @@
 			endEvent(e){
 				const{lng,lat} = e.lnglat
 				this._rectanglelnglat = [lng,lat]
-				this.rectangle.setBounds(new AMap.Bounds(this.rectanglelnglat,this._rectanglelnglat))
+				const Bounds = new AMap.Bounds(this.rectanglelnglat,this._rectanglelnglat)
+				this.rectangle.setBounds(Bounds)
 			},
 			
 			// 重置覆盖物
 			resetCover(){
+				this.form.geomText = undefined
 				this.polygonPath = []
 				this.polygon.setPath([])
 				this.rectangle.setBounds(new AMap.Bounds([0,0],[0,0]))
 				this.circle.setRadius(0)
 				this.circleRadius = 0
+			},
+			
+			// 编辑
+			eidtor(){
+				this.isCheck = true
+				// 圆形
+				if(this.form.geomType === 1){
+					this.CircleEditor.open()
+				}
+				// 矩形
+				if(this.form.geomType === 2){
+					this.RectangleEditor.open()
+				}
+				// 多边形
+				if(this.form.geomType === 3){
+					this.PolyEditor.open()
+				}
+			},
+			endEdit(){
+				this.isCheck = false
+				// 圆形
+				if(this.form.geomType === 1){
+					this.CircleEditor.close()
+				}
+				// 矩形
+				if(this.form.geomType === 2){
+					this.RectangleEditor.close()
+				}
+				// 多边形
+				if(this.form.geomType === 3){
+					this.PolyEditor.close()
+				}
 			}
 		}
 

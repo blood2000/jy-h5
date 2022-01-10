@@ -63,15 +63,17 @@
 			}
 		},
 		onShow(){
-			this.handleQuery()
+			
 		},
 		onLoad(option){
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': option.token
 			});
-			this.location = option.location
+			const {longitude,latitude} = JSON.parse(option.location)
+			this.location = longitude ? [longitude,latitude] : [116.397497,39.906888]
 			option.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', option.statusBarHeight);
-			
+			this.handleQuery()
+			console.log(getCurrentPages());
 			// this.getList();
 		},
 		onPullDownRefresh() {
@@ -133,7 +135,7 @@
 			},
 			handleAdd(){
 				uni.navigateTo({
-					url:"/pages/address/edit?location=" + this.location
+					url:"/pages/address/edit?location=" + JSON.stringify(this.location)
 				})
 			},
 			handleEdit(item){
