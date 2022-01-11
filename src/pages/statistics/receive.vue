@@ -402,7 +402,7 @@
 		padding-top: 50upx;
 		.item-total {
 			display: flex;
-			align-items: center;
+			align-items: baseline;
 			width: 33.33%;
 			padding: 10upx;
 			&:first-child {
@@ -437,8 +437,9 @@
 			}
 			.total-val {
 				color: #fff;
-				font-size: 32upx;
+				font-size: 34upx;
 				font-weight: bold;
+				font-family: Bahnschrift;
 			}
 		}
 	}
