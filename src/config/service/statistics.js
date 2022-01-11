@@ -19,3 +19,12 @@ export function statisticsList(query, config) {
 		headers: config
 	});
 }
+
+export function planStatisticsMergeList(query, config) {
+	return uniRequest({
+		url: '/jyz/jyzWaybillSearch/planStatisticsMergeList',
+		method: 'get',
+		params: query,
+		headers: config
+	});
+}
