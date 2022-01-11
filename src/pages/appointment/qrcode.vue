@@ -5,40 +5,44 @@
 
 			<u-overlay :show="show" @click="()=>{show = false; cbData = null; domId = ''}">
 
-				<view class="qrcode ly-flex-v ly-flex-align-center">
-					<view class="poster ly-flex-v ly-flex-align-center" id="poster">
-						<view class="titleView">
-							<image src="../../static/appointment/qrTitle_left.png" mode="aspectFill"
-								style="height:2upx;width:90upx;">
-							</image>
-							<text class="titleView_stationName">{{qrcodeInfo.stationName}}</text>
-							<image src="../../static/appointment/qrTitle_right.png" mode="aspectFill"
-								style="height:2upx;width:90upx;">
-							</image>
-						</view>
-						<view class="licenseNumberView  ly-flex ly-flex-pack-justify ly-flex-align-start">
-							<view class="licenseNumberValue">{{qrcodeInfo.licenseNumber}}</view>
-							<view class="heapNumberValue">{{qrcodeInfo.heapNumber}}</view>
-						</view>
-						<view class="qr" :class="cbData && cbData.transRelType == 'chy' ? 'chy' : ''" @tap.stop>
-							<image :src="qrcode.src" mode="aspectFill" style="height:400upx;width:400upx"></image>
-							<tki-qrcode :show="false" cid="qrcode1" ref="qrcode" :val="qrcode.val" :size="qrcode.size"
-								:unit="qrcode.unit" :background="qrcode.background" :foreground="qrcode.foreground"
-								:pdground="qrcode.pdground" :icon="qrcode.icon" :iconSize="qrcode.iconsize"
-								:lv="qrcode.lv" :onval="qrcode.onval" :loadMake="qrcode.loadMake"
-								:usingComponents="true" @result="result" />
-						</view>
-						<view class="contents">
-							<view class="contents-top ly-flex ly-flex-pack-justify ly-flex-align-start">
-								<view class="name g-double-row">{{ qrcodeInfo.companyName }}</view>
+				<view class="allView ly-flex-v ly-flex-align-center">
+					<view class="qrcode ly-flex-v ly-flex-align-center">
+						<view class="poster ly-flex-v ly-flex-align-center" id="poster">
+							<view class="titleView">
+								<image src="../../static/appointment/qrTitle_left.png" mode="aspectFill"
+									style="height:2upx;width:90upx;">
+								</image>
+								<text class="titleView_stationName">{{qrcodeInfo.stationName}}</text>
+								<image src="../../static/appointment/qrTitle_right.png" mode="aspectFill"
+									style="height:2upx;width:90upx;">
+								</image>
 							</view>
-							<view class="contents-bottom ly-flex ly-flex-pack-justify ly-flex-align-center">
-								<view class="g-single-row text">{{ qrcodeInfo.dateStr }}</view>
+							<view class="licenseNumberView  ly-flex ly-flex-pack-justify ly-flex-align-start">
+								<view class="licenseNumberValue">{{qrcodeInfo.licenseNumber}}</view>
+								<view class="heapNumberValue">{{qrcodeInfo.heapNumber}}</view>
+							</view>
+							<view class="qr" :class="cbData && cbData.transRelType == 'chy' ? 'chy' : ''" @tap.stop>
+								<image :src="qrcode.src" mode="aspectFill" style="height:400upx;width:400upx"></image>
+								<tki-qrcode :show="false" cid="qrcode1" ref="qrcode" :val="qrcode.val"
+									:size="qrcode.size" :unit="qrcode.unit" :background="qrcode.background"
+									:foreground="qrcode.foreground" :pdground="qrcode.pdground" :icon="qrcode.icon"
+									:iconSize="qrcode.iconsize" :lv="qrcode.lv" :onval="qrcode.onval"
+									:loadMake="qrcode.loadMake" :usingComponents="true" @result="result" />
+							</view>
+							<view class="contents">
+								<view class="contents-top ly-flex ly-flex-pack-justify ly-flex-align-start">
+									<view class="name g-double-row">{{ qrcodeInfo.companyName }}</view>
+								</view>
+								<view class="contents-bottom ly-flex ly-flex-pack-justify ly-flex-align-center">
+									<view class="g-single-row text">{{ qrcodeInfo.dateStr }}</view>
+								</view>
 							</view>
 						</view>
 					</view>
+					<view class="closeBtn">
+						<image src="../../static/appointment/qr_close.png" mode="aspectFill" style="height:72upx;width:72upx"></image>
+					</view>
 				</view>
-
 			</u-overlay>
 		</html2canvas>
 	</view>
@@ -92,7 +96,7 @@
 					companyName: '山西汇通上报有限公司',
 					dateStr: '2021-12-29～2021-12-29',
 				},
-				
+
 				domId: '',
 
 				cbData: null,
@@ -359,7 +363,6 @@
 </script>
 
 <style lang="scss" scoped>
-	
 	.titleView {
 		margin-top: 36upx;
 		display: flex;
@@ -367,7 +370,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 	}
-	
+
 	.titleView_stationName {
 		font-size: 36upx;
 		font-weight: bold;
@@ -375,7 +378,7 @@
 		padding-left: 15upx;
 		padding-right: 15upx;
 	}
-	
+
 	.licenseNumberView {
 		margin-top: 27upx;
 		margin-bottom: 19upx;
@@ -384,7 +387,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 	}
-	
+
 	.licenseNumberValue {
 		font-size: 28upx;
 		font-weight: bold;
@@ -392,7 +395,7 @@
 		position: relative;
 		left: -120upx;
 	}
-	
+
 	.heapNumberValue {
 		font-size: 24upx;
 		color: #FFFFFF;
@@ -404,7 +407,20 @@
 		position: relative;
 		right: -120upx;
 	}
-	
+
+	.closeBtn {
+		margin-top: 48upx;
+	}
+
+	.allView {
+		display: flex;
+		/*实现垂直居中*/
+		align-items: center;
+		/*实现水平居中*/
+		justify-content: center;
+		margin: 120upx auto;
+	}
+
 	.qrcode {
 		width: 580rpx;
 		height: auto;

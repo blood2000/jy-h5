@@ -10,7 +10,7 @@ import { getDicts, listByDict, getDictsByType } from '@/config/service/data';
 // import './config/bridge.js'
 //自定义指令
 import './directive'
-import { parseTime, numberFormat, numberFormatUnit, selectDictLabel } from './utils/ddc.js';
+import { parseTime, numberFormat, numberFormatUnit, selectDictLabel, floor } from './utils/ddc.js';
 //复制到剪贴板
 import VueClipboard from 'vue-clipboard2'
 Vue.use(VueClipboard)
@@ -59,6 +59,7 @@ Vue.prototype.selectDictLabel = selectDictLabel;
 Vue.prototype.$store = store;
 Vue.config.productionTip = false;
 Vue.prototype.getDicts = getDicts;
+Vue.prototype.floor = floor;
 Vue.prototype.listByDict = listByDict;
 Vue.prototype.getDictsByType = getDictsByType;
 
