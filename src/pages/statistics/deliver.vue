@@ -6,7 +6,7 @@
 			<view class="title-bar size36 flex align-center justify-between">
 				<view class="cuIcon-back" @click="handleBack"></view>
 				<view class="text-bold">发货统计</view>
-				<view class="cuIcon-back" style="opacity: 0;"></view>
+				<view @click="linkToTotal">货品汇总</view>
 			</view>
 			<view class="time-frame flex align-center text-white text-bold">
 				<image class="time-icon margin-mright" src="/static/statistics/icon_time.png" mode=""></image>
@@ -29,48 +29,63 @@
 		</view>
 		<!-- 列表 -->
 		<view class="list-frame" v-for="(item, index) in list" :key="index">
-			<view class="list-componyframe flex align-center justify-between">
-				<view class="">
-					<view class="flex align-center">
-						<view class="list-tag list-tagbgdeliver flex align-center justify-center">发</view>
-						<view class="list-namedeliver">{{item.sedCompnayInfoName || '无'}}</view>
+			<view class="list-frame-inner">
+				<view class="list-componyframe flex align-center justify-between">
+					<view class="list-namedeliver">{{item.orderPlanInfoName || '无'}}</view>
+					<view class="list-goods">{{item.goodsTypeName || '无'}}</view>
+				</view>
+				<view class="list-numframe flex align-center flex-wrap">
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.carNum || 0}}</view>
+						<view class="list-numtitle margin-stop">已完成车数</view>
 					</view>
-					<view class="flex align-center margin-stop">
-						<view class="list-tag list-tagbgreceive flex align-center justify-center">收</view>
-						<view class="list-namereceive">{{item.recCompnayInfoName || '无'}}</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.grossWeight || 0}}</view>
+						<view class="list-numtitle margin-stop">总毛重（吨）</view>
+					</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.overloadRemark || 0}}</view>
+						<view class="list-numtitle margin-stop">备注</view>
+					</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.realWeight || 0}}</view>
+						<view class="list-numtitle margin-stop">净重（吨）</view>
+					</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.netWeight || 0}}</view>
+						<view class="list-numtitle margin-stop">总净重（吨）</view>
 					</view>
 				</view>
-				<view class="list-goods">{{item.goodsTypeName || '无'}}</view>
-			</view>
-			<view class="list-numframe flex align-center justify-between flex-wrap">
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.carNum || 0}}</view>
-					<view class="list-numtitle margin-stop">车数</view>
+			</view>	
+			<view class="total">
+				<view class="item-total">
+					<view class="total-label total-label-hj">合计</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.netWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">原发数（净重）</view>
+				<view class="item-total">
+					<view class="total-label">车数</view>
+					<view class="total-val">184</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.realWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">实收数（实重）</view>
+				<view class="item-total">
+					<view class="total-label">总毛重</view>
+					<view class="total-val">184</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.grossWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">总毛重</view>
+				<view class="item-total">
+					<view class="total-label">备注</view>
+					<view class="total-val">184</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.tareWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">总皮重</view>
+				<view class="item-total">
+					<view class="total-label">净重</view>
+					<view class="total-val">184</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.overloadRemark || 0}}</view>
-					<view class="list-numtitle margin-stop">备注</view>
+				<view class="item-total">
+					<view class="total-label">总净重</view>
+					<view class="total-val">-9.84</view>
 				</view>
 			</view>
 		</view>
 		<uni-load-more v-if="list.length !== 0" :status="status" :icon-size="16" :content-text="contentText" />
 		<NonePage v-else></NonePage>
+		
 	</view>
 </template>
 
@@ -96,6 +111,28 @@
 					startCreateTime: this.queryParams.startCreateTime?this.queryParams.startCreateTime + ' 00:00:00' : '',
 					endCreateTime: this.queryParams.endCreateTime?this.queryParams.endCreateTime + ' 23:59:59' : '',
 				}
+			},
+			listNew() {
+				var result = [];
+				let list = this.list;
+				list.sort();
+				if(list && list.length > 0) {
+					for(var i = 0; i < list.length;) {
+						var count = 0;
+						var sameItem = [];
+						for(var j = i; j < list.length; j++) {
+							if(list[i].recCompnayInfoName == list[j].recCompnayInfoName) {
+								sameItem.push(list[j]);
+								count++;
+							}  	
+						}
+						result.push([list[i],count]);
+						console.log(count)
+						i+=count;
+					}
+				}
+				console.log(result)
+				return result;
 			}
 		},
 		data() {
@@ -112,17 +149,20 @@
 					contentnomore: '没有更多了'
 				},
 				queryParams: {
-					startCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
-					endCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
+					startCreateTime: '2021-01-05',
+					endCreateTime: '2022-01-06',
 					receiveType: 2,
 					isInvalid: 0,
 					pageNum: 1,
-					pageSize: 10
+					pageSize: 10,
+					completeFlag: 1,
+					status: 30
 				},
 				list: []
 			}
 		},
 		onLoad(option) {
+			this.token = option.token;
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': option.token
 			});
@@ -156,6 +196,11 @@
 			}
 		},
 		methods: {
+			linkToTotal() {
+				uni.navigateTo({
+					url: `/pages/statistics/goodsSummary?token=${this.token}&quer=${this.quer}`
+				})
+			},
 			handleBack() {
 				uni.webView.navigateBack();
 			},
@@ -253,8 +298,12 @@
 	position: relative;
 	z-index: 1;
 	margin: 0 30upx 30upx;
-	background: #FFFFFF;
-	border-radius: 24upx;
+	&-inner {
+		position: relative;
+		z-index: 2;
+		background: #FFFFFF;
+		border-radius: 24upx;
+	}
 	.list-componyframe{
 		padding: 43upx 30upx 24upx;
 		border-bottom: 1upx solid #F0F0F0;
@@ -276,6 +325,10 @@
 			font-size: 32upx;
 			font-weight: bold;
 			color: #333333;
+			width: 50%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 		.list-namereceive{
 			font-size: 24upx;
@@ -285,6 +338,12 @@
 			font-size: 32upx;
 			font-weight: bold;
 			color: #3A65FF;
+			width: 50%;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			text-align: right;
+			margin-left: 20upx;
 		}
 	}
 	.list-numframe{
@@ -302,6 +361,110 @@
 				font-weight: 400;
 				color: #878787;
 			}
+		}
+	}
+	.total {
+		position: relative;
+		top: -40upx;
+		background-color: #3a65ff;
+		border-radius: 24upx;
+		display: flex;
+		flex-wrap: wrap;
+		padding: 20upx 30upx;
+		padding-top: 50upx;
+		.item-total {
+			display: flex;
+			align-items: center;
+			width: 33.33%;
+			padding: 10upx;
+			&:first-child {
+				position: relative;
+				&::after {
+					position: absolute;
+					right: 30upx;
+					transform: translateY(-50%);
+					top: 33upx;
+					content: '';
+					display: block;
+					width: 2upx;
+					height: 33upx;
+					background-color: rgba($color: #fff, $alpha: 0.18);
+				}
+			}
+			.total-label {
+				color: #fff;
+				font-size: 24upx;
+				margin-right: 10upx;
+				&-hj {
+					width: 125upx;
+					height: 37upx;
+					line-height: 37upx;
+					background-color: #ffffff;
+					border-radius: 18px 18px 18px 0px;
+					font-size: 30upx;
+					color: #3a65ff;
+					font-weight: bold;
+					text-align: center;
+				}
+			}
+			.total-val {
+				color: #fff;
+				font-size: 32upx;
+				font-weight: bold;
+			}
+		}
+	}
+}
+
+.footer-total {
+	position: fixed;
+	z-index: 9;
+	bottom: 0;
+	background-color: #3a65ff;
+	border-radius: 24upx;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 20upx 30upx;
+	padding-top: 50upx;
+	.item-total {
+		display: flex;
+		align-items: center;
+		width: 33.33%;
+		padding: 10upx;
+		&:first-child {
+			position: relative;
+			&::after {
+				position: absolute;
+				right: 30upx;
+				transform: translateY(-50%);
+				top: 33upx;
+				content: '';
+				display: block;
+				width: 2upx;
+				height: 33upx;
+				background-color: rgba($color: #fff, $alpha: 0.18);
+			}
+		}
+		.total-label {
+			color: #fff;
+			font-size: 24upx;
+			margin-right: 10upx;
+			&-hj {
+				width: 125upx;
+				height: 37upx;
+				line-height: 37upx;
+				background-color: #ffffff;
+				border-radius: 18px 18px 18px 0px;
+				font-size: 30upx;
+				color: #3a65ff;
+				font-weight: bold;
+				text-align: center;
+			}
+		}
+		.total-val {
+			color: #fff;
+			font-size: 32upx;
+			font-weight: bold;
 		}
 	}
 }
