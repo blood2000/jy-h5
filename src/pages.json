@@ -201,6 +201,13 @@
 			"navigationBarBackgroundColor": "#ffffff"
 		}
 	},{
+		"path": "pages/statistics/goodsSummary",
+		"style": {
+			"navigationBarTitleText": "货品汇总",
+			"enablePullDownRefresh": false,
+			"navigationBarBackgroundColor": "#ffffff"
+		}
+	},{
 		"path": "pages/protocol/privacyPolicy",
 		"style": {
 			"navigationBarTitleText": "隐私政策",
