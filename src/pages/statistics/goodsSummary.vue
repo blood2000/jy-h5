@@ -1,28 +1,28 @@
 <template>
 	<view class="home-page">
 		<view v-for="(item,index) in list" :key="index" class="list-frame flex align-center flex-wrap">
-			<view class="list-item" style="border-right: 1upx solid #ebebeb;">
-				<view class="list-title flex justify-center">精煤</view>
+			<view class="list-item" style="border-right: 1upx solid #ebebeb;width: 30%;">
+				<view class="list-title flex justify-center">{{item.goodsTypeName}}</view>
 			</view>
-			<view class="list-item flex align-center">
+			<view class="list-item flex align-center" style="width: 30%;">
 				<view class="list-tag">车数</view>
-				<view class="list-num">184</view>
+				<view class="list-num">{{item.carNum}}</view>
 			</view>
-			<view class="list-item flex align-center">
+			<view class="list-item flex align-center" style="width: 40%;">
 				<view class="list-tag">总毛重</view>
-				<view class="list-num">184</view>
+				<view class="list-num">{{item.grossWeight}}</view>
 			</view>
-			<view class="list-item flex align-center">
+			<view class="list-item flex align-center" style="width: 30%;">
 				<view class="list-tag">备注</view>
-				<view class="list-num">184</view>
+				<view class="list-num">{{item.overloadRemark}}</view>
 			</view>
-			<view class="list-item flex align-center">
+			<view class="list-item flex align-center" style="width: 30%;">
 				<view class="list-tag">净重</view>
-				<view class="list-num">184</view>
+				<view class="list-num">{{item.netWeight}}</view>
 			</view>
-			<view class="list-item flex align-center">
+			<view class="list-item flex align-center" style="width: 40%;">
 				<view class="list-tag">总净重</view>
-				<view class="list-num">184</view>
+				<view class="list-num">{{floor(item.overloadRemark + item.netWeight)}}</view>
 			</view>
 		</view>
 		<uni-load-more v-if="list.length !== 0" :status="status" :icon-size="16" :content-text="contentText" />
@@ -72,6 +72,9 @@
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': option.token
 			});
+			console.log(option);
+			this.queryParams = JSON.parse(option.quer);
+			console.log(this.queryParams);
 			this.getList();
 		},
 		onPullDownRefresh() {
@@ -103,6 +106,7 @@
 					}
 					this.list = [...this.list, ...res.rows];
 					uni.stopPullDownRefresh();
+					console.log(this.list)
 				});
 			},
 			// 重置参数
@@ -118,17 +122,17 @@
 <style lang="scss" scoped>
 .list-frame{
 	margin: 24upx 30upx 0;
-	padding: 0 30upx 30upx;
+	padding: 0 20upx 30upx;
 	background: #FFFFFF;
 	border-radius: 24upx;
 	.list-item{
 		margin-top: 30upx;
-		padding: 0 20upx;
-		width: 33%;
+		padding: 0 10upx;
+		// width: 33%;
 		.list-title{
-			letter-spacing: 10upx;
+			// letter-spacing: 10upx;
 			margin: 0 auto 0 0;
-			padding: 0 20upx;
+			padding: 0 10upx;
 			font-weight: bold;
 			color: #FFFFFF;
 			height: 37upx;
@@ -136,13 +140,13 @@
 			border-radius: 0 18upx 18upx 18upx;
 		}
 		.list-tag{
-			margin-right: 20upx;
+			margin-right: 10upx;
 			font-size: 24upx;
 			font-weight: 500;
 			color: #878787;
 		}
 		.list-num{
-			font-size: 36upx;
+			font-size: 32upx;
 			font-family: Bahnschrift;
 			font-weight: normal;
 			color: #333333;
