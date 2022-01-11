@@ -1,6 +1,8 @@
 <template>
 	<view class="content-page" :style="{'--statusBar12': (statusBar12) + 'px' }">
-		<HeaderBar title="预约凭证信息" @back="navigateBack" :border="false"></HeaderBar>
+		<WhiteHeader :showBack="true" :showLine="true">
+					<text slot="title">预约凭证信息</text>
+				</WhiteHeader>
 		<view class="home-page">
 			<view class="companyView">
 				<image class="companyView_icon" src="/static/appointment/appointment_company.png" mode="aspectFill">
@@ -35,10 +37,10 @@
 </template>
 
 <script>
-	import HeaderBar from '@/components/Building/HeaderBar2';
+	import WhiteHeader from '@/components/Header/WhiteHeader.vue';
 	export default {
 		components: {
-			HeaderBar,
+			WhiteHeader,
 		},
 		data() {
 			return {
