@@ -1,8 +1,8 @@
 <template>
 	<view class="content-page" :style="{'--statusBar12': (statusBar12) + 'px' }">
 		<WhiteHeader :showBack="true" :showLine="true">
-					<text slot="title">预约凭证信息</text>
-				</WhiteHeader>
+			<text slot="title">预约凭证信息</text>
+		</WhiteHeader>
 		<view class="home-page">
 			<view class="companyView">
 				<image class="companyView_icon" src="/static/appointment/appointment_company.png" mode="aspectFill">
@@ -28,6 +28,11 @@
 				</image>
 				<text class="stationView_nameLabel">场站现可预约时段</text>
 			</view>
+			<view class="timeGridView">
+				<view v-for="(item,index) in appointmentInfo.canAppointmentTime" :key="index">
+					<view class="img-text">{{item.timeStr}}</view>
+				</view>
+			</view>
 			<view class="form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
 				<view class="cancel" @click="handleCancle('form')">取消</view>
 				<view class="sure" @click="handleSubmit('form')">确认预约</view>
@@ -38,6 +43,7 @@
 
 <script>
 	import WhiteHeader from '@/components/Header/WhiteHeader.vue';
+
 	export default {
 		components: {
 			WhiteHeader,
@@ -67,6 +73,36 @@
 						{
 							timeStr: '12:00',
 							isAvailable: true
+						}, {
+							timeStr: '9:00',
+							isAvailable: false
+						},
+						{
+							timeStr: '10:00',
+							isAvailable: true
+						},
+						{
+							timeStr: '11:00',
+							isAvailable: true
+						},
+						{
+							timeStr: '12:00',
+							isAvailable: true
+						}, {
+							timeStr: '9:00',
+							isAvailable: false
+						},
+						{
+							timeStr: '10:00',
+							isAvailable: true
+						},
+						{
+							timeStr: '11:00',
+							isAvailable: true
+						},
+						{
+							timeStr: '12:00',
+							isAvailable: true
 						},
 					],
 				},
@@ -77,13 +113,13 @@
 
 <style>
 	.content-page {
-		background: #FFFFFF; 
-		background-size:100% 100%;
-		width:100%;
-		height:100%;
-		position:fixed;
+		background: #FFFFFF;
+		background-size: 100% 100%;
+		width: 100%;
+		height: 100%;
+		position: fixed;
 	}
-	
+
 	.home-page {
 		display: flex;
 		align-items: flex-start;
@@ -169,9 +205,9 @@
 		margin-right: 24upx;
 		margin-top: 54upx;
 	}
-	
+
 	/*表单按钮css*/
-	.form-button{
+	.form-button {
 		position: fixed;
 		left: 0;
 		right: 0;
@@ -179,8 +215,9 @@
 		padding: 24upx 24upx 42upx;
 		background: #fff;
 	}
-	
-	.cancel, .sure{
+
+	.cancel,
+	.sure {
 		height: 90upx;
 		line-height: 76upx;
 		border-radius: 10upx;
@@ -190,17 +227,29 @@
 		font-weight: bold;
 		color: #3A65FF;
 	}
-	
-	.cancel{
+
+	.cancel {
 		width: 48%;
-		background: #FFFFFF; 
+		background: #FFFFFF;
 		border: 1upx solid #3A65FF;
 		color: #3A65FF;
 	}
-	.sure{
+
+	.sure {
 		width: 48%;
 		background: #3A65FF;
 		border: 1upx solid #3A65FF;
 		color: #fff;
+	}
+
+	.timeGridView {
+		/* 		margin-top: 42upx;
+		margin-left: 88upx;
+		margin-right: 88upx; */
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+		flex-wrap: wrap;
 	}
 </style>
