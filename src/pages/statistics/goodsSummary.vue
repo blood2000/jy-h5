@@ -1,6 +1,6 @@
 <template>
 	<view class="home-page">
-		<view v-for="(item,index) in 10" :key="index" class="list-frame flex align-center flex-wrap">
+		<view v-for="(item,index) in list" :key="index" class="list-frame flex align-center flex-wrap">
 			<view class="list-item" style="border-right: 1upx solid #ebebeb;">
 				<view class="list-title flex justify-center">精煤</view>
 			</view>
@@ -92,7 +92,7 @@
 				uni.webView.navigateBack();
 			},
 			getList() {
-				statisticsList(this.quer, this.headerInfo).then(res => {
+				statisticsList(this.queryParams, this.headerInfo).then(res => {
 					if(res.rows.length === 0) {
 						this.isEnd = true;
 						this.status = 'noMore';
