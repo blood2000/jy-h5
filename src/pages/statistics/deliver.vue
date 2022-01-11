@@ -48,14 +48,44 @@
 						<view class="list-numtitle margin-stop">备注</view>
 					</view>
 					<view class="list-numlist">
-						<view class="list-numcont">{{item.realWeight || 0}}</view>
+						<view class="list-numcont">{{item.netWeight || 0}}</view>
 						<view class="list-numtitle margin-stop">净重（吨）</view>
 					</view>
 					<view class="list-numlist">
-						<view class="list-numcont">{{item.netWeight || 0}}</view>
+						<view class="list-numcont">{{(item.netWeight + item.overloadRemark).toFixed(2) || 0}}</view>
 						<view class="list-numtitle margin-stop">总净重（吨）</view>
 					</view>
 				</view>
+				<template v-if="item.childList && item.childList.length > 0">
+					<block v-for="(itemChild, i) in item.childList" :key="i">
+						<view class="list-componyframe flex align-center justify-between">
+							<view class="list-namedeliver">{{itemChild.orderPlanInfoName || '无'}}</view>
+							<view class="list-goods">{{itemChild.goodsTypeName || '无'}}</view>
+						</view>
+						<view class="list-numframe flex align-center flex-wrap">
+							<view class="list-numlist">
+								<view class="list-numcont">{{itemChild.carNum || 0}}</view>
+								<view class="list-numtitle margin-stop">已完成车数</view>
+							</view>
+							<view class="list-numlist">
+								<view class="list-numcont">{{itemChild.grossWeight || 0}}</view>
+								<view class="list-numtitle margin-stop">总毛重（吨）</view>
+							</view>
+							<view class="list-numlist">
+								<view class="list-numcont">{{itemChild.overloadRemark || 0}}</view>
+								<view class="list-numtitle margin-stop">备注</view>
+							</view>
+							<view class="list-numlist">
+								<view class="list-numcont">{{itemChild.netWeight || 0}}</view>
+								<view class="list-numtitle margin-stop">净重（吨）</view>
+							</view>
+							<view class="list-numlist">
+								<view class="list-numcont">{{(itemChild.netWeight + itemChild.overloadRemark).toFixed(2) || 0}}</view>
+								<view class="list-numtitle margin-stop">总净重（吨）</view>
+							</view>
+						</view>
+					</block>
+				</template>
 			</view>	
 			<view class="total">
 				<view class="item-total">
@@ -63,23 +93,23 @@
 				</view>
 				<view class="item-total">
 					<view class="total-label">车数</view>
-					<view class="total-val">184</view>
+					<view class="total-val">{{ item.totolCarNum }}</view>
 				</view>
 				<view class="item-total">
 					<view class="total-label">总毛重</view>
-					<view class="total-val">184</view>
+					<view class="total-val">{{ item.totolGrossWeight }}</view>
 				</view>
 				<view class="item-total">
 					<view class="total-label">备注</view>
-					<view class="total-val">184</view>
+					<view class="total-val">{{ item.totolOverloadRemark }}</view>
 				</view>
 				<view class="item-total">
 					<view class="total-label">净重</view>
-					<view class="total-val">184</view>
+					<view class="total-val">{{ item.totolRealWeight }}</view>
 				</view>
 				<view class="item-total">
 					<view class="total-label">总净重</view>
-					<view class="total-val">-9.84</view>
+					<view class="total-val">{{ item.totolNetWeight }}</view>
 				</view>
 			</view>
 		</view>
@@ -91,7 +121,7 @@
 
 <script>
 	import { mapState } from 'vuex';
-	import { planStatisticsList }from "@/config/service/statistics.js"
+	import { planStatisticsMergeList }from "@/config/service/statistics.js"
 	import uniData from '@/utils/uni.webview.1.5.2.js'
 	import NonePage from '@/components/NonePage/NonePage.vue';
 	export default {
@@ -111,28 +141,6 @@
 					startCreateTime: this.queryParams.startCreateTime?this.queryParams.startCreateTime + ' 00:00:00' : '',
 					endCreateTime: this.queryParams.endCreateTime?this.queryParams.endCreateTime + ' 23:59:59' : '',
 				}
-			},
-			listNew() {
-				var result = [];
-				let list = this.list;
-				list.sort();
-				if(list && list.length > 0) {
-					for(var i = 0; i < list.length;) {
-						var count = 0;
-						var sameItem = [];
-						for(var j = i; j < list.length; j++) {
-							if(list[i].recCompnayInfoName == list[j].recCompnayInfoName) {
-								sameItem.push(list[j]);
-								count++;
-							}  	
-						}
-						result.push([list[i],count]);
-						console.log(count)
-						i+=count;
-					}
-				}
-				console.log(result)
-				return result;
 			}
 		},
 		data() {
@@ -149,8 +157,8 @@
 					contentnomore: '没有更多了'
 				},
 				queryParams: {
-					startCreateTime: '2021-01-05',
-					endCreateTime: '2022-01-06',
+					startCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
+					endCreateTime: this.parseTime(Date.now(), '{y}-{m}-{d}'),
 					receiveType: 2,
 					isInvalid: 0,
 					pageNum: 1,
@@ -197,15 +205,17 @@
 		},
 		methods: {
 			linkToTotal() {
+				let quer = this.quer;
+				quer.pageNum = 1;
 				uni.navigateTo({
-					url: `/pages/statistics/goodsSummary?token=${this.token}&quer=${JSON.stringify(this.quer)}`
+					url: `/pages/statistics/goodsSummary?token=${this.token}&quer=${JSON.stringify(quer)}`
 				})
 			},
 			handleBack() {
 				uni.webView.navigateBack();
 			},
 			getList() {
-				planStatisticsList(this.quer, this.headerInfo).then(res => {
+				planStatisticsMergeList(this.quer, this.headerInfo).then(res => {
 					if(res.rows.length === 0) {
 						this.isEnd = true;
 						this.status = 'noMore';
@@ -214,7 +224,31 @@
 					if(res.rows.length < this.queryParams.pageSize){
 						this.status = 'noMore';
 					}
-					this.list = [...this.list, ...res.rows];
+					let newList = res.rows;
+					if(newList && newList.length > 0) {
+						newList.forEach(el => {
+							let totolCarNum = el.carNum || 0; // 总车量
+							let totolGrossWeight = el.grossWeight || 0; // 总毛重
+							let totolOverloadRemark = el.overloadRemark || 0; // 总备注
+							let totolRealWeight = el.netWeight || 0; // 净重
+							let totolNetWeight = el.netWeight + el.overloadRemark || 0; // 总净重
+							if(el.childList && el.childList.length > 0) {
+								el.childList.forEach(elChild => {
+									totolCarNum = totolCarNum + (elChild.carNum || 0);
+									totolGrossWeight = totolGrossWeight + (elChild.grossWeight || 0);
+									totolOverloadRemark = totolOverloadRemark + (elChild.overloadRemark || 0);
+									totolRealWeight = totolRealWeight + (elChild.netWeight || 0);
+									totolNetWeight = totolNetWeight + ((elChild.netWeight || 0) + (elChild.overloadRemark || 0));
+								});
+							}
+							el.totolCarNum = totolCarNum;
+							el.totolGrossWeight = totolGrossWeight.toFixed(2);
+							el.totolOverloadRemark = totolOverloadRemark.toFixed(2);
+							el.totolRealWeight = totolRealWeight.toFixed(2);
+							el.totolNetWeight = totolNetWeight.toFixed(2);
+						});
+					}
+					this.list = [...this.list, ...newList];
 					uni.stopPullDownRefresh();
 				});
 			},
@@ -308,7 +342,7 @@
 .list-frame{
 	position: relative;
 	z-index: 1;
-	margin: 0 30upx 30upx;
+	margin: 0 30upx -10upx;
 	&-inner {
 		position: relative;
 		z-index: 2;
@@ -387,7 +421,7 @@
 			display: flex;
 			align-items: center;
 			width: 33.33%;
-			padding: 10upx;
+			padding: 10upx 6upx;
 			&:first-child {
 				position: relative;
 				&::after {
@@ -405,13 +439,13 @@
 			.total-label {
 				color: #fff;
 				font-size: 24upx;
-				margin-right: 10upx;
+				margin-right: 6upx;
 				&-hj {
 					width: 125upx;
 					height: 37upx;
 					line-height: 37upx;
 					background-color: #ffffff;
-					border-radius: 18px 18px 18px 0px;
+					border-radius: 0 18px 18px 18px;
 					font-size: 30upx;
 					color: #3a65ff;
 					font-weight: bold;
@@ -420,62 +454,9 @@
 			}
 			.total-val {
 				color: #fff;
-				font-size: 32upx;
-				font-weight: bold;
-			}
-		}
-	}
-}
-
-.footer-total {
-	position: fixed;
-	z-index: 9;
-	bottom: 0;
-	background-color: #3a65ff;
-	border-radius: 24upx;
-	display: flex;
-	flex-wrap: wrap;
-	padding: 20upx 30upx;
-	padding-top: 50upx;
-	.item-total {
-		display: flex;
-		align-items: center;
-		width: 33.33%;
-		padding: 10upx;
-		&:first-child {
-			position: relative;
-			&::after {
-				position: absolute;
-				right: 30upx;
-				transform: translateY(-50%);
-				top: 33upx;
-				content: '';
-				display: block;
-				width: 2upx;
-				height: 33upx;
-				background-color: rgba($color: #fff, $alpha: 0.18);
-			}
-		}
-		.total-label {
-			color: #fff;
-			font-size: 24upx;
-			margin-right: 10upx;
-			&-hj {
-				width: 125upx;
-				height: 37upx;
-				line-height: 37upx;
-				background-color: #ffffff;
-				border-radius: 18px 18px 18px 0px;
 				font-size: 30upx;
-				color: #3a65ff;
 				font-weight: bold;
-				text-align: center;
 			}
-		}
-		.total-val {
-			color: #fff;
-			font-size: 32upx;
-			font-weight: bold;
 		}
 	}
 }
