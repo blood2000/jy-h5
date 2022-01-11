@@ -258,6 +258,15 @@
 			"enablePullDownRefresh": true,
 			"navigationBarBackgroundColor": "#3a65ff"
 		}
+	},
+	{
+		"path": "pages/appointment/makeAppointment",
+		"style": {
+			"navigationBarTitleText": "预约凭证信息",
+			"navigationStyle": "custom",
+			"enablePullDownRefresh": true,
+			"navigationBarBackgroundColor": "#3a65ff"
+		}
 	}
   ],
   "globalStyle": {
