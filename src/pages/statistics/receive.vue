@@ -233,7 +233,7 @@
 								});
 							}
 							el.totolCarNum = totolCarNum;
-							el.totolDeliverNetWeight = totolDeliverNetWeight;
+							el.totolDeliverNetWeight = totolDeliverNetWeight.toFixed(2);
 							el.totolNetWeight = totolNetWeight.toFixed(2);
 							el.totolRealWeight = totolRealWeight.toFixed(2);
 							el.totolLossWeight = totolLossWeight.toFixed(2);
