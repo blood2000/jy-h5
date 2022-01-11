@@ -6,7 +6,7 @@
 			<view class="title-bar size36 flex align-center justify-between">
 				<view class="cuIcon-back" @click="handleBack"></view>
 				<view class="text-bold">发货统计</view>
-				<view @click="linkToTotal">货品汇总</view>
+				<view @click="linkToTotal" class="header-total">货品汇总</view>
 			</view>
 			<view class="time-frame flex align-center text-white text-bold">
 				<image class="time-icon margin-mright" src="/static/statistics/icon_time.png" mode=""></image>
@@ -198,7 +198,7 @@
 		methods: {
 			linkToTotal() {
 				uni.navigateTo({
-					url: `/pages/statistics/goodsSummary?token=${this.token}&quer=${this.quer}`
+					url: `/pages/statistics/goodsSummary?token=${this.token}&quer=${JSON.stringify(this.quer)}`
 				})
 			},
 			handleBack() {
@@ -261,6 +261,17 @@
 </script>
 
 <style lang="scss" scoped>
+.header-total {
+		width: 140upx;
+		height: 40upx;
+		background-color: #3a65ff;
+		border-radius: 20px;
+		border: solid 1px #fff;
+		font-size: 28upx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+}
 .home-page{
 	font-family: 'PingFang Regular';
 }
