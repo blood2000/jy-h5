@@ -19,9 +19,13 @@
 					<text class="stationView_label">可预约数：{{appointmentInfo.canAppointmentCount}}</text>
 					<view class="stationView_viewMoreView">
 						<text class="stationView_label">已承运数：{{appointmentInfo.haveShipCount}}</text>
-						<text class="stationView_viewMorelabel">查看出入区信息</text>
 					</view>
 				</view>
+			</view>
+			<view class="historyView">
+				<image class="companyView_icon" src="/static/appointment/appointment_ship.png" mode="aspectFill">
+				</image>
+				<text class="stationView_nameLabel">承运记录</text>
 			</view>
 		</view>
 	</view>
@@ -187,10 +191,13 @@
 		justify-content: center;
 	}
 	
-	.stationView_viewMorelabel {
-		font-size: 24upx;
-		color: #2366F2;
-		padding-left: 19upx;
-		padding-top: 23upx;
+	.historyView {
+		display: flex;
+		align-items: flex-start;
+		flex-direction: row;
+		justify-content: space-between;
+		margin-left: 24upx;
+		margin-right: 24upx;
+		margin-top: 54upx;
 	}
 </style>
