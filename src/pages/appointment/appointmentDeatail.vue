@@ -30,6 +30,8 @@
 			<view class="historyListView">
 				<view v-for="(item,index) in appointmentInfo.history" :key="index">
 					<view class="historyListView_row">
+						<image class="historyListView_row_ring" :src="item.isFinished?greenRing:redRing" mode="aspectFill">
+						</image>
 						<view :class="item.isFinished?'historyListView_row_statusLabel_finished':'historyListView_row_statusLabel_noFinished'">{{item.isFinished?'已完成':'未完成'}}</view>
 						<view class="historyListView_row_columnView">
 							<view class="historyListView_row_licenseLabel">{{item.licenseNumber}}</view>
@@ -53,6 +55,8 @@
 		data() {
 			return {
 				statusBar12: 0,
+				redRing: '/static/appointment/appointment_company.png',
+				greenRing: '/static/appointment/appointment_company.png',
 				appointmentInfo: {
 					companyName: '山西汇通上报有限公司',
 					stationName: '五福洗煤场/32号堆',
@@ -185,6 +189,7 @@
 		align-items: flex-start;
 		flex-direction: row;
 		justify-content: center;
+		margin-left: 44upx;
 	}
 	
 	.historyListView_row_statusLabel_noFinished {
@@ -192,6 +197,13 @@
 		color: #EE3D54;
 		padding-left: 13upx;
 		flex-shrink: 0;
+	}
+	
+	.historyListView_row_ring {
+		width: 16upx;
+		height: 16upx;
+		flex-shrink: 0;
+		margin-top: 12upx;
 	}
 	
 	.historyListView_row_statusLabel_finished {
