@@ -30,7 +30,7 @@
 			</view>
 			<view class="timeGridView">
 				<view v-for="(item,index) in appointmentInfo.canAppointmentTime" :key="index">
-					<view class="img-text">{{item.timeStr}}</view>
+					<view :class="item.isAvailable==false?'timeGridView_button_gray': (item.isSelected==false?'timeGridView_button_unselected':'timeGridView_button_selected')">{{item.timeStr}}</view>
 				</view>
 			</view>
 			<view class="form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
@@ -60,49 +60,61 @@
 					haveShipCount: '99',
 					canAppointmentTime: [{
 							timeStr: '9:00',
-							isAvailable: false
+							isAvailable: false,
+							isSelected: false
 						},
 						{
 							timeStr: '10:00',
-							isAvailable: true
+							isAvailable: true,
+							isSelected: true
 						},
 						{
 							timeStr: '11:00',
-							isAvailable: true
+							isAvailable: true,
+							isSelected: false
 						},
 						{
 							timeStr: '12:00',
-							isAvailable: true
+							isAvailable: true,
+							isSelected: false
 						}, {
 							timeStr: '9:00',
-							isAvailable: false
+							isAvailable: false,
+							isSelected: false
 						},
 						{
 							timeStr: '10:00',
-							isAvailable: true
+							isAvailable: true,
+							isSelected: false
 						},
 						{
 							timeStr: '11:00',
-							isAvailable: true
+							isAvailable: true,
+							isSelected: false
 						},
 						{
 							timeStr: '12:00',
-							isAvailable: true
+							isAvailable: true,
+							isSelected: false
 						}, {
 							timeStr: '9:00',
-							isAvailable: false
+							isAvailable: false,
+							isSelected: false
 						},
 						{
 							timeStr: '10:00',
-							isAvailable: true
+							isAvailable: true,
+							isSelected: false
 						},
 						{
 							timeStr: '11:00',
-							isAvailable: true
+							isAvailable: true,
+							isSelected: false
 						},
 						{
 							timeStr: '12:00',
-							isAvailable: true
+							isAvailable: true,
+							isSelected: false
 						},
 					],
 				},
@@ -243,13 +255,62 @@
 	}
 
 	.timeGridView {
-		/* 		margin-top: 42upx;
+		margin-top: 12upx;
 		margin-left: 88upx;
-		margin-right: 88upx; */
+		margin-right: 88upx;
 		display: flex;
 		align-items: center;
 		flex-direction: row;
-		justify-content: space-between;
+		justify-content: flex-start;
 		flex-wrap: wrap;
 	}
+	
+	.timeGridView_button_gray {
+		margin-right: 30upx;
+		margin-top: 30upx;
+		width: 120upx;
+		height: 64upx;
+		border-radius: 10upx;
+		color: #B3B3B3;
+		background-color: #EDF2FA;
+		font-size: 32upx;
+		border: #000000;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: center;
+	}
+	
+	.timeGridView_button_selected {
+		margin-right: 30upx;
+		margin-top: 30upx;
+		width: 120upx;
+		height: 64upx;
+		border-radius: 10upx;
+		color: #FFFFFF;
+		background-color: #2366F2;
+		font-size: 32upx;
+		border: #000000;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: center;
+	}
+	
+	.timeGridView_button_unselected {
+		margin-right: 30upx;
+		margin-top: 30upx;
+		width: 120upx;
+		height: 64upx;
+		border-radius: 10upx;
+		color: #2366F2;
+		background-color: #FFFFFF;
+		font-size: 32upx;
+		border: 2upx dashed #2366F2;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: center;
+	}
+	
 </style>

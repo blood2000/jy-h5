@@ -218,9 +218,9 @@
 			// this.handleQuery()
 		},
 		onLoad(option){
-			this.$store.dispatch('getLoginInfoAction', {
-				'Authorization': option.token
-			});
+			// this.$store.dispatch('getLoginInfoAction', {
+			// 	'Authorization': option.token
+			// });
 			option.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', option.statusBarHeight);
 			if(option.id){
 				uni.showLoading()
