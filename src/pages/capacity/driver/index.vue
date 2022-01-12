@@ -26,7 +26,7 @@
 				</uni-swipe-action>
 			</view>
 		</view>
-		<NonePage v-else></NonePage>
+		<NonePage v-else-if="status !== 'loading'"></NonePage>
 		
 		<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
 		
@@ -84,8 +84,11 @@
 			options.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', options.statusBarHeight);
 			this.getList();
 		},
-		onPullDownRefresh() {
-			uni.stopPullDownRefresh();  //停止下拉刷新动画
+		async onPullDownRefresh() {
+			await this.handleQuery();
+			setTimeout(() => {
+				uni.stopPullDownRefresh(); //停止下拉刷新动画
+			}, 700);
 		},
 		// 触底加载
 		onReachBottom() {
