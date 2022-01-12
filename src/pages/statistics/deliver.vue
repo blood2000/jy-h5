@@ -367,6 +367,7 @@
 			background: #59BE32;
 		}
 		.list-namedeliver{
+			position: relative;
 			font-size: 32upx;
 			font-weight: bold;
 			color: #333333;
@@ -374,6 +375,19 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+			padding-left: 52upx;
+			&:before {
+				position: absolute;
+				left: 0;
+				content: '';
+				display: block;
+				width: 42upx;
+				height: 42upx;
+				background: url('@/static/statistics/icon-company.png') no-repeat;
+				background-size: cover;
+				margin-right: 10upx;
+				flex-shrink: 0;
+			}
 		}
 		.list-namereceive{
 			font-size: 24upx;
