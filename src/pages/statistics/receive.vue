@@ -37,7 +37,7 @@
 				</view>
 				<view class="list-numframe flex align-center justify-between flex-wrap">
 					<view class="list-numlist">
-						<view class="list-numcont">{{item.carNum || 0}}</view>
+						<view class="list-numcont">{{item.carNum || 0 }}</view>
 						<view class="list-numtitle margin-stop">已完成车数</view>
 					</view>
 					<view class="list-numlist">
@@ -65,23 +65,23 @@
 							</view>
 							<view class="list-numframe flex align-center flex-wrap">
 								<view class="list-numlist">
-							<view class="list-numcont">{{item.carNum || 0}}</view>
+							<view class="list-numcont">{{itemChild.carNum || 0}}</view>
 							<view class="list-numtitle margin-stop">已完成车数</view>
 						</view>
 						<view class="list-numlist">
-							<view class="list-numcont">{{item.deliverNetWeight || 0}}</view>
+							<view class="list-numcont">{{itemChild.deliverNetWeight || 0}}</view>
 							<view class="list-numtitle margin-stop">总矿发（吨）</view>
 						</view>
 						<view class="list-numlist">
-							<view class="list-numcont">{{(item.netWeight) || 0}}</view>
+							<view class="list-numcont">{{(itemChild.netWeight) || 0}}</view>
 							<view class="list-numtitle margin-stop">总净重（吨）</view>
 						</view>
 						<view class="list-numlist">
-							<view class="list-numcont">{{item.realWeight || 0}}</view>
+							<view class="list-numcont">{{itemChild.realWeight || 0}}</view>
 							<view class="list-numtitle margin-stop">总实收（吨）</view>
 						</view>
 						<view class="list-numlist">
-							<view class="list-numcont">{{item.lossWeight || 0}}</view>
+							<view class="list-numcont">{{itemChild.lossWeight || 0}}</view>
 							<view class="list-numtitle margin-stop">盈亏（吨）</view>
 						</view>
 						</view>
