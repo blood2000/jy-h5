@@ -141,7 +141,10 @@
 				"navigationBarTitleText": "企业管理",
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true,
-				"navigationBarBackgroundColor": "#ffffff"
+				"navigationBarBackgroundColor": "#ffffff",
+				"app-plus": {
+					"softinputMode": "adjustPan"
+				}
 			}
 		},
 		// {
