@@ -30,43 +30,87 @@
 		</view>
 		<!-- 列表 -->
 		<view class="list-frame" v-for="(item, index) in list" :key="index">
-			<view class="list-componyframe flex align-center justify-between">
-				<view class="">
-					<view class="flex align-center">
-						<view class="list-tag list-tagbgreceive flex align-center justify-center">收</view>
-						<view class="list-namedeliver">{{item.recCompnayInfoName || '无'}}</view>
+			<view class="list-frame-inner">
+				<view class="list-componyframe flex align-center justify-between">
+					<view class="list-namedeliver">{{item.orderPlanInfoName || '无'}}</view>
+					<view class="list-goods">{{item.goodsTypeName || '无'}}</view>
+				</view>
+				<view class="list-numframe flex align-center justify-between flex-wrap">
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.carNum || 0 }}</view>
+						<view class="list-numtitle margin-stop">已完成车数</view>
 					</view>
-					<view class="flex align-center margin-stop">
-						<view class="list-tag list-tagbgdeliver flex align-center justify-center">发</view>
-						<view class="list-namereceive">{{item.sedCompnayInfoName || '无'}}</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.deliverNetWeight || 0}}</view>
+						<view class="list-numtitle margin-stop">总矿发（吨）</view>
+					</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{(item.netWeight) || 0}}</view>
+						<view class="list-numtitle margin-stop">总净重（吨）</view>
+					</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.realWeight || 0}}</view>
+						<view class="list-numtitle margin-stop">总实收（吨）</view>
+					</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.lossWeight || 0}}</view>
+						<view class="list-numtitle margin-stop">盈亏（吨）</view>
 					</view>
 				</view>
-				<view class="list-goods">{{item.goodsTypeName || '无'}}</view>
+				<template v-if="item.childList && item.childList.length > 0">
+					<block v-for="(itemChild, i) in item.childList" :key="i">
+						<view class="list-componyframe flex align-center justify-between">
+							<view class="list-namedeliver">{{itemChild.orderPlanInfoName || '无'}}</view>
+								<view class="list-goods">{{itemChild.goodsTypeName || '无'}}</view>
+							</view>
+							<view class="list-numframe flex align-center flex-wrap">
+								<view class="list-numlist">
+							<view class="list-numcont">{{itemChild.carNum || 0}}</view>
+							<view class="list-numtitle margin-stop">已完成车数</view>
+						</view>
+						<view class="list-numlist">
+							<view class="list-numcont">{{itemChild.deliverNetWeight || 0}}</view>
+							<view class="list-numtitle margin-stop">总矿发（吨）</view>
+						</view>
+						<view class="list-numlist">
+							<view class="list-numcont">{{(itemChild.netWeight) || 0}}</view>
+							<view class="list-numtitle margin-stop">总净重（吨）</view>
+						</view>
+						<view class="list-numlist">
+							<view class="list-numcont">{{itemChild.realWeight || 0}}</view>
+							<view class="list-numtitle margin-stop">总实收（吨）</view>
+						</view>
+						<view class="list-numlist">
+							<view class="list-numcont">{{itemChild.lossWeight || 0}}</view>
+							<view class="list-numtitle margin-stop">盈亏（吨）</view>
+						</view>
+						</view>
+					</block>
+				</template>
 			</view>
-			<view class="list-numframe flex align-center justify-between flex-wrap">
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.carNum || 0}}</view>
-					<view class="list-numtitle margin-stop">车数</view>
+			<view class="total">
+				<view class="item-total">
+					<view class="total-label total-label-hj">合计</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.netWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">原发数（净重）</view>
+				<view class="item-total">
+					<view class="total-label">车数</view>
+					<view class="total-val">{{ item.totolCarNum }}</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.realWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">实收数（实重）</view>
+				<view class="item-total">
+					<view class="total-label">矿发</view>
+					<view class="total-val">{{ item.totolDeliverNetWeight }}</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.grossWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">总毛重</view>
+				<view class="item-total">
+					<view class="total-label">净重</view>
+					<view class="total-val">{{ item.totolNetWeight }}</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.tareWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">总皮重</view>
+				<view class="item-total">
+					<view class="total-label">实收</view>
+					<view class="total-val">{{ item.totolRealWeight }}</view>
 				</view>
-				<view class="list-numlist">
-					<view class="list-numcont">{{item.lossWeight || 0}}</view>
-					<view class="list-numtitle margin-stop">亏涨吨</view>
+				<view class="item-total">
+					<view class="total-label">盈亏</view>
+					<view class="total-val">{{ item.totolLossWeight }}</view>
 				</view>
 			</view>
 		</view>
@@ -77,7 +121,7 @@
 
 <script>
 	import { mapState } from 'vuex';
-	import { planStatisticsList }from "@/config/service/statistics.js"
+	import { planStatisticsMergeList }from "@/config/service/statistics.js"
 	import uniData from '@/utils/uni.webview.1.5.2.js'
 	import NonePage from '@/components/NonePage/NonePage.vue';
 	export default {
@@ -162,7 +206,7 @@
 				uni.webView.navigateBack();
 			},
 			getList() {
-				planStatisticsList(this.quer, this.headerInfo).then(res => {
+				planStatisticsMergeList(this.quer, this.headerInfo).then(res => {
 					if(res.rows.length === 0) {
 						this.isEnd = true;
 						this.status = 'noMore';
@@ -170,6 +214,30 @@
 					}
 					if(res.rows.length < this.queryParams.pageSize){
 						this.status = 'noMore';
+					}
+					let newList = res.rows;
+					if(newList && newList.length > 0) {
+						newList.forEach(el => {
+							let totolCarNum = el.carNum || 0; // 总车量
+							let totolDeliverNetWeight = el.deliverNetWeight || 0; // 总矿发
+							let totolNetWeight = el.netWeight || 0; // 净重
+							let totolRealWeight = el.realWeight || 0; // 实收
+							let totolLossWeight = el.lossWeight || 0; // 盈亏
+							if(el.childList && el.childList.length > 0) {
+								el.childList.forEach(elChild => {
+									totolCarNum = totolCarNum + (elChild.carNum || 0);
+									totolDeliverNetWeight = totolDeliverNetWeight + (elChild.deliverNetWeight || 0);
+									totolNetWeight = totolNetWeight + (elChild.netWeight || 0);
+									totolRealWeight = totolRealWeight + (elChild.realWeight || 0);
+									totolLossWeight = totolLossWeight + (elChild.lossWeight || 0);
+								});
+							}
+							el.totolCarNum = totolCarNum;
+							el.totolDeliverNetWeight = totolDeliverNetWeight.toFixed(2);
+							el.totolNetWeight = totolNetWeight.toFixed(2);
+							el.totolRealWeight = totolRealWeight.toFixed(2);
+							el.totolLossWeight = totolLossWeight.toFixed(2);
+						});
 					}
 					this.list = [...this.list, ...res.rows];
 					uni.stopPullDownRefresh();
@@ -257,9 +325,13 @@
 .list-frame{
 	position: relative;
 	z-index: 1;
-	margin: 0 30upx 30upx;
-	background: #FFFFFF;
-	border-radius: 24upx;
+	margin: 0 30upx -10upx;
+	&-inner {
+		position: relative;
+		z-index: 2;
+		background: #FFFFFF;
+		border-radius: 24upx;
+	}
 	.list-componyframe{
 		padding: 43upx 30upx 24upx;
 		border-bottom: 1upx solid #F0F0F0;
@@ -278,18 +350,48 @@
 			background: #59BE32;
 		}
 		.list-namedeliver{
+			position: relative;
 			font-size: 32upx;
 			font-weight: bold;
 			color: #333333;
+			width: 50%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			padding-left: 52upx;
+			&:before {
+				position: absolute;
+				left: 0;
+				content: '';
+				display: block;
+				width: 42upx;
+				height: 42upx;
+				background: url('@/static/statistics/icon-company.png') no-repeat;
+				background-size: cover;
+				margin-right: 10upx;
+				flex-shrink: 0;
+			}
 		}
 		.list-namereceive{
 			font-size: 24upx;
 			color: #878787;
 		}
 		.list-goods{
-			font-size: 32upx;
+			font-size: 28upx;
 			font-weight: bold;
 			color: #3A65FF;
+			max-width: 50%;
+			height: 40upx;
+			line-height: 40upx;
+			text-align: center;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			text-align: right;
+			margin-left: 20upx;
+			background-color: #ebefff;
+			border-radius: 20upx;
+			padding: 0 20upx;
 		}
 	}
 	.list-numframe{
@@ -306,6 +408,58 @@
 				font-size: 24upx;
 				font-weight: 400;
 				color: #878787;
+			}
+		}
+	}
+	.total {
+		position: relative;
+		top: -40upx;
+		background-color: #3a65ff;
+		border-radius: 24upx;
+		display: flex;
+		flex-wrap: wrap;
+		padding: 20upx 30upx;
+		padding-top: 50upx;
+		.item-total {
+			display: flex;
+			align-items: baseline;
+			width: 33.33%;
+			padding: 10upx;
+			&:first-child {
+				position: relative;
+				&::after {
+					position: absolute;
+					right: 30upx;
+					transform: translateY(-50%);
+					top: 33upx;
+					content: '';
+					display: block;
+					width: 2upx;
+					height: 33upx;
+					background-color: rgba($color: #fff, $alpha: 0.18);
+				}
+			}
+			.total-label {
+				color: #fff;
+				font-size: 24upx;
+				margin-right: 10upx;
+				&-hj {
+					width: 125upx;
+					height: 37upx;
+					line-height: 37upx;
+					background-color: #ffffff;
+					border-radius: 0 18px 18px 18px;
+					font-size: 30upx;
+					color: #3a65ff;
+					font-weight: bold;
+					text-align: center;
+				}
+			}
+			.total-val {
+				color: #fff;
+				font-size: 34upx;
+				font-weight: bold;
+				font-family: Bahnschrift;
 			}
 		}
 	}

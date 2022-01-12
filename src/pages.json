@@ -136,27 +136,6 @@
 			}
 		},
 		{
-			"path": "pages/enterprise/index",
-			"style": {
-				"navigationBarTitleText": "企业管理",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true,
-				"navigationBarBackgroundColor": "#ffffff",
-				"app-plus": {
-					"softinputMode": "adjustPan"
-				}
-			}
-		},
-		// {
-		//   "path": "pages/enterprise/add",
-		//   "style": {
-		//     "navigationBarTitleText": "新增企业",
-		//     "navigationStyle": "custom",
-		//     "navigationBarBackgroundColor":"#ffffff",
-		// 	"enablePullDownRefresh": false
-		//   }
-		// },
-		{
 			"path": "pages/transportPlan/index",
 			"style": {
 				"navigationStyle": "custom",
@@ -196,7 +175,8 @@
 				"enablePullDownRefresh": false,
 				"navigationBarBackgroundColor": "#ffffff"
 			}
-		}, {
+		},
+		{
 			"path": "pages/statistics/receive",
 			"style": {
 				"navigationBarTitleText": "收货统计",
@@ -261,10 +241,82 @@
 				"navigationBarBackgroundColor": "#3a65ff"
 			}
 		}, {
+			"path": "pages/operate/pricingStrategy/index",
+			"style": {
+				"navigationBarTitleText": "运价策略",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/operate/pricingStrategy/edit",
+			"style": {
+				"navigationBarTitleText": "新增运价策略",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/operate/goodsPrice/index",
+			"style": {
+				"navigationBarTitleText": "货价策略",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/operate/goodsPrice/edit",
+			"style": {
+				"navigationBarTitleText": "新增货价策略",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": false
+			}
+		},{
+			"path": "pages/statistics/goodsSummary",
+			"style": {
+				"navigationBarTitleText": "货品汇总",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/appointment/index",
 			"style": {
 				"navigationBarTitleText": "预约",
-				"enablePullDownRefresh": true
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
+		},
+		{
+			"path": "pages/appointment/qrcode",
+			"style": {
+				"navigationBarTitleText": "QRCode",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
+		},
+		{
+			"path": "pages/appointment/makeAppointment",
+			"style": {
+				"navigationBarTitleText": "预约凭证信息",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
+		},
+		{
+			"path": "pages/appointment/appointmentDeatail",
+			"style": {
+				"navigationBarTitleText": "凭证信息",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#3a65ff"
 			}
 		}
 	],

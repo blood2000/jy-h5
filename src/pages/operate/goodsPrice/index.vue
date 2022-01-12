@@ -1,26 +1,33 @@
 <template>
 	<view class="u-page">
-		<HeaderBar title="地址管理" @back="navigateBack">
-			<text slot="right" @click="handleAdd">新增地址</text>
+		<HeaderBar title="货价策略" @back="navigateBack">
+			<text slot="right" @click="handleAdd">新增策略</text>
 		</HeaderBar>
-		
 		<view class="main">
 			<view class="list" v-if="true">
-				<view class="card-list" v-for="item,index in list" :key="index" @tap="handleEdit(item)">
-					<view class="title">
-						{{item.companyAddrName}}
+				<view class="card-list"  v-for="item,index in list" :key="index">
+					<view class="list-item" :class="modalName=='move-box-'+ index?'move-cur':''" 
+					@touchstart="ListTouchStart" @touchmove="ListTouchMove" @touchend="ListTouchEnd" :data-target="'move-box-' + index">
+						<view class="title">
+							{{item.name}}
+						</view>
+						<view class="goods">
+							货品：{{item.goodsTypeName}}
+						</view>
+						<view class="">
+							<span>当前定价：{{item.price ? item.price + '元' : 0}}</span>
+						</view>
+						<view class="">
+							<span>定价有效期：{{item.endTime ? item.startTime + ' 到 ' + item.endTime : item.startTime ? '长期有效' : '暂无定价'}}</span>
+						</view>
+						<view class="move">
+							<view class="bg-grey _btn" @tap="handleEdit(item)">编辑</view>
+							<view class="bg-red  _btn" @tap="handleDelete(item)">删除</view>
+						</view>
 					</view>
-					<view class="address">
-						{{item.detail}}
-					</view>
-					<view class="electric">
-						<img src="../../static/address/electric.png" mode="" />
-						<span>关联电子围栏数：{{item.zjFenceList ? item.zjFenceList.length : 0}}</span>
-					</view>
-					<view class="btn">
-						<switch class="switch-sex" :class="!item.status?'checked':''" :checked="!item.status" @tap.stop @change="changeStatus(item)" />
-					</view>
+					
 				</view>
+				
 			</view>
 			<uni-load-more v-if="list && list.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
 			<NonePage v-else></NonePage>
@@ -32,7 +39,7 @@
 
 <script>
 	import { mapState } from 'vuex';
-	import {getList,tenantCompanyAddressInfoUpdateStatus as changeStatus} from '@/config/service/address/index'
+	import {getList,deleteStrategy} from '@/config/service/operate/goodsPrice/index'
 	import NonePage from '@/components/NonePage/NonePage.vue';
 	import HeaderBar from '@/components/Building/HeaderBar2.vue';
 	export default {
@@ -42,6 +49,7 @@
 		},
 		computed: {
 			...mapState({
+				statusBarHeight: (state) => state.header.statusBarHeight,
 				headerInfo: state => state.header.headerInfo
 			})
 		},
@@ -50,7 +58,6 @@
 				list:[],
 				status:'more',
 				isEnd:false,
-				location:undefined,
 				contentText: {
 					contentdown: '上拉加载更多',
 					contentrefresh: '加载中',
@@ -60,20 +67,18 @@
 					pageNum: 1,
 					pageSize: 10
 				},
+				modalName:null
 			}
 		},
 		onShow(){
-			
+			this.handleQuery()
 		},
 		onLoad(option){
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': option.token
 			});
-			const {longitude,latitude} = JSON.parse(option.location)
-			this.location = longitude ? [longitude,latitude] : [116.397497,39.906888]
 			option.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', option.statusBarHeight);
-			this.handleQuery()
-			console.log(getCurrentPages());
+			
 			// this.getList();
 		},
 		onPullDownRefresh() {
@@ -121,30 +126,60 @@
 					this.status = 'noMore';
 				}
 				this.list = [...this.list,...data.data.list]
-				this.list.forEach(res => {
-					if(res.zjFenceList){
-						res.zjFenceList.forEach(item => {
-							Object.keys(item).forEach(v => {
-								if(item[v] === null ||item[v] === undefined ){
-									item[v] = ''
-								}
-							})
-						})
-					}
-				})
+				// this.list.forEach(res => {
+				// 	if(res.zjFenceList){
+				// 		res.zjFenceList.forEach(item => {
+				// 			Object.keys(item).forEach(v => {
+				// 				if(item[v] === null ||item[v] === undefined ){
+				// 					item[v] = ''
+				// 				}
+				// 			})
+				// 		})
+				// 	}
+				// })
 			},
 			handleAdd(){
 				uni.navigateTo({
-					url:"/pages/address/edit?location=" + JSON.stringify(this.location)
+					url:"/pages/operate/goodsPrice/edit"
 				})
 			},
 			handleEdit(item){
 				uni.navigateTo({
-					url:"/pages/address/edit?data=" + JSON.stringify(item)
+					url:`/pages/operate/goodsPrice/edit?id=${item.id}&tenantGoodsId=${item.tenantGoodsId}&name=${item.name}&effectivePlanNum=${item.orderPlanInfos ? item.orderPlanInfos.length : 0}`
 				})
 			},
-			changeStatus(item){
-				changeStatus({id:[item.id],status:(item.status ? 0 : 1)},this.headerInfo).then(() => {item.status = !item.status}) // this.handleQuery()
+			handleDelete(item){
+				uni.showModal({
+					title: '温馨提示',
+					content: '确定要删除这条策略?',
+					success: async res => {
+						if (res.confirm) {
+							deleteStrategy(item.id,this.headerInfo).then(res => {
+								this.msgSuccess('res.msg')
+								this.handleQuery()
+							})
+						}
+					}
+				})
+			},
+			// ListTouch触摸开始
+			ListTouchStart(e) {
+				this.listTouchStart = e.touches[0].pageX
+			},
+			
+			// ListTouch计算方向
+			ListTouchMove(e) {
+				this.listTouchDirection = e.touches[0].pageX - this.listTouchStart > 0 ? 'right' : 'left'
+			},
+			
+			// ListTouch计算滚动
+			ListTouchEnd(e) {
+				if (this.listTouchDirection == 'left') {
+					this.modalName = e.currentTarget.dataset.target
+				} else {
+					this.modalName = null
+				}
+				this.listTouchDirection = null
 			}
 		}
 	}
@@ -159,13 +194,19 @@
 			padding: 24upx 32upx;
 			background: #F5F5F5;
 			.card-list{
+				overflow: hidden;
 				position: relative;
-				padding: 20rpx;
+				// padding:	 20rpx;
 				// max-height: calc(100% - 75px) ;
 				width: 100%;
 				background: #FFFFFF;
 				margin-bottom: 22rpx;
 				border-radius: 16px;
+				.list-item{
+					padding: 20rpx;
+					transition: all .6s ease-in-out 0s;
+					// transform: translateX(0rpx);
+				}
 				.title{
 					width: 80%;
 					white-space: nowrap;
@@ -175,7 +216,7 @@
 					font-weight: bold;
 					margin-bottom: 12rpx;
 				}
-				.address{
+				.goods{
 					// width: 320px;
 					white-space: nowrap;
 					overflow: hidden;
@@ -183,32 +224,23 @@
 					margin-bottom: 12rpx;
 					color: #878787;
 				}
-				.electric{
-					font-weight: bold;
-					img{
-						height: 42rpx;
-						width: 42rpx;
-						margin-right: 12rpx;
-					}
-					span{
-						vertical-align: top;
+				.move{
+					display: flex;
+					position: absolute;
+					top: 0;
+					right: 0;
+					width: 200rpx;
+					height: 100%;
+					transform: translateX(100%);
+					._btn{
+						display: flex;
+						flex: 1;
+						justify-content: center;
+						align-items: center
 					}
 				}
-				.btn{
-					position: absolute;
-					top:20rpx;
-					right: 20rpx;
-					.switch-sex{
-						transform:scale(0.8)
-					}
-					.switch-sex::after {
-						content: "开";
-					}
-					
-					.switch-sex::before {
-						content: "关";
-					}
-					
+				.move-cur {
+					transform: translateX(-200rpx)
 				}
 			}
 		}

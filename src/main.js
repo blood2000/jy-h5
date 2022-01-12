@@ -10,7 +10,7 @@ import { getDicts, listByDict, getDictsByType } from '@/config/service/data';
 // import './config/bridge.js'
 //自定义指令
 import './directive'
-import { parseTime, numberFormat, numberFormatUnit, selectDictLabel } from './utils/ddc.js';
+import { parseTime, numberFormat, numberFormatUnit, selectDictLabel, floor } from './utils/ddc.js';
 //复制到剪贴板
 import VueClipboard from 'vue-clipboard2'
 Vue.use(VueClipboard)
@@ -43,7 +43,7 @@ import VueAMap from 'vue-amap';
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
   key: '2066cb0dafaa492aee47fa1090227a38', // 高德企业key
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.Driving', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'AMap.Geocoder', 'AMap.Marker','AMap.CitySearch','AMap.Geocoder'],
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.Driving', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'AMap.RectangleEditor','AMap.Geocoder', 'AMap.Marker','AMap.CitySearch','AMap.Geocoder'],
   v: '1.4.4',
   uiVersion: '1.1.1'
 });
@@ -59,6 +59,7 @@ Vue.prototype.selectDictLabel = selectDictLabel;
 Vue.prototype.$store = store;
 Vue.config.productionTip = false;
 Vue.prototype.getDicts = getDicts;
+Vue.prototype.floor = floor;
 Vue.prototype.listByDict = listByDict;
 Vue.prototype.getDictsByType = getDictsByType;
 
@@ -69,3 +70,4 @@ const app = new Vue({
 	store
 })
 app.$mount()
+

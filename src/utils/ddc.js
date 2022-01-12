@@ -1,3 +1,14 @@
+/**
+ * 四舍五入保留两位
+ * @param {*} number 数字
+ * @param {*} precision 保留位置(1= 小数一位 2=小数二位, -1= 位数, -2=百位数)
+ */
+export function floor(number, precision = 2) {
+  // return Math.floor(number * 100) / 100; // (截取)
+  return (number - 0).toFixed(precision); //  bug比较多
+  // return Math.round((number - 0) * Math.pow(10, precision)) / Math.pow(10, precision);
+}
+
 // 日期格式化
 export function parseTime(time, pattern) {
   if (arguments.length === 0 || !time) {
@@ -151,4 +162,39 @@ export function isPeriodFormate(date) {
   } else {
     return '';
   }
+}
+
+/**
+ * 节流
+ * @param {*} callback 
+ * @param {*} time 毫秒
+ * @returns 
+ */
+ export function ThrottleFun(callback, time) {
+  let canFlag = true;
+  return function(...argument) {
+    if (!canFlag) return;
+    canFlag = false;
+    setTimeout(function() {
+      canFlag = true;
+      callback(...argument);
+    }, time);
+  };
+}
+
+/**
+ * 防抖
+ * @param {*} callback 
+ * @param {*} time 毫秒
+ * @returns 
+ */
+export function DebounceFun(fun, delay) {
+  return function(args) {
+    let that = this;
+    let _args = args;
+    clearTimeout(fun.id);
+    fun.id = setTimeout(function() {
+      fun.call(that, _args);
+    }, delay);
+  };
 }

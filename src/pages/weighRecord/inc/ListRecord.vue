@@ -1,38 +1,39 @@
 <template>
   <view class="list-record" @click="navigateToDetail">
-    <view class="item-record" v-for="(item, index) in list" :key="index" :data-id="index">
+    <view class="item-record" v-for="item in list" :key="item.waybillNo" :data-waybillNo="item.waybillNo" :data-deviceNo="deviceNo">
       <view class="item-head building-bottom-line">
-        <text class="item-title">运输计划名称</text>
+        <text class="item-title">{{ item.orderPlanInfoName }}</text>
         <view class="item-head-right">
-          <img src="@/static/weighRecord/logo_ji.png" alt="" class="item-logo">
+          <img src="@/static/weighRecord/logo_chao.png" alt="" class="item-logo" v-if="item.isChy > 0">
+          <img src="@/static/weighRecord/logo_ji.png" alt="" class="item-logo" v-else>
           <i class="icon-arrow"></i>
         </view>
       </view>
       <view class="item-route building-bottom-line">
         <view class="route route-delivery">
-          <text>衢州宝红建材有限公司</text>
+          <text>{{ item.sedCompnayInfoName }}</text>
         </view>
         <view class="route route-receipt">
-          <text>浙江宝红商品砼有限公司</text>
+          <text>{{ item.recCompnayInfoName }}</text>
         </view>
       </view>
       <view class="item-info">
         <view class="item-info-name">
           <view>
             <text class="label">货物：</text>
-            <text class="val">小石头</text>
+            <text class="val">{{ item.goodsTypeName }}</text>
           </view>
           <view>
             <text class="label">过磅类型：</text>
-            <text class="val">皮重</text>
+            <text class="val">{{ item.weighingTypeName }}</text>
           </view>
         </view>
         <view class="item-info-number">
-          <view class="car-no">闽A12345</view>
-          <view class="tel">兔斯基 13700000000</view>
+          <view class="car-no">{{ item.licenseNumber }}</view>
+          <view class="tel">{{ item.driverName }} {{ item.driverPhone }}</view>
         </view>
         <view class="item-info-time">
-          过磅时间：2021-12-12 18:18:40
+          过磅时间：{{ item.createTime }}
         </view>
       </view>
     </view>
@@ -46,7 +47,11 @@
       list: {
         type: Array,
         default: []
-      }
+      },
+			deviceNo: {
+				type: String,
+        default: ''
+			}
     },
     methods: {
       /**
@@ -54,9 +59,9 @@
        * @param {Object} e 当前点击对象
        */
       navigateToDetail(e) {
-        if(e.target.dataset.id >= 0) {
+        if(e.target.dataset.waybillNo >= 0) {
           uni.navigateTo({
-            url: `/pages/weighRecord/detail?id=${e.target.dataset.id}`
+            url: `/pages/weighRecord/detail?waybillNo=${e.target.dataset.waybillNo}&deviceNo=${this.deviceNo}`
           });
         }
       }
