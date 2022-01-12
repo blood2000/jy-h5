@@ -208,7 +208,7 @@
 				let quer = this.quer;
 				quer.pageNum = 1;
 				uni.navigateTo({
-					url: `/pages/statistics/goodsSummary?token=${this.token}&quer=${JSON.stringify(quer)}`
+					url: `/pages/statistics/goodsSummary?statusBarHeight=${this.statusBarHeight}&token=${this.token}&quer=${JSON.stringify(quer)}`
 				})
 			},
 			handleBack() {

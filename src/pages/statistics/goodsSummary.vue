@@ -1,5 +1,15 @@
 <template>
 	<view class="home-page">
+		<!-- 头部 -->
+		<view :style="{height:statusBarHeight*2 + 108 +'upx'}"></view>
+		<view class="title-frame">
+			<view :style="{height:statusBarHeight*2+'upx'}"></view>
+			<view class="title-bar size36 flex align-center justify-between">
+				<view class="cuIcon-back" @click="handleBack"></view>
+				<view class="text-bold">货品汇总</view>
+				<view class="cuIcon-back" style="opacity: 0;"></view>
+			</view>
+		</view>
 		<view v-for="(item,index) in list" :key="index" class="list-frame flex align-center flex-wrap">
 			<view class="list-item" style="border-right: 1upx solid #ebebeb;width: 30%;">
 				<view class="list-title flex justify-center">{{item.goodsTypeName}}</view>
@@ -72,6 +82,7 @@
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': option.token
 			});
+			this.statusBarHeight = option.statusBarHeight;
 			console.log(option);
 			this.queryParams = JSON.parse(option.quer);
 			console.log(this.queryParams);
@@ -92,7 +103,7 @@
 		},
 		methods: {
 			handleBack() {
-				uni.webView.navigateBack();
+				uni.navigateBack();
 			},
 			getList() {
 				statisticsList(this.queryParams, this.headerInfo).then(res => {
@@ -120,6 +131,18 @@
 </script>
 
 <style lang="scss" scoped>
+.title-frame{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 10;
+	background-color: #FFFFFF;
+	.title-bar{
+		padding: 30upx;
+		color: #333333;
+	}
+}
 .list-frame{
 	margin: 24upx 30upx 0;
 	padding: 0 20upx 30upx;
