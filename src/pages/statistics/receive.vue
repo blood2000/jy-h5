@@ -377,15 +377,21 @@
 			color: #878787;
 		}
 		.list-goods{
-			font-size: 32upx;
+			font-size: 28upx;
 			font-weight: bold;
 			color: #3A65FF;
-			width: 50%;
+			max-width: 50%;
+			height: 40upx;
+			line-height: 40upx;
+			text-align: center;
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			text-align: right;
 			margin-left: 20upx;
+			background-color: #ebefff;
+			border-radius: 20upx;
+			padding: 0 20upx;
 		}
 	}
 	.list-numframe{
