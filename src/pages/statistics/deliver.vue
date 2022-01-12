@@ -10,12 +10,12 @@
 			</view>
 			<view class="time-frame flex align-center text-white text-bold">
 				<image class="time-icon margin-mright" src="/static/statistics/icon_time.png" mode=""></image>
-				<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" end="3000-01-01" @change="startDateChange">
+				<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" :end="queryParams.endCreateTime?queryParams.endCreateTime:'3000-01-01'" @change="startDateChange">
 					<view v-if="queryParams.startCreateTime" class="picker">{{queryParams.startCreateTime}}</view>
 					<view v-else class="picker">选择开始时间</view>
 				</picker>
 				<view class="margin-lr">到</view>
-				<picker mode="date" :value="queryParams.endCreateTime" start="1900-01-01" end="3000-01-01" @change="endDateChange">
+				<picker mode="date" :value="queryParams.endCreateTime" :start="queryParams.startCreateTime?queryParams.startCreateTime:'1900-01-01'" end="3000-01-01" @change="endDateChange">
 					<view v-if="queryParams.endCreateTime" class="picker">{{queryParams.endCreateTime}}</view>
 					<view v-else class="picker">选择结束时间</view>
 				</picker>
