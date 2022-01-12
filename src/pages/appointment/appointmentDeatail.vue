@@ -27,6 +27,18 @@
 				</image>
 				<text class="stationView_nameLabel">承运记录</text>
 			</view>
+			<view class="historyListView">
+				<view v-for="(item,index) in appointmentInfo.history" :key="index">
+					<view class="historyListView_row">
+						<view :class="item.isFinished?'historyListView_row_statusLabel_finished':'historyListView_row_statusLabel_noFinished'">{{item.isFinished?'已完成':'未完成'}}</view>
+						<view class="historyListView_row_columnView">
+							<view class="historyListView_row_licenseLabel">{{item.licenseNumber}}</view>
+							<view class="historyListView_row_dateLabel">{{item.dateStr}}</view>
+							<view class="historyListView_row_line"></view>
+						</view>
+					</view>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -48,64 +60,21 @@
 					dateStr: '2021-12-29～2021-12-29',
 					canAppointmentCount: '10086',
 					haveShipCount: '99',
-					canAppointmentTime: [{
-							timeStr: '9:00',
-							isAvailable: false,
-							isSelected: false
+					history: [{
+							isFinished: false,
+							licenseNumber: '闽A12345',
+							dateStr: '2021/12/13  12:26:12'
 						},
 						{
-							timeStr: '10:00',
-							isAvailable: true,
-							isSelected: true
+							isFinished: true,
+							licenseNumber: '闽A12345',
+							dateStr: '2021/12/05  12:26:12'
 						},
 						{
-							timeStr: '11:00',
-							isAvailable: true,
-							isSelected: false
-						},
-						{
-							timeStr: '12:00',
-							isAvailable: true,
-							isSelected: false
-						}, {
-							timeStr: '9:00',
-							isAvailable: false,
-							isSelected: false
-						},
-						{
-							timeStr: '10:00',
-							isAvailable: true,
-							isSelected: false
-						},
-						{
-							timeStr: '11:00',
-							isAvailable: true,
-							isSelected: false
-						},
-						{
-							timeStr: '12:00',
-							isAvailable: true,
-							isSelected: false
-						}, {
-							timeStr: '9:00',
-							isAvailable: false,
-							isSelected: false
-						},
-						{
-							timeStr: '10:00',
-							isAvailable: true,
-							isSelected: false
-						},
-						{
-							timeStr: '11:00',
-							isAvailable: true,
-							isSelected: false
-						},
-						{
-							timeStr: '12:00',
-							isAvailable: true,
-							isSelected: false
-						},
+							isFinished: true,
+							licenseNumber: '闽A12345',
+							dateStr: '2021/12/03  12:26:12'
+						}
 					],
 				}
 			}
@@ -199,5 +168,69 @@
 		margin-left: 24upx;
 		margin-right: 24upx;
 		margin-top: 54upx;
+	}
+	
+	.historyListView {
+		display: flex;
+		align-items: flex-start;
+		flex-direction: column;
+		justify-content: space-between;
+		margin-left: 44upx;
+		margin-right: 44upx;
+		margin-top: 34upx;
+	}
+	
+	.historyListView_row {
+		display: flex;
+		align-items: flex-start;
+		flex-direction: row;
+		justify-content: center;
+	}
+	
+	.historyListView_row_statusLabel_noFinished {
+		font-size: 28upx;
+		color: #EE3D54;
+		padding-left: 13upx;
+		flex-shrink: 0;
+	}
+	
+	.historyListView_row_statusLabel_finished {
+		font-size: 28upx;
+		color: #24B494;
+		padding-left: 13upx;
+		flex-shrink: 0;
+	}
+	
+	.historyListView_row_columnView {
+		display: flex;
+		align-items: flex-start;
+		flex-direction: column;
+		justify-content: space-between;
+		margin-left: 40upx;
+		margin-right: 44upx;
+	}
+	
+	.historyListView_row_licenseLabel {
+		font-size: 32upx;
+		font-weight: bold;
+		color: #333333;
+		font-family: PingFang SC;
+	}
+	
+	.historyListView_row_dateLabel {
+		font-size: 28upx;
+		color: #999999;
+		font-family: PingFang SC;
+		padding-top: 28upx;
+	}
+	
+	.historyListView_row_line {
+		font-size: 28upx;
+		color: #999999;
+		margin-top: 34upx;
+		padding-bottom: 33upx;
+		width: calc(100vw - 238upx);
+		height: 1upx;
+		border-top: solid #EBEBEB 1upx;
 	}
 </style>
