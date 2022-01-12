@@ -55,8 +55,8 @@
 		data() {
 			return {
 				statusBar12: 0,
-				redRing: '/static/appointment/appointment_company.png',
-				greenRing: '/static/appointment/appointment_company.png',
+				redRing: '/static/appointment/appointment_redRing.png',
+				greenRing: '/static/appointment/appointment_greenRing.png',
 				appointmentInfo: {
 					companyName: '山西汇通上报有限公司',
 					stationName: '五福洗煤场/32号堆',
