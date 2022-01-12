@@ -29,12 +29,33 @@
 			<view class="list-bg"></view>
 		</view>
 		<!-- 列表 -->
+<<<<<<< HEAD
 		<view class="list-frame" v-for="(item, index) in list" :key="index">
 			<view class="list-componyframe flex align-center justify-between">
 				<view class="">
 					<view class="flex align-center">
 						<view class="list-tag list-tagbgreceive flex align-center justify-center">收</view>
 						<view class="list-namedeliver">{{item.recCompnayInfoName || '无'}}</view>
+=======
+		<view class="list-frame" :class="{'list-frame-total': item.childList && item.childList.length > 0}" v-for="(item, index) in list" :key="index">
+			<view class="list-frame-inner">
+				<view class="list-componyframe flex align-center justify-between">
+					<view class="list-namedeliver">{{item.orderPlanInfoName || '无'}}</view>
+					<view class="list-goods">{{item.goodsTypeName || '无'}}</view>
+				</view>
+				<view class="list-numframe flex align-center justify-between flex-wrap">
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.carNum || 0 }}</view>
+						<view class="list-numtitle margin-stop">已完成车数</view>
+					</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{item.deliverNetWeight || 0}}</view>
+						<view class="list-numtitle margin-stop">总矿发（吨）</view>
+					</view>
+					<view class="list-numlist">
+						<view class="list-numcont">{{(item.netWeight) || 0}}</view>
+						<view class="list-numtitle margin-stop">总净重（吨）</view>
+>>>>>>> 1420913bccfc9cedbb0a191cc50d313e704c82c8
 					</view>
 					<view class="flex align-center margin-stop">
 						<view class="list-tag list-tagbgdeliver flex align-center justify-center">发</view>
@@ -43,10 +64,16 @@
 				</view>
 				<view class="list-goods">{{item.goodsTypeName || '无'}}</view>
 			</view>
+<<<<<<< HEAD
 			<view class="list-numframe flex align-center justify-between flex-wrap">
 				<view class="list-numlist">
 					<view class="list-numcont">{{item.carNum || 0}}</view>
 					<view class="list-numtitle margin-stop">车数</view>
+=======
+			<view class="total" v-if="item.childList && item.childList.length > 0">
+				<view class="item-total">
+					<view class="total-label total-label-hj">合计</view>
+>>>>>>> 1420913bccfc9cedbb0a191cc50d313e704c82c8
 				</view>
 				<view class="list-numlist">
 					<view class="list-numcont">{{item.netWeight || 0}}</view>
@@ -257,9 +284,22 @@
 .list-frame{
 	position: relative;
 	z-index: 1;
+<<<<<<< HEAD
 	margin: 0 30upx 30upx;
 	background: #FFFFFF;
 	border-radius: 24upx;
+=======
+	margin: 0 30upx 24upx;
+	&-total {
+		margin: 0 30upx -14upx;
+	}
+	&-inner {
+		position: relative;
+		z-index: 2;
+		background: #FFFFFF;
+		border-radius: 24upx;
+	}
+>>>>>>> 1420913bccfc9cedbb0a191cc50d313e704c82c8
 	.list-componyframe{
 		padding: 43upx 30upx 24upx;
 		border-bottom: 1upx solid #F0F0F0;

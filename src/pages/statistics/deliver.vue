@@ -28,7 +28,7 @@
 			<view class="list-bg"></view>
 		</view>
 		<!-- 列表 -->
-		<view class="list-frame" v-for="(item, index) in list" :key="index">
+		<view class="list-frame" :class="{'list-frame-total': item.childList && item.childList.length > 0}" v-for="(item, index) in list" :key="index">
 			<view class="list-frame-inner">
 				<view class="list-componyframe flex align-center justify-between">
 					<view class="list-namedeliver">{{item.orderPlanInfoName || '无'}}</view>
@@ -87,7 +87,7 @@
 					</block>
 				</template>
 			</view>	
-			<view class="total">
+			<view class="total" v-if="item.childList && item.childList.length > 0">
 				<view class="item-total">
 					<view class="total-label total-label-hj">合计</view>
 				</view>
@@ -342,7 +342,10 @@
 .list-frame{
 	position: relative;
 	z-index: 1;
-	margin: 0 30upx -10upx;
+	margin: 0 30upx 24upx;
+	&-total {
+		margin: 0 30upx -14upx;
+	}
 	&-inner {
 		position: relative;
 		z-index: 2;
