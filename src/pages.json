@@ -318,6 +318,15 @@
 				"enablePullDownRefresh": true,
 				"navigationBarBackgroundColor": "#3a65ff"
 			}
+		},
+		{
+			"path": "pages/enterprise/index",
+			"style": {
+			  "navigationBarTitleText": "企业管理",
+			  "navigationStyle": "custom",
+			  "enablePullDownRefresh": true,
+			  "navigationBarBackgroundColor":"#ffffff"
+			}
 		}
 	],
 	"globalStyle": {
