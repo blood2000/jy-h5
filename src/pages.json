@@ -302,6 +302,15 @@
 				"enablePullDownRefresh": true,
 				"navigationBarBackgroundColor": "#3a65ff"
 			}
+		},
+		{
+			"path": "pages/appointment/appointmentDeatail",
+			"style": {
+				"navigationBarTitleText": "凭证信息",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
 		}
 	],
 	"globalStyle": {
