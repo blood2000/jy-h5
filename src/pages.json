@@ -3,284 +3,311 @@
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 	},
 	"pages": [
-    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-    // 启动页
-	
-	{
-		"path": "pages/workbench/index",
-		"style": {
-			"navigationBarTitleText": "工作台",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": true
-		}
-	},
-    {
-      "path": "pages/generalTable/index",
-      "style": {
-        "navigationBarTitleText": "通用页",
-        "navigationStyle": "custom",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/building/v1/index",
-      "style": {
-        "navigationBarTitleText": "厂区管理",
-        "navigationStyle": "custom",
-        "enablePullDownRefresh": true,
-        "navigationBarBackgroundColor": "#3A65FF"
-      }
-    },
-    {
-      "path": "pages/building/v1/buildingType",
-      "style": {
-        "navigationBarTitleText": "添加场区分类",
-        "navigationStyle": "custom",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#3A65FF"
-      }
-    },
-    {
-      "path": "pages/building/v1/addBuilding",
-      "style": {
-        "navigationBarTitleText": "添加场区",
-        "navigationStyle": "custom",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#3A65FF"
-      }
-    },
-	{
-	  "path": "pages/capacity/vehicle/index",
-	  "style": {
-	    "navigationBarTitleText": "车辆管理",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false
-	  }
-	},
-	{
-	  "path": "pages/capacity/vehicle/add",
-	  "style": {
-	    "navigationBarTitleText": "新增车辆",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false
-	  }
-	},
-	{
-	  "path": "pages/capacity/vehicle/auth",
-	  "style": {
-	    "navigationBarTitleText": "提交S认证",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false
-	  }
-	},
-	{
-	  "path": "pages/capacity/driver/index",
-	  "style": {
-	    "navigationBarTitleText": "司机管理",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false
-	  }
-	},
-	{
-	  "path": "pages/capacity/driver/add",
-	  "style": {
-	    "navigationBarTitleText": "新增司机",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false
-	  }
-	},
-	{
-	  "path": "pages/capacity/driver/auth",
-	  "style": {
-	    "navigationBarTitleText": "提交S认证",
-	    "navigationStyle": "custom",
-	    "enablePullDownRefresh": false
-	  }
-	},
-	
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		// 启动页
 
-	{
-		"path": "pages/material/index",
-		"style": {
-		  "navigationBarTitleText": "物料管理",
-		  "navigationStyle": "custom",
-		  "enablePullDownRefresh": true,
-		  "navigationBarBackgroundColor":"#ffffff"
+		{
+			"path": "pages/workbench/index",
+			"style": {
+				"navigationBarTitleText": "工作台",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/generalTable/index",
+			"style": {
+				"navigationBarTitleText": "通用页",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/building/v1/index",
+			"style": {
+				"navigationBarTitleText": "厂区管理",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#3A65FF"
+			}
+		},
+		{
+			"path": "pages/building/v1/buildingType",
+			"style": {
+				"navigationBarTitleText": "添加场区分类",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#3A65FF"
+			}
+		},
+		{
+			"path": "pages/building/v1/addBuilding",
+			"style": {
+				"navigationBarTitleText": "添加场区",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#3A65FF"
+			}
+		},
+		{
+			"path": "pages/capacity/vehicle/index",
+			"style": {
+				"navigationBarTitleText": "车辆管理",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/capacity/vehicle/add",
+			"style": {
+				"navigationBarTitleText": "新增车辆",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/capacity/vehicle/auth",
+			"style": {
+				"navigationBarTitleText": "提交S认证",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/capacity/driver/index",
+			"style": {
+				"navigationBarTitleText": "司机管理",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/capacity/driver/add",
+			"style": {
+				"navigationBarTitleText": "新增司机",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/capacity/driver/auth",
+			"style": {
+				"navigationBarTitleText": "提交S认证",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+
+
+		{
+			"path": "pages/material/index",
+			"style": {
+				"navigationBarTitleText": "物料管理",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#ffffff"
+			}
+		},
+		{
+			"path": "pages/material/materialCategory",
+			"style": {
+				"navigationBarTitleText": "新增物料",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/orders/index",
+			"style": {
+				"navigationBarTitleText": "货源管理",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#ffffff"
+			}
+		},
+		{
+			"path": "pages/orders/add",
+			"style": {
+				"navigationBarTitleText": "新增货源",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/transportPlan/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "运输计划",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/address/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "地址管理",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/address/edit",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "新增地址",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/address/map",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "新增电子围栏",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/transportPlan/add",
+			"style": {
+				"navigationBarTitleText": "创建收货计划",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#ffffff"
+			}
+		},
+		{
+			"path": "pages/statistics/receive",
+			"style": {
+				"navigationBarTitleText": "收货统计",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#ffffff"
+			}
+		}, {
+			"path": "pages/statistics/deliver",
+			"style": {
+				"navigationBarTitleText": "发货统计",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#ffffff"
+			}
+		}, {
+			"path": "pages/statistics/custom",
+			"style": {
+				"navigationBarTitleText": "自定义统计",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#ffffff"
+			}
+		}, {
+			"path": "pages/protocol/privacyPolicy",
+			"style": {
+				"navigationBarTitleText": "隐私政策",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/protocol/userAgreement",
+			"style": {
+				"navigationBarTitleText": "用户协议",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/weighRecord/index",
+			"style": {
+				"navigationBarTitleText": "过磅记录",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
+		},
+		{
+			"path": "pages/weighRecord/list",
+			"style": {
+				"navigationBarTitleText": "过磅记录",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
+		}, {
+			"path": "pages/weighRecord/detail",
+			"style": {
+				"navigationBarTitleText": "过磅记录详情",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
+		}, {
+			"path": "pages/operate/pricingStrategy/index",
+			"style": {
+				"navigationBarTitleText": "运价策略",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/operate/pricingStrategy/edit",
+			"style": {
+				"navigationBarTitleText": "新增运价策略",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/operate/goodsPrice/index",
+			"style": {
+				"navigationBarTitleText": "货价策略",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/operate/goodsPrice/edit",
+			"style": {
+				"navigationBarTitleText": "新增货价策略",
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor": "#ffffff",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/appointment/index",
+			"style": {
+				"navigationBarTitleText": "预约",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
+		},
+		{
+			"path": "pages/appointment/qrcode",
+			"style": {
+				"navigationBarTitleText": "QRCode",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
+		},
+		{
+			"path": "pages/appointment/makeAppointment",
+			"style": {
+				"navigationBarTitleText": "预约凭证信息",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#3a65ff"
+			}
 		}
-	},
-	{
-	  "path": "pages/material/materialCategory",
-	  "style": {
-	    "navigationBarTitleText": "新增物料",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": false
-	  }
-	},
-	{
-		"path": "pages/orders/index",
-		"style": {
-		  "navigationBarTitleText": "货源管理",
-		  "navigationStyle": "custom",
-		  "enablePullDownRefresh": true,
-		  "navigationBarBackgroundColor":"#ffffff"
-		}
-	},
-	{
-	  "path": "pages/orders/add",
-	  "style": {
-	    "navigationBarTitleText": "新增货源",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": false
-	  }
-	},
-	{
-		"path": "pages/transportPlan/index",
-		"style": {
-		  "navigationStyle": "custom",
-		  "navigationBarTitleText": "运输计划",
-		  "enablePullDownRefresh": true
-		}
-	},
-	{
-		"path": "pages/address/index",
-		"style": {
-		  "navigationStyle": "custom",
-		  "navigationBarTitleText": "地址管理",
-		  "enablePullDownRefresh": true
-		}
-	},
-	{
-		"path": "pages/address/edit",
-		"style": {
-		  "navigationStyle": "custom",
-		  "navigationBarTitleText": "新增地址",
-		  "enablePullDownRefresh": false
-		}
-	},
-	{
-		"path": "pages/address/map",
-		"style": {
-		  "navigationStyle": "custom",
-		  "navigationBarTitleText": "新增电子围栏",
-		  "enablePullDownRefresh": false
-		}
-	},
-	{
-		"path": "pages/transportPlan/add",
-		"style": {
-			"navigationBarTitleText": "创建收货计划",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#ffffff"
-		}
-	},
-	{
-		"path": "pages/statistics/receive",
-		"style": {
-			"navigationBarTitleText": "收货统计",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#ffffff"
-		}
-	},{
-		"path": "pages/statistics/deliver",
-		"style": {
-			"navigationBarTitleText": "发货统计",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#ffffff"
-		}
-	},{
-		"path": "pages/statistics/custom",
-		"style": {
-			"navigationBarTitleText": "自定义统计",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#ffffff"
-		}
-	},{
-		"path": "pages/protocol/privacyPolicy",
-		"style": {
-			"navigationBarTitleText": "隐私政策",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false
-		}
-	},{
-		"path": "pages/protocol/userAgreement",
-		"style": {
-			"navigationBarTitleText": "用户协议",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false
-		}
-	},
-	{
-		"path": "pages/weighRecord/index",
-		"style": {
-			"navigationBarTitleText": "过磅记录",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#3a65ff"
-		}
-	},
-	{
-		"path": "pages/weighRecord/list",
-		"style": {
-			"navigationBarTitleText": "过磅记录",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#3a65ff"
-		}
-	},{
-		"path": "pages/weighRecord/detail",
-		"style": {
-			"navigationBarTitleText": "过磅记录详情",
-			"navigationStyle": "custom",
-			"enablePullDownRefresh": false,
-			"navigationBarBackgroundColor": "#3a65ff"
-		}
-	},{
-	  "path": "pages/operate/pricingStrategy/index",
-	  "style": {
-	    "navigationBarTitleText": "运价策略",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": true
-	  }
-	},
-	{
-	  "path": "pages/operate/pricingStrategy/edit",
-	  "style": {
-	    "navigationBarTitleText": "新增运价策略",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": false
-	  }
-	},
-	{
-	  "path": "pages/operate/goodsPrice/index",
-	  "style": {
-	    "navigationBarTitleText": "货价策略",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": true
-	  }
-	},
-	{
-	  "path": "pages/operate/goodsPrice/edit",
-	  "style": {
-	    "navigationBarTitleText": "新增货价策略",
-	    "navigationStyle": "custom",
-	    "navigationBarBackgroundColor":"#ffffff",
-		"enablePullDownRefresh": false
-	  }
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "统计",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#fff"
 	}
-  ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "统计",
-    "navigationBarBackgroundColor": "#fff",
-    "backgroundColor": "#fff"
-  }
 }
