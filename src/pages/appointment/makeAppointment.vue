@@ -30,7 +30,7 @@
 			</view>
 			<view class="timeGridView">
 				<view v-for="(item,index) in appointmentInfo.canAppointmentTime" :key="index">
-					<view class="img-text">{{item.timeStr}}</view>
+					<button class="timeGridView_button">{{item.timeStr}}</button>
 				</view>
 			</view>
 			<view class="form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
@@ -243,13 +243,22 @@
 	}
 
 	.timeGridView {
-		/* 		margin-top: 42upx;
+		margin-top: 12upx;
 		margin-left: 88upx;
-		margin-right: 88upx; */
+		margin-right: 88upx;
 		display: flex;
 		align-items: center;
 		flex-direction: row;
-		justify-content: space-between;
+		justify-content: flex-start;
 		flex-wrap: wrap;
 	}
+	
+	.timeGridView_button {
+		margin-right: 30upx;
+		margin-top: 30upx;
+		width: 120upx;
+		height: 64upx;
+		border-radius: 10upx;
+	}
+	
 </style>
