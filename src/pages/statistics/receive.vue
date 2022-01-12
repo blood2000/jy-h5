@@ -10,12 +10,12 @@
 			</view>
 			<view class="time-frame flex align-center text-white text-bold">
 				<image class="time-icon margin-mright" src="/static/statistics/icon_time.png" mode=""></image>
-				<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" :end="queryParams.endCreateTime?queryParams.endCreateTime:'3000-01-01'" @change="startDateChange">
+				<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" end="3000-01-01" @change="startDateChange">
 					<view v-if="queryParams.startCreateTime" class="picker">{{queryParams.startCreateTime}}</view>
 					<view v-else class="picker">选择开始时间</view>
 				</picker>
 				<view class="margin-lr">到</view>
-				<picker mode="date" :value="queryParams.endCreateTime" :start="queryParams.startCreateTime?queryParams.startCreateTime:'1900-01-01'" end="3000-01-01" @change="endDateChange">
+				<picker mode="date" :value="queryParams.endCreateTime" start="1900-01-01" end="3000-01-01" @change="endDateChange">
 					<view v-if="queryParams.endCreateTime" class="picker">{{queryParams.endCreateTime}}</view>
 					<view v-else class="picker">选择结束时间</view>
 				</picker>
@@ -29,33 +29,12 @@
 			<view class="list-bg"></view>
 		</view>
 		<!-- 列表 -->
-<<<<<<< HEAD
 		<view class="list-frame" v-for="(item, index) in list" :key="index">
 			<view class="list-componyframe flex align-center justify-between">
 				<view class="">
 					<view class="flex align-center">
 						<view class="list-tag list-tagbgreceive flex align-center justify-center">收</view>
 						<view class="list-namedeliver">{{item.recCompnayInfoName || '无'}}</view>
-=======
-		<view class="list-frame" :class="{'list-frame-total': item.childList && item.childList.length > 0}" v-for="(item, index) in list" :key="index">
-			<view class="list-frame-inner">
-				<view class="list-componyframe flex align-center justify-between">
-					<view class="list-namedeliver">{{item.orderPlanInfoName || '无'}}</view>
-					<view class="list-goods">{{item.goodsTypeName || '无'}}</view>
-				</view>
-				<view class="list-numframe flex align-center justify-between flex-wrap">
-					<view class="list-numlist">
-						<view class="list-numcont">{{item.carNum || 0 }}</view>
-						<view class="list-numtitle margin-stop">已完成车数</view>
-					</view>
-					<view class="list-numlist">
-						<view class="list-numcont">{{item.deliverNetWeight || 0}}</view>
-						<view class="list-numtitle margin-stop">总矿发（吨）</view>
-					</view>
-					<view class="list-numlist">
-						<view class="list-numcont">{{(item.netWeight) || 0}}</view>
-						<view class="list-numtitle margin-stop">总净重（吨）</view>
->>>>>>> 1420913bccfc9cedbb0a191cc50d313e704c82c8
 					</view>
 					<view class="flex align-center margin-stop">
 						<view class="list-tag list-tagbgdeliver flex align-center justify-center">发</view>
@@ -64,16 +43,10 @@
 				</view>
 				<view class="list-goods">{{item.goodsTypeName || '无'}}</view>
 			</view>
-<<<<<<< HEAD
 			<view class="list-numframe flex align-center justify-between flex-wrap">
 				<view class="list-numlist">
 					<view class="list-numcont">{{item.carNum || 0}}</view>
 					<view class="list-numtitle margin-stop">车数</view>
-=======
-			<view class="total" v-if="item.childList && item.childList.length > 0">
-				<view class="item-total">
-					<view class="total-label total-label-hj">合计</view>
->>>>>>> 1420913bccfc9cedbb0a191cc50d313e704c82c8
 				</view>
 				<view class="list-numlist">
 					<view class="list-numcont">{{item.netWeight || 0}}</view>
@@ -209,25 +182,39 @@
 				this.list = [];
 			},
 			startDateChange(e) {
-				this.queryParams.startCreateTime = e.detail.value
 				if (this.queryParams.endCreateTime){
-					this.clearQuery();
-					this.queryParams = {
-						...this.queryParams,
-						pageNum: 1
+					if (new Date(this.parseTime(this.queryParams.endCreateTime, '{y}/{m}/{d} {h}:{i}{s}')).getTime() < new Date(this.parseTime(this.queryParams.startCreateTime, '{y}/{m}/{d} {h}:{i}{s}')).getTime()){
+						this.msgSuccess('开始时间必须小于或等于结束时间，请重新选择');
+						this.queryParams.startCreateTime = null;
+					} else {
+						this.queryParams.startCreateTime = e.detail.value;
+						this.clearQuery();
+						this.queryParams = {
+							...this.queryParams,
+							pageNum: 1
+						}
+						this.getList();
 					}
-					this.getList();
+				} else {
+					this.queryParams.startCreateTime = e.detail.value;
 				}
 			},
 			endDateChange(e) {
-				this.queryParams.endCreateTime = e.detail.value
 				if (this.queryParams.startCreateTime){
-					this.clearQuery();
-					this.queryParams = {
-						...this.queryParams,
-						pageNum: 1
+					if (new Date(this.parseTime(this.queryParams.endCreateTime, '{y}/{m}/{d} {h}:{i}{s}')).getTime() < new Date(this.parseTime(this.queryParams.startCreateTime, '{y}/{m}/{d} {h}:{i}{s}')).getTime()){
+						this.msgSuccess('结束时间必须大于或等于开始时间，请重新选择');
+						this.queryParams.endCreateTime = '';
+					} else {
+						this.queryParams.endCreateTime = e.detail.value;
+						this.clearQuery();
+						this.queryParams = {
+							...this.queryParams,
+							pageNum: 1
+						}
+						this.getList();
 					}
-					this.getList();
+				} else {
+					this.queryParams.endCreateTime = e.detail.value;
 				}
 			},
 			handleClear() {
@@ -284,22 +271,9 @@
 .list-frame{
 	position: relative;
 	z-index: 1;
-<<<<<<< HEAD
 	margin: 0 30upx 30upx;
 	background: #FFFFFF;
 	border-radius: 24upx;
-=======
-	margin: 0 30upx 24upx;
-	&-total {
-		margin: 0 30upx -14upx;
-	}
-	&-inner {
-		position: relative;
-		z-index: 2;
-		background: #FFFFFF;
-		border-radius: 24upx;
-	}
->>>>>>> 1420913bccfc9cedbb0a191cc50d313e704c82c8
 	.list-componyframe{
 		padding: 43upx 30upx 24upx;
 		border-bottom: 1upx solid #F0F0F0;
