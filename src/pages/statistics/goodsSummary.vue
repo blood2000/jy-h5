@@ -150,6 +150,7 @@
 			font-family: Bahnschrift;
 			font-weight: normal;
 			color: #333333;
+			line-height: 1;
 		}
 	}
 	
