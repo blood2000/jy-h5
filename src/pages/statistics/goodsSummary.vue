@@ -12,7 +12,7 @@
 		</view>
 		<view v-for="(item,index) in list" :key="index" class="list-frame flex align-center flex-wrap">
 			<view class="list-item" style="border-right: 1upx solid #ebebeb;width: 30%;">
-				<view class="list-title flex justify-center">{{item.goodsTypeName}}</view>
+				<view class="list-title ellipsis">{{item.goodsTypeName}}</view>
 			</view>
 			<view class="list-item flex align-center" style="width: 30%;">
 				<view class="list-tag">车数</view>
@@ -153,12 +153,14 @@
 		padding: 0 10upx;
 		// width: 33%;
 		.list-title{
+			text-align: center;
 			// letter-spacing: 10upx;
 			margin: 0 auto 0 0;
 			padding: 0 10upx;
 			font-weight: bold;
 			color: #FFFFFF;
 			height: 37upx;
+			line-height: 37upx;
 			background: #3A65FF;
 			border-radius: 0 18upx 18upx 18upx;
 		}
