@@ -4,7 +4,7 @@
 			<text slot="right" @click="handleAdd">新增车辆</text>
 		</HeaderBar>
 		
-		<view class="card-list" v-if="dataList && dataList.length > 0">
+		<view class="card-list" v-if="dataList && dataList.length > 0 ">
 			<view v-for="(item, index) in dataList" :key="index" class="card-item">
 				<uni-swipe-action>
 					<uni-swipe-action-item :right-options="options2" @click="checked=>swipeActionClick(checked, item)">
@@ -31,7 +31,7 @@
 				</uni-swipe-action>
 			</view>
 		</view>
-		<NonePage v-else></NonePage>
+		<NonePage v-else-if="status !== 'loading'"></NonePage>
 		
 		<uni-load-more v-if="dataList && dataList.length > 0" :status="status" :icon-size="16" :content-text="contentText" />
 		
@@ -95,8 +95,11 @@
 			this.getDictsList();
 			this.getList();
 		},
-		onPullDownRefresh() {
-			uni.stopPullDownRefresh();  //停止下拉刷新动画
+		async onPullDownRefresh() {
+			await this.handleQuery();
+			setTimeout(() => {
+				uni.stopPullDownRefresh(); //停止下拉刷新动画
+			}, 700);
 		},
 		// 触底加载
 		onReachBottom() {

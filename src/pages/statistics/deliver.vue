@@ -367,6 +367,7 @@
 			background: #59BE32;
 		}
 		.list-namedeliver{
+			position: relative;
 			font-size: 32upx;
 			font-weight: bold;
 			color: #333333;
@@ -374,21 +375,40 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+			padding-left: 52upx;
+			&:before {
+				position: absolute;
+				left: 0;
+				content: '';
+				display: block;
+				width: 42upx;
+				height: 42upx;
+				background: url('@/static/statistics/icon-company.png') no-repeat;
+				background-size: cover;
+				margin-right: 10upx;
+				flex-shrink: 0;
+			}
 		}
 		.list-namereceive{
 			font-size: 24upx;
 			color: #878787;
 		}
 		.list-goods{
-			font-size: 32upx;
+			font-size: 28upx;
 			font-weight: bold;
 			color: #3A65FF;
-			width: 50%;
+			max-width: 50%;
+			height: 40upx;
+			line-height: 40upx;
+			text-align: center;
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			text-align: right;
 			margin-left: 20upx;
+			background-color: #ebefff;
+			border-radius: 20upx;
+			padding: 0 20upx;
 		}
 	}
 	.list-numframe{
