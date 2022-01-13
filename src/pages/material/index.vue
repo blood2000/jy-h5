@@ -83,7 +83,7 @@
 import {tenantGoodsRelList, tenantGoodsRelDelete} from '../../config/service/material/index'
 import { mapState } from "vuex";
 import mockData from "./mockData.js";
-import uniData from '@/utils/uni.webview.1.5.2.js';
+// import uniData from '@/utils/uni.webview.1.5.2.js';
 import HeaderBar from '@/components/Building/HeaderBar2.vue';
 import SiderBar from "../../components/Building/SiderBar.vue";
 import { removePropertyOfNull } from '@/utils/ddc';

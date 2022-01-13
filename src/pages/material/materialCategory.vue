@@ -78,17 +78,15 @@
 			}
 		},
 		async onLoad(options){
+			this.cbData = options.cbData && JSON.parse(options.cbData)
 			await this.initData()
 			if(options && options.cbData){
-				this.cbData = JSON.parse(options.cbData)
-
 				await this.changeGoodsBigType(this.cbData.goodsBigType)
 				this.form = {
 					...this.form,
 					...this.cbData,
 					standards: this.cbData.standards + ''
 				}
-				
 			}
 		},
 		methods: {
