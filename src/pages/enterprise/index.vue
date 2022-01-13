@@ -90,7 +90,7 @@ export default {
     return {
 	  queryParams: { // 请求参数
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
 
         // goodsTypeName: undefined // 定价策略
       },
