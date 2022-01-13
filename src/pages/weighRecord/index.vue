@@ -73,7 +73,7 @@
 			 * 返回上一页
 			 */
 			navigateBack() {
-				uni.navigateBack();
+				uni.webView.navigateBack();
 			},
 			// 触底
 			scrolltolower(e) {
