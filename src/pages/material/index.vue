@@ -186,13 +186,14 @@ export default {
 	},
 	// 新增
 	handleAdd() {
-		uni.redirectTo({
+		
+		uni.navigateTo({
 			url: '/pages/material/materialCategory'
 		});
 	},
 	// 编辑
 	handlerEdit(row){
-		uni.redirectTo({
+		uni.navigateTo({
 			url: '/pages/material/materialCategory?cbData=' + JSON.stringify(row)
 		});
 	},
@@ -237,14 +238,14 @@ export default {
 
     // 添加场区分类
     toAddBuildingType() {
-      uni.redirectTo({
+      uni.navigateTo({
         url: "./buildingType",
       });
     },
 
     // 添加场区
     addBuilding() {
-      uni.redirectTo({
+      uni.navigateTo({
           url: "./addBuilding?type=" + this.activeIndex,
         });
     },
