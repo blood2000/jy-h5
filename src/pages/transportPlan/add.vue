@@ -832,23 +832,23 @@
 					name: undefined,
 					effectiveDate: [], // 转成 开始时间 和 结束时间
 					isForever: [], // 转成 数字值 有长度为true 
-					transId: undefined,
-					orderInfoId: undefined,
+					// transId: undefined,
+					// orderInfoId: undefined,
 					weight: undefined,
 					weightType: [],  // 有长度为true
-					startAddressId: undefined,
-					aliasName: undefined,
-					endAddressId: undefined,
-					sedCompnayInfoId: undefined,
-					recCompnayInfoId: undefined,
+					// startAddressId: undefined,
+					// aliasName: undefined,
+					// endAddressId: undefined,
+					// sedCompnayInfoId: undefined,
+					// recCompnayInfoId: undefined,
 					startAddressWlId: undefined,
 					endAddressWlId: undefined,
-					unAliasName: undefined,
-					orderPlanTeanRelList: [],
+					// unAliasName: undefined,
+					// orderPlanTeanRelList: [],
 					teamCodes: undefined, // 测试单选 调度者
-					orderPolicyId: undefined,
-					goodsPolicyId: undefined,
-					planFreightId: undefined,
+					// orderPolicyId: undefined,
+					// goodsPolicyId: undefined,
+					// planFreightId: undefined,
 				},
 				this.formsUpdate = Date.now()
 				this.oldDatePicker1 = Date.now()
