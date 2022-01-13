@@ -163,8 +163,8 @@
 
 		</uni-forms>
 		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
-			<view class="reset" @click="handleCancle('form')">{{ cbData?'取消':'重置' }}</view>
-			<view class="submit" @click="handleSubmit('form')">{{ cbData?'确认修改': '确认创建' }}</view>
+			<view class="reset" @click="handleCancle('form')">{{ id?'取消':'重置' }}</view>
+			<view class="submit" @click="handleSubmit('form')">{{ id?'确认修改': '确认创建' }}</view>
 		</view>
 
 
