@@ -297,7 +297,14 @@
 			},
 			bindPickerChange(e) {
 				this.clearQuery();
-				this.queryParams.status = e.target.value == 0 ? '' : 30;
+				if(e.target.value == 0) {
+					this.queryParams.notStatus = 30;
+					this.queryParams.delete('status');
+				}
+				else {
+					this.queryParams.status = 30;
+					this.queryParams.delete('notStatus');
+				}
 				this.queryParams = {
 					...this.queryParams,
 					pageNum: 1,

@@ -81,9 +81,10 @@
 	width: 380upx;
 	margin: 0 -8upx;
 	::v-deep .uni-date-editor--x:hover .uni-date__icon-clear {
-		right: -46upx;
+		right: -80upx;
 		top: 2upx;
 		border: 0;
+    z-index: 9999;
 	}
 	::v-deep .uni-date-x {
 		background-color: transparent;
