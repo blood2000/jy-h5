@@ -281,6 +281,7 @@
 			"path": "pages/statistics/goodsSummary",
 			"style": {
 				"navigationBarTitleText": "货品汇总",
+				"navigationStyle": "custom",
 				"navigationBarBackgroundColor": "#ffffff",
 				"enablePullDownRefresh": false
 			}
