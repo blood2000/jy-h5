@@ -10,12 +10,12 @@
 			</view>
 			<view class="time-frame flex align-center text-white text-bold">
 				<image class="time-icon margin-mright" src="/static/statistics/icon_time.png" mode=""></image>
-				<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" end="3000-01-01" @change="startDateChange">
+				<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" :end="queryParams.endCreateTime?queryParams.endCreateTime:'3000-01-01'" @change="startDateChange">
 					<view v-if="queryParams.startCreateTime" class="picker">{{queryParams.startCreateTime}}</view>
 					<view v-else class="picker">选择开始时间</view>
 				</picker>
 				<view class="margin-lr">到</view>
-				<picker mode="date" :value="queryParams.endCreateTime" start="1900-01-01" end="3000-01-01" @change="endDateChange">
+				<picker mode="date" :value="queryParams.endCreateTime" :start="queryParams.startCreateTime?queryParams.startCreateTime:'1900-01-01'" end="3000-01-01" @change="endDateChange">
 					<view v-if="queryParams.endCreateTime" class="picker">{{queryParams.endCreateTime}}</view>
 					<view v-else class="picker">选择结束时间</view>
 				</picker>
@@ -252,39 +252,25 @@
 				this.list = [];
 			},
 			startDateChange(e) {
+				this.queryParams.startCreateTime = e.detail.value
 				if (this.queryParams.endCreateTime){
-					if (new Date(this.parseTime(this.queryParams.endCreateTime, '{y}/{m}/{d} {h}:{i}{s}')).getTime() < new Date(this.parseTime(this.queryParams.startCreateTime, '{y}/{m}/{d} {h}:{i}{s}')).getTime()){
-						this.msgSuccess('开始时间必须小于或等于结束时间，请重新选择');
-						this.queryParams.startCreateTime = null;
-					} else {
-						this.queryParams.startCreateTime = e.detail.value;
-						this.clearQuery();
-						this.queryParams = {
-							...this.queryParams,
-							pageNum: 1
-						}
-						this.getList();
+					this.clearQuery();
+					this.queryParams = {
+						...this.queryParams,
+						pageNum: 1
 					}
-				} else {
-					this.queryParams.startCreateTime = e.detail.value;
+					this.getList();
 				}
 			},
 			endDateChange(e) {
+				this.queryParams.endCreateTime = e.detail.value
 				if (this.queryParams.startCreateTime){
-					if (new Date(this.parseTime(this.queryParams.endCreateTime, '{y}/{m}/{d} {h}:{i}{s}')).getTime() < new Date(this.parseTime(this.queryParams.startCreateTime, '{y}/{m}/{d} {h}:{i}{s}')).getTime()){
-						this.msgSuccess('结束时间必须大于或等于开始时间，请重新选择');
-						this.queryParams.endCreateTime = '';
-					} else {
-						this.queryParams.endCreateTime = e.detail.value;
-						this.clearQuery();
-						this.queryParams = {
-							...this.queryParams,
-							pageNum: 1
-						}
-						this.getList();
+					this.clearQuery();
+					this.queryParams = {
+						...this.queryParams,
+						pageNum: 1
 					}
-				} else {
-					this.queryParams.endCreateTime = e.detail.value;
+					this.getList();
 				}
 			},
 			handleClear() {
