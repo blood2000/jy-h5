@@ -10,12 +10,12 @@
 			</view>
 			<view class="time-frame flex align-center text-white text-bold">
 				<image class="time-icon margin-mright" src="/static/statistics/icon_time.png" mode=""></image>
-				<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" end="3000-01-01" @change="startDateChange">
+				<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" :end="queryParams.endCreateTime?queryParams.endCreateTime:'3000-01-01'" @change="startDateChange">
 					<view v-if="queryParams.startCreateTime" class="picker">{{queryParams.startCreateTime}}</view>
 					<view v-else class="picker">选择开始时间</view>
 				</picker>
 				<view class="margin-lr">到</view>
-				<picker mode="date" :value="queryParams.endCreateTime" start="1900-01-01" end="3000-01-01" @change="endDateChange">
+				<picker mode="date" :value="queryParams.endCreateTime" :start="queryParams.startCreateTime?queryParams.startCreateTime:'1900-01-01'" end="3000-01-01" @change="endDateChange">
 					<view v-if="queryParams.endCreateTime" class="picker">{{queryParams.endCreateTime}}</view>
 					<view v-else class="picker">选择结束时间</view>
 				</picker>
@@ -29,13 +29,13 @@
 			<view class="list-bg"></view>
 		</view>
 		<!-- 列表 -->
-		<view class="list-frame" v-for="(item, index) in list" :key="index">
+		<view class="list-frame" :class="{'list-frame-total': item.childList && item.childList.length > 0}" v-for="(item, index) in list" :key="index">
 			<view class="list-frame-inner">
 				<view class="list-componyframe flex align-center justify-between">
 					<view class="list-namedeliver">{{item.orderPlanInfoName || '无'}}</view>
 					<view class="list-goods">{{item.goodsTypeName || '无'}}</view>
 				</view>
-				<view class="list-numframe flex align-center justify-between flex-wrap">
+				<view class="list-numframe flex align-center flex-wrap">
 					<view class="list-numlist">
 						<view class="list-numcont">{{item.carNum || 0 }}</view>
 						<view class="list-numtitle margin-stop">已完成车数</view>
@@ -88,7 +88,7 @@
 					</block>
 				</template>
 			</view>
-			<view class="total">
+			<view class="total" v-if="item.childList && item.childList.length > 0">
 				<view class="item-total">
 					<view class="total-label total-label-hj">合计</view>
 				</view>
@@ -325,7 +325,10 @@
 .list-frame{
 	position: relative;
 	z-index: 1;
-	margin: 0 30upx -10upx;
+	margin: 0 30upx 24upx;
+	&-total {
+		margin: 0 30upx -14upx;
+	}
 	&-inner {
 		position: relative;
 		z-index: 2;
