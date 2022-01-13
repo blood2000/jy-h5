@@ -3,11 +3,14 @@
 		@change="handlerChange($event)">
 		<view class="ly-flex-pack-end">
 			<slot>
-				<view v-if="(_value || _value ===0) && range.length > 0" class="limitWide picker-input g-single-row" >
+				<view v-if="(_value || _value ===0) && range.length > 0" class="limitWide picker-input g-single-row" :class="{ 'clos': close}" >
 					{{ range[_value].dictLabel }}
 				</view>
 				<view class="picker-placeholder" v-else>{{placeholder}}</view>
 			</slot>
+			<view class="closeicon" @click.stop="handlerClose" v-if="close && (_value || _value ===0) && range.length > 0">
+				<u-icon name="close-circle" size='16' color="#999999" class="yangiwiss"></u-icon>
+			</view>
 			<u-icon name="arrow-down-fill" size='7' color="#999999" class="yangiwiss"></u-icon>
 		</view>
 	</picker>
@@ -23,6 +26,10 @@
 			},
 			placeholder:String,
 			disabled: {
+				type: Boolean,
+				default: false
+			},
+			close:{
 				type: Boolean,
 				default: false
 			}
@@ -49,14 +56,31 @@
 				}
 				this.$emit('input', this.range[index].dictValue)
 				this.$emit('change', this.range[index].dictValue)
+			},
+
+			handlerClose(){
+				this.$emit('input', undefined)
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+
+	.ly-flex-pack-end{
+		position: relative;
+		.closeicon{
+			position: absolute;
+			top: 20upx;
+			right: 32upx;
+			cursor:pointer;
+		}
+	}
 	.ly-flex-pack-end .limitWide{
 		width: 300upx;
+		&.clos{
+			padding-right: 30upx;
+		}
 	}
 
 	.yangiwiss{
