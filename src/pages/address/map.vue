@@ -158,16 +158,16 @@
 				if(this.form.geomType === 2){
 					// this.form.geomText = [...this.rectanglelnglat,...this._rectanglelnglat].join()
 				    const Bounds = this.rectangle.getBounds()
-					this.form.geomText = [Bounds.northeast,Bounds.southwest].join()
+					this.form.geomText = [Bounds.southwest,Bounds.northeast].join()
 					const {lng,lat} = Bounds.getCenter()
+					console.log(Bounds.getCenter);
 					this.form.centerLng = lng
 					this.form.centerLat = lat
 				}
 				// 多边形
 				if(this.form.geomType === 3){
 					// this.form.geomText = this.polygonPath.join()
-					this.form.geomText = this.polygon.getPath()
-					console.log(this.polygon.getPath());
+					this.form.geomText = this.polygon.getPath().join()
 					const {lng,lat} = this.polygon.getBounds().getCenter()
 					this.form.centerLng = lng
 					this.form.centerLat = lat
@@ -254,12 +254,14 @@
 					this.circle.setRadius(Number(lnglat[2]))
 				}
 				if(this.form.geomType === 2){
+					// console.log(this.form.geomText);
 					const lnglat = this.form.geomText.split(',')
 					this.rectanglelnglat = [lnglat[0],lnglat[1]]
 					this._rectanglelnglat = [lnglat[2],lnglat[3]]
 					this.rectangle.setBounds(new AMap.Bounds(this.rectanglelnglat,this._rectanglelnglat))
 				}
 				if(this.form.geomType === 3){
+					// console.log(this.form.geomText);
 					const lnglat = this.form.geomText.split(',')
 					const _lnglat = lnglat.map((item,index) => {
 						if(index%2 === 0){
@@ -276,31 +278,33 @@
 				this.form.geomType = 3
 				// this.map.setStatus({dragEnable:true})
 				this.isDraw = false
-				this.map.on('touchend',this.eventListen)
+				this.map.on('touchend',this.polygonEvent)
 			},
 			// 画圆形
 			drawCircle(){
 				this.msgSuccess('点击地图拖动绘制圆形')
 				this.form.geomType = 1
 				this.isDraw = false
-				this.map.on('touchstart',this.eventListenCircle)
-				this.map.on('touchmove',this.circleEvent)
+				this.map.on('touchstart',this.circleStartEvent)
+				this.map.on('touchmove',this.circleMoveEvent)
 			},
 			// 画矩形
 			drawRectangle(){
-				this.msgSuccess('请从左下角至右上角绘制')
+				this.msgSuccess('点击地图拖动绘制矩形')
 				this.form.geomType = 2
 				this.isDraw = false
 				this.map.on('touchstart',this.startEvent)
-				this.map.on('touchmove',this.endEvent)
+				this.map.on('touchmove',this.moveEvent)
+				this.map.on('touchend',this.endEvent)
 			},
 			// 结束绘制
 			close(){
-				this.map.off('touchend',this.eventListen)
-				this.map.off('touchstart',this.eventListenCircle)
-				this.map.off('touchmove',this.circleEvent)
-				this.map.off('touchstart',this.startEvent)
-				this.map.off('touchmove',this.endEvent)
+				this.map.off('touchend',this.polygonEvent) // 多边形
+				this.map.off('touchstart',this.circleStartEvent) // 圆
+				this.map.off('touchmove',this.circleMoveEvent)
+				this.map.off('touchstart',this.startEvent) // 矩形
+				this.map.off('touchmove',this.moveEvent)
+				this.map.off('touchend',this.endEvent)
 				this.map.setStatus({dragEnable:true})
 				this.isDraw = true
 				this.isEdit = false
@@ -315,7 +319,7 @@
 			},
 			
 			// 多边形绘制，监听回调函数
-			eventListen(e){
+			polygonEvent(e){
 				// console.log(e);
 				// const{lng,lat} = e.lnglat
 				this.polygonPath.push(e.lnglat)
@@ -324,14 +328,14 @@
 			
 			// 圆形绘制，监听回调函数
 			//开始
-			eventListenCircle(e){
+			circleStartEvent(e){
 				this.map.setStatus({dragEnable:false})
 				const{lng,lat} = e.lnglat
 				this.circleCenter = [lng,lat]
 				this.circle.setCenter([lng,lat])
 			},
 			// 结束
-			circleEvent(e){
+			circleMoveEvent(e){
 				const{lng,lat} = e.lnglat
 				const radius = AMap.GeometryUtil.distance(this.circleCenter,[lng,lat]) 
 				this.circleRadius = radius
@@ -345,12 +349,24 @@
 				const{lng,lat} = e.lnglat
 				this.rectanglelnglat = [lng,lat]
 			},
-			// 结束
-			endEvent(e){
+			// 滑动
+			moveEvent(e){
 				const{lng,lat} = e.lnglat
 				this._rectanglelnglat = [lng,lat]
 				const Bounds = new AMap.Bounds(this.rectanglelnglat,this._rectanglelnglat)
 				this.rectangle.setBounds(Bounds)
+			},
+			// 结束
+			endEvent(e){
+				const{lng,lat} = e.lnglat
+				const _lng = this.rectanglelnglat[0]
+				const _lat = this.rectanglelnglat[1]
+				const southWest = []
+				const northEast = []
+				lng > _lng ? (northEast[0] = lng,southWest[0] = _lng) : (northEast[0] = _lng,southWest[0] = lng)
+				lat > _lat ? (northEast[1] = lat,southWest[1] = _lat) : (northEast[1] = _lat,southWest[1] = lat)
+				this.rectangle.setBounds(new AMap.Bounds(southWest,northEast))
+				
 			},
 			
 			// 重置覆盖物
@@ -405,9 +421,17 @@
 		height: calc(100vh - 88rpx - var(--statusBar));
 		width: 100%;
 
-		::v-deep .amap-marker .amap-icon img {
-			max-width: 40px !important;
-			max-height: 30px !important;
+		::v-deep .amap-marker .amap-icon{
+			top:-40rpx;
+			left: -40rpx;
+			width: 102rpx !important;
+			height: 102rpx !important;
+			img{
+				top: 40rpx !important;
+				left: 40rpx !important;
+				max-width: 40px !important;
+				max-height: 30px !important;
+			}
 		}
 
 		.name {
