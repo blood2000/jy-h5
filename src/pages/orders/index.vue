@@ -188,13 +188,13 @@ export default {
 	},
 	// 新增
 	handleAdd() {
-		uni.redirectTo({
+		uni.navigateTo({
 			url: '/pages/orders/add'
 		});
 	},
 	// 编辑
 	handlerEdit(row){
-		uni.redirectTo({
+		uni.navigateTo({
 			url: '/pages/orders/add?cbData=' + JSON.stringify(row)
 		});
 	},
