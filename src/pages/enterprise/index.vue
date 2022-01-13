@@ -326,6 +326,11 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+	.content-page{
+		height: 100vh;
+		overflow: scroll;
+	}
+
 	// 新
 	.main-box{
 		padding: 24upx 24upx;
