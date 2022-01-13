@@ -22,7 +22,9 @@
 				<view class="list-view">
 					<u-list
 						@scrolltolower="scrolltolower"
+						@scroll="handerlScroll"
 						preLoadScreen="1.5"
+						:lowerThreshold ='20'
 					>
 						<u-list-item
 							v-for="(item, index) in indexList"
@@ -43,10 +45,17 @@
 							  </view>
 							</u-cell>
 						</u-list-item>
+						<uni-load-more v-if="indexList && indexList.length > 0" :status="status" :icon-size="16" :content-text="{
+							contentdown: '上拉加载更多',
+							contentrefresh: '加载中',
+							contentnomore: '没有更多了'
+						}" />
 					</u-list>
+
 				</view>
 			</view>
 			<NonePage v-else></NonePage>
+			
 		</template>
 		
     </view>
@@ -78,7 +87,10 @@ export default {
 
 	  // 追加
 	  status: true, // 0启用 1禁用
-	  statusBar12: 0
+	  statusBar12: 0,
+
+	  status:'more', // more|loading|noMore
+	  isScollValue: false
     };
   },
 
@@ -90,16 +102,6 @@ export default {
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
-	// statusBar12(){
-	// 	let height = this.statusBarHeight - 0
-
-	// 	let platform=uni.getSystemInfoSync().platform
-	// 	if(platform=='ios'){
-	// 		height -= 10
-	// 	}
-	// 	return height
-	// },	
-	
 
 	que(){
 		return {
@@ -149,9 +151,17 @@ export default {
 			})
 		}
     },
+
+	// handerlScroll
+	handerlScroll(ee){
+		this.isScollValue = ee > 100
+		
+	},
 	
 	// s= 列表相关
-	scrolltolower() {
+	scrolltolower(e) {
+		if(!this.isScollValue) return
+		// console.log(e, '触底');
 		this.loadmore()
 	},
 
@@ -159,15 +169,24 @@ export default {
 		if(status && status === 'init'){
 			this.queryParams.pageNum = 1
 		} else {
+			if(this.status === 'noMore') return
 			this.queryParams.pageNum++
 		}
 
 		uni.showLoading();
+		this.status = 'loading'
+
 		return orderInfoList(this.que, this.headerInfo).then(res=>{
 			uni.hideLoading();
+			this.status = 'more'
 
 			
 			this.total = res.data.total - 0
+
+			if(res.data.list.length < this.que.pageSize){
+				// 没有更多了
+				this.status = 'noMore';
+			}
 
 			const _data = res.data.list.map(e=> {
 			    e._status = e.status === 0
