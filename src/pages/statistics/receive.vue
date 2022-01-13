@@ -297,6 +297,7 @@
 			},
 			bindPickerChange(e) {
 				this.clearQuery();
+				this.queryParams.status = e.target.value == 0 ? '' : 30;
 				this.queryParams = {
 					...this.queryParams,
 					pageNum: 1,
