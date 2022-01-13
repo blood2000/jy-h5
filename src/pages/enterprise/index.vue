@@ -12,7 +12,7 @@
 				<view class="list-item" v-for="(row) in listData" :key="row.id">
 					<view class="title-abbreviation ellipsis">{{ row.companyAbbreviation }}</view>
 					<view class="right-box">
-						<switch :key="switchKey" :disabled="row.isCurrent === 1" :checked="row.status === 0" class="m-switch" @change.stop="({ detail })=> handlerChange(row, detail.value)" />
+						<switch v-if="row.isCurrent !== 1" :key="switchKey" :disabled="row.isCurrent === 1" :checked="row.status === 0" class="m-switch" @change.stop="({ detail })=> handlerChange(row, detail.value)" />
 						<view class="vertical-line">|</view>
 						<view class="medit-button" @click="handlerEdit(row)">编辑</view>
 					</view>
