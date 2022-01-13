@@ -241,7 +241,7 @@ export default {
 						icon: 'none',
 					});
 
-					this.loadmore('init')
+					this.loadmore()
 					// setTimeout(()=>{
 					// }, 700)
 
@@ -301,7 +301,7 @@ export default {
 				listData = [...this.listData, ...res.data.list];
 			}
 
-			this.listData = listData.sort((a,b)=> a.id - b.id)
+			this.listData = listData // listData.sort((a,b)=> a.id - b.id)
 			
 		})
 
