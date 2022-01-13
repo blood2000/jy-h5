@@ -8,18 +8,23 @@
 				<view class="text-bold">收货统计</view>
 				<view class="cuIcon-back" style="opacity: 0;"></view>
 			</view>
-			<view class="time-frame flex align-center text-white text-bold">
-				<image class="time-icon margin-mright" src="/static/statistics/icon_time.png" mode=""></image>
-				<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" :end="queryParams.endCreateTime?queryParams.endCreateTime:'3000-01-01'" @change="startDateChange">
-					<view v-if="queryParams.startCreateTime" class="picker">{{queryParams.startCreateTime}}</view>
-					<view v-else class="picker">选择开始时间</view>
+			<view class="filter-wrap">
+				<view class="time-frame flex align-center text-white text-bold">
+					<image class="time-icon margin-mright" src="/static/statistics/icon_time.png" mode=""></image>
+					<picker mode="date" :value="queryParams.startCreateTime" start="1900-01-01" :end="queryParams.endCreateTime?queryParams.endCreateTime:'3000-01-01'" @change="startDateChange">
+						<view v-if="queryParams.startCreateTime" class="picker">{{queryParams.startCreateTime}}</view>
+						<view v-else class="picker">选择开始时间</view>
+					</picker>
+					<view class="margin-lr">到</view>
+					<picker mode="date" :value="queryParams.endCreateTime" :start="queryParams.startCreateTime?queryParams.startCreateTime:'1900-01-01'" end="3000-01-01" @change="endDateChange">
+						<view v-if="queryParams.endCreateTime" class="picker">{{queryParams.endCreateTime}}</view>
+						<view v-else class="picker">选择结束时间</view>
+					</picker>
+					<view v-if="queryParams.startCreateTime || queryParams.endCreateTime" class="cuIcon-roundclose size30 margin-mleft" @click="handleClear"></view>
+				</view>
+				<picker @change="bindPickerChange" :value="queryParams.completeFlag" :range="completeFlags" range-key="name" class="picker-select">
+					<view class="uni-input">{{completeFlags[queryParams.completeFlag].name}}</view>
 				</picker>
-				<view class="margin-lr">到</view>
-				<picker mode="date" :value="queryParams.endCreateTime" :start="queryParams.startCreateTime?queryParams.startCreateTime:'1900-01-01'" end="3000-01-01" @change="endDateChange">
-					<view v-if="queryParams.endCreateTime" class="picker">{{queryParams.endCreateTime}}</view>
-					<view v-else class="picker">选择结束时间</view>
-				</picker>
-				<view v-if="queryParams.startCreateTime || queryParams.endCreateTime" class="cuIcon-roundclose size30 margin-mleft" @click="handleClear"></view>
 			</view>
 		</view>
 		<!-- 背景 -->
@@ -167,7 +172,14 @@
 					completeFlag: 1,
 					status: 30
 				},
-				list: []
+				list: [],
+				completeFlags: [{
+					name: '未完成',
+					value: 0
+				}, {
+					name: '已完成',
+					value: 1
+				}]
 			}
 		},
 		onLoad(option) {
@@ -280,6 +292,15 @@
 					startCreateTime: '',
 					endCreateTime: '',
 					pageNum: 1
+				}
+				this.getList();
+			},
+			bindPickerChange(e) {
+				this.clearQuery();
+				this.queryParams = {
+					...this.queryParams,
+					pageNum: 1,
+					completeFlag: e.target.value
 				}
 				this.getList();
 			}
@@ -466,6 +487,27 @@
 				font-weight: bold;
 				font-family: Bahnschrift;
 			}
+		}
+	}
+}
+.filter-wrap {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	.picker-select {
+		padding: 0 30upx 30upx;
+		color: #fff;
+		display: flex;
+		align-items: center;
+		&::after {
+			content: '';
+			display: block;
+			width:0;
+			height:0;
+			border-top: 12upx solid #fff;
+			border-left: 10upx solid transparent;
+			border-right: 10upx solid transparent;
+			margin-left: 10upx;
 		}
 	}
 }
