@@ -5,10 +5,10 @@
 		<uni-forms ref="form" v-model="form" :rules="rules" label-width="150">
 			<view class="ly-form-card">
 				<uni-forms-item required name="goodsBigType" label="商品大类" class="border-bottom">
-					<pickers v-model="form.goodsBigType" :range="goodsBigTypeOption" placeholder='请选择商品大类' @change="changeGoodsBigType"></pickers>
+					<pickers :disabled="!!cbData" v-model="form.goodsBigType" :range="goodsBigTypeOption" placeholder='请选择商品大类' @change="changeGoodsBigType"></pickers>
 				</uni-forms-item> 
 				<uni-forms-item required name="goodsType" label="商品小类" class="border-bottom">
-					<pickers :disabled="!form.goodsBigType" v-model="form.goodsType" :range="goodsTypeOption" placeholder='请选择商品小类' @change="(_data)=>binddata('goodsType',_data,'form')"></pickers>
+					<pickers :disabled="!!cbData || !form.goodsBigType" v-model="form.goodsType" :range="goodsTypeOption" placeholder='请选择商品小类' @change="(_data)=>binddata('goodsType',_data,'form')"></pickers>
 				</uni-forms-item> 
 				<uni-forms-item required name="standards" label="物料规格">
 					<pickers v-model="form.standards" :range="standardsOption" placeholder='请选择物料规格' @change="(_data)=>binddata('standards',_data,'form')"></pickers>
