@@ -36,8 +36,6 @@ export default {
       title: "场区阈值设置",
       reason: "",
       threshold: "",
-      id: '',
-      jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
       tempThreshold: "",
     };
   },
@@ -69,14 +67,13 @@ export default {
         url: "getThreshold",
         header: this.headerInfo,
         querys: {
-          jyzCode: this.jyzCode,
+          jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
         },
       };
       buildingRequest(config).then((res) => {
         console.log("获取场区阈值", res);
         if (res.data) {
           this.threshold = res.data.capacityVehicleThreshold;
-          this.id = res.data.id;
         }
       });
     },
@@ -109,30 +106,17 @@ export default {
       }
       const config = {
         url: "setThreshold",
-        method: "POST",
+        method: 'POST',
         header: this.headerInfo,
         data: {
-          id: this.id,
-          jyzCode: this.jyzCode,
-          capacityVehicleThreshold: this.threshold,
+          id: '',
+          jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
+          capacityVehicleThreshold: this.threshold
         },
       };
-      buildingRequest(config).then((res) => {
-        console.log("设置阈值", res);
-        uni.showModal({
-          title: "提示",
-          content: res.msg,
-          showCancel: false,
-          success:  (res) => {
-            if (res.confirm) {
-              //点击确认
-              uni.navigateBack({
-                delta: 1,
-              })
-            }
-          },
-        });
-      });
+      buildingRequest(config).then( res => {
+        console.log('设置阈值', res)
+      })
     },
   },
 };

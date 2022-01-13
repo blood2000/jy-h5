@@ -99,9 +99,9 @@ export default {
 
   computed: {},
 
-  mounted() {
-    console.log("Card Show");
-  },
+  // mounted() {
+  //   console.log("Card Show");
+  // },
 
   methods: {},
 };

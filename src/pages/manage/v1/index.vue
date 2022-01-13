@@ -49,13 +49,13 @@ export default {
           name: "工作台",
         },
         {
-          path: "../../../static/manage/home.png",
-          selPath: "../../../static/manage/home-sel.png",
+          path: "../../../static/manage/reserve.png",
+          selPath: "../../../static/manage/reserve-sel.png",
           name: "预约凭证",
         },
         {
-          path: "../../../static/manage/home.png",
-          selPath: "../../../static/manage/home-sel.png",
+          path: "../../../static/manage/statistics.png",
+          selPath: "../../../static/manage/statistics-sel.png",
           name: "统计",
         },
       ],

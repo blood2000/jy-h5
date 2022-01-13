@@ -20,7 +20,7 @@
     </div>
     <div class="manage-btn-box">
       <div class="manage-btn manage-btn-cancel" @click="cancel">取消</div>
-      <div class="manage-btn manage-btn-confirm" @click="confirm">确定</div>
+      <div class="manage-btn manage-btn-confirm">确定</div>
     </div>
   </div>
 </template>
@@ -35,10 +35,8 @@ export default {
     return {
       title: "场区阈值设置",
       reason: "",
-      threshold: "",
-      id: '',
-      jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
-      tempThreshold: "",
+      threshold: '',
+      tempThreshold: '',
     };
   },
 
@@ -69,16 +67,15 @@ export default {
         url: "getThreshold",
         header: this.headerInfo,
         querys: {
-          jyzCode: this.jyzCode,
-        },
-      };
-      buildingRequest(config).then((res) => {
-        console.log("获取场区阈值", res);
-        if (res.data) {
-          this.threshold = res.data.capacityVehicleThreshold;
-          this.id = res.data.id;
+          jyzCode: '7f913f1fbf454c9f85e19eadac059d8f',
         }
-      });
+        
+      };
+      buildingRequest(config).then(res => {
+        console.log('获取场区阈值', res);
+        
+
+      })
     },
     numberInput(e) {
       setTimeout(() => {
@@ -94,45 +91,8 @@ export default {
     },
     cancel() {
       uni.navigateBack({
-        delta: 1,
-      });
-    },
-    //设置阈值
-    confirm() {
-      if (!this.threshold) {
-        uni.showToast({
-          title: "请输入场区阈值",
-          icon: "none",
-          duration: 1500,
-        });
-        return false;
-      }
-      const config = {
-        url: "setThreshold",
-        method: "POST",
-        header: this.headerInfo,
-        data: {
-          id: this.id,
-          jyzCode: this.jyzCode,
-          capacityVehicleThreshold: this.threshold,
-        },
-      };
-      buildingRequest(config).then((res) => {
-        console.log("设置阈值", res);
-        uni.showModal({
-          title: "提示",
-          content: res.msg,
-          showCancel: false,
-          success:  (res) => {
-            if (res.confirm) {
-              //点击确认
-              uni.navigateBack({
-                delta: 1,
-              })
-            }
-          },
-        });
-      });
+        delta: 1
+      })
     },
   },
 };

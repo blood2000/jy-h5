@@ -15,8 +15,7 @@ const apiUrl = {
   editBuilding: '/zjz1-jyz-service/jyz-building/updateStorage',//编辑场区分类
 
   // 管理端相关接口
-  getThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/getCapacityVehicleThreshold',   //获取场区阈值
-  setThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/insertOrUpdate',   //场区阈值设置
+  getThreshold: '/zjz1-jyz-service/fieldThreshold/getCapacityVehicleThreshold',   //获取场区阈值
 }
 
 export default apiUrl

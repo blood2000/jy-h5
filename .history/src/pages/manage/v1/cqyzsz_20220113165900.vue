@@ -76,7 +76,6 @@ export default {
         console.log("获取场区阈值", res);
         if (res.data) {
           this.threshold = res.data.capacityVehicleThreshold;
-          this.id = res.data.id;
         }
       });
     },

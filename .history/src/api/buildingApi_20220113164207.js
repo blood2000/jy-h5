@@ -16,7 +16,6 @@ const apiUrl = {
 
   // 管理端相关接口
   getThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/getCapacityVehicleThreshold',   //获取场区阈值
-  setThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/insertOrUpdate',   //场区阈值设置
 }
 
 export default apiUrl

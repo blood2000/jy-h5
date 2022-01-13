@@ -76,7 +76,6 @@ export default {
         console.log("获取场区阈值", res);
         if (res.data) {
           this.threshold = res.data.capacityVehicleThreshold;
-          this.id = res.data.id;
         }
       });
     },
@@ -121,7 +120,7 @@ export default {
         console.log("设置阈值", res);
         uni.showModal({
           title: "提示",
-          content: res.msg,
+          content: res.data.msg,
           showCancel: false,
           success:  (res) => {
             if (res.confirm) {

@@ -90,7 +90,9 @@
             <div class="manage-box-title-item">
               <div class="manage-title2">入场时段 ({{ index * 1 + 1 }})</div>
               <div class="manage-subtitle">
-                <div><uni-icons type="info" size="10"></uni-icons>请完善时段信息</div>
+                <div>
+                  <uni-icons type="info" size="10"></uni-icons>请完善时段信息
+                </div>
               </div>
             </div>
             <div class="manage-delete-box" @click="deleteTime(index)">
@@ -131,7 +133,7 @@
             </picker>
           </div>
           <div class="manage-box-line">
-            <div class="manage-title2">放号量</div>
+            <div class="manage-title2">放号量 <span class="require">*</span></div>
             <div class="manage-input-box">
               <input
                 class="manage-input"
@@ -180,6 +182,11 @@ export default {
   onShow() {},
 
   methods: {
+    back() {
+      uni.navigateBack({
+        delta: 1,
+      });
+    },
     //日期选择
     changeDate(e, type) {
       this[type] = e.detail.value;
@@ -205,7 +212,7 @@ export default {
       uni.showModal({
         title: "提示",
         content: "删除该时段",
-        success:  (res) => {
+        success: (res) => {
           if (res.confirm) {
             //点击确认
             this.enterTimeArr.splice(index, 1);
@@ -213,13 +220,13 @@ export default {
         },
       });
     },
-    
+
     addTime() {
       this.enterTimeArr.push({
-        startTime: '',
-        endTime: '',
-        num: ''
-      })
+        startTime: "",
+        endTime: "",
+        num: "",
+      });
     },
 
     //数值输入
