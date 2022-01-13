@@ -106,7 +106,8 @@
 					}],
 					companyList: [],
 					searchKey: '', // 搜搜关键字
-					showPopFilter: false
+					showPopFilter: false,
+					deviceNo: ''
 				}
 			},
 			async onLoad(options) {

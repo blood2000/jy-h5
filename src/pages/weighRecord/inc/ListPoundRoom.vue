@@ -1,6 +1,6 @@
 <template>
-  <view class="list-record" @click="navigateToDetail">
-    <view class="item-record" v-for="item in list" :key="item.id" :data-deviceNo="item.deviceNo">
+  <view class="list-record">
+    <view class="item-record" v-for="item in list" :key="item.id" :data-deviceNo="item.deviceNo" @click="navigateToDetail(item.deviceNo)">
       <!-- 磅房标题 -->
       <view class="item-head">
         <text class="item-title">{{ item.buildingName }}</text>
@@ -75,13 +75,17 @@
 			 * 跳转至过磅详情
 			 * @param {Object} e 当前点击对象
 			 */
-			navigateToDetail(e) {
-				if(e.target.dataset.deviceNo >= 0) {
-					uni.navigateTo({
-						url: `/pages/weighRecord/list?deviceNo=${e.target.dataset.deviceNo}`
-					});
-				}
-			},
+			navigateToDetail(deviceNo) {
+        if(!deviceNo) {
+          return uni.showToast({
+            title: '缺失设备编号deviceNo',
+            icon: 'none'
+          });
+        }
+				uni.navigateTo({
+          url: `/pages/weighRecord/list?deviceNo=${deviceNo}`
+        });
+      },
     }
   }
 </script>
@@ -98,17 +102,8 @@
       height: 100%;
     }	
     .item-record {
-      position: relative;
       background-color: #fff;
       border-radius: 24upx;
-      &::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: 0;
-      }
       &:not(:last-child) {
         margin-bottom: 24upx;
       }

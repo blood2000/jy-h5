@@ -1,6 +1,6 @@
 <template>
-  <view class="list-record" @click="navigateToDetail">
-    <view class="item-record" v-for="item in list" :key="item.waybillNo" :data-waybillNo="item.waybillNo" :data-deviceNo="deviceNo">
+  <view class="list-record">
+    <view class="item-record" v-for="item in list" :key="item.waybillNo" :data-waybillNo="item.waybillNo" :data-deviceNo="deviceNo" @click="navigateToDetail(item.waybillNo)">
       <view class="item-head building-bottom-line">
         <text class="item-title">{{ item.orderPlanInfoName }}</text>
         <view class="item-head-right">
@@ -19,11 +19,11 @@
       </view>
       <view class="item-info">
         <view class="item-info-name">
-          <view>
+          <view class="item-info-name-l">
             <text class="label">货物：</text>
             <text class="val">{{ item.goodsTypeName }}</text>
           </view>
-          <view>
+          <view class="item-info-name-r">
             <text class="label">过磅类型：</text>
             <text class="val">{{ item.weighingTypeName }}</text>
           </view>
@@ -58,12 +58,16 @@
        * 跳转至过磅详情
        * @param {Object} e 当前点击对象
        */
-      navigateToDetail(e) {
-        if(e.target.dataset.waybillNo >= 0) {
-          uni.navigateTo({
-            url: `/pages/weighRecord/detail?waybillNo=${e.target.dataset.waybillNo}&deviceNo=${this.deviceNo}`
+      navigateToDetail(waybillNo) {
+				if(!waybillNo) {
+          return uni.showToast({
+            title: '缺失订单编号waybillNo',
+            icon: 'none'
           });
         }
+				uni.navigateTo({
+          url: `/pages/weighRecord/detail?waybillNo=${waybillNo}`
+        });
       }
     }
   }
@@ -84,19 +88,10 @@
     }
   .list-record {
 		.item-record {
-			position: relative;
 			background-color: #fff;
 			border-radius: 24upx;
 			&:not(:last-child) {
 				margin-bottom: 24upx;
-			}
-			&::after {
-				content: "";
-				position: absolute;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				top: 0;
 			}
 			.item-head {
 				height: 80upx;
@@ -108,6 +103,9 @@
 					font-size: 32upx;
 					color: $text-color;
 					font-weight: 700;
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
 				}
 				.item-logo {
 					width: 120upx;
@@ -117,6 +115,7 @@
 				&-right {
 					display: flex;
 					align-items: center;
+					margin-left: 10upx;
 				}
 				.icon-arrow {
 					width: 18upx;
@@ -171,6 +170,12 @@
 				&-name {
 					display: flex;
 					justify-content: space-between;
+					&-l {
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						width: 400upx;
+					}
 					.label {
 						font-size: 26upx;
 						color: $label-color;
