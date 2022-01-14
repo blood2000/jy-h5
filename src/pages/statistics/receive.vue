@@ -299,11 +299,11 @@
 				this.clearQuery();
 				if(e.target.value == 0) {
 					this.queryParams.notStatus = 30;
-					this.queryParams.delete('status');
+					delete this.queryParams.status;
 				}
 				else {
 					this.queryParams.status = 30;
-					this.queryParams.delete('notStatus');
+					delete this.queryParams.notStatus;
 				}
 				this.queryParams = {
 					...this.queryParams,
