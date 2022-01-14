@@ -163,26 +163,21 @@
 		.info-title {
 			display: flex;
 			justify-content: space-between;
-			align-items: center;
-			height: 42upx;
+			align-items: baseline;
+			min-height: 42upx;
 			.title {
 				font-size: 32upx;
 				color: $text-color;
 				font-weight: bold;
 				width: 60%;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
 			}
 			.type {
 				font-size: 28upx;
 				color: #3a65ff;
 				font-weight: bold;
 				width: 40%;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
 				margin-left: 20upx;
+				text-align: right;
 			}
 		}
 		.info-price {

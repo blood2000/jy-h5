@@ -117,7 +117,7 @@
 				</uni-forms-item>
 
 				<uni-forms-item :required="false" name="startAddressWlId" label="接单电子围栏" v-if="form.startAddressId" class="border-bottom">
-					<pickers v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
+					<pickers close v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
 				</uni-forms-item>
 
 				<!--  -->
@@ -139,7 +139,7 @@
 					<!-- <u-alert v-if='form.type == 0' type="error" :description="description" fontSize='1'></u-alert> -->
 
 					<uni-forms-item :required="false" name="endAddressWlId" label="卸货电子围栏">
-						<pickers v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择卸货电子围栏'></pickers>
+						<pickers close v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择卸货电子围栏'></pickers>
 					</uni-forms-item>
 				</template>
 
@@ -163,8 +163,8 @@
 
 		</uni-forms>
 		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
-			<view class="reset" @click="handleCancle('form')">{{ cbData?'取消':'重置' }}</view>
-			<view class="submit" @click="handleSubmit('form')">{{ cbData?'确认修改': '确认创建' }}</view>
+			<view class="reset" @click="handleCancle('form')">{{ id?'取消':'重置' }}</view>
+			<view class="submit" @click="handleSubmit('form')">{{ id?'确认修改': '确认创建' }}</view>
 		</view>
 
 
@@ -832,29 +832,31 @@
 					name: undefined,
 					effectiveDate: [], // 转成 开始时间 和 结束时间
 					isForever: [], // 转成 数字值 有长度为true 
-					transId: undefined,
-					orderInfoId: undefined,
+					// transId: undefined,
+					// orderInfoId: undefined,
 					weight: undefined,
 					weightType: [],  // 有长度为true
-					startAddressId: undefined,
-					aliasName: undefined,
-					endAddressId: undefined,
-					sedCompnayInfoId: undefined,
-					recCompnayInfoId: undefined,
+					// startAddressId: undefined,
+					// aliasName: undefined,
+					// endAddressId: undefined,
+					// sedCompnayInfoId: undefined,
+					// recCompnayInfoId: undefined,
 					startAddressWlId: undefined,
 					endAddressWlId: undefined,
-					unAliasName: undefined,
-					orderPlanTeanRelList: [],
+					// unAliasName: undefined,
+					// orderPlanTeanRelList: [],
 					teamCodes: undefined, // 测试单选 调度者
-					orderPolicyId: undefined,
-					goodsPolicyId: undefined,
-					planFreightId: undefined,
+					// orderPolicyId: undefined,
+					// goodsPolicyId: undefined,
+					// planFreightId: undefined,
 				},
 				this.formsUpdate = Date.now()
 				this.oldDatePicker1 = Date.now()
 			},
 			// 确认创建
 			handleSubmit(formName) {
+				console.log(this.form);
+
 				// 手动验证空值
 				if(!this.noValidate()) return
 

@@ -9,10 +9,10 @@
 		<template>
 			<!-- 列表 -->
 			<view v-if="!!listData.length">
-				<view class="list-item" v-for="(row) in listData" :key="row.id">
+				<view class="list-item" v-for="(row, index) in listData" :key="row.id">
 					<view class="title-abbreviation ellipsis">{{ row.companyAbbreviation }}</view>
 					<view class="right-box">
-						<switch v-if="row.isCurrent !== 1" :key="switchKey" :disabled="row.isCurrent === 1" :checked="row.status === 0" class="m-switch" @change.stop="({ detail })=> handlerChange(row, detail.value)" />
+						<switch v-if="row.isCurrent !== 1" :key="switchKey" :disabled="row.isCurrent === 1" :checked="row.status === 0" class="m-switch" @change.stop="({ detail })=> handlerChange(row, detail.value, index)" />
 						<view class="vertical-line">|</view>
 						<view class="medit-button" @click="handlerEdit(row)">编辑</view>
 					</view>
@@ -90,7 +90,7 @@ export default {
     return {
 	  queryParams: { // 请求参数
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
 
         // goodsTypeName: undefined // 定价策略
       },
@@ -218,7 +218,7 @@ export default {
 	},
 
 	// 启用|禁用
-	handlerChange(row, value){
+	handlerChange(row, value, index){
 		// 提示
 		uni.showModal({
 			title: '提示',
@@ -241,9 +241,14 @@ export default {
 						icon: 'none',
 					});
 
-					this.loadmore('init')
-					// setTimeout(()=>{
-					// }, 700)
+					setTimeout(()=>{
+						console.log((index + 1) >= this.queryParams.pageSize);
+						if((index + 1) > this.queryParams.pageSize){
+							this.loadmore()
+						} else {
+							this.loadmore('init')
+						}
+					}, 700)
 
 
 				} else if (res.cancel) {
@@ -301,7 +306,7 @@ export default {
 				listData = [...this.listData, ...res.data.list];
 			}
 
-			this.listData = listData.sort((a,b)=> a.id - b.id)
+			this.listData = listData // listData.sort((a,b)=> a.id - b.id)
 			
 		})
 
@@ -326,6 +331,10 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+	.content-page{
+		height: 100vh;
+	}
+
 	// 新
 	.main-box{
 		padding: 24upx 24upx;

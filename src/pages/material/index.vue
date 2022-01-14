@@ -22,7 +22,9 @@
 				<view class="list-view">
 					<u-list
 						@scrolltolower="scrolltolower"
+						@scroll="handerlScroll"
 						preLoadScreen="1.5"
+						:lowerThreshold ='20'
 					>
 						<u-list-item
 							v-for="(item, index) in indexList"
@@ -59,6 +61,12 @@
 							  </view>
 							</u-cell>
 						</u-list-item>
+
+						<uni-load-more v-if="indexList && indexList.length > 0" :status="status" :icon-size="16" :content-text="{
+							contentdown: '上拉加载更多',
+							contentrefresh: '加载中',
+							contentnomore: '没有更多了'
+						}" />
 					</u-list>
 				</view>
 			</view>
@@ -75,7 +83,7 @@
 import {tenantGoodsRelList, tenantGoodsRelDelete} from '../../config/service/material/index'
 import { mapState } from "vuex";
 import mockData from "./mockData.js";
-import uniData from '@/utils/uni.webview.1.5.2.js';
+// import uniData from '@/utils/uni.webview.1.5.2.js';
 import HeaderBar from '@/components/Building/HeaderBar2.vue';
 import SiderBar from "../../components/Building/SiderBar.vue";
 import { removePropertyOfNull } from '@/utils/ddc';
@@ -85,14 +93,17 @@ export default {
     return {
 	  queryParams: { // 请求参数
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
 
         goodsTypeName: undefined // 定价策略
       },
 	  indexList: [],
 	  total: 0,
 	  cbData: null,
-	  statusBar12: 0
+	  statusBar12: 0,
+
+	  status:'more', // more|loading|noMore
+	  isScollValue: false
     };
   },
 
@@ -151,9 +162,15 @@ export default {
 			})
 		}
     },
+
+	// handerlScroll
+	handerlScroll(ee){
+		this.isScollValue = ee > 100
+	},
 	
 	// s= 列表相关
 	scrolltolower() {
+		if(!this.isScollValue) return
 		this.loadmore()
 	},
 
@@ -161,13 +178,21 @@ export default {
 		if(status && status === 'init'){
 			this.queryParams.pageNum = 1
 		} else {
+			if(this.status === 'noMore') return
 			this.queryParams.pageNum++
 		}
 
 		uni.showLoading();
+		this.status = 'loading'
 		return tenantGoodsRelList(this.que, this.headerInfo).then(res=>{
 			uni.hideLoading();
+			this.status = 'more'
 			this.total = res.data.total - 0
+
+			if(res.data.list.length < this.que.pageSize){
+				// 没有更多了
+				this.status = 'noMore';
+			}
 
 			if(status && status === 'init'){
 				this.indexList = res.data.list
@@ -186,13 +211,14 @@ export default {
 	},
 	// 新增
 	handleAdd() {
-		uni.redirectTo({
+		
+		uni.navigateTo({
 			url: '/pages/material/materialCategory'
 		});
 	},
 	// 编辑
 	handlerEdit(row){
-		uni.redirectTo({
+		uni.navigateTo({
 			url: '/pages/material/materialCategory?cbData=' + JSON.stringify(row)
 		});
 	},
@@ -237,14 +263,14 @@ export default {
 
     // 添加场区分类
     toAddBuildingType() {
-      uni.redirectTo({
+      uni.navigateTo({
         url: "./buildingType",
       });
     },
 
     // 添加场区
     addBuilding() {
-      uni.redirectTo({
+      uni.navigateTo({
           url: "./addBuilding?type=" + this.activeIndex,
         });
     },
