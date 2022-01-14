@@ -172,14 +172,14 @@
 					text-overflow: ellipsis;
 					font-size: 32rpx;
 					font-weight: bold;
-					margin-bottom: 12rpx;
+					margin-bottom: 20rpx;
 				}
 				.address{
 					// width: 320px;
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
-					margin-bottom: 12rpx;
+					margin-bottom: 20rpx;
 					color: #878787;
 				}
 				.electric{
