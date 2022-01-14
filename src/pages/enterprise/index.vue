@@ -5,18 +5,24 @@
 			<text style="color:#3A65FF" slot="right" @click="handleAdd">新增</text>
 	</HeaderBar>
 	<!-- 搜索框 -->
-	<view class="search-box">
-		<u-search class="usearch" placeholder="日照香炉生紫烟" v-model="queryParams.sfewojfowewe" :showAction="false"></u-search>
 
-		<view class="bePpen">
-			<text class="sfewewf" @click="bePpenShow = true">启禁用</text>
-			<u-picker :show="bePpenShow" :columns="bePcolumns"></u-picker>
+	<!-- <u-sticky offset-top="200"> -->
+		<view class="search-box" :style="{top: (statusBarHeight - 0 + 44) *2 + 'upx'}">
+			<u-search class="usearch" placeholder="请输入收发企业名称" v-model="queryParams.companyName" :showAction="false" @clear="loadmore('init')" @search="loadmore('init')"></u-search>
+
+			<view class="bePpen" @click.stop="bePpenShow = true">
+				<text class="sfewewf">状态: {{ statusName }}</text>
+				<u-icon name="arrow-down-fill" size="12"></u-icon>
+			</view>
 		</view>
-	</view>
+	<!-- </u-sticky> -->
+	<u-picker :show="bePpenShow" :columns="bePcolumns" :closeOnClickOverlay="true"
+			 @cancel="bePpenShow = false"
+			 @close="()=> { bePpenShow = false }"
+			 @confirm="handlerConfirm"
+	></u-picker>
     <!-- main -->
-    <view class="main-box">
-
-
+    <view class="main-box" :style="{marginTop: ((44 + 10) * 2) + 'upx'}">
 
 		<template>
 			<!-- 列表 -->
@@ -102,12 +108,13 @@ export default {
     return {
 		bePpenShow: false,
 		bePcolumns: [
-			['中国', '美国', '日本']
+			['不限', '启用', '禁用']
 		],
 	  queryParams: { // 请求参数
         pageNum: 1,
         pageSize: 20,
-		sfewojfowewe: undefined
+		companyName: undefined, // 搜索企业名称
+		status: undefined
 
         // goodsTypeName: undefined // 定价策略
       },
@@ -156,6 +163,18 @@ export default {
 		return {
 			...removePropertyOfNull(this.queryParams) 
 		}
+	},
+
+	statusName(){
+		let _name = this.bePcolumns[0][0]
+		if(this.queryParams.status === 0 || this.queryParams.status){
+			if(this.queryParams.status === 0){
+				_name = this.bePcolumns[0][1]
+			} else {
+				_name = this.bePcolumns[0][2]
+			}
+		}
+		return _name
 	}
   },
   async onLoad(options) {
@@ -188,15 +207,30 @@ export default {
   },
 
   methods: {
-    bePpen_close(){
-		console.log(12313);
+	handlerConfirm(_data){
+		// 点击了确定
+		if(_data && Array.isArray(_data.indexs)){
+			let _dataindex = undefined
+			switch (_data.indexs[0]) {
+				case 0:
+					_dataindex = undefined
+					break;
+				case 1:
+					_dataindex = 0
+					break;
+				case 2:
+					_dataindex = 1
+					break;
+			}
+			this.$set(this.queryParams, 'status', _dataindex)
+			this.bePpenShow = false
+
+			this.loadmore('init')
+		}
+
 	},
 
 	// 新
-	open() {
-		// console.log('open');
-	},
-
 	close() {
 		this.cbData = null
 		this.show = false
@@ -354,11 +388,13 @@ export default {
 <style lang='scss' scoped>
 
 	.search-box{
-		
+		position: fixed;
+		left: 0;
 		width: 100%;
 		padding: 20upx;
 		background-color: #fff;
 		border-top: 1px solid #f3f3f3;
+		z-index: 1;
 
 		display: flex;
 		align-items: center;
@@ -367,7 +403,7 @@ export default {
 			padding: 0 20upx;
 		}
 		.bePpen{
-
+			display: flex;
 		}
 
 
