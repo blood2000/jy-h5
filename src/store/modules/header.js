@@ -3,7 +3,7 @@ const store = {
 		isAndroid: false,
 		isiOS: false,
 		headerInfo: {
-			"Authorization":"70cafaf2-8e62-4245-9a7f-538583795e39",
+			"Authorization":"1306afe1-fd3b-4375-8d34-75eaacc44f7f",
 			"App-Type": "2",
 			"App-Code": "f3209f6c7353414e8dbb94dd23cf8b91",
 			"Terminal-Type": "app",

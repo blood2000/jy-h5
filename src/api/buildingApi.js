@@ -17,6 +17,9 @@ const apiUrl = {
   // 管理端相关接口
   getThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/getCapacityVehicleThreshold',   //获取场区阈值
   setThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/insertOrUpdate',   //场区阈值设置
+  getRules: '/zjz1-jyz-service/rcyy/subscribeRule/getSubscribeRules',   //获取预约规则
+  setRules: '/zjz1-jyz-service/rcyy/subscribeRule/getSubscribeRules',   //获取预约规则
+
 }
 
 export default apiUrl
