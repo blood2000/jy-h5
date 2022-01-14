@@ -70,16 +70,19 @@
 	.ly-flex-pack-end{
 		position: relative;
 		.closeicon{
-			position: absolute;
-			top: 20upx;
-			right: 32upx;
+			// position: absolute;
+			// top: 20upx;
+			// right: 32upx;
+			display: flex;
+			align-items: center;
+
 			cursor:pointer;
 		}
 	}
 	.ly-flex-pack-end .limitWide{
 		width: 300upx;
 		&.clos{
-			padding-right: 30upx;
+			// padding-right: 30upx;
 		}
 	}
 
