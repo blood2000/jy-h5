@@ -333,7 +333,7 @@
 			
 			// 多边形绘制，监听回调函数
 			polygonEvent(e){
-				if(this.polygonPath.length >= 5){
+				if(this.polygonPath.length >= 20){
 					this.msgSuccess('最多选择20个点')
 					return
 				}
@@ -425,13 +425,13 @@
 			
 			// 多边形限制
 			PolyEditorLimit(e){
-				if(this.polygonPath.length == 5){
+				if(this.polygonPath.length == 20){
 					this.msgSuccess('最多添加20个点')
 					this.oldPolygonPath = this.polygon.getPath().map(res => {
 						return [res.lng,res.lat]
 					})
 				}
-				if(this.polygonPath.length > 5){
+				if(this.polygonPath.length > 20){
 					this.msgSuccess('最多添加20个点')
 					this.polygonPath = deepClone(this.oldPolygonPath)
 					this.$nextTick(function(){
@@ -440,7 +440,7 @@
 				}
 			},
 			setOldPolygonPath(e){
-				if(this.polygonPath.length === 5){
+				if(this.polygonPath.length === 20){
 					this.oldPolygonPath = this.polygon.getPath().map(res => {
 						return [res.lng,res.lat]
 					})
