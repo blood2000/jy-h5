@@ -4,8 +4,20 @@
 	<HeaderBar title="企业管理" @back="navigateBack">
 			<text style="color:#3A65FF" slot="right" @click="handleAdd">新增</text>
 	</HeaderBar>
+	<!-- 搜索框 -->
+	<view class="search-box">
+		<u-search class="usearch" placeholder="日照香炉生紫烟" v-model="queryParams.sfewojfowewe" :showAction="false"></u-search>
+
+		<view class="bePpen">
+			<text class="sfewewf" @click="bePpenShow = true">启禁用</text>
+			<u-picker :show="bePpenShow" :columns="bePcolumns"></u-picker>
+		</view>
+	</view>
     <!-- main -->
     <view class="main-box">
+
+
+
 		<template>
 			<!-- 列表 -->
 			<view v-if="!!listData.length">
@@ -88,9 +100,14 @@ export default {
 
   data() {
     return {
+		bePpenShow: false,
+		bePcolumns: [
+			['中国', '美国', '日本']
+		],
 	  queryParams: { // 请求参数
         pageNum: 1,
         pageSize: 20,
+		sfewojfowewe: undefined
 
         // goodsTypeName: undefined // 定价策略
       },
@@ -171,6 +188,10 @@ export default {
   },
 
   methods: {
+    bePpen_close(){
+		console.log(12313);
+	},
+
 	// 新
 	open() {
 		// console.log('open');
@@ -331,6 +352,27 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+
+	.search-box{
+		
+		width: 100%;
+		padding: 20upx;
+		background-color: #fff;
+		border-top: 1px solid #f3f3f3;
+
+		display: flex;
+		align-items: center;
+		.usearch{
+			flex: 1;
+			padding: 0 20upx;
+		}
+		.bePpen{
+
+		}
+
+
+	}
+
 	.content-page{
 		height: 100vh;
 	}
@@ -449,6 +491,7 @@ export default {
 		text-align: right;
 	}
 	
+
 	
 	
 </style>
