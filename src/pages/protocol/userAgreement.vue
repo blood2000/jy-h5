@@ -5,7 +5,7 @@
 		<view class="user-page__title">在完成注册或以任何方式使用至简集运服务前，请您务必仔细阅读并透彻理解本至简集运服务条款(以下或简称“服务条款”)，在确认充分理解后选择接受或不接受本服务条款；一旦您完成“同意条款并注册”或开始以其他方式使用至简集运服务，即表明您已阅读并同意受本服务条款的约束。如您不同意本服务条款或其中任何条款约定，您应不再进行下一步或停止注册。</view>
 		<view class="user-page__title"> 如果您未满18周岁，请在法定监护人的陪同下阅读本服务条款。</view>
 		<view class="user-page__list text-bold">一、协议范围</view>
-		<view class="user-page__list text-bold">1.1. 至简集运服务条款是您与福建至简至一信息科技有限公司平台（“至简集运”或者“我们”）就使用至简集运服务而订立的有效合约。至简集运包含域名为 http://www.z1gc.net 、司机APP、微信小程序、微信公众号等。</view>
+		<view class="user-page__list text-bold">1.1. 至简集运服务条款是您与福建至简至一信息科技有限公司平台（“至简集运”或者“我们”）就使用至简集运服务而订立的有效合约。至简集运包含域名为 http://zjjy.zjz1.net 、企业APP、微信小程序、微信公众号等。</view>
 		<view class="user-page__list text-bold">1.2. 如您购买或使用至简集运上某一具体服务，您仍需确认具体服务对应的服务条款；请您审慎阅读、充分理解各条款内容，选择接受或不接受该服务条款。</view>
 		
 		<view class="user-page__list text-bold">二、账户的注册、使用与安全</view>
@@ -111,7 +111,7 @@
 		<view class="user-page__list text-bold">14.2. 本服务条款的章节标题仅为行文方便而设，不具有法律或合同效力。</view>
 		<view class="user-page__list text-bold">14.3. 本服务条款任一条款被视为废止、无效或不可执行，该条款应视为可分的且不影响本服务条款及其他条款的有效性及可执行性。</view>
 		
-		<view class="user-page__list text-bold">14.4. 至简集运有权在至简集运官网（ http://www.z1gc.net ）上发布公告、发站内通知或邮件通知等方式将本服务的权利义务全部或者部分转移给至简集运的关联公司。</view>
+		<view class="user-page__list text-bold">14.4. 至简集运有权在至简集运官网（ http://zjjy.zjz1.net ）上发布公告、发站内通知或邮件通知等方式将本服务的权利义务全部或者部分转移给至简集运的关联公司。</view>
 		<view class="user-page__list text-bold">14.5. 除另有约定外，出于服务专业性考虑，至简集运亦可能委托关联公司或其他法律主体向您提供至简集运上一项或多项具体服务，同时您可能会与该等公司订立相关条款或条件，请您审慎阅读、充分理解条款和条件内容，选择接受或不接受该条款和条件。</view>
 		<view class="user-page__list text-bold">14.6. 本服务条款项下之保密条款、知识产权条款、法律适用与管辖条款以及性质上理应存续的其他条款（如对注册信息的真实性保证等），不因本条款的终止而失效。</view>
 		<view style="margin-bottom: 100rpx"></view>
