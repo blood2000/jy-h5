@@ -305,12 +305,11 @@
 					this.queryParams.status = 30;
 					delete this.queryParams.notStatus;
 				}
-				this.queryParams = {
-					...this.queryParams,
-					pageNum: 1,
-					completeFlag: e.target.value
-				}
-				this.getList();
+				this.$set(this.queryParams, 'completeFlag', e.target.value);
+				this.$set(this.queryParams, 'pageNum', 1);
+				this.$nextTick(() => {
+					this.getList();
+				})
 			}
 		}
 	}
