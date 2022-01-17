@@ -42,7 +42,7 @@
 				<view class="list-numframe flex align-center flex-wrap">
 					<view class="list-numlist">
 						<view class="list-numcont">{{item.carNum || 0}}</view>
-						<view class="list-numtitle margin-stop">已完成车数</view>
+						<view class="list-numtitle margin-stop"><template v-if="queryParams.completeFlag == 1">已完成</template><template v-else>未完成</template>车数</view>
 					</view>
 					<view class="list-numlist">
 						<view class="list-numcont">{{item.grossWeight || 0}}</view>
@@ -70,7 +70,7 @@
 						<view class="list-numframe flex align-center flex-wrap">
 							<view class="list-numlist">
 								<view class="list-numcont">{{itemChild.carNum || 0}}</view>
-								<view class="list-numtitle margin-stop">已完成车数</view>
+								<view class="list-numtitle margin-stop"><template v-if="queryParams.completeFlag == 1">已完成</template><template v-else>未完成</template>车数</view>
 							</view>
 							<view class="list-numlist">
 								<view class="list-numcont">{{itemChild.grossWeight || 0}}</view>
