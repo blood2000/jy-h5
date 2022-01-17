@@ -4,15 +4,33 @@
 	<HeaderBar title="企业管理" @back="navigateBack">
 			<text style="color:#3A65FF" slot="right" @click="handleAdd">新增</text>
 	</HeaderBar>
+	<!-- 搜索框 -->
+
+	<!-- <u-sticky offset-top="200"> -->
+		<view class="search-box" :style="{top: (statusBarHeight - 0 + 44) *2 + 'upx'}">
+			<u-search class="usearch" placeholder="请输入收发企业名称" v-model="queryParams.companyName" :showAction="false" @clear="loadmore('init')" @search="loadmore('init')"></u-search>
+
+			<view class="bePpen" @click.stop="bePpenShow = true">
+				<text class="sfewewf">状态: {{ statusName }}</text>
+				<u-icon name="arrow-down-fill" size="12"></u-icon>
+			</view>
+		</view>
+	<!-- </u-sticky> -->
+	<u-picker :show="bePpenShow" :columns="bePcolumns" :closeOnClickOverlay="true"
+			 @cancel="bePpenShow = false"
+			 @close="()=> { bePpenShow = false }"
+			 @confirm="handlerConfirm"
+	></u-picker>
     <!-- main -->
-    <view class="main-box">
+    <view class="main-box" :style="{marginTop: ((44 + 10) * 2) + 'upx'}">
+
 		<template>
 			<!-- 列表 -->
 			<view v-if="!!listData.length">
-				<view class="list-item" v-for="(row) in listData" :key="row.id">
+				<view class="list-item" v-for="(row, index) in listData" :key="row.id">
 					<view class="title-abbreviation ellipsis">{{ row.companyAbbreviation }}</view>
 					<view class="right-box">
-						<switch :key="switchKey" :disabled="row.isCurrent === 1" :checked="row.status === 0" class="m-switch" @change.stop="({ detail })=> handlerChange(row, detail.value)" />
+						<switch v-if="row.isCurrent !== 1" :key="switchKey" :disabled="row.isCurrent === 1" :checked="row.status === 0" class="m-switch" @change.stop="({ detail })=> handlerChange(row, detail.value, index)" />
 						<view class="vertical-line">|</view>
 						<view class="medit-button" @click="handlerEdit(row)">编辑</view>
 					</view>
@@ -88,9 +106,15 @@ export default {
 
   data() {
     return {
+		bePpenShow: false,
+		bePcolumns: [
+			['不限', '启用', '禁用']
+		],
 	  queryParams: { // 请求参数
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
+		companyName: undefined, // 搜索企业名称
+		status: undefined
 
         // goodsTypeName: undefined // 定价策略
       },
@@ -139,6 +163,18 @@ export default {
 		return {
 			...removePropertyOfNull(this.queryParams) 
 		}
+	},
+
+	statusName(){
+		let _name = this.bePcolumns[0][0]
+		if(this.queryParams.status === 0 || this.queryParams.status){
+			if(this.queryParams.status === 0){
+				_name = this.bePcolumns[0][1]
+			} else {
+				_name = this.bePcolumns[0][2]
+			}
+		}
+		return _name
 	}
   },
   async onLoad(options) {
@@ -171,11 +207,30 @@ export default {
   },
 
   methods: {
-	// 新
-	open() {
-		// console.log('open');
+	handlerConfirm(_data){
+		// 点击了确定
+		if(_data && Array.isArray(_data.indexs)){
+			let _dataindex = undefined
+			switch (_data.indexs[0]) {
+				case 0:
+					_dataindex = undefined
+					break;
+				case 1:
+					_dataindex = 0
+					break;
+				case 2:
+					_dataindex = 1
+					break;
+			}
+			this.$set(this.queryParams, 'status', _dataindex)
+			this.bePpenShow = false
+
+			this.loadmore('init')
+		}
+
 	},
 
+	// 新
 	close() {
 		this.cbData = null
 		this.show = false
@@ -218,7 +273,7 @@ export default {
 	},
 
 	// 启用|禁用
-	handlerChange(row, value){
+	handlerChange(row, value, index){
 		// 提示
 		uni.showModal({
 			title: '提示',
@@ -241,9 +296,14 @@ export default {
 						icon: 'none',
 					});
 
-					this.loadmore('init')
-					// setTimeout(()=>{
-					// }, 700)
+					setTimeout(()=>{
+						console.log((index + 1) >= this.queryParams.pageSize);
+						if((index + 1) > this.queryParams.pageSize){
+							this.loadmore()
+						} else {
+							this.loadmore('init')
+						}
+					}, 700)
 
 
 				} else if (res.cancel) {
@@ -301,7 +361,7 @@ export default {
 				listData = [...this.listData, ...res.data.list];
 			}
 
-			this.listData = listData.sort((a,b)=> a.id - b.id)
+			this.listData = listData // listData.sort((a,b)=> a.id - b.id)
 			
 		})
 
@@ -326,6 +386,33 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+
+	.search-box{
+		position: fixed;
+		left: 0;
+		width: 100%;
+		padding: 20upx;
+		background-color: #fff;
+		border-top: 1px solid #f3f3f3;
+		z-index: 1;
+
+		display: flex;
+		align-items: center;
+		.usearch{
+			flex: 1;
+			padding: 0 20upx;
+		}
+		.bePpen{
+			display: flex;
+		}
+
+
+	}
+
+	.content-page{
+		height: 100vh;
+	}
+
 	// 新
 	.main-box{
 		padding: 24upx 24upx;
@@ -440,6 +527,7 @@ export default {
 		text-align: right;
 	}
 	
+
 	
 	
 </style>

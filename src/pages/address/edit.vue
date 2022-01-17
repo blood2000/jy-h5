@@ -296,9 +296,9 @@
 				})
 			},
 			addList(data){
-				if(data.id || data.index){
+				if(data.index){
 					this.form.zjFenceList.find((res,index) => {
-						if(res.id === data.id){
+						if(data.index && index == data.index){
 							this.form.zjFenceList.splice(index,1,data)
 						}
 					})
@@ -373,6 +373,9 @@
 </script>
 
 <style lang="scss" scoped>
+	::v-deep .el-vue-search-box-container{
+		z-index:200
+	}
 	.name{
 		height: 100rpx;
 		line-height: 100rpx;

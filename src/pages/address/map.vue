@@ -41,6 +41,7 @@
 
 <script>
 	import HeaderBar from '@/components/Building/HeaderBar2.vue';
+	import { deepClone } from '@/utils/ddc';
 	import {
 		mapState
 	} from "vuex";
@@ -65,6 +66,9 @@
 			...mapState({
 				statusBarHeight: (state) => state.header.statusBarHeight,
 			})
+		},
+		watch:{
+			
 		},
 		mounted() {},
 		data() {
@@ -95,6 +99,7 @@
 				
 				polygon:null, // 多边形实例
 				polygonPath:[], // 多边形路径
+				oldPolygonPath:[],
 				PolyEditor:null,
 				
 				isDraw:true, // 画图 
@@ -147,27 +152,23 @@
 				let pages = getCurrentPages()
 				let prePage = pages[pages.length - 2]
 				// 圆形
-				if(this.form.geomType === 1){
+				if(this.form.geomType === 1 && this.circleRadius){
 					const circleCenter = this.circle.getCenter()
-					// this.form.geomText = [...this.circleCenter,Math.floor(this.circleRadius)].join()
-					this.form.geomText = [circleCenter,this.circle.getRadius()].join()
+					this.form.geomText = [circleCenter,Math.floor(this.circle.getRadius())].join()
 					this.form.centerLng = circleCenter.lng
 					this.form.centerLat = circleCenter.lat
 				}
 				// 矩形
-				if(this.form.geomType === 2){
-					// this.form.geomText = [...this.rectanglelnglat,...this._rectanglelnglat].join()
+				if(this.form.geomType === 2 && this._rectanglelnglat.length){
 				    const Bounds = this.rectangle.getBounds()
-					this.form.geomText = [Bounds.northeast,Bounds.southwest].join()
+					this.form.geomText = [Bounds.southwest,Bounds.northeast].join()
 					const {lng,lat} = Bounds.getCenter()
 					this.form.centerLng = lng
 					this.form.centerLat = lat
 				}
 				// 多边形
-				if(this.form.geomType === 3){
-					// this.form.geomText = this.polygonPath.join()
-					this.form.geomText = this.polygon.getPath()
-					console.log(this.polygon.getPath());
+				if(this.form.geomType === 3 && this.polygonPath.length > 2){
+					this.form.geomText = this.polygon.getPath().join()
 					const {lng,lat} = this.polygon.getBounds().getCenter()
 					this.form.centerLng = lng
 					this.form.centerLat = lat
@@ -200,7 +201,6 @@
 			// 	// this.addressNamelnglat = [lng, lat];
 			// },
 			init() {
-				const _this = this
 				this.map = this.$refs.amapref.$$getInstance();
 				this.polygon = new AMap.Polygon({
 					strokeColor: "#FF33FF", //线颜色
@@ -213,23 +213,22 @@
 					// zIndex: 100,
 				})
 				this.PolyEditor = new AMap.PolyEditor(this.map,this.polygon);
-				// this.PolyEditor.open(); 
+				
 				this.circle = new AMap.Circle({
-					center:_this.circleCenter.length ? _this.circleCenter : null,
-					radius:_this.circleRadius,
+					center:this.circleCenter.length ? this.circleCenter : null,
+					radius:this.circleRadius,
 					strokeColor: "#FF33FF", //线颜色
 					strokeOpacity: 0.2, //线透明度
 					strokeWeight: 3,    //线宽
 					fillColor: "#1791fc", //填充色
 					fillOpacity: 0.35,//填充透明度
 					// draggable: true
-					// path: _this.polygonPath,
 					// zIndex: 100,
 				})
 				this.CircleEditor = new AMap.CircleEditor(this.map,this.circle); 
-				// this.circleEditor.open(); 
+				
 				this.rectangle = new AMap.Rectangle({
-					// path: _this.polygonPath,
+					// path: new AMap.Bounds(southWest, northEast),
 					strokeColor: "#FF33FF", //线颜色
 					strokeOpacity: 0.2, //线透明度
 					strokeWeight: 3,    //线宽
@@ -239,11 +238,12 @@
 					// zIndex: 100,
 				})
 				this.RectangleEditor = new AMap.RectangleEditor(this.map,this.rectangle);
-				// this.RectangleEditor.open();
+				
 				
 				this.polygon.setMap(this.map)
 				this.circle.setMap(this.map)
 				this.rectangle.setMap(this.map)
+				
 				
 				if(this.form.geomType === 1){
 					// console.log(this.form.geomText.split(','));
@@ -254,19 +254,23 @@
 					this.circle.setRadius(Number(lnglat[2]))
 				}
 				if(this.form.geomType === 2){
+					// console.log(this.form.geomText);
 					const lnglat = this.form.geomText.split(',')
 					this.rectanglelnglat = [lnglat[0],lnglat[1]]
 					this._rectanglelnglat = [lnglat[2],lnglat[3]]
 					this.rectangle.setBounds(new AMap.Bounds(this.rectanglelnglat,this._rectanglelnglat))
 				}
 				if(this.form.geomType === 3){
+					// console.log(this.form.geomText);
 					const lnglat = this.form.geomText.split(',')
 					const _lnglat = lnglat.map((item,index) => {
 						if(index%2 === 0){
 							return [item,lnglat[index+1]]
 						}
 					})
-					this.polygon.setPath(_lnglat.filter(res => res !== undefined))
+					this.polygonPath = _lnglat.filter(res => res !== undefined)
+					this.oldPolygonPath = deepClone(this.polygonPath)
+					this.polygon.setPath(this.polygonPath)
 				}
 				// console.log(this.form);
 			},
@@ -276,31 +280,33 @@
 				this.form.geomType = 3
 				// this.map.setStatus({dragEnable:true})
 				this.isDraw = false
-				this.map.on('touchend',this.eventListen)
+				this.map.on('touchend',this.polygonEvent)
 			},
 			// 画圆形
 			drawCircle(){
 				this.msgSuccess('点击地图拖动绘制圆形')
 				this.form.geomType = 1
 				this.isDraw = false
-				this.map.on('touchstart',this.eventListenCircle)
-				this.map.on('touchmove',this.circleEvent)
+				this.map.on('touchstart',this.circleStartEvent)
+				this.map.on('touchmove',this.circleMoveEvent)
 			},
 			// 画矩形
 			drawRectangle(){
-				this.msgSuccess('请从左下角至右上角绘制')
+				this.msgSuccess('点击地图拖动绘制矩形')
 				this.form.geomType = 2
 				this.isDraw = false
 				this.map.on('touchstart',this.startEvent)
-				this.map.on('touchmove',this.endEvent)
+				this.map.on('touchmove',this.moveEvent)
+				this.map.on('touchend',this.endEvent)
 			},
 			// 结束绘制
 			close(){
-				this.map.off('touchend',this.eventListen)
-				this.map.off('touchstart',this.eventListenCircle)
-				this.map.off('touchmove',this.circleEvent)
-				this.map.off('touchstart',this.startEvent)
-				this.map.off('touchmove',this.endEvent)
+				this.map.off('touchend',this.polygonEvent) // 多边形
+				this.map.off('touchstart',this.circleStartEvent) // 圆
+				this.map.off('touchmove',this.circleMoveEvent)
+				this.map.off('touchstart',this.startEvent) // 矩形
+				this.map.off('touchmove',this.moveEvent)
+				this.map.off('touchend',this.endEvent)
 				this.map.setStatus({dragEnable:true})
 				this.isDraw = true
 				this.isEdit = false
@@ -313,25 +319,41 @@
 				this.isEdit = true
 				this.isEditor = false
 			},
+			// 重置覆盖物
+			resetCover(){
+				this.form.geomText = undefined
+				this.polygonPath = []
+				this.polygon.setPath([])
+				this.rectanglelnglat = []
+				this._rectanglelnglat = []
+				this.rectangle.setBounds(new AMap.Bounds([0,0],[0,0]))
+				this.circle.setRadius(0)
+				this.circleRadius = 0
+			},
 			
 			// 多边形绘制，监听回调函数
-			eventListen(e){
-				// console.log(e);
-				// const{lng,lat} = e.lnglat
+			polygonEvent(e){
+				if(this.polygonPath.length >= 20){
+					this.msgSuccess('最多选择20个点')
+					return
+				}
 				this.polygonPath.push(e.lnglat)
 				this.polygon.setPath(this.polygonPath)
+				this.oldPolygonPath = this.polygon.getPath().map(res => {
+						return [res.lng,res.lat]
+					})
 			},
 			
 			// 圆形绘制，监听回调函数
 			//开始
-			eventListenCircle(e){
+			circleStartEvent(e){
 				this.map.setStatus({dragEnable:false})
 				const{lng,lat} = e.lnglat
 				this.circleCenter = [lng,lat]
 				this.circle.setCenter([lng,lat])
 			},
 			// 结束
-			circleEvent(e){
+			circleMoveEvent(e){
 				const{lng,lat} = e.lnglat
 				const radius = AMap.GeometryUtil.distance(this.circleCenter,[lng,lat]) 
 				this.circleRadius = radius
@@ -345,22 +367,24 @@
 				const{lng,lat} = e.lnglat
 				this.rectanglelnglat = [lng,lat]
 			},
-			// 结束
-			endEvent(e){
+			// 滑动
+			moveEvent(e){
 				const{lng,lat} = e.lnglat
 				this._rectanglelnglat = [lng,lat]
 				const Bounds = new AMap.Bounds(this.rectanglelnglat,this._rectanglelnglat)
 				this.rectangle.setBounds(Bounds)
 			},
-			
-			// 重置覆盖物
-			resetCover(){
-				this.form.geomText = undefined
-				this.polygonPath = []
-				this.polygon.setPath([])
-				this.rectangle.setBounds(new AMap.Bounds([0,0],[0,0]))
-				this.circle.setRadius(0)
-				this.circleRadius = 0
+			// 结束
+			endEvent(e){
+				const{lng,lat} = e.lnglat
+				const _lng = this.rectanglelnglat[0]
+				const _lat = this.rectanglelnglat[1]
+				const southWest = []
+				const northEast = []
+				lng > _lng ? (northEast[0] = lng,southWest[0] = _lng) : (northEast[0] = _lng,southWest[0] = lng)
+				lat > _lat ? (northEast[1] = lat,southWest[1] = _lat) : (northEast[1] = _lat,southWest[1] = lat)
+				this.rectangle.setBounds(new AMap.Bounds(southWest,northEast))
+				
 			},
 			
 			// 编辑
@@ -377,6 +401,8 @@
 				// 多边形
 				if(this.form.geomType === 3){
 					this.PolyEditor.open()
+					this.PolyEditor.on('addnode',this.PolyEditorLimit)
+					this.PolyEditor.on('adjust',this.setOldPolygonPath)
 				}
 			},
 			endEdit(){
@@ -392,6 +418,32 @@
 				// 多边形
 				if(this.form.geomType === 3){
 					this.PolyEditor.close()
+					this.PolyEditor.off('addnode',this.PolyEditorLimit)
+					this.PolyEditor.off('adjust',this.setOldPolygonPath)
+				}
+			},
+			
+			// 多边形限制
+			PolyEditorLimit(e){
+				if(this.polygonPath.length == 20){
+					this.msgSuccess('最多添加20个点')
+					this.oldPolygonPath = this.polygon.getPath().map(res => {
+						return [res.lng,res.lat]
+					})
+				}
+				if(this.polygonPath.length > 20){
+					this.msgSuccess('最多添加20个点')
+					this.polygonPath = deepClone(this.oldPolygonPath)
+					this.$nextTick(function(){
+						this.polygon.setPath(this.polygonPath)
+					})
+				}
+			},
+			setOldPolygonPath(e){
+				if(this.polygonPath.length === 20){
+					this.oldPolygonPath = this.polygon.getPath().map(res => {
+						return [res.lng,res.lat]
+					})
 				}
 			}
 		}
@@ -405,9 +457,18 @@
 		height: calc(100vh - 88rpx - var(--statusBar));
 		width: 100%;
 
-		::v-deep .amap-marker .amap-icon img {
-			max-width: 40px !important;
-			max-height: 30px !important;
+		::v-deep .amap-marker .amap-icon{
+			top:-20rpx;
+			left: -20rpx;
+			width: 62rpx !important;
+			height: 62rpx !important;
+			img{
+				top: 20rpx !important;
+				left: 20rpx !important;
+				max-width: 40px !important;
+				max-height: 30px !important;
+				pointer-events: none
+			}
 		}
 
 		.name {

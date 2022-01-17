@@ -117,7 +117,7 @@
 				</uni-forms-item>
 
 				<uni-forms-item :required="false" name="startAddressWlId" label="接单电子围栏" v-if="form.startAddressId" class="border-bottom">
-					<pickers v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
+					<pickers close v-model="form.startAddressWlId" :range="startAddressIdOption" placeholder='请选择接单电子围栏'></pickers>
 				</uni-forms-item>
 
 				<!--  -->
@@ -139,7 +139,7 @@
 					<!-- <u-alert v-if='form.type == 0' type="error" :description="description" fontSize='1'></u-alert> -->
 
 					<uni-forms-item :required="false" name="endAddressWlId" label="卸货电子围栏">
-						<pickers v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择卸货电子围栏'></pickers>
+						<pickers close v-model="form.endAddressWlId" :range="endAddressIdOption" placeholder='请选择卸货电子围栏'></pickers>
 					</uni-forms-item>
 				</template>
 
@@ -163,8 +163,8 @@
 
 		</uni-forms>
 		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
-			<view class="reset" @click="handleCancle('form')">{{ cbData?'取消':'重置' }}</view>
-			<view class="submit" @click="handleSubmit('form')">{{ cbData?'确认修改': '确认创建' }}</view>
+			<view class="reset" @click="handleCancle('form')">{{ id?'取消':'重置' }}</view>
+			<view class="submit" @click="handleSubmit('form')">{{ id?'确认修改': '确认创建' }}</view>
 		</view>
 
 
@@ -469,7 +469,7 @@
 				}
 				this.olDweightType = this.cbData.weight
 
-				this.teamCodes = this.cbData.teamCodeList.map(e=> e.objCode)
+				this.teamCodes = this.cbData.teamCodeList?.map(e=> e.objCode) || []
 				this.changeTeamCodes(this.teamCodes)
 
 				this.form = {
@@ -505,13 +505,13 @@
 				}
 
 				const _data = (await listInfo(que,this.headerInfo)).list;
-				this.transIdOption = _data.map(e => {
+				this.transIdOption = _data?.map(e => {
 					return {
 						dictLabel: e.transName,
 						dictValue: e.id,
 						disable: e.delFlag !== '0'
 					};
-				});
+				}) || [];
 				// console.log('获取运输公司: ',JSON.stringify(this.transIdOption));
 			},
 			// 获取货源列表
@@ -526,13 +526,13 @@
 				}
 
 				const _data = (await orderInfoList(que, this.headerInfo)).data.list;
-				this.orderInfoIdOption = _data.map(e => {
+				this.orderInfoIdOption = _data?.map(e => {
 					return {
 						dictLabel: e.orderName,
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				});
+				}) || [];
 			},
 			// 获取收发企业
 			async getTransceiverAddress() {
@@ -558,7 +558,7 @@
 				this.recCompnayList = _data;
 
 				
-				this.recCompnayInfoIdOption = _data.map(e => {
+				this.recCompnayInfoIdOption = _data?.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.sedCompnayInfoId = e.id;
 						this.transceiverAddress = e.companyName;
@@ -572,7 +572,7 @@
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				});
+				}) || [];
 			},
 
 			// 获取发货企业
@@ -590,7 +590,7 @@
 
 				this.sedCompnayList = _data;
 
-				this.sedCompnayInfoIdOption = _data.map(e => {
+				this.sedCompnayInfoIdOption = _data?.map(e => {
 					if (e.isCurrent === 1) {
 						this.form.recCompnayInfoId = e.id;
 						this.transceiverAddress = e.companyName;
@@ -605,7 +605,7 @@
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				});
+				}) || [];
 			},
 
 			// 调度者
@@ -616,13 +616,13 @@
 				};
 				const _data = (await getDispatcherTeam(que, this.headerInfo)).list
 
-				this.teamList = _data.map(e => {
+				this.teamList = _data?.map(e => {
 					return {
 						...e,
 						dictLabel: e.name,
 						dictValue: e.id
 					};
-				});
+				}) || [];
 				// console.log('调度者:',this.teamList );
 			},
 
@@ -639,14 +639,14 @@
 
 				const _data = (await tenantCompanyAddressInfoList(que, this.headerInfo)).data.list;
 
-				this.shfuewnsdnsddssOption = _data.map(e => {
+				this.shfuewnsdnsddssOption = _data?.map(e => {
 					return {
 						...e,
 						dictLabel: e.companyAddrName,
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-				});
+				}) || [];
 			},
 
 			// 处理地址下面的电子围栏数据
@@ -655,13 +655,13 @@
 				const m_findData = this.shfuewnsdnsddssOption.find(e => e.id === m_id);
 
 				if (m_findData) {
-					this.startAddressIdOption = m_findData.zjFenceList.map(e => {
+					this.startAddressIdOption = m_findData.zjFenceList?.map(e => {
 						return {
 							dictLabel: e.name,
 							dictValue: e.id,
 							disable: e.status !== 0
 						};
-					});
+					}) || [];
 				}
 			},
 			// 处理地址下面的电子围栏数据
@@ -669,13 +669,13 @@
 				this.form.endAddressWlId = undefined;
 				const m_findData = this.shfuewnsdnsddssOption.find(e => e.id === m_id);
 				if (m_findData) {
-					this.endAddressIdOption = m_findData.zjFenceList.map(e => {
+					this.endAddressIdOption = m_findData.zjFenceList?.map(e => {
 					return {
 						dictLabel: e.name,
 						dictValue: e.id,
 						disable: e.status !== 0
 					};
-					});
+					}) || [];
 				}
 			},
 
@@ -689,12 +689,12 @@
 				
 				const _data = (await tenantGoodsPolicyInfo(que, this.headerInfo)).data;
 
-				this.orderPolicyInfoOption = _data.map(e => {
+				this.orderPolicyInfoOption = _data?.map(e => {
 					return {
 						dictLabel: e.name,
 						dictValue: e.id
 					};
-				});
+				}) || [];
 			},
 
 			// 获取运价策略
@@ -706,12 +706,12 @@
 				
 				const _data = (await goodspriceList(que, this.headerInfo)).data;
 
-				this.goodsPolicyIdOption = _data.map(e => {
+				this.goodsPolicyIdOption = _data?.map(e => {
 					return {
 						dictLabel: e.name,
 						dictValue: e.id
 					};
-				});
+				}) || [];
 			},
 
 			// 获取计算公式
@@ -722,12 +722,12 @@
 				};
 				
 				const _data = (await orderPlanFreightList(que, this.headerInfo)).data.list;
-				this.planFreightIdOption = _data.map(e => {
+				this.planFreightIdOption = _data?.map(e => {
 					return {
 						dictLabel: e.name,
 						dictValue: e.id
 					};
-				});
+				}) || [];
 			},
 
 
@@ -750,7 +750,7 @@
 
 				// 编辑要添加调度者id
 				if(cb){
-					const newArr = this.teamCodes.map(e=>{
+					const newArr = this.teamCodes?.map(e=>{
 						for (let i = 0; i < cb.length; i++) {
 							const ee = cb[i];
 							if (ee.objCode === e) {
@@ -760,7 +760,7 @@
 						return {
 							objCode: e
 						}
-					})
+					}) || []
 
 					this.teamList.forEach(e=>{
 						for (let i = 0; i < newArr.length; i++) {
@@ -832,29 +832,31 @@
 					name: undefined,
 					effectiveDate: [], // 转成 开始时间 和 结束时间
 					isForever: [], // 转成 数字值 有长度为true 
-					transId: undefined,
-					orderInfoId: undefined,
+					// transId: undefined,
+					// orderInfoId: undefined,
 					weight: undefined,
 					weightType: [],  // 有长度为true
-					startAddressId: undefined,
-					aliasName: undefined,
-					endAddressId: undefined,
-					sedCompnayInfoId: undefined,
-					recCompnayInfoId: undefined,
+					// startAddressId: undefined,
+					// aliasName: undefined,
+					// endAddressId: undefined,
+					// sedCompnayInfoId: undefined,
+					// recCompnayInfoId: undefined,
 					startAddressWlId: undefined,
 					endAddressWlId: undefined,
-					unAliasName: undefined,
-					orderPlanTeanRelList: [],
+					// unAliasName: undefined,
+					// orderPlanTeanRelList: [],
 					teamCodes: undefined, // 测试单选 调度者
-					orderPolicyId: undefined,
-					goodsPolicyId: undefined,
-					planFreightId: undefined,
+					// orderPolicyId: undefined,
+					// goodsPolicyId: undefined,
+					// planFreightId: undefined,
 				},
 				this.formsUpdate = Date.now()
 				this.oldDatePicker1 = Date.now()
 			},
 			// 确认创建
 			handleSubmit(formName) {
+				console.log(this.form);
+
 				// 手动验证空值
 				if(!this.noValidate()) return
 
@@ -878,10 +880,10 @@
 
 						isForever: this.form.isForever.length>0 ? 1 : 0,
 						weightType: this.form.weightType.length>0 ? 1 : 2,
-						orderPlanTeanRelList: this.form.orderPlanTeanRelList.map(e=> {
+						orderPlanTeanRelList: this.form.orderPlanTeanRelList?.map(e=> {
 							delete e.name
 							return e
-						}),
+						}) || [],
 						// [
 						// 	{objCode: "517a12b2f4db4270866d2132bd878cef", isDel: 0, type: 1}
 						// ], // 调度者

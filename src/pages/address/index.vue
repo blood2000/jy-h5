@@ -69,11 +69,10 @@
 			this.$store.dispatch('getLoginInfoAction', {
 				'Authorization': option.token
 			});
-			const {longitude,latitude} = JSON.parse(option.location)
+			const {longitude,latitude} =option.location ? JSON.parse(option.location) : {longitude:116.397497,latitude:39.906888}
 			this.location = longitude ? [longitude,latitude] : [116.397497,39.906888]
 			option.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', option.statusBarHeight);
 			this.handleQuery()
-			console.log(getCurrentPages());
 			// this.getList();
 		},
 		onPullDownRefresh() {
@@ -173,14 +172,14 @@
 					text-overflow: ellipsis;
 					font-size: 32rpx;
 					font-weight: bold;
-					margin-bottom: 12rpx;
+					margin-bottom: 20rpx;
 				}
 				.address{
 					// width: 320px;
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
-					margin-bottom: 12rpx;
+					margin-bottom: 20rpx;
 					color: #878787;
 				}
 				.electric{
