@@ -29,13 +29,13 @@
 			</view>
 			<view class="ly-form-card">
 				<uni-forms-item required name="vehicleTotalWeight" label="车辆总重量(皮重)" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleTotalWeight" :disabled="disabled" placeholder="请输入车辆总重量(皮重)" />
+					<uni-easyinput type="digit" :inputBorder="false" :clearable="false" v-model="form.vehicleTotalWeight" :disabled="disabled" placeholder="请输入车辆总重量(皮重)" @blur="(e) => checkLength(e, 'vehicleTotalWeight')" />
 				</uni-forms-item>
 				<uni-forms-item required name="vehicleLoadWeight" label="车辆可载重量" class="border-bottom">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleLoadWeight" :disabled="disabled" placeholder="请输入车辆可载重量" />
+					<uni-easyinput type="digit" :inputBorder="false" :clearable="false" v-model="form.vehicleLoadWeight" :disabled="disabled" placeholder="请输入车辆可载重量" @blur="(e) => checkLength(e, 'vehicleLoadWeight')" />
 				</uni-forms-item>
 				<uni-forms-item :required='false' name="vehicleRemainingLoadVolume" label="车辆可载立方">
-					<uni-easyinput type="number" :inputBorder="false" :clearable="false" v-model="form.vehicleRemainingLoadVolume" :disabled="disabled" placeholder="请输入车辆可载立方" />
+					<uni-easyinput type="digit" :inputBorder="false" :clearable="false" v-model="form.vehicleRemainingLoadVolume" :disabled="disabled" placeholder="请输入车辆可载立方" @blur="(e) => checkLength(e, 'vehicleRemainingLoadVolume')" />
 				</uni-forms-item>
 			</view>
 			<view class="ly-form-card">
@@ -180,6 +180,12 @@
 			this.getDictsList();
 		},
 		methods: {
+			checkLength(e, key) {
+				let value = e.detail.value;
+				this.$nextTick(() => {
+					this.$set(this.form, key, Number(value).toFixed(3));
+				})
+			},
 			navigateBack() {
 				uni.navigateBack();
 			},
