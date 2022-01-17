@@ -21,7 +21,7 @@
 						<view v-else class="picker">选择结束时间</view>
 					</picker>
 				</view>
-				<picker @change="bindPickerChange" :value="queryParams.completeFlag" :range="completeFlags" range-key="name" class="picker-select">
+				<picker @change="bindPickerChange" :value="queryParams.completeFlag" :range="completeFlags" range-key="name" class="picker-select" @cancel="onCancel()" v-if="isShowPicker">
 					<view class="uni-input">{{completeFlags[queryParams.completeFlag].name}}</view>
 				</picker>
 			</view>
@@ -178,7 +178,8 @@
 				}, {
 					name: '已完成',
 					value: 1
-				}]
+				}],
+				isShowPicker: true
 			}
 		},
 		onLoad(option) {
@@ -317,6 +318,14 @@
 				this.$nextTick(() => {
 					this.getList();
 				})
+			},
+			onCancel(e) {
+				setTimeout(() => {
+					this.isShowPicker = false;
+					setTimeout(() =>{
+						this.isShowPicker = true;
+					}, 0);
+				}, 300);
 			}
 		}
 	}
