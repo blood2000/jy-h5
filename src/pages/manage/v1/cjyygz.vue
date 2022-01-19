@@ -1,4 +1,4 @@
-<!-- 创建预约规则 -->
+<!-- 创建/编辑预约规则 -->
 <template>
   <div class="manage-content">
     <HeaderBar :title="title" @back="back"></HeaderBar>
@@ -51,14 +51,14 @@
         </div>
       </div>
       <!-- 排除日期添加 -->
-      <div class="manage-box">
+      <div class="manage-box" v-if="effDate && invalidDate">
         <div class="manage-box-line" style="border-bottom: none">
-          <div class="manage-title2">
-            排除日期 <span class="require">*</span>
-          </div>
+          <div class="manage-title2">排除日期</div>
           <picker
             mode="date"
             :value="outDate"
+            :start="effDate"
+            :end="invalidDate"
             @change="changeDate($event, 'outDate')"
           >
             <!-- <view class="picker-btn" v-if="outDate">
@@ -73,7 +73,7 @@
             v-for="(item, index) in outDateArr"
             :key="index"
           >
-            <div>{{ item }}</div>
+            <div>{{ item.excludeDate }}</div>
             <uni-icons
               type="clear"
               size="14"
@@ -85,7 +85,7 @@
       </div>
       <!-- 入场时段 -->
       <block v-for="(item, index) in enterTimeArr" :key="index">
-        <div class="manage-box">
+        <div class="manage-box" v-if='!isEdit || !item.deleted'>
           <div class="manage-box-title">
             <div class="manage-box-title-item">
               <div class="manage-title2">入场时段 ({{ index * 1 + 1 }})</div>
@@ -133,13 +133,15 @@
             </picker>
           </div>
           <div class="manage-box-line">
-            <div class="manage-title2">放号量 <span class="require">*</span></div>
+            <div class="manage-title2">
+              放号量 <span class="require">*</span>
+            </div>
             <div class="manage-input-box">
               <input
                 class="manage-input"
                 type="number"
                 placeholder="请输入放号量"
-                v-model="item.num"
+                v-model="item.largesse"
               />
             </div>
           </div>
@@ -148,7 +150,7 @@
       <div class="add-time" @click="addTime">新增时段</div>
     </div>
     <div class="manage-btn-box">
-      <div class="manage-btn">保存</div>
+      <div class="manage-btn" @click="submit">保存</div>
     </div>
   </div>
 </template>
@@ -156,12 +158,14 @@
 <script>
 import { mapState } from "vuex";
 import HeaderBar from "../../../components/Building/HeaderBar.vue";
+import buildingRequest from "../../../config/buildingRequest";
 import formFilter from "../../../utils/filter";
 import format from "../../../utils/format";
 export default {
   data() {
     return {
       title: "创建预约规则",
+      jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
       ruleName: "",
       effDate: "", //生效日期
       invalidDate: "", //失效日期
@@ -172,14 +176,34 @@ export default {
         // { startTime: "12:25", endTime: "14:00", num: 8 },
       ],
       temInput: "", //放号量缓存数据，用于过滤
+      isEdit: false,
+      editData: {
+        code: "",
+        id: "",
+      },
     };
   },
 
   components: { HeaderBar },
 
-  computed: {},
+  computed: {
+    ...mapState({
+      headerInfo: (state) => state.header.headerInfo,
+      isAndroid: (state) => state.header.isAndroid,
+      isiOS: (state) => state.header.isiOS,
+      statusBarHeight: (state) => state.header.statusBarHeight,
+    }),
+  },
 
-  onShow() {},
+  onLoad(option) {
+    if (option.code) {
+      this.editData.code = option.code;
+      this.isEdit = true;
+      this.getDetail();
+    } else {
+      this.isEdit = false;
+    }
+  },
 
   methods: {
     back() {
@@ -187,11 +211,31 @@ export default {
         delta: 1,
       });
     },
+    getDetail() {
+      const config = {
+        url: "getRuleDetail",
+        header: this.headerInfo,
+        querys: {
+          code: this.editData.code,
+        },
+      };
+      buildingRequest(config).then((res) => {
+        console.log("获取规则详情", res);
+        let resData = res.data;
+        this.effDate = resData.effectiveDate;
+        this.invalidDate = resData.expirationDate;
+        this.ruleName = resData.ruleName;
+        this.outDateArr = resData.ruleExcludeDates;
+        this.enterTimeArr = resData.ruleAdmissionTimeIntervals;
+        this.editData.id = resData.id;
+        // this.editData.ruleAdmissionTimeIntervalUpdateBos = resData.ruleAdmissionTimeIntervals;
+      });
+    },
     //日期选择
     changeDate(e, type) {
       this[type] = e.detail.value;
       if (type === "outDate") {
-        this.outDateArr.push(e.detail.value);
+        this.outDateArr.push({ excludeDate: e.detail.value });
       }
     },
 
@@ -214,8 +258,14 @@ export default {
         content: "删除该时段",
         success: (res) => {
           if (res.confirm) {
-            //点击确认
-            this.enterTimeArr.splice(index, 1);
+            //编辑状态下删除的时段只存id传给后端
+            let id =  this.enterTimeArr[index].id;
+            if (this.isEdit && id) {
+              this.$set(this.enterTimeArr, index, {id, deleted: true});
+            } else {
+              this.enterTimeArr.splice(index, 1);
+            }
+            
           }
         },
       });
@@ -225,7 +275,7 @@ export default {
       this.enterTimeArr.push({
         startTime: "",
         endTime: "",
-        num: "",
+        largesse: "",
       });
     },
 
@@ -241,6 +291,118 @@ export default {
           }
         }
       }, 0);
+    },
+
+    formValid() {
+      if (!this.ruleName) {
+        uni.showToast({
+          title: "请输入规则名称",
+          icon: "none",
+          duration: 1500,
+        });
+        return false;
+      }
+      if (!this.effDate) {
+        uni.showToast({
+          title: "请选择生效日期",
+          icon: "none",
+          duration: 1500,
+        });
+        return false;
+      }
+      if (!this.invalidDate) {
+        uni.showToast({
+          title: "请选择失效日期",
+          icon: "none",
+          duration: 1500,
+        });
+        return false;
+      }
+      if (this.enterTimeArr.length === 0) {
+        uni.showToast({
+          title: "请添加入场时段",
+          icon: "none",
+          duration: 1500,
+        });
+        return false;
+      }
+      let leap = true;
+      for (let i = 0; i < this.enterTimeArr.length; i++) {
+        leap = !(
+          !this.enterTimeArr[i].startTime ||
+          !this.enterTimeArr[i].endTime ||
+          !this.enterTimeArr[i].largesse
+        );
+        leap = leap || this.enterTimeArr[i].deleted;
+        if (!leap) {
+          uni.showToast({
+            title: "请完善入场时段",
+            icon: "none",
+            duration: 1500,
+          });
+          break;
+        }
+      }
+
+      return leap;
+    },
+
+    submit() {
+      if (!this.formValid()) return;
+
+      let data = {
+        jyzCode: this.jyzCode,
+        ruleName: this.ruleName,
+        effectiveDate: this.effDate,
+        expirationDate: this.invalidDate,
+        ruleExcludeDateBos: this.outDateArr,
+      };
+      let config = {};
+      if (this.isEdit) {
+        let enterArr = [];
+        this.enterTimeArr.map(item => {
+          if (item.deleted) {
+            enterArr.push({id: item.id})
+          } else {
+            enterArr.push(item)
+          }
+        })
+        data.ruleAdmissionTimeIntervalUpdateBos = enterArr;
+        data.id = this.editData.id;
+        data.code = this.editData.code;
+        config = {
+          url: "updateRules",
+          method: "put",
+          header: this.headerInfo,
+          data: data,
+        };
+      } else {
+        data.ruleAdmissionTimeIntervalInsertBos = this.enterTimeArr;
+        config = {
+          url: "setRules",
+          method: "POST",
+          header: this.headerInfo,
+          data: data,
+        };
+      }
+      console.log("添加规则参数", data);
+      // return;
+      buildingRequest(config).then((res) => {
+        console.log("增加/修改预约规则请求", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              uni.navigateBack({
+                delta: 1,
+              });
+            }
+          },
+        });
+      });
     },
   },
 };

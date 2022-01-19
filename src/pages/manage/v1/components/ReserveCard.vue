@@ -2,10 +2,10 @@
 <template>
   <div class="manage-box card-box">
     <div class="card-line">
-      <div class="manage-title3">{{ cardData.company }}</div>
+      <div class="manage-title3">{{ cardData.companyName }}</div>
       <div class="card-title-time">
         <img src="../../../../static/manage/time.png" alt="" />
-        <span>{{ cardData.time }}</span>
+        <span>{{ cardData.startTime }}</span>
       </div>
     </div>
     <div class="manage-splite-line"></div>
@@ -27,17 +27,20 @@
         <div class="manage-title2">{{ cardData.licenseNumber }}</div>
       </div>
       <div class="card-line-item">
-        <div class="manage-title2">{{ cardData.driver }}</div>
+        <div class="manage-title2">{{ cardData.nickName }}</div>
         <div class="card-line-item-icon card-line-item-ml">
           <img src="../../../../static/manage/tel.png" alt="" />
         </div>
       </div>
     </div>
-    <div class="card-line" v-if="cardData.status !== 2">
-      <div class="card-line-date">{{ cardData.date }}</div>
+    <div class="card-line" v-if="cardData.reservationStatus === 0">
+      <div class="card-line-date">{{ cardData.createTime }}</div>
+    </div>
+    <div class="card-line" v-if="cardData.reservationStatus === 1">
+      <div class="card-line-date">{{ cardData.admissionTime }}</div>
     </div>
     <div class="manage-splite-line top-border"></div>
-    <div class="card-line" v-if="cardData.status === 0">
+    <div class="card-line" v-if="cardData.reservationStatus === 0">
       <div class="card-bottom-item">
         <div class="card-line-item-icon">
           <img src="../../../../static/manage/enter.png" alt="" />
@@ -62,11 +65,11 @@
     <div class="card-line" v-if="cardData.status === 2">
       <div class="card-date-item">
         <div class="card-line-value">入场时间:</div>
-        <div class="manage-title2 card-line-text">{{ cardData.enterDate }}</div>
+        <div class="manage-title2 card-line-text">{{ cardData.admissionTime }}</div>
       </div>
       <div class="card-date-item">
         <div class="card-line-value">出场时间:</div>
-        <div class="manage-title2 card-line-text">{{ cardData.outDate }}</div>
+        <div class="manage-title2 card-line-text">{{ cardData.appearanceTime }}</div>
       </div>
     </div>
   </div>

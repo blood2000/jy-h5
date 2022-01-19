@@ -43,6 +43,11 @@
   color: #878787;
 }
 
+.manage-title5 {
+  font-size: 20rpx;
+  color: #B3B3B3;
+}
+
 .manage-delete {
   color: red;
 }
@@ -88,11 +93,22 @@
 }
 
 .switch-box {
+  position: relative;
   display: flex;
   align-items: center;
   > span {
     padding-right: 10rpx;
   }
+}
+
+.switch-box::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
 }
 
 .manage-subtitle {

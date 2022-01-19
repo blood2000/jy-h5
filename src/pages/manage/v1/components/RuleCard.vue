@@ -2,14 +2,14 @@
 <template>
   <div class="manage-box card-box">
     <div class="card-line">
-      <div class="manage-title3">{{ cardData.name }}</div>
-      <div class="switch-box">
-        <span v-show="cardData.isInvalid">启用</span>
-        <span v-show="!cardData.isInvalid">禁用</span>
+      <div class="manage-title3">{{ cardData.ruleName }}</div>
+      <div class="switch-box" @click="switchInvalid">
+        <span v-show="!cardData.isDisable">启用</span>
+        <span v-show="cardData.isDisable">禁用</span>
         <switch
           class="my-switch"
           color="#3a65ff"
-          :checked="cardData.isInvalid"
+          :checked="!cardData.isDisable"
           @change="switchInvalid($event)"
         />
       </div>
@@ -18,7 +18,9 @@
     <div class="card-line">
       <div class="card-line-item">
         <div class="card-line-value">预约时段:</div>
-        <div class="manage-title2">{{ cardData.reserveTimeNums }}</div>
+        <div class="manage-title2">
+          {{ cardData.ruleAdmissionTimeIntervals.length }}
+        </div>
       </div>
       <div class="card-line-item">
         <div class="card-line-value">总预约数:</div>
@@ -30,48 +32,48 @@
     <div class="card-line card-bg-line">
       <div class="card-line-item">
         <div class="card-line-item-icon card-line-item-start">始</div>
-        <div class="manage-title2">{{ cardData.startDate }}</div>
+        <div class="manage-title2">{{ cardData.effectiveDate }}</div>
       </div>
       <div class="card-line-item">
         <div class="card-line-item-icon card-line-item-end">终</div>
-        <div class="manage-title2">{{ cardData.endDate }}</div>
+        <div class="manage-title2">{{ cardData.expirationDate }}</div>
       </div>
     </div>
     <div class="card-line">
       <!-- <div class="card-line-date">{{ cardData.date }}</div> -->
 
       <div class="card-line-day">
-        排除天数: <span> {{ cardData.exDays }} </span> 天
+        排除天数: <span> {{ cardData.ruleExcludeDates.length }} </span> 天
       </div>
       <div class="card-line-day">
         实际天数: <span> {{ cardData.acDays }} </span>天
       </div>
     </div>
     <div class="card-line">
-      <div class="card-line-date">{{ cardData.date }}</div>
+      <div class="card-line-date">{{ cardData.createTime }}</div>
     </div>
     <div class="manage-splite-line top-border"></div>
     <div class="card-line">
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="apportion">
         <uni-icons type="checkbox" size="16"></uni-icons>
         <div class="manage-title2 card-line-item-ml">派号</div>
       </div>
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="editRule">
         <uni-icons type="compose" size="16"></uni-icons>
         <div class="manage-title2 card-line-item-ml">编辑</div>
       </div>
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="deleteRule">
         <uni-icons type="trash" color="red" size="16"></uni-icons>
         <div class="manage-title2 card-line-item-ml manage-delete">删除</div>
       </div>
     </div>
-    
-    
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import format from "../../../../utils/format";
+import buildingRequest from "../../../../config/buildingRequest";
 export default {
   data() {
     return {
@@ -99,22 +101,75 @@ export default {
 
   components: {},
 
-  computed: {},
+  computed: {
+    ...mapState({
+      headerInfo: (state) => state.header.headerInfo,
+      isAndroid: (state) => state.header.isAndroid,
+      isiOS: (state) => state.header.isiOS,
+      statusBarHeight: (state) => state.header.statusBarHeight,
+    }),
+  },
+
+  // watch: {
+  //   cardData: {
+  //     // 需要注意，因为对象引用的原因， newValue和oldValue的值一直相等
+  //     handler(newValue, oldValue) {
+  //       // 在这里标记页面编辑状态
+  //       console.log(newValue.isDisable)
+  //     },
+  //     // 通过指定deep属性为true, watch会监听对象里面每一个值的变化
+  //     deep: true,
+  //   },
+  // },
 
   mounted() {
     console.log("Card Show");
   },
 
   methods: {
-    switchInvalid(e) {
-      console.log(e);
-      let value = e.target.value;
-      // Vue.set(item, "isInvalid", !value * 1);
+    //启用禁用规则
+    switchInvalid() {
+      let value = this.cardData.isDisable;
+      let content = '';
+      value && (content = "确认启用该条规则?");
+      value || (content = "确认禁用该条规则?");
       let obj = {
-        isInvalid: value,
+        isInvalid: value ? 0 : 1,
         index: this.cardIndex,
       };
-      this.$emit("changeUse", obj);
+      uni.showModal({
+        title: "提示",
+        content: content,
+        success: (res) => {
+          if (res.confirm) {
+            this.$emit("changeUse", obj);
+          }
+        },
+      });
+    },
+    //派号
+    apportion() {
+      let code = this.cardData.code;
+      this.$emit("toApportion", code);
+    },
+    //编辑
+    editRule() {
+      let code = this.cardData.code;
+      this.$emit("toJump", code);
+    },
+    //删除
+    deleteRule() {
+      let id = this.cardData.id;
+      uni.showModal({
+        title: "提示",
+        content: "确认删除该规则?",
+        success: (res) => {
+          if (res.confirm) {
+            this.$emit("deleteRule", id);
+          }
+        },
+      });
+      
     },
   },
 };

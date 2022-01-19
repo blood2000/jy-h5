@@ -1,7 +1,8 @@
 <!-- 今日预约调号 -->
 <template>
   <div class="manage-content">
-    <HeaderBar :title="title" @back="back"></HeaderBar>
+    <HeaderBar :title="title" @back="back" :barStyle="barStyle"></HeaderBar>
+    
     <div class="manage-main">
       <div class="manage-box">
         <div class="manage-box-line">
@@ -47,6 +48,10 @@ export default {
   data() {
     return {
       title: "今日预约调号",
+      barStyle: {
+        background: '#3a65ff',
+        color: '#fff'
+      },
       reason: "",
       reserveNo: 98,
     };

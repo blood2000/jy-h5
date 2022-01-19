@@ -14,43 +14,46 @@
       <div class="manage-tab-slider" :class="'manage-slider' + tabIndex"></div>
     </div>
     <div class="manage-line">
-      <div class="manage-title1"> 共 {{total}} 条 </div>
-      <div class="manage-btn1">添加凭证</div>
+      <div class="manage-title1">共 {{ total }} 条</div>
+      <div class="manage-btn1" @click="add">添加凭证</div>
     </div>
     <div class="manage-main">
       <z-paging
-          ref="paging"
-          v-model="reserveData"
-          @query="query"
-          :fixed="false"
-          :loading-more-enabled="true"
-          :hide-empty-view="true"
-          :auto="true"
-          :show-loading-more-no-more-line="false"
-        >
-          <div v-if="noData" class="no-data">暂无预约凭证记录</div>
-          <div
-            class="manage-box"
-            v-for="(item, index) in reserveData"
-            :key="index"
-          >
-            {{ item.name }} -- {{item.page}}
-          </div>
-        </z-paging>
+        ref="paging"
+        v-model="reserveData"
+        @query="query"
+        :fixed="false"
+        :loading-more-enabled="false"
+        :hide-empty-view="true"
+        :auto="true"
+        :show-loading-more-no-more-line="false"
+      >
+        <div v-if="noData" class="no-data">暂无预约凭证记录</div>
+        <block v-for="(item, index) in reserveData" :key="index">
+          <certificate-card
+            :cardData="item"
+            :status="tabIndex"
+          ></certificate-card>
+        </block>
+      </z-paging>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import ZPagingMixin from "@/uni_modules/z-paging/components/z-paging/js/z-paging-mixin";
+import CertificateCard from "./CertificateCard.vue";
+import buildingRequest from "../../../../config/buildingRequest";
 export default {
   mixins: [ZPagingMixin], // 使用mixin
   data() {
     return {
-      total: 7,
+      jyzCode: "62baa47ae922439fbf3c102774722e40",
+      total: 0,
       tabs: [
-        { name: "已生效", number: 3 },
-        { name: "已失效", number: 5 },
+        { name: "已生效", status: 0 },
+        { name: "已失效", status: 1 },
       ],
       tabIndex: 0,
       reserveData: [],
@@ -60,13 +63,22 @@ export default {
     };
   },
 
-  components: {},
+  components: { CertificateCard },
 
-  computed: {},
+  computed: {
+    ...mapState({
+      headerInfo: (state) => state.header.headerInfo,
+      isAndroid: (state) => state.header.isAndroid,
+      isiOS: (state) => state.header.isiOS,
+      statusBarHeight: (state) => state.header.statusBarHeight,
+    }),
+  },
+  created() {
+    this.query();
+  },
 
   mounted() {
     console.log("预约凭证 show");
-    this.query();
   },
 
   methods: {
@@ -79,41 +91,37 @@ export default {
       console.log(pageNum, pageSize);
       this.noData = false;
       this.pageNum = pageNum || 1;
-      this.getData().then(res => {
-        this.$refs.paging.complete(res);
-        if (this.reserveData.length === 0 && res.length === 0) {
+      let data = {
+        // pageNum: this.pageNum,
+        // pageSize: this.pageSize,
+        jyzCode: this.jyzCode,
+        status: this.tabIndex,
+      };
+      const config = {
+        url: "getCertifyRecord",
+        header: this.headerInfo,
+        querys: data,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("获取预约凭证记录", res);
+        // res.data = [
+        //   {
+        //     companyName: "123",
+        //   },
+        // ];
+        this.$refs.paging.complete(res.data);
+        this.total = res.data.length;
+        if (this.reserveData.length === 0 && res.data.length === 0) {
           this.noData = true;
         } else {
           this.noData = false;
         }
-      })
-      
-      
+      });
     },
-    getData() {
-      uni.showLoading();
-      let data = {
-        pageNum: this.pageNum,
-        pageSize: this.pageSize,
-        type: this.tabIndex,
-      };
-      console.log('参数', data)
-      let reserveData = [];
-      let len = 10;
-      if (this.pageNum === 3) {
-        len = 4;
-      }
-      
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          for (let i = 0; i < len; i++) {
-            let time = new Date().getTime();
-            let obj = { name: time + i, page: this.pageNum};
-            reserveData.push(obj);
-          }
-          uni.hideLoading();
-          resolve(reserveData)
-        }, 1000);
+    add() {
+      console.log(111);
+      uni.navigateTo({
+        url: "./addCertify",
       });
     },
   },

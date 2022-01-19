@@ -10,44 +10,52 @@
         <div class="work-title-line">
           <div class="work-title-line-long">
             <div class="work-item-name1">预约号量</div>
-            <div class="work-item-value1">{{ overviewData.yyhl }}</div>
+            <div class="work-item-value1">
+              {{ overviewData.largesseCount || 0 }}
+            </div>
           </div>
           <div class="work-title-line-long">
             <div class="work-item-name1">已预约</div>
-            <div class="work-item-value1">{{ overviewData.yyy }}</div>
+            <div class="work-item-value1">
+              {{ overviewData.reservedCount || 0 }}
+            </div>
           </div>
           <div class="work-title-line-short">
             <div class="work-item-name1">已入场</div>
-            <div class="work-item-value1">{{ overviewData.yrc }}</div>
+            <div class="work-item-value1">
+              {{ overviewData.enteredCount || 0 }}
+            </div>
           </div>
           <div class="work-title-line-short">
             <div class="work-item-name1">已出场</div>
-            <div class="work-item-value1">{{ overviewData.ycc }}</div>
+            <div class="work-item-value1">
+              {{ overviewData.alreadyAppearedCount || 0 }}
+            </div>
           </div>
         </div>
         <div class="work-radius-line">
           <div class="work-radius-line-item">
             <div class="point"></div>
             <div class="work-item-name2">预约凭证</div>
-            <span> 5 </span>
+            <span> {{ overviewData.voucherCount || 0 }} </span>
           </div>
           <div class="work-radius-line-item">
             <div class="point"></div>
             <div class="work-item-name2">预约号段</div>
-            <span> 12 </span>
+            <span> {{ overviewData.segmentCount || 0 }} </span>
           </div>
         </div>
       </div>
       <div class="work-header-line">
         <div
           class="work-header-line-item"
-          v-for="(item, index) in vehicleData"
+          v-for="(item, index) in overviewData.lastAppearance"
           :key="index"
         >
           <img src="../../../../static/manage/car.png" alt="" />
-          <div class="manage-title2">{{ item.num }}</div>
-          <div class="work-item-name3">{{ item.name }}</div>
-          <div class="work-date">{{ item.date }}</div>
+          <div class="manage-title2">{{ item.licenseNumber }}</div>
+          <div class="work-item-name3">{{ item.nickName }}</div>
+          <div class="work-date">{{ item.appearanceTime }}</div>
         </div>
       </div>
     </div>
@@ -98,7 +106,7 @@
           :auto="true"
           :show-loading-more-no-more-line="false"
         >
-          <div v-if="noData" class="no-data">暂无预约记录</div>
+          <div v-if="noData" class="no-data">暂无记录</div>
           <block v-for="(item, index) in reserveData" :key="index">
             <reserve-card :cardData="item"></reserve-card>
           </block>
@@ -106,6 +114,7 @@
       </div>
 
       <div class="work-main-content" v-else>
+        <div v-if="noData" class="no-data">暂无记录</div>
         <block v-for="(item, index) in reserveData" :key="index">
           <reserve-card :cardData="item"></reserve-card>
         </block>
@@ -120,7 +129,9 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import ZPagingMixin from "@/uni_modules/z-paging/components/z-paging/js/z-paging-mixin";
+import buildingRequest from "../../../../config/buildingRequest";
 import format from "../../../../utils/format";
 import ReserveCard from "./ReserveCard.vue";
 import PickerModal from "./PickerModal.vue";
@@ -128,26 +139,27 @@ export default {
   mixins: [ZPagingMixin], // 使用mixin
   data() {
     return {
+      jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
       searchKey: "",
       pickerData: [
-        {name: '今日预约调号', url: 'jryyth'},
-        {name: '场区阈值设置', url: 'cqyzsz'},
-        {name: '预约规则设置', url: 'yygzsz'},
+        { name: "今日预约调号", url: "jryyth" },
+        { name: "场区阈值设置", url: "cqyzsz" },
+        { name: "预约规则设置", url: "yygzsz" },
       ],
       showPickerModal: false,
-      overviewData: { yyhl: 620, yyy: 132, yrc: 78, ycc: 50 },
-      vehicleData: [
-        { num: "闽A112233", name: "辛弃疾", date: "12.28 12:32" },
-        { num: "闽A667833", name: "王阳明", date: "12.28 12:32" },
-        { num: "闽A545233", name: "李白", date: "12.28 12:32" },
-      ],
+      overviewData: {},
+      // vehicleData: [
+      //   { num: "闽A112233", name: "辛弃疾", date: "12.28 12:32" },
+      //   { num: "闽A667833", name: "王阳明", date: "12.28 12:32" },
+      //   { num: "闽A545233", name: "李白", date: "12.28 12:32" },
+      // ],
       tabs: [
-        { name: "待入场", number: 3 },
-        { name: "已入场", number: 5 },
-        { name: "已出场", number: 2 },
+        { name: "待入场", reservationStatus: 0 },
+        { name: "已入场", reservationStatus: 1 },
+        { name: "已出场", reservationStatus: 2 },
       ],
       tabIndex: 0,
-      total: 13,
+      total: 0,
       reserveData: [],
 
       pageNum: 1,
@@ -174,16 +186,25 @@ export default {
 
   created() {
     console.log("workbench load");
+    this.getStatistics();
   },
 
   mounted() {
     console.log("workbench show");
+
     this.query();
   },
 
   components: { ReserveCard, PickerModal },
 
-  computed: {},
+  computed: {
+    ...mapState({
+      headerInfo: (state) => state.header.headerInfo,
+      isAndroid: (state) => state.header.isAndroid,
+      isiOS: (state) => state.header.isiOS,
+      statusBarHeight: (state) => state.header.statusBarHeight,
+    }),
+  },
 
   methods: {
     //入场预约设置
@@ -196,6 +217,20 @@ export default {
     },
     showTop() {
       this.$emit("showTop");
+    },
+    //首页统计信息
+    getStatistics() {
+      const config = {
+        url: "getStatistics",
+        header: this.headerInfo,
+        querys: {
+          jyzCode: this.jyzCode,
+        },
+      };
+      buildingRequest(config).then((res) => {
+        console.log("首页统计信息", res);
+        this.overviewData = res.data;
+      });
     },
     searchDriver() {
       if (this.isScroll) {
@@ -220,57 +255,32 @@ export default {
       console.log(pageNum, pageSize, this.isScroll);
       this.noData = false;
       this.pageNum = pageNum || 1;
-      this.getData().then((res) => {
-        this.isScroll || this.$refs.paging.complete(res);
-        this.isScroll && (this.reserveData = res);
-        if (this.reserveData.length === 0 && res.length === 0) {
+      this.getRecord();
+    },
+    getRecord() {
+      let data = {
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+        jyzCode: this.jyzCode,
+        keyWord: this.searchKey,
+        reservationStatus: this.tabIndex,
+      };
+      const config = {
+        url: "getDriverRecord",
+        header: this.headerInfo,
+        querys: data,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("司机记录", res);
+        this.isScroll || this.$refs.paging.complete(res.data.list);
+        this.isScroll && (this.reserveData = res.data.list);
+        this.total = res.data.total;
+        // if (this.reserveData.length === 0 && res.data.list.length === 0) {
+        if (this.total === 0) {
           this.noData = true;
         } else {
           this.noData = false;
         }
-      });
-    },
-    getData() {
-      uni.showLoading();
-      let data = {
-        pageNum: this.pageNum,
-        pageSize: this.pageSize,
-        keyword: this.searchKey,
-        type: this.tabIndex,
-      };
-      console.log("参数", data);
-      let reserveData = [];
-      let len = 10;
-      if (this.pageNum === 3) {
-        len = 4;
-      }
-      if (this.searchKey !== "") {
-        len = this.searchKey * 1;
-      }
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          let createDate = format.dateFormat(
-            new Date(),
-            "{y}-{m}-{d} {h}:{i}:{s}"
-          );
-          for (let i = 0; i < len; i++) {
-            let obj = {
-              company: "山西华汇通商贸有限公司",
-              goodsType: "石渣土",
-              status: this.tabIndex,
-              date: createDate,
-              time: "08:00",
-              enterArea: this.pageNum + "站台",
-              licenseNumber: "闽A123123",
-              driver: "辛弃疾",
-              enterDate: format.dateFormat(new Date(), "{m}-{d} {h}:{i}"),
-              outDate: format.dateFormat(new Date(), "{m}-{d} {h}:{i}"),
-            };
-            reserveData.push(obj);
-          }
-          uni.hideLoading();
-          resolve(reserveData);
-        }, 1000);
       });
     },
   },

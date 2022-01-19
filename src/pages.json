@@ -179,6 +179,42 @@
           "bounce": "none"
         }
       }
+    },
+    {
+      "path": "pages/manage/v1/apportion",
+      "style": {
+        "navigationBarTitleText": "派号",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/addCertify",
+      "style": {
+        "navigationBarTitleText": "添加凭证",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/buildingList",
+      "style": {
+        "navigationBarTitleText": "入场区域选择",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
     }
   ],
   "globalStyle": {
