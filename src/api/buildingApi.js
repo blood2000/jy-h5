@@ -27,13 +27,17 @@ const apiUrl = {
   deleteRule: (id) => {
     return `/zjz1-jyz-service/rcyy/subscribeRule/del/${id}`
   },   //删除预约规则
-
+  getDispatch: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/getReservationVoucher',   //获取派号信息
   
   getCertifyRecord: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/getSubscribeRuleVouchers',   //获取预约凭证记录
   getTenantInfo: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/getTenantInfo',   //获取租户列表
   getBuildingInfo: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/getBuildingInfo',   //获取场区列表
   getGoodsInfo: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/getGoodsRelInfo',   //获取场区列表
   addCertify: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/insert',   //添加凭证
+
+
+  getTodayRecord: '/zjz1-jyz-service/rcyy/todaySubscribeRuleRecord/getTodaySubscribeRuleRecord',   //获取今日预约调号
+  setTodayRecord: '/zjz1-jyz-service/rcyy/todaySubscribeRuleRecord/reservationNumberAdjustment',   //设置今日预约调号
 }
 
 export default apiUrl

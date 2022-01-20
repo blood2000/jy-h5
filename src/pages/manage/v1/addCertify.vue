@@ -223,6 +223,10 @@ export default {
         url: "./buildingList",
       });
     },
+    // 删除已选区域
+    deleteItem(index) {
+      this.$store.commit("deleteBuilding", index);
+    },
     //上拉列表选择
     change(e, type) {
       let that = this;

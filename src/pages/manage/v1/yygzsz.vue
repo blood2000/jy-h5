@@ -145,9 +145,9 @@ export default {
         });
       }
     },
-    toApportion(code) {
+    toApportion(params) {
       uni.navigateTo({
-          url: "./apportion?code=" + code,
+          url: `./apportion?params=${JSON.stringify(params)}`
         });
     },
     deleteRule(id) {

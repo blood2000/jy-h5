@@ -150,7 +150,12 @@ export default {
     //派号
     apportion() {
       let code = this.cardData.code;
-      this.$emit("toApportion", code);
+      let params = {
+        code: this.cardData.code,
+        choiceDate: this.cardData.effectiveDate,
+        reserveNums: this.cardData.reserveNums
+      };
+      this.$emit("toApportion", params);
     },
     //编辑
     editRule() {
