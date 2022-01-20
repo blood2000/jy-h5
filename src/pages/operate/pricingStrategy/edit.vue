@@ -29,7 +29,7 @@
 						<view class="flex">
 							定价： 
 							<view v-if="modifyName !== ('modify' + index)">
-								{{item.price + selectDictLabel(unitRange,item.unit) }}
+								{{item.price + '元/吨' }} <!-- item.price + selectDictLabel(unitRange,item.unit) -->
 								<span :data-modify="'modify' + index" class="modify" @tap='modify'>修改</span>
 							</view>
 							<view class="flex" v-else>
@@ -395,7 +395,7 @@
 			handleStart(item,index) {
 				uni.showModal({
 					title: '温馨提示',
-					content: '确定要立即失效这条定价?',
+					content: '确定要立即生效这条定价?',
 					success: async res => {
 						if (res.confirm) {
 							this.priceData.forEach((item, i) => {

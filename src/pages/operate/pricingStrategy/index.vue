@@ -12,10 +12,10 @@
 							{{item.name}}
 						</view>
 						<view class="">
-							<span>当前定价：{{item.price ? item.price + '元' : 0}}</span>
+							<span>当前定价：{{item.nowPrice ? item.nowPrice + '元' : 0}}</span>
 						</view>
 						<view class="">
-							<span>定价有效期：{{item.endTime ? item.startTime + ' 到 ' + item.endTime : item.startTime ? '长期有效' : '暂无定价'}}</span>
+							<span>策略规则：{{item.policyDetailNum ? item.policyDetailNum : 0}}条</span>
 						</view>
 						<view class="move">
 							<view class="bg-grey _btn" @tap="handleEdit(item)">编辑</view>
@@ -62,7 +62,8 @@
 				},
 				queryParams: {
 					pageNum: 1,
-					pageSize: 10
+					pageSize: 10,
+					policyType:1
 				},
 				modalName:null
 			}

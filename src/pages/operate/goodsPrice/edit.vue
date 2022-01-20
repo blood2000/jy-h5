@@ -432,7 +432,7 @@
 			handleStart(item,index) {
 				uni.showModal({
 					title: '温馨提示',
-					content: '确定要立即失效这条定价?',
+					content: '确定要立即生效这条定价?',
 					success: async res => {
 						if (res.confirm) {
 							this.priceData.forEach((item, i) => {
