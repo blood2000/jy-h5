@@ -5,16 +5,16 @@
 		</HeaderBar>
 		<scroll-view scroll-x class="bg-white nav">
 			<view class="flex text-center">
-				<view class="cu-item flex-sub" :class="{'text-blue cur':!history}" @tap="detailList">
+				<view class="cu-item flex-sub" :class="{'text-blue cur':!history}" @tap="history = false">
 					定价列表
 				</view>
-				<view class="cu-item flex-sub" :class="{'text-blue cur':history}" @tap="historyList">
+				<view class="cu-item flex-sub" :class="{'text-blue cur':history}" @tap="history = true">
 					历史定价
 				</view>
 			</view>
 		</scroll-view>
 		<!-- 列表 -->
-		<view v-if="!history">
+		<view class="mt" v-if="!history">
 			<view class="ly-flex-pack-start good">
 				<view class="">
 					策略名称：
@@ -66,7 +66,7 @@
 			</view>
 		</view>
 		<!-- 历史列表 -->
-		<view v-else>
+		<view class="mt" v-else>
 			<view class="main">
 				<view class="list" v-if="historyData.length > 0">
 					<view class="card-list" v-for="item,index in historyData" :key="index">
@@ -240,6 +240,7 @@
 				this.effectivePlanNum = option.effectivePlanNum
 				this.form.name = option.name
 				this.getDetailList()
+				this.getHistoryList()
 			}
 		},
 		onPullDownRefresh() {
@@ -252,7 +253,7 @@
 				if(!this.isEnd) {
 					this.status = 'more';
 					this.queryParams.pageNum++;
-					this.historyList()
+					this.getHistoryList()
 				}
 			}
 		},
@@ -364,10 +365,6 @@
 			//   this.list = [];
 			//   this.isEnd = false;
 			// },
-			detailList(){
-				this.history = false
-				this.historyData = []
-			},
 			getDetailList() {
 				this.history = false
 			      return getDetailList({ id: this.form.id, pageNum:1 , pageSize:100 },this.headerInfo)
@@ -387,8 +384,7 @@
 					  	})
 			        }); // .catch(e => e)
 			    },
-			async historyList() {
-			  this.history = true
+			async getHistoryList() {
 			  if(!this.form.id) return;
 			  this.status = 'loading';
 			  	uni.showLoading();
@@ -529,9 +525,18 @@
 </script>
 
 <style lang="scss" scoped>
+	.mt{
+		margin-top: 110rpx;
+	}
 	.u-page {
 		padding: 0;
 		height: 100vh;
+		.nav{
+			position: fixed;
+			width: 100%;
+			z-index: 1024;
+			box-shadow: 0 1upx 6upx rgba(0, 0, 0, 0.1);
+		}
 		.good{
 			height:70rpx;
 			line-height: 70rpx;
