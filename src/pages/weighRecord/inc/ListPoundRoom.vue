@@ -28,7 +28,7 @@
       <view class="item-route building-top-line">
         <view class="item-route-lastTime">
           <text>最近一个过磅:</text>
-          <text>{{ item.finishTime }}</text>
+          <text>{{ parseTime(new Date(item.finishTime).getTime(), '{y}-{m}-{d} {h}:{i}:{s}') }}</text>
         </view>
         <view class="item-route-name">
           <image src="@/static/weighRecord/icon_route.png" class="item-logo-route"></image>
@@ -41,7 +41,7 @@
         <view class="item-info">
           <view class="item-info-car">
             <view>
-              <text class="item-info-lable">毛重：</text>
+              <text class="item-info-lable">{{ item.weighingType == 1 ? '皮重' : '毛重' }}：</text>
               <text class="item-info-value">{{ item.grossWeight }}吨</text>
             </view>
           </view>

@@ -66,7 +66,7 @@
           });
         }
 				uni.navigateTo({
-          url: `/pages/weighRecord/detail?waybillNo=${waybillNo}`
+          url: `/pages/weighRecord/detail?waybillNo=${waybillNo}&deviceNo=${this.deviceNo}`
         });
       }
     }
@@ -138,7 +138,6 @@
           &::before {
             width: 30upx;
 						height: 30upx;
-						display: block;
 						border-radius: 4upx;
 						font-size: 20upx;
 						color: #fff;
@@ -152,14 +151,12 @@
             &::before {
               content: '发';
               background-color: #3a65ff;
-              display: block;
             }
           }
           &-receipt {
             &::before {
               content: '收';
               background-color: #59be32;
-              display: block;
             }
           }
 				}
