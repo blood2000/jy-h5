@@ -20,21 +20,46 @@
         </div>
       </div>
       <!-- 位置 -->
-      <div class="building-body-box">
+      <!-- <div class="building-body-box">
         <div class="building-title1">位置信息</div>
         <div class="map-box">
           <Map :locationInfo="locationMsg"></Map>
         </div>
-      </div>
+      </div> -->
       <!-- 选择物料 -->
-      <MaterialPicker
-        v-if="buildingMsg.buildingType !== '0'"
+      <!-- <MaterialPicker
+        v-if="buildingMsg.buildingType !== 1"
         :materialList="materialList"
         @changeMaterialList="changeMaterialList"
-      ></MaterialPicker>
+      ></MaterialPicker> -->
+
+      <div class="building-input-box" v-if="buildingMsg.buildingType !== 1">
+        <div class="building-input-item">
+          <div class="building-title1">
+            请选择存储的物料 <span class="required">*</span>
+          </div>
+          <div class="placeholder" @click="toChooseMaterial">
+            请选择
+            <uni-icons type="forward" size="14"></uni-icons>
+          </div>
+        </div>
+        <!-- 显示框 -->
+        <div class="building-input-content" v-if="choosedMaterial.length > 0">
+          <div
+            class="building-input-content-item"
+            v-for="(item, index) in choosedMaterial"
+            :key="index"
+          >
+            {{ item.goodsName }}
+            <span class="building-input-delete" @click="deleteItem(index)">
+              <uni-icons type="clear" color="red" size="14"></uni-icons>
+            </span>
+          </div>
+        </div>
+      </div>
 
       <!-- 物料相关 -->
-      <div class="building-input-box" v-if="buildingMsg.buildingType !== '0'">
+      <div class="building-input-box" v-if="buildingMsg.buildingType !== 1">
         <div class="building-input-item">
           <div class="building-title1">
             物料单位 <span class="required">*</span>
@@ -44,7 +69,7 @@
             maxlength="9"
             placeholder="请输入"
             type="text"
-            v-model="buildingMsg.unit"
+            v-model="buildingMsg.goodsUnit"
             cursor-spacing="150"
           />
         </div>
@@ -57,7 +82,7 @@
             maxlength="16"
             placeholder="请输入"
             type="text"
-            v-model="buildingMsg.size"
+            v-model="buildingMsg.maxVolume"
             cursor-spacing="150"
           />
         </div>
@@ -76,7 +101,7 @@
       </div>
     </div>
     <div class="building-btn-box">
-      <div class="building-btn">添加</div>
+      <div class="building-btn" @click="addBuilding">添加</div>
     </div>
   </div>
 </template>
@@ -84,6 +109,7 @@
 <script>
 import { mapState } from "vuex";
 import HeaderBar from "../../../components/Building/HeaderBar.vue";
+import buildingRequest from "../../../config/buildingRequest";
 import Map from "../../../components/Building/Map.vue";
 import MaterialPicker from "../../../components/Building/MaterialPicker.vue";
 import mockData from "./config/mockData";
@@ -91,22 +117,20 @@ export default {
   data() {
     return {
       title: "",
-      buildingTypes: [],
       buildingTypeIndex: 0,
       noChoose: true,
       buildingMsg: {
         buildingType: "",
         buildingName: "",
+        pid: "",
         remark: "",
-        material: "",
-        unit: "",
-        size: "",
+        goodsUnit: "",
+        maxVolume: "",
       },
       locationMsg: {
         latitude: "",
         longitude: "",
       },
-      materialList: [],
     };
   },
 
@@ -118,23 +142,32 @@ export default {
       isAndroid: (state) => state.header.isAndroid,
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
+      choosedMaterial: (state) => state.building.choosedMaterial,
     }),
   },
 
   onLoad(option) {
-    this.buildingMsg.buildingType = option.type;
-    if (option.type === "0") {
+    this.$store.commit("getChoosedMaterial", []);
+    let data = JSON.parse(option.data);
+    console.log(option.data);
+    this.buildingMsg.buildingType = data.type;
+    this.buildingMsg.pid = data.pid;
+    if (data.type === 1) {
       // 磅房
       this.title = "添加设施（地磅类）";
     } else {
       this.title = "添加场区（仓储类）";
     }
+    //获取当前物料并存入vuex
+    //TODO...  this.$store.commit("getChoosedMaterial", this.choosedList);
+  
   },
 
   onShow() {
-    this.buildingTypes = mockData.buildingTypes;
-    this.materialList = mockData.materialList;
-    this.getLocationInfo();
+    console.log(this.choosedMaterial);
+    // this.getChoosedList();
+    // this.handleMaterialList();
+    // this.getLocationInfo();
   },
 
   methods: {
@@ -143,7 +176,7 @@ export default {
         delta: 1,
       });
     },
-
+    
     // 获取地理位置
     getLocationInfo() {
       var that = this;
@@ -159,7 +192,108 @@ export default {
     },
     //选择物料
     changeMaterialList(list) {
-      this.materialList = JSON.parse(list)
+      this.materialList = JSON.parse(list);
+    },
+    toChooseMaterial() {
+      uni.navigateTo({
+        url: "./materialList?check=1",
+      });
+    },
+
+    // 删除已选物料
+    deleteItem(index) {
+      this.$store.commit("deleteMaterial", index);
+    },
+
+    //请求参数
+    getReqData() {
+      let { buildingType, buildingName, pid, remark, goodsUnit, maxVolume } =
+        this.buildingMsg;
+
+      if (!buildingName) {
+        uni.showToast({
+          title: "请输入设施名称",
+          icon: "none",
+          duration: 1500,
+        });
+        return false;
+      }
+
+      if (this.buildingMsg.buildingType !== 1) {
+        if (this.choosedMaterial.length === 0) {
+          uni.showToast({
+            title: "请选择物料",
+            icon: "none",
+            duration: 1500,
+          });
+          return false;
+        }
+
+        if (!goodsUnit) {
+          uni.showToast({
+            title: "请选择物料单位",
+            icon: "none",
+            duration: 1500,
+          });
+          return false;
+        }
+
+        if (!maxVolume) {
+          uni.showToast({
+            title: "请输入最大容积",
+            icon: "none",
+            duration: 1500,
+          });
+          return false;
+        }
+
+        let goodsTypes = "";
+        this.choosedMaterial.map((item) => {
+          goodsTypes += item.goodsType + ",";
+        });
+
+        let reqData = {
+          buildingType,
+          buildingName,
+          pid,
+          remark,
+          building: { goodsUnit, maxVolume, goodsTypes },
+        };
+
+        return reqData;
+      } else {
+        return  {
+          buildingType,
+          buildingName,
+          pid,
+          remark,
+        };
+      }
+    },
+
+    addBuilding() {
+      let data = this.getReqData();
+      if (!data) return;
+      const config = {
+        url: "insertSubBuilding",
+        header: this.headerInfo,
+        method: "POST",
+        data: data,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("添加场区", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              this.back();
+            }
+          },
+        });
+      });
     },
   },
 };

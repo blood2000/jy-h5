@@ -3,12 +3,12 @@
   flex: 1;
 }
 
-.me-text-beyond, .g-single-row {
-	/*文本内容超宽度省略号显示 单行*/
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	width: 100%;
+.me-text-beyond {
+  /*文本内容超宽度省略号显示 单行*/
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 
 /* 两行溢出 */
@@ -23,18 +23,26 @@
 
 .building-bottom-line::after {
   position: absolute;
-  content: '';
+  content: "";
   width: 100%;
   height: 1px;
   left: 0;
   bottom: 0;
   background-image: linear-gradient(to bottom, #333, transparent);
-  transform: scaleY(.5);
+  transform: scaleY(0.5);
 }
 
 .status-bar {
-	width: 100%;
-	background: #3A65FF;
+  width: 100%;
+  background: #3a65ff;
+}
+
+.building-title0 {
+  font-size: 32rpx;
+  font-family: PingFang SC;
+  font-weight: bold;
+  color: #333333;
+  padding: 0 20rpx 20rpx;
 }
 
 .building-title1 {
@@ -42,7 +50,15 @@
   font-weight: bold;
 }
 
+.building-title2 {
+  font-size: 26rpx;
+  color: #333;
+}
 
+.building-title3 {
+  font-size: 26rpx;
+  color: #999;
+}
 
 .required {
   padding-left: 10rpx;
@@ -51,37 +67,62 @@
 }
 
 .no-choose {
-	position: absolute;
-	top: 0;
-	right: 0;
-	min-width: 180rpx;
-	height: 80rpx;
-	line-height: 80rpx;
-	text-align: right;
-	background: #fff;
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 180rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: right;
+  background: #fff;
   color: #878787;
 }
 
 .my-input {
-	/* min-width: 240rpx; */
-	text-align: right;
-	font-size: 28rpx;
-	height: 80rpx;
-	/* padding-right: 10rpx; */
+  /* min-width: 240rpx; */
+  text-align: right;
+  font-size: 28rpx;
+  height: 80rpx;
+  /* padding-right: 10rpx; */
 }
 
 .placeholder {
   color: #878787;
 }
+
+.building-date {
+  /* min-width: 170rpx; */
+  padding: 0;
+}
+
+.enter {
+  position: absolute;
+  top: 12rpx;
+  right: 20rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background: url("../../static/building/enter.png") no-repeat center;
+  background-size: 40rpx 40rpx;
+}
 /* 页面容器 */
 .building-content {
-	box-sizing: border-box;
-	height: 100%;
-	background: #f5f5f5;
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	overflow: hidden;
+  box-sizing: border-box;
+  height: 100%;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+}
+
+.building-bottom {
+  box-sizing: border-box;
+  padding: 0 20rpx;
+  height: 120rpx;
+  border-top: 1rpx solid #999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .building-main {
@@ -95,26 +136,41 @@
     box-sizing: border-box;
     width: 120rpx;
     height: 100%;
-    padding: 20rpx 0 90rpx;
+    padding: 20rpx 0 100rpx;
     background: #fff;
-    border-right: 2rpx solid #999;
+    border-top: 4rpx solid #f5f5f5;
     &-add {
       position: absolute;
-      width: 60rpx;
-      height: 60rpx;
-      left: 30rpx;
+      // width: 60rpx;
+      // height: 60rpx;
+      left: 24rpx;
       bottom: 20rpx;
-      
+      width: 81rpx;
+      height: 81rpx;
+      background: linear-gradient(88deg, #a1cfe0, #479dec, #2a69f0);
+      box-shadow: 0px 5rpx 8rpx 0px rgba(58, 101, 255, 0.34);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
   &-content {
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     flex: 1;
     &-body {
-      padding: 40rpx 0;
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 20rpx;
+      flex: 1;
+      overflow-y: auto;
+      &-container {
+        margin: 0 10rpx 20rpx;
+        padding: 40rpx 0 0;
+        display: flex;
+        flex-wrap: wrap;
+        background: #fff;
+        border-radius: 20rpx;
+      }
     }
   }
 }
@@ -122,7 +178,7 @@
 .building-box-1 {
   position: relative;
   height: 80rpx;
-  padding: 0 20rpx;
+  padding: 0 20rpx 10rpx;
   display: flex;
   justify-content: space-between;
 }
@@ -130,8 +186,14 @@
 .building-box-left {
   line-height: 80rpx;
   overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 26rpx;
+  color: #999;
+  > span {
+    font-size: 28rpx;
+    color: #333;
+  }
 }
 
 .building-box-right {
@@ -142,36 +204,65 @@
 .building-as-btn {
   // width: 120rpx;
   box-sizing: border-box;
-  padding: 0 20rpx;
-  height: 60rpx;
+  padding: 0 30rpx;
+  height: 54rpx;
   text-align: center;
-  line-height: 60rpx;
+  line-height: 54rpx;
   color: #fff;
-  background: #3A65FF;
+  background: #3a65ff;
   border-radius: 10rpx;
+  font-size: 26rpx;
+  font-weight: bold;
 }
 
 .building-default {
-  color: #3A65FF;
+  color: #3a65ff;
   background: #fff;
   border: 1px solid #ddd;
-  line-height: 58rpx;
+  line-height: 52rpx;
   margin-right: 20rpx;
+}
+
+.no-item {
+  width: 100%;
+  padding-bottom: 40rpx;
+  text-align: center;
+  color: #666;
+  font-size: 32rpx;
+  // width: 438rpx;
+  // height: 272rpx;
+  // background: url('../../static/has_none.png') no-repeat center;
+  // background-size: 100% 100%;
 }
 
 .building-item-box {
   box-sizing: border-box;
+  position: relative;
   width: 40%;
   height: 200rpx;
-  border: 2rpx solid #999;
-  background: #fff;
+  // border: 2rpx solid #999;
   border-radius: 10rpx;
   margin: 0 0 20rpx 7%;
+  overflow: hidden;
   &-title {
+    box-sizing: border-box;
+    padding: 0 10rpx;
     height: 60rpx;
     line-height: 60rpx;
     text-align: center;
-    border-bottom: 1rpx solid #999;
+    font-size: 26rpx;
+    background: #f0f3ff;
+    color: #3a65ff;
+    font-weight: bold;
+  }
+  &-content {
+    // background: url('../../static/building/building.png') no-repeat center;
+    // background-size: 100% 100%;
+    height: 116rpx;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -179,9 +270,24 @@
   margin-right: 0;
 }
 
+.building-item-ascheck {
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 42rpx;
+  height: 33rpx;
+
+}
+
+.checked {
+  border: 2rpx solid #3a65ff;
+  font-weight: bold;
+}
 
 // 表单项
 .building-body {
+  position: relative;
   box-sizing: border-box;
   padding: 30rpx 0 0;
   margin-bottom: 20rpx;
@@ -191,35 +297,46 @@
 
 .building-input-box,
 .building-body-box {
+  position: relative;
   box-sizing: border-box;
   width: 94%;
   padding: 10rpx 20rpx;
-  margin: 0 auto 20rpx;
+  margin: 0 auto 30rpx;
   background: #fff;
   border-radius: 12rpx;
+  box-shadow: 0 2rpx 10rpx 0 rgba(0, 0, 0, 0.2);
 }
-
-
+.building-body-item,
 .building-input-item {
   position: relative;
   height: 80rpx;
   line-height: 80rpx;
-	box-sizing: border-box;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-  
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &-name {
+    font-weight: bold;
+  }
+  &-icon {
+    width: 120rpx;
+    height: 100%;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 }
 
 .building-input-item::after {
   position: absolute;
-  content: '';
+  content: "";
   width: 100%;
   height: 1px;
   left: 0;
   bottom: 0;
   background-image: linear-gradient(to bottom, #999, transparent);
-  transform: scaleY(.5);
+  transform: scaleY(0.5);
 }
 
 .building-input-item:last-child::after {
@@ -227,8 +344,8 @@
 }
 
 .building-picker-btn {
-	min-width: 240rpx;
-	text-align: right;
+  min-width: 240rpx;
+  text-align: right;
 }
 
 .map-box {
@@ -239,18 +356,18 @@
 
 .textarea-box {
   box-sizing: border-box;
-  height: 280rpx;
+  height: 200rpx;
   margin-top: 10rpx;
 }
 
 .building-remark {
-	box-sizing: border-box;
-	padding: 20rpx;
-	height: 100%;
-	border-radius: 10rpx;
-	background: #f5f5f5;
-	font-size: 28rpx;
-	width: 100%;
+  box-sizing: border-box;
+  padding: 20rpx;
+  height: 100%;
+  border-radius: 10rpx;
+  background: #f5f5f5;
+  font-size: 28rpx;
+  width: 100%;
 }
 
 .building-btn-box {
@@ -272,10 +389,9 @@
   line-height: 80rpx;
   color: #fff;
   font-size: 32rpx;
-  background: #3A65FF;
+  background: #3a65ff;
   border-radius: 10rpx;
 }
-
 
 // 模态
 .building-modal {
@@ -284,7 +400,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,.4);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 100;
   display: flex;
   justify-content: center;
@@ -305,7 +421,7 @@
       height: 80rpx;
       line-height: 80rpx;
       text-align: center;
-      background: #3A65FF;
+      background: #3a65ff;
       color: #fff;
     }
     &-content {
@@ -328,7 +444,7 @@
     text-align: center;
     border-radius: 10rpx;
     color: #fff;
-    background: #3A65FF;
+    background: #3a65ff;
     .building-input-delete {
       position: absolute;
       top: -4px;
@@ -344,4 +460,228 @@
   .building-input-content-item:nth-child(4n) {
     margin-right: 0;
   }
+}
+
+// 物料类别
+.search-box {
+  height: 90rpx;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  .search-input-box {
+    position: relative;
+    box-sizing: border-box;
+    width: 94%;
+    height: 68rpx;
+    padding: 0 20rpx;
+    background: #fff;
+    border: 1rpx solid #999;
+    border-radius: 34rpx;
+    font-size: 28rpx;
+    color: #7f7f7f;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .search-input {
+    width: 100%;
+    font-size: 28rpx;
+    padding-left: 50rpx;
+    background: url("../../static/building/search.png") no-repeat;
+    background-position: 0 center;
+    background-size: contain;
+  }
+}
+
+.building-body-title {
+  padding: 0 30rpx;
+  margin-bottom: 20rpx;
+}
+
+// 场区申请审核
+.building-tab-box {
+  position: relative;
+  box-sizing: border-box;
+  height: 80rpx;
+  padding: 0 30rpx;
+  margin-bottom: 6rpx;
+  color: #e9f3ff;
+  font-size: 28rpx;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  z-index: 100;
+}
+
+.building-tab-item {
+  position: relative;
+  box-sizing: border-box;
+  // padding: 0 20rpx;
+  width: 140rpx;
+  line-height: 80rpx;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  .building-count-icon {
+    position: absolute;
+    width: 28rpx;
+    height: 28rpx;
+    top: 10rpx;
+    right: 6rpx;
+    background: #ef5242;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 20rpx;
+    text-align: center;
+    line-height: 28rpx;
+    font-weight: normal;
+  }
+  .count-icon-2 {
+    min-width: 32rpx;
+    min-height: 32rpx;
+    line-height: 32rpx;
+  }
+}
+
+.building-tab-slider {
+  position: absolute;
+  width: 50rpx;
+  height: 4rpx;
+  bottom: 10rpx;
+  left: 75rpx;
+  background: #ffffff;
+  border-radius: 2rpx;
+  transition: left 0.15s linear;
+}
+
+.slider-active0 {
+  left: 75rpx;
+}
+
+.slider-active1 {
+  left: 215rpx;
+}
+
+.slider-active2 {
+  left: 355rpx;
+}
+
+.tab-active {
+  color: #fff;
+  font-weight: bold;
+}
+
+.building-card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.building-card-title::before {
+  content: "";
+  position: absolute;
+  width: 10rpx;
+  height: 40rpx;
+  top: 20rpx;
+  left: -20rpx;
+  background: #3a65ff;
+  border-radius: 5rpx;
+}
+
+.building-body-floor {
+  box-sizing: border-box;
+  padding: 0 0 10rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &-item {
+    max-width: 33%;
+    .building-name {
+      font-size: 24rpx;
+      color: #878787;
+      margin-bottom: 6rpx;
+    }
+    .building-value {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 32rpx;
+      font-weight: bold;
+      span {
+        padding-left: 10rpx;
+      }
+    }
+  }
+  &-sub {
+    font-size: 24rpx;
+    color: #878787;
+  }
+}
+
+.building-bg-floor {
+  padding: 0 20rpx;
+  height: 66rpx;
+  background: rgba(58, 101, 255, 0.1);
+  border-radius: 6px;
+  margin-bottom: 20rpx;
+  .building-bg-name {
+    font-weight: bold;
+    > span {
+      padding-left: 10rpx;
+    }
+  }
+
+  .building-bg-value {
+    color: #3a65ff;
+  }
+}
+
+.building-cancel {
+  background: #fff;
+  border: 1rpx solid #ddd;
+  color: #333;
+  // margin-right: 20rpx;
+}
+
+.building-danger {
+  background: #ef5242;
+  color: #fff;
+  // margin-right: 20rpx;
+}
+
+.building-primary {
+  background: #3a65ff;
+  color: #fff;
+  flex: 1;
+}
+
+// 申请审核页面
+.header-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 394rpx;
+  background: linear-gradient(0deg, rgba(58, 101, 255, 0) 0%, #3a65ff 100%);
+}
+
+//仓储分配
+.as-radio {
+  box-sizing: border-box;
+  width: 34rpx;
+  height: 34rpx;
+  border: 1rpx solid #c9c9c9;
+  border-radius: 50%;
+  margin-left: 20rpx;
+}
+
+.radio-choosed {
+  border: none;
+  background: #3A65FF;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
