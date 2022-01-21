@@ -28,7 +28,7 @@
       <view class="item-route building-top-line">
         <view class="item-route-lastTime">
           <text>最近一个过磅:</text>
-          <text>{{ item.finishTime }}</text>
+          <text>{{ parseTime(new Date(item.finishTime).getTime(), '{y}-{m}-{d} {h}:{i}:{s}') }}</text>
         </view>
         <view class="item-route-name">
           <image src="@/static/weighRecord/icon_route.png" class="item-logo-route"></image>

@@ -73,7 +73,7 @@
 					<view class="record-img" v-if="weighRecord.imgs && weighRecord.imgs.length > 0">
 						<img :src="item" alt="" class="item-img" v-for="(item,index) in weighRecord.imgs" :key="index">
 					</view>
-					<view class="record-time">过磅时间：{{ weighRecord.finishTime}}</view>
+					<view class="record-time">过磅时间：{{ parseTime(new Date(weighRecord.finishTime).getTime(), '{y}-{m}-{d} {h}:{i}:{s}') }}</view>
 				</view>
 			</view>
 		</view>
@@ -129,6 +129,7 @@
 					deviceNo: this.deviceNo
 				}, this.headerInfo).then(res=>{
 					this.weighRecord = res.data;
+					this.$set(this.weighRecord, 'imgs', res.data.imgs.split(','));
 				})
 			},
 			findList() {
@@ -307,6 +308,7 @@
 			}
 			.record-img {
 				display: flex;
+				flex-wrap: wrap;
 				margin: 20upx -12upx 0;
 				.item-img {
 					width: 198upx;
@@ -314,7 +316,7 @@
 					object-fit: object-fit;
 					background-color: #dcdcdc;
 					border-radius: 6upx;
-					margin: 0 12upx;
+					margin: 12upx;
 				}
 			}
 			.record-time {
