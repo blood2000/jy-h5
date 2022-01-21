@@ -182,7 +182,7 @@
 					}
 					this.status = 'loading';
 					findList({
-						deviceNo: this.deviceNo,
+						deviceCode: this.deviceNo,
 						pageNum: this.pageNum,
 						pageSize: 10,
 						buildingType: 1,

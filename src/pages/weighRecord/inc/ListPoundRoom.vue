@@ -41,7 +41,7 @@
         <view class="item-info">
           <view class="item-info-car">
             <view>
-              <text class="item-info-lable">毛重：</text>
+              <text class="item-info-lable">{{ item.weighingType == 1 ? '皮重' : '毛重' }}：</text>
               <text class="item-info-value">{{ item.grossWeight }}吨</text>
             </view>
           </view>

@@ -30,6 +30,15 @@
         oldDatePicker1: Date.now() // 改变key值重新渲染
       }
     },
+    mounted () {
+      let self = this;
+      document.getElementsByClassName("uni-date__icon-clear")[0].addEventListener("click", () => {
+        self.$emit('input', []);
+        self.$nextTick(() => {
+          self.$emit('getList', true);
+        });
+      });
+    },
     methods: {
       // 时间控件
 			handlerPick(arr){
