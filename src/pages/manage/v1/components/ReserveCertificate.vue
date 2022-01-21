@@ -40,8 +40,13 @@
         </block>
       </z-paging>
     </div>
-    <div v-if="showQrcode" class="manage-modal">
-      <div class="qrcode-box"></div>
+    <div v-if="showQrcode" class="manage-modal" @click="cancelModal">
+      <div class="qrcode-box" @click.stop="saveQrcode">
+        <div class="qrcode-content">
+          <uqrcode ref="uQRCode" :text="qrcodeUrl" :size="qrcodeSize" />
+        </div>
+        <div class="qrcode-text">扫描二维码前往至简集运司机端小程序</div>
+      </div>
     </div>
   </div>
 </template>
@@ -66,8 +71,9 @@ export default {
       pageNum: 1,
       pageSize: 10,
       noData: false,
-      qrcodeUrl: '',  //二维码链接
+      qrcodeUrl: "", //二维码链接
       showQrcode: false,
+      qrcodeSize: 256,
     };
   },
 
@@ -133,15 +139,15 @@ export default {
       });
     },
     deleteCertify(id) {
-       const config = {
+      const config = {
         url: "deleteCertify",
         method: "DELETE",
         header: this.headerInfo,
         params: id,
       };
-      buildingRequest(config).then(res => {
-        console.log('删除预约凭证', res);
-         uni.showModal({
+      buildingRequest(config).then((res) => {
+        console.log("删除预约凭证", res);
+        uni.showModal({
           title: "提示",
           content: res.msg,
           showCancel: false,
@@ -152,12 +158,15 @@ export default {
             }
           },
         });
-      })
+      });
     },
     toDispatch(code) {
       uni.navigateTo({
         url: "./dispatch?code=" + code,
       });
+    },
+    cancelModal() {
+      this.showQrcode = false;
     },
     share(code) {
       const config = {
@@ -165,13 +174,17 @@ export default {
         method: "POST",
         header: this.headerInfo,
         data: {
-          query: code
+          query: code,
         },
       };
-      buildingRequest(config).then(res => {
-        console.log('分享获取链接', res)
+      buildingRequest(config).then((res) => {
+        console.log("分享获取链接", res);
         this.qrcodeUrl = res.data.url;
-      })
+        this.showQrcode = true;
+      });
+    },
+    saveQrcode() {
+      
     },
   },
 };
@@ -179,5 +192,29 @@ export default {
 <style lang='scss' scoped>
 .manage-main {
   padding-top: 30rpx;
+}
+
+.qrcode-box {
+  box-sizing: border-box;
+  padding: 30rpx 30rpx;
+  position: absolute;
+  z-index: 102;
+  width: 90%;
+  // height: 600rpx;
+  left: 5%;
+  top: 30%;
+  border-radius: 20rpx;
+  background: #fff;
+
+  .qrcode-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .qrcode-text {
+    padding-top: 20rpx;
+    text-align: center;
+    color: #333;
+  }
 }
 </style>

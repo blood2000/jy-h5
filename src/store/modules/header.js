@@ -2,27 +2,27 @@ const store = {
 	state: {
 		isAndroid: false,
 		isiOS: false,
-        headerInfo: {
-			"Authorization":"21b3f3ba-3d2c-43a0-9677-47df399eabd8",
-			"App-Type":"2",
-			"App-Code":"f3209f6c7353414e8dbb94dd23cf8b91", // 集运站管理
+		headerInfo: {
+			"Authorization": "21b3f3ba-3d2c-43a0-9677-47df399eabd8",
+			"App-Type": "2",
+			"App-Code": "f3209f6c7353414e8dbb94dd23cf8b91", // 集运站管理
 			// "App-Code":"ffd23bd6a4e040198e7ef2f63c000e66", // web
-			"Terminal-Type":"web",
-			"App-Version":"1.0",
-			"Produce-Code":"2c3c8c43b487432b9d67934a6c4dcbbe",
+			"Terminal-Type": "web",
+			"App-Version": "1.0",
+			"Produce-Code": "2c3c8c43b487432b9d67934a6c4dcbbe",
 			"statusBarHeight": 0
 		},
 		statusBarHeight: 0,
 
 		appOption: {}
-    },
-    getters: {
-		
-    },
-    mutations: {
-        getLoginInfo: (state, val) => {
-            state.headerInfo = Object.assign({}, state.headerInfo, val);
-        },
+	},
+	getters: {
+
+	},
+	mutations: {
+		getLoginInfo: (state, val) => {
+			state.headerInfo = Object.assign({}, state.headerInfo, val);
+		},
 		getDevice: (state, val) => {
 			if (val === 'isAndroid') {
 				state.isAndroid = true;
@@ -40,21 +40,29 @@ const store = {
 			state.appOption = val || {};
 			console.log('接收到的数据', JSON.stringify(state.appOption));
 		},
-    },
-    actions: {
-        getLoginInfoAction: ({ commit }, val) => {
-            commit('getLoginInfo', val)
-        },
-		getDeviceAction: ({ commit }, val) => {
-		    commit('getDevice', val)
+	},
+	actions: {
+		getLoginInfoAction: ({
+			commit
+		}, val) => {
+			commit('getLoginInfo', val)
 		},
-		getStatusBarHeightAction: ({ commit }, val) => {
-		    commit('getStatusBarHeight', val)
+		getDeviceAction: ({
+			commit
+		}, val) => {
+			commit('getDevice', val)
+		},
+		getStatusBarHeightAction: ({
+			commit
+		}, val) => {
+			commit('getStatusBarHeight', val)
 		},
 
-		setOption: ({ commit }, val) => {
-		    commit('getAppOption', val)
+		setOption: ({
+			commit
+		}, val) => {
+			commit('getAppOption', val)
 		},
-    }
+	}
 }
 export default store
