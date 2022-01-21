@@ -73,7 +73,7 @@
 		},
 		onLoad(option){
 			this.$store.dispatch('getLoginInfoAction', {
-				'Authorization': 'c2e4ffbc-6afd-4871-b029-9fe923053696'
+				'Authorization': option.token
 			});
 			option.statusBarHeight && this.$store.dispatch('getStatusBarHeightAction', option.statusBarHeight);
 			
