@@ -215,6 +215,18 @@
           "bounce": "none"
         }
       }
+    },
+    {
+      "path": "pages/manage/v1/dispatch",
+      "style": {
+        "navigationBarTitleText": "调号",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
     }
   ],
   "globalStyle": {

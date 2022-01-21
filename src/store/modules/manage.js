@@ -1,11 +1,11 @@
 const store = {
   state: {
-    // materialList: [],    //可选的物料列表
+    buildingList: [],    //场区列表
     choosedBuilding: [],   //当前已选场区
   },
   mutations: {
-    getMaterialList: (state, list) => {
-      state.materialList = list;
+    getBuildingList: (state, list) => {
+      state.buildingList = list;
     },
     getChoosedBuilding: (state, list) => {
       state.choosedBuilding = list;

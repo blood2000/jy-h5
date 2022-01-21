@@ -75,7 +75,7 @@
         <uni-icons type="eye" color="#333" size="16"></uni-icons>
         <div class="manage-title2 card-line-item-ml">查看详情</div>
       </div>
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="deleteCertify">
         <uni-icons type="trash" color="red" size="16"></uni-icons>
         <div class="manage-title2 card-line-item-ml  manage-delete">删除</div>
       </div>
@@ -85,13 +85,13 @@
     
     
     <div class="card-line" v-if="status === 0">
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="share">
         <div class="card-line-item-icon">
           <img src="../../../../static/manage/share.png" alt="" />
         </div>
         <div class="manage-title2 card-line-item-ml">分享</div>
       </div>
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="toDispatch">
         <div class="card-line-item-icon">
           <img src="../../../../static/manage/dispatch.png" alt="" />
         </div>
@@ -155,13 +155,34 @@ export default {
     restNumber() {
       return this.cardData.reserveNumber - this.cardData.useNumber;
     },
+    
   },
 
   // mounted() {
   //   console.log("Card Show");
   // },
 
-  methods: {},
+  methods: {
+    deleteCertify() {
+      console.log(this.cardData.id);
+      uni.showModal({
+        title: "提示",
+        content: "确认删除该凭证?",
+        success: (res) => {
+          if (res.confirm) {
+            this.$emit('deleteCertify', this.cardData.id);
+          }
+        },
+      });
+      
+    },
+    toDispatch() {
+      this.$emit('toDispatch', this.cardData.code);
+    },
+    share() {
+      this.$emit('share', this.cardData.code);
+    },
+  },
 };
 </script>
 <style lang='scss' scoped>

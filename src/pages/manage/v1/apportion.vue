@@ -22,7 +22,7 @@
         </div>
         <div class="manage-expand-line">
           <div class="manage-expand-curdate">当前日期</div>
-          <div>{{ choiceDate }}</div>
+          <div @click="expandCalendar">{{ choiceDate }}</div>
         </div>
         <div class="manage-expand-line-bg">
           <div class="manage-expand-item">
@@ -38,14 +38,16 @@
           </div>
           <div class="manage-expand-item">
             <div class="manage-title4">剩余票数</div>
-            <div class="manage-expand-item-value">144</div>
+            <div class="manage-expand-item-value">{{ restNums }}</div>
           </div>
         </div>
       </div>
+      <!-- 凭证列表 -->
       <div
         class="manage-box"
         v-for="(item, index) in dispatchList"
         :key="index"
+        v-show="!item.isDelete"
       >
         <div class="manage-box-title">
           <div class="manage-box-title-item">
@@ -110,7 +112,7 @@
             :key="idx"
           >
             {{ itm.buildingName }}
-            <span class="building-input-delete" @click="deleteItem(idx)">
+            <span class="building-input-delete" @click="deleteItem(index, idx)">
               <uni-icons type="clear" color="red" size="14"></uni-icons>
             </span>
           </div>
@@ -149,7 +151,8 @@ export default {
     return {
       title: "派号",
       code: "",
-      reserveNums: "",
+      reserveNums: "", //总票数
+      restNums: "", //剩余票数
       choiceDate: "",
       startDate: "",
       endDate: "",
@@ -160,6 +163,7 @@ export default {
       goodsList: [],
       // goodsBigType: "",
       dispatchList: [],
+      buildingList: [],
       curIndex: 0,
     };
   },
@@ -185,14 +189,18 @@ export default {
     this.$store.commit("getChoosedBuilding", []);
     this.getTenantInfo();
     this.getGoodsInfo();
-    this.getDispatch();
+    this.getBuildingInfo(this.getDispatch);
   },
 
   onShow() {
     console.log(this.choosedBuilding);
     if (this.dispatchList.length > 0) {
       this.dispatchList[this.curIndex].choosedBuilding = this.choosedBuilding;
-      // this.$set(this.dispatchList, this.curIndex, this.dispatchList[this.curIndex]);
+      this.$set(
+        this.dispatchList,
+        this.curIndex,
+        this.dispatchList[this.curIndex]
+      );
       console.log(this.dispatchList);
     }
   },
@@ -201,6 +209,22 @@ export default {
     back() {
       uni.navigateBack({
         delta: 1,
+      });
+    },
+    getBuildingInfo(fun) {
+      const config = {
+        url: "getBuildingInfo",
+        header: this.headerInfo,
+        querys: {
+          jyzCode: this.jyzCode,
+        },
+      };
+      buildingRequest(config).then((res) => {
+        console.log("场区列表", res);
+        if (res.code === 200) {
+          this.buildingList = res.data;
+          fun();
+        }
       });
     },
     getTenantInfo() {
@@ -244,11 +268,43 @@ export default {
         this.endDate = res.data.expirationDate;
         this.ruleExcludeDates = res.data.ruleExcludeDates;
         this.dispatchList = res.data.subscribeRuleVoucherVos;
+        let usedNums = 0;
         this.dispatchList.map((item) => {
-          item.tenantIndex = -1;
-          item.tenantCode = "";
-          item.goodsIndex = -1;
+          // item.tenantIndex = -1;
+          // item.tenantCode = "";
+          // item.goodsIndex = -1;
+          // item.goodsType = '';
+          // item.goodsBigType = '';
+          item.vehicleNums = item.reserveNumber || 0;
+          usedNums += item.vehicleNums * 1;
+          this.tenantList.map((tItem, tIndex) => {
+            if (item.tenantCode === tItem.code) {
+              item.tenantIndex = tIndex;
+            }
+          });
+          this.goodsList.map((gItem, gIndex) => {
+            if (item.goodsType === gItem.goodsType) {
+              item.goodsIndex = gIndex;
+              item.goodsBigType = gItem.goodsBigType;
+            }
+          });
+
+          let buildingId = item.buildingId.split(",");
+          console.log(this.buildingList);
+          item.choosedBuilding = [];
+          this.buildingList.map((bItem, bIndex) => {
+            buildingId.map((itm) => {
+              if (itm == bItem.id) {
+                item.choosedBuilding.push(bItem);
+              }
+            });
+          });
         });
+        if (this.reserveNums * 1 < usedNums) {
+          this.restNums = 0;
+        } else {
+          this.restNums = this.reserveNums * 1 - usedNums;
+        }
       });
     },
     expandCalendar() {
@@ -273,6 +329,21 @@ export default {
         });
       }
     },
+    //删除列表项目
+    deleteTime(index) {
+      uni.showModal({
+        title: "提示",
+        content: "确认删除该凭证?",
+        success: (res) => {
+          if (res.confirm) {
+            //点击确认
+            let item = this.dispatchList[index];
+            item.isDelete = true;
+            this.$set(this.dispatchList, index, item);
+          }
+        },
+      });
+    },
     //上拉列表选择
     change(e, type, index) {
       let that = this;
@@ -281,11 +352,32 @@ export default {
         tenant: () => {
           item.tenantIndex = e.detail.value * 1;
           item.tenantCode = this.tenantList[item.tenantIndex].code;
+          this.$set(this.dispatchList, index, item);
         },
         goods: () => {
-          item.goodsIndex = e.detail.value * 1;
-          item.goodsType = this.goodsList[item.goodsIndex].goodsType;
-          item.goodsBigType = this.goodsList[item.goodsIndex].goodsBigType;
+          let dIndex = e.detail.value * 1;
+          let leap = true;
+          for (let i = 0; i < this.dispatchList.length; i++) {
+            if (this.dispatchList[i].goodsIndex === dIndex) {
+              leap = false;
+              // item.goodsIndex = -1;
+              // item.goodsType = '';
+              // item.goodsBigType = '';
+              uni.showToast({
+                title: "该种类已添加，请勿重复添加",
+                icon: "none",
+                duration: 1500,
+              });
+              break;
+            }
+          }
+          if (!leap) return;
+          console.log(item);
+          item.goodsIndex = dIndex;
+          item.goodsType = this.goodsList[dIndex].goodsType;
+          item.goodsBigType = this.goodsList[dIndex].goodsBigType;
+          item.goodsName = this.goodsList[dIndex].goodsName;
+          this.$set(this.dispatchList, index, item);
         },
       };
       changeValue[type]();
@@ -302,6 +394,15 @@ export default {
       });
     },
 
+    deleteItem(index, buildingIndex) {
+      this.curIndex = index;
+      let choosedBuilding = this.dispatchList[index].choosedBuilding;
+      choosedBuilding.splice(buildingIndex, 1);
+      this.dispatchList[index].choosedBuilding = choosedBuilding;
+      // this.$store.commit("deleteBuilding", buildingIndex);
+      this.$set(this.dispatchList, index, this.dispatchList[index]);
+    },
+
     numberFilter(e, index) {
       setTimeout(() => {
         let value = e.detail.value;
@@ -314,6 +415,7 @@ export default {
         tenantCode: "",
         goodsIndex: -1,
         goodsType: "",
+        goodsBigType: "",
         choosedBuilding: [],
         vehicleNums: "",
       };
@@ -344,7 +446,7 @@ export default {
         if (!this.dispatchList[i].goodsType) {
           leap = false;
           uni.showToast({
-            title: "请选择商品类型",
+            title: "请选择货品类型",
             icon: "none",
             duration: 1500,
           });
@@ -375,8 +477,59 @@ export default {
     submit() {
       if (!this.formValid()) return;
       let data = {
-        
-      }
+        code: this.code,
+        jyzCode: this.jyzCode,
+        effectiveDate: this.choiceDate,
+        expirationDate: this.choiceDate,
+        subscribeRuleVoucherBos: [],
+      };
+      let subscribeRuleVoucherBos = [];
+      this.dispatchList.map((item) => {
+        if (item.isDelete) {
+          subscribeRuleVoucherBos.push({
+            id: item.id,
+          });
+        } else {
+          let buildingId = "";
+          item.choosedBuilding.map((item) => {
+            buildingId += item.id + ",";
+          });
+          buildingId = buildingId.slice(0, -1);
+          let obj = {
+            goodsBigType: item.goodsBigType,
+            goodsType: item.goodsType,
+            reserveNumber: item.vehicleNums,
+            buildingId: buildingId,
+            tenantCode: item.tenantCode,
+          };
+          if (item.id) {
+            obj.id = item.id;
+            obj.code = item.code;
+          }
+          subscribeRuleVoucherBos.push(obj);
+        }
+      });
+      data.subscribeRuleVoucherBos = subscribeRuleVoucherBos;
+      const config = {
+        url: "setDispatch",
+        method: "POST",
+        header: this.headerInfo,
+        data: data,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("派号", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              this.getDispatch();
+            }
+          },
+        });
+      });
     },
   },
 };

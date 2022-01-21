@@ -325,6 +325,7 @@ export default {
       this.choosedBuilding.map((item) => {
         buildingId += item.id + ",";
       });
+      buildingId = buildingId.slice(0, -1);
       let data = {
         jyzCode: this.jyzCode,
         effectiveDate: this.effDate,

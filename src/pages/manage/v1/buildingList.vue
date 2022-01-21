@@ -92,7 +92,9 @@ export default {
       };
       buildingRequest(config).then((res) => {
         console.log("场区列表", res);
+
         if (res.code === 200) {
+          this.$store.commit("getBuildingList", res.data);
           let choosedList = [];
           // res.data = [
           //   {buildingName: 'AAAadsfasdfadsf', id: 0},

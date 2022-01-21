@@ -33,6 +33,9 @@
           <certificate-card
             :cardData="item"
             :status="tabIndex"
+            @deleteCertify="deleteCertify"
+            @toDispatch="toDispatch"
+            @share="share"
           ></certificate-card>
         </block>
       </z-paging>
@@ -60,6 +63,7 @@ export default {
       pageNum: 1,
       pageSize: 10,
       noData: false,
+      qrcodeUrl: '',  //二维码链接
     };
   },
 
@@ -123,6 +127,47 @@ export default {
       uni.navigateTo({
         url: "./addCertify",
       });
+    },
+    deleteCertify(id) {
+       const config = {
+        url: "deleteCertify",
+        method: "DELETE",
+        header: this.headerInfo,
+        params: id,
+      };
+      buildingRequest(config).then(res => {
+        console.log('删除预约凭证', res);
+         uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              this.$refs.paging.reload();
+            }
+          },
+        });
+      })
+    },
+    toDispatch(code) {
+      uni.navigateTo({
+        url: "./dispatch?code=" + code,
+      });
+    },
+    share(code) {
+      const config = {
+        url: "share",
+        method: "POST",
+        header: this.headerInfo,
+        data: {
+          query: code
+        },
+      };
+      buildingRequest(config).then(res => {
+        console.log('分享获取链接', res)
+        this.qrcodeUrl = res.data.url;
+      })
     },
   },
 };
