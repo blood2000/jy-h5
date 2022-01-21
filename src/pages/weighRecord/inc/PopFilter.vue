@@ -268,6 +268,7 @@
         right: 0;
         bottom: 0;
         top: 0;
+        z-index: 999;
       }
       &.active {
         background-color: rgba($color: #3a65ff, $alpha: 0.12);
