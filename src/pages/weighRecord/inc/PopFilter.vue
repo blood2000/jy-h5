@@ -12,8 +12,8 @@
           <view class="form-item">
             <view class="form-label">过磅类型</view>
             <view class="form-cont">
-              <view class="radio-group" @click="onChangeFilterForm">
-                <view class="item-radio" :class="{'active': filterForm.weighingType == item.id}" :data-value="item.id" data-formName="weighingType" v-for="item in weighTypeList" :key="item.id">{{ item.name }}</view>
+              <view class="radio-group">
+                <view class="item-radio" :class="{'active': filterForm.weighingType == item.id}" :data-value="item.id" data-formName="weighingType" v-for="item in weighTypeList" :key="item.id" @click="onChangeFilterForm(item.id, 'weighingType')">{{ item.name }}</view>
               </view>
             </view>
           </view>
@@ -24,8 +24,8 @@
               <text class="more" @click="isShowMoreCompany=true">更多企业</text>
             </view>
             <view class="form-cont">
-              <view class="radio-group" @click="onChangeFilterForm">
-                <view class="item-radio fill" :class="{'active': filterForm.compnayInfoId == item.id}" :data-value="item.id" data-formName="compnayInfoId" v-for="item in companyListNew" :key="item.id">{{ item.companyName }}</view>
+              <view class="radio-group">
+                <view class="item-radio fill" :class="{'active': filterForm.compnayInfoId == item.id}" :data-value="item.id" data-formName="compnayInfoId" v-for="item in companyListNew" :key="item.id" @click="onChangeFilterForm(item.id, 'compnayInfoId')">{{ item.companyName }}</view>
               </view>
             </view>
           </view>
@@ -36,8 +36,8 @@
               <text class="more" @click="isShowMoretransportPlan=true">更多运输计划</text>
             </view>
             <view class="form-cont">
-              <view class="radio-group" @click="onChangeFilterForm">
-                <view class="item-radio fill" :class="{'active': filterForm.orderPlanInfoCode == item.orderPlanCode}" :data-value="item.orderPlanCode" data-formName="orderPlanInfoCode" v-for="item in orderPlanListNew" :key="item.orderPlanCode">{{ item.name }}</view>
+              <view class="radio-group">
+                <view class="item-radio fill" :class="{'active': filterForm.orderPlanInfoCode == item.orderPlanCode}" :data-value="item.orderPlanCode" data-formName="orderPlanInfoCode" v-for="item in orderPlanListNew" :key="item.orderPlanCode" @click="onChangeFilterForm(item.orderPlanCode, 'orderPlanInfoCode')">{{ item.name }}</view>
               </view>
             </view>
           </view>
@@ -58,8 +58,8 @@
               <text>称重状况</text>
             </view>
             <view class="form-cont">
-              <view class="radio-group" @click="onChangeFilterForm">
-                <view class="item-radio" :class="{'active': filterForm.completeFlag === item.id}" :data-value="item.id" data-formName="completeFlag" v-for="item in weighStatusList" :key="item.id">{{ item.name }}</view>
+              <view class="radio-group">
+                <view class="item-radio" :class="{'active': filterForm.completeFlag === item.id}" :data-value="item.id" data-formName="completeFlag" v-for="item in weighStatusList" :key="item.id" @click="onChangeFilterForm(item.id, 'completeFlag')">{{ item.name }}</view>
               </view>
             </view>
           </view>
@@ -80,8 +80,8 @@
         <input type="text" placeholder="输入企业名称" class="input-search" v-model="searchCompanyName" />
         <view class="list-company">
           <scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y">
-            <view class="radio-group" @click="onChangeFilterForm">
-              <view class="item-radio fill" :class="{'active': filterForm.compnayInfoId == item.id}" :data-value="item.id" data-formName="compnayInfoId" v-for="item in companyListFiltter" :key="item.id">{{ item.companyName }}</view>
+            <view class="radio-group">
+              <view class="item-radio fill" :class="{'active': filterForm.compnayInfoId == item.id}" :data-value="item.id" data-formName="compnayInfoId" v-for="item in companyListFiltter" :key="item.id" @click="onChangeFilterForm(item.id,'compnayInfoId')">{{ item.companyName }}</view>
             </view>
           </scroll-view>
         </view>
@@ -100,8 +100,8 @@
         <input type="text" placeholder="输入运输计划名称" class="input-search" v-model="searchOrderPlan" />
         <view class="list-company">
           <scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y">
-            <view class="radio-group" @click="onChangeFilterForm">
-              <view class="item-radio fill" :class="{'active': filterForm.orderPlanInfoCode == item.orderPlanCode}" :data-value="item.orderPlanCode" data-formName="orderPlanInfoCode" v-for="item in orderPlanListFiltter" :key="item.orderPlanCode">{{ item.name }}</view>
+            <view class="radio-group">
+              <view class="item-radio fill" :class="{'active': filterForm.orderPlanInfoCode == item.orderPlanCode}" :data-value="item.orderPlanCode" data-formName="orderPlanInfoCode" v-for="item in orderPlanListFiltter" :key="item.orderPlanCode" @click="onChangeFilterForm(item.orderPlanCode, 'orderPlanInfoCode')">{{ item.name }}</view>
             </view>
           </scroll-view>
         </view>
@@ -165,13 +165,13 @@
       /**
        * 选择类型
        */
-      onChangeFilterForm(e) {
-        if(e.target.dataset.formName) {
-          if(this.filterForm[e.target.dataset.formName] === e.target.dataset.value) {
-            this.filterForm[e.target.dataset.formName] = '';
+      onChangeFilterForm(value, formName) {
+        if(formName) {
+          if(this.filterForm[formName] === value) {
+            this.filterForm[formName] = '';
           }
           else {
-            this.filterForm[e.target.dataset.formName] = e.target.dataset.value;
+            this.filterForm[formName] = value;
           }
         }
       },
@@ -252,7 +252,6 @@
     flex-wrap: wrap;
     margin: 0 -15upx;
     .item-radio {
-      position: relative;
       height: 70upx;
       line-height: 70upx;
       font-size: 29upx;
@@ -261,15 +260,6 @@
       border-radius: 6upx;
       margin: 0 15upx 15upx;
       background-color: rgba($color: #ccc, $alpha: 0.18);
-      &::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: 0;
-        z-index: 999;
-      }
       &.active {
         background-color: rgba($color: #3a65ff, $alpha: 0.12);
         color: #3a65ff;
