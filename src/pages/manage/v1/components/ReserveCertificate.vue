@@ -40,6 +40,9 @@
         </block>
       </z-paging>
     </div>
+    <div v-if="showQrcode" class="manage-modal">
+      <div class="qrcode-box"></div>
+    </div>
   </div>
 </template>
 
@@ -64,6 +67,7 @@ export default {
       pageSize: 10,
       noData: false,
       qrcodeUrl: '',  //二维码链接
+      showQrcode: false,
     };
   },
 
