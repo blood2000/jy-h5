@@ -66,7 +66,7 @@
 					<view class="card-list" v-for="item,index in historyData" :key="index">
 						<view class="list-item">
 							<view class="flex">
-								定价： {{item.price + selectDictLabel(unitRange,item.unit) }}
+								定价： {{item.price + '元/吨' }} <!-- item.price + selectDictLabel(unitRange,item.unit) -->
 							</view> 
 							<view class="">
 								{{'状态：' + selectDictLabel(statusDict,item.takeEffectStatus)}}
@@ -497,7 +497,7 @@
 		.nav{
 			position: fixed;
 			width: 100%;
-			z-index: 1024;
+			z-index: 100;
 			box-shadow: 0 1upx 6upx rgba(0, 0, 0, 0.1);
 		}
 		.good{

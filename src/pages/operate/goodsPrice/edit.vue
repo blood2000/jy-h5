@@ -534,7 +534,7 @@
 		.nav{
 			position: fixed;
 			width: 100%;
-			z-index: 1024;
+			z-index: 100;
 			box-shadow: 0 1upx 6upx rgba(0, 0, 0, 0.1);
 		}
 		.good{
