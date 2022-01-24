@@ -59,21 +59,21 @@
 					<view class="record-name">
 						<view>
 							<text class="label">地磅：</text>
-							<text class="val">{{ weighRecord.weighbridgeName }}</text>
+							<text class="val">{{ detailInfo.deviceName }}</text>
 						</view>
 						<view>
 							<text class="label">司磅员：</text>
-							<text class="val">{{ weighRecord.userName }}</text>
+							<text class="val">{{ detailInfo.userName }}</text>
 						</view>
 					</view>
 					<view class="record-tare">
-						<view class="label">皮重</view>
-						<text>{{ weighRecord.tareWeight }}吨</text>
+						<view class="label">{{ detailInfo.weighingType == 1 ? '皮重' : '毛重' }}</view>
+						<text>{{ detailInfo.weight }}吨</text>
 					</view>
 					<view class="record-img" v-if="imgs && imgs.length > 0">
 						<img :src="item" alt="" class="item-img" v-for="(item,index) in imgs" :key="index">
 					</view>
-					<view class="record-time">过磅时间：{{ parseTime(new Date(weighRecord.finishTime).getTime(), '{y}-{m}-{d} {h}:{i}:{s}') }}</view>
+					<view class="record-time">过磅时间：{{ parseTime(new Date(detailInfo.weightTime).getTime(), '{y}-{m}-{d} {h}:{i}:{s}') }}</view>
 				</view>
 			</view>
 		</view>
@@ -116,7 +116,6 @@
 			this.deviceNo = options.deviceNo;
 			this.waybillNo = options.waybillNo;
 			this.findList();
-			this.getWaybillInfoByDeviceNo();
 		},
 		methods: {
 			/**
@@ -124,13 +123,6 @@
 			 */
 			navigateBack() {
 				uni.navigateBack();
-			},
-			getWaybillInfoByDeviceNo() {
-				getWaybillInfoByDeviceNo({
-					deviceNo: this.deviceNo
-				}, this.headerInfo).then(res=>{
-					this.weighRecord = res.data;
-				})
 			},
 			findList() {
 				findList({
@@ -143,6 +135,40 @@
 					this.imgs = [res.rows[0].mineImgs, res.rows[0].grossImgs, res.rows[0].tareImgs, res.rows[0].receiptImgs].filter(item => {
 						return item && item.trim();
 					})
+					let obj = {}
+					if(this.detailInfo.completeFlag == 1) {
+						// 已完成过磅，取最后一个过磅类型相关信息
+						if(this.detailInfo.weighingType == 1) {
+							obj.deviceName = this.detailInfo.grossDeviceName;
+							obj.userName = this.detailInfo.grossUserName;
+							obj.weight = this.detailInfo.grossWeight;
+							obj.weightTime = this.detailInfo.grossTime;
+						}
+						else {
+							obj.deviceName = this.detailInfo.tareDeviceName;
+							obj.userName = this.detailInfo.tareUserName;
+							obj.weight = this.detailInfo.tareWeight;
+							obj.weightTime = this.detailInfo.tareTime;
+						}
+					}
+					else {
+						if(this.detailInfo.weighingType == 1) {
+							obj.deviceName = this.detailInfo.tareDeviceName;
+							obj.userName = this.detailInfo.tareUserName;
+							obj.weight = this.detailInfo.tareWeight;
+							obj.weightTime = this.detailInfo.tareTime;
+						}
+						else {
+							obj.deviceName = this.detailInfo.grossDeviceName;
+							obj.userName = this.detailInfo.grossUserName;
+							obj.weight = this.detailInfo.grossWeight;
+							obj.weightTime = this.detailInfo.grossTime;
+						}
+					}
+					this.detailInfo = {
+						...this.detailInfo,
+						...obj
+					}
 				})
 			}
 		},

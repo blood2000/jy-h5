@@ -33,7 +33,7 @@
           <view class="tel">{{ item.driverName }} {{ item.driverPhone }}</view>
         </view>
         <view class="item-info-time">
-          过磅时间：{{ item.createTime }}
+          过磅时间：{{ item.completeFlag == 1 ? (item.weighingType == 1 ? item.grossTime : item.tareTime) : (item.weighingType == 1 ? item.tareTime : item.grossTime) }}
         </view>
       </view>
     </view>
