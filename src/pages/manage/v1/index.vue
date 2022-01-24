@@ -38,6 +38,7 @@ import { mapState } from "vuex";
 import HeaderBar from "../../../components/Building/HeaderBar.vue";
 import ReserveCertificate from "./components/ReserveCertificate.vue";
 import WorkBench from "./components/WorkBench.vue";
+import { queryUserInfo } from '@/config/service/user/index.js'
 export default {
   data() {
     return {
