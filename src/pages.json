@@ -22,33 +22,7 @@
 				"enablePullDownRefresh": true
 			}
 		},
-		{
-			"path": "pages/building/v1/index",
-			"style": {
-				"navigationBarTitleText": "厂区管理",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": true,
-				"navigationBarBackgroundColor": "#3A65FF"
-			}
-		},
-		{
-			"path": "pages/building/v1/buildingType",
-			"style": {
-				"navigationBarTitleText": "添加场区分类",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#3A65FF"
-			}
-		},
-		{
-			"path": "pages/building/v1/addBuilding",
-			"style": {
-				"navigationBarTitleText": "添加场区",
-				"navigationStyle": "custom",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#3A65FF"
-			}
-		},
+		
 		{
 			"path": "pages/capacity/vehicle/index",
 			"style": {
@@ -330,7 +304,224 @@
 			  "enablePullDownRefresh": true,
 			  "navigationBarBackgroundColor":"#ffffff"
 			}
-		}
+		},
+		{
+      "path": "pages/building/v1/index",
+      "style": {
+        "navigationBarTitleText": "场区管理",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/buildingType",
+      "style": {
+        "navigationBarTitleText": "添加场区分类",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/addBuilding",
+      "style": {
+        "navigationBarTitleText": "添加场区",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/editBuilding",
+      "style": {
+        "navigationBarTitleText": "编辑场区",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/materialList",
+      "style": {
+        "navigationBarTitleText": "物料类别",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/chooseMaterial",
+      "style": {
+        "navigationBarTitleText": "选择物料",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/buildingCheck",
+      "style": {
+        "navigationBarTitleText": "场区申请审核",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/check",
+      "style": {
+        "navigationBarTitleText": "申请审核",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/building/v1/apportion",
+      "style": {
+        "navigationBarTitleText": "仓储分配",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+		{
+      "path": "pages/manage/v1/index",
+      "style": {
+        "navigationBarTitleText": "入场预约系统",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/jryyth",
+      "style": {
+        "navigationBarTitleText": "今日预约调号",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/cqyzsz",
+      "style": {
+        "navigationBarTitleText": "场区阈值设置",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    
+    {
+      "path": "pages/manage/v1/yygzsz",
+      "style": {
+        "navigationBarTitleText": "预约规则设置",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/cjyygz",
+      "style": {
+        "navigationBarTitleText": "创建预约规则",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/apportion",
+      "style": {
+        "navigationBarTitleText": "派号",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/addCertify",
+      "style": {
+        "navigationBarTitleText": "添加凭证",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/buildingList",
+      "style": {
+        "navigationBarTitleText": "入场区域选择",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/manage/v1/dispatch",
+      "style": {
+        "navigationBarTitleText": "调号",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    }
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
