@@ -92,9 +92,7 @@ export default {
 
   methods: {
     back() {
-      uni.navigateBack({
-        delta: 1,
-      });
+      uni.webView.navigateBack();
     },
     changeTab(index) {
       this.tabIndex = index;

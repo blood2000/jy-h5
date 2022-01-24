@@ -44,7 +44,17 @@ const buildingRequest = function (config) {
         uni.hideLoading();
         if (res.data.code === 200) {
           resolve(res.data)
-          
+        } else if (res.data.code === 401) {
+          uni.showToast({
+            title: res.data.msg,
+            icon: 'none',
+            duration: 2000
+          });
+          setTimeout(() => {
+            uni.webView.reLaunch({
+              url: '/pages/public/applogin'
+            });
+          }, 1000)
         } else {
           // if(util.showError){
           // 	showError(res);

@@ -5,8 +5,8 @@ const store = {
 		headerInfo: {
 			// "Authorization": "21b3f3ba-3d2c-43a0-9677-47df399eabd8",
 			"App-Type": "2",
-			// "App-Code": "f3209f6c7353414e8dbb94dd23cf8b91", // 集运站管理
-			"App-Code":"ffd23bd6a4e040198e7ef2f63c000e66", // web
+			"App-Code": "f3209f6c7353414e8dbb94dd23cf8b91", // 集运站管理
+			// "App-Code":"ffd23bd6a4e040198e7ef2f63c000e66", // web
 			"Terminal-Type": "web",
 			"App-Version": "1.0",
 			"Produce-Code": "2c3c8c43b487432b9d67934a6c4dcbbe",
