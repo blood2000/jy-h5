@@ -70,8 +70,8 @@
 						<view class="label">皮重</view>
 						<text>{{ weighRecord.tareWeight }}吨</text>
 					</view>
-					<view class="record-img" v-if="weighRecord.imgs && weighRecord.imgs.length > 0">
-						<img :src="item" alt="" class="item-img" v-for="(item,index) in weighRecord.imgs" :key="index">
+					<view class="record-img" v-if="imgs && imgs.length > 0">
+						<img :src="item" alt="" class="item-img" v-for="(item,index) in imgs" :key="index">
 					</view>
 					<view class="record-time">过磅时间：{{ parseTime(new Date(weighRecord.finishTime).getTime(), '{y}-{m}-{d} {h}:{i}:{s}') }}</view>
 				</view>
@@ -93,7 +93,8 @@
 			return {
 				statusBar12: 0,
 				detailInfo: {}, // 订单详情
-				weighRecord: {} // 过磅记录
+				weighRecord: {}, // 过磅记录
+				imgs: []
 			}
 		},
 		async onLoad(options){
@@ -129,7 +130,6 @@
 					deviceNo: this.deviceNo
 				}, this.headerInfo).then(res=>{
 					this.weighRecord = res.data;
-					this.$set(this.weighRecord, 'imgs', res.data.imgs.split(','));
 				})
 			},
 			findList() {
@@ -140,6 +140,9 @@
 					jyzCode: this.jyzCode
 				}, this.headerInfo).then(res=>{
 					this.detailInfo = res.rows[0];
+					this.imgs = [res.rows[0].mineImgs, res.rows[0].grossImgs, res.rows[0].tareImgs, res.rows[0].receiptImgs].filter(item => {
+						return item && item.trim();
+					})
 				})
 			}
 		},
