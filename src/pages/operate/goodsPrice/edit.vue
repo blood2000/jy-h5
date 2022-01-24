@@ -61,7 +61,8 @@
 				</view>
 				<NonePage v-else></NonePage>
 			</view>
-			<view class="button">
+			<view style="height: 160rpx;"/>
+			<view class="button-box">
 				<button type="primary" @tap="submit" :loading="loading">提交</button>
 			</view>
 		</view>
@@ -605,13 +606,18 @@
 				}
 			}
 		}
-		.button{
+		.button-box{
 			position:fixed;
 			margin: auto;
 			left: 0;
 			right: 0;
-			bottom: 100rpx;
-			width: 80%;
+			bottom: 0;
+			width: 100%;
+			height: 140rpx;
+			background: #f1f1f1;
+			button{
+				width: 80%;
+			}
 		}
 		.cu-modal{
 			z-index: 998;
