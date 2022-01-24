@@ -90,8 +90,12 @@ export default {
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
   },
-  async onLoad() {
-    await this.$onLaunched;
+  onLoad(option) {
+    // await this.$onLaunched;
+    this.$store.commit("getLoginInfoAction", {
+      Authorization: option.token,
+      statusBarHeight: option.statusBarHeight,
+    });
     this.getAddedGoods();
     // this.$store.commit("getMaterialList", mockData.materialList);
   },
