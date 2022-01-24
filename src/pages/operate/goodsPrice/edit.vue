@@ -375,6 +375,8 @@
 			          this.sortList();
 					  uni.hideLoading()
 					  
+					  this.priceData.length && (this.ruleForm.startTime = this.parseTime(+new Date(this.priceData[this.priceData.length - 1].startTime) + 8.64e7,'{y}-{m}-{d}'))
+					  
 					  this.priceData.forEach(item => {
 					  				Object.keys(item).forEach(v => {
 					  					if(item[v] === null ||item[v] === undefined ){
