@@ -288,7 +288,7 @@ export default {
 </script>
 <style lang='scss' scoped>
 .work-header {
-  padding: 30rpx 0;
+  padding: 30rpx 0 0;
   &-box {
     margin-bottom: 20rpx;
     padding: 20rpx 30rpx;

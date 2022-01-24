@@ -1,13 +1,18 @@
 <!-- 管理端TAB页面 -->
 <template>
   <div class="manage-content">
-    <HeaderBar :title="title" @back="back" ></HeaderBar>
+    <HeaderBar :title="title" @back="back"></HeaderBar>
     <!-- 工作台组件 -->
-    <scroll-view class="manage-main" :scroll-y='isScroll' @scroll='scroll' v-if="tabIndex === 0">
-      <work-bench  :isScroll='isScroll' @showTop='showTop'></work-bench>
+    <scroll-view
+      class="manage-main"
+      :scroll-y="isScroll"
+      @scroll="scroll"
+      v-if="tabIndex === 0"
+    >
+      <work-bench :isScroll="isScroll" @showTop="showTop"></work-bench>
     </scroll-view>
     <!-- 预约凭证组件 -->
-    <div class="manage-main" v-if='tabIndex === 1'>
+    <div class="manage-main" v-if="tabIndex === 1">
       <reserve-certificate></reserve-certificate>
     </div>
 
@@ -31,7 +36,7 @@
 <script>
 import { mapState } from "vuex";
 import HeaderBar from "../../../components/Building/HeaderBar.vue";
-import ReserveCertificate from './components/ReserveCertificate.vue';
+import ReserveCertificate from "./components/ReserveCertificate.vue";
 import WorkBench from "./components/WorkBench.vue";
 export default {
   data() {
@@ -64,7 +69,6 @@ export default {
   },
 
   components: { HeaderBar, WorkBench, ReserveCertificate },
- 
 
   computed: {
     ...mapState({
@@ -75,8 +79,15 @@ export default {
     }),
   },
 
-  async onLoad() {
-    await this.$onLaunched;
+  onLoad(option) {
+    this.$store.dispatch("getLoginInfoAction", {
+      Authorization: option.token,
+      statusBarHeight: option.statusBarHeight,
+    });
+    // this.headerInfo["App-Code"] = 'f3209f6c7353414e8dbb94dd23cf8b91'
+    // const res = uni.getSystemInfoSync()
+    // this.system = res.platform;
+    // this.statusBarHeight = option.statusBarHeight
   },
 
   methods: {
@@ -100,7 +111,7 @@ export default {
       }
     },
     showTop() {
-      console.log(123)
+      console.log(123);
       this.isScroll = true;
     },
   },
@@ -110,6 +121,4 @@ export default {
 .manage-content {
   padding-bottom: 120rpx;
 }
-
-
 </style>
