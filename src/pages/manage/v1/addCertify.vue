@@ -21,7 +21,7 @@
       </div>
       <div class="building-input-box">
         <div class="building-input-item">
-          <div class="building-title1">请选择入场区域</div>
+          <div class="building-title1">入场区域</div>
           <div class="placeholder" @click="toChooseBuilding">
             请选择
             <uni-icons type="forward" size="14"></uni-icons>
@@ -143,7 +143,8 @@ export default {
   data() {
     return {
       title: "添加凭证",
-      jyzCode: "62baa47ae922439fbf3c102774722e40",
+      // jyzCode: "62baa47ae922439fbf3c102774722e40",
+      jyzCode: "",
       tenantList: [],
       tenantIndex: -1,
       tenantCode: "",
@@ -177,6 +178,7 @@ export default {
 
   onLoad() {
     this.$store.commit("getChoosedBuilding", []);
+    this.jyzCode = uni.getStorageSync('jyzCode');
   },
 
   onShow() {
@@ -195,7 +197,7 @@ export default {
         url: "getTenantInfo",
         header: this.headerInfo,
         querys: {
-          jyzCode: "03520ce23946491fbe3eb689e60cfc66",
+          jyzCode: this.jyzCode,
         },
       };
       buildingRequest(config).then((res) => {

@@ -21,6 +21,12 @@
   // border-top: 1rpx solid #c8c7cc;
 }
 
+.manage-title0 {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: #333;
+}
+
 .manage-title1 {
   font-size: 28rpx;
   color: #333;
@@ -422,7 +428,7 @@
 .manage-number-box {
   display: flex;
   align-items: center;
-  width: 164rpx;
+  // width: 164rpx;
 }
 
 .manage-number-minus {

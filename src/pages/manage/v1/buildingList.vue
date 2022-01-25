@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       title: "入场区域",
-      jyzCode: "62baa47ae922439fbf3c102774722e40",
+      jyzCode: "",
       buildingName: "",
       choosedList: [],
       renderList: [],
@@ -70,6 +70,10 @@ export default {
       statusBarHeight: (state) => state.header.statusBarHeight,
       choosedBuilding: (state) => state.manage.choosedBuilding,
     }),
+  },
+
+  onLoad() {
+    this.jyzCode = uni.getStorageSync('jyzCode');
   },
 
   onShow() {
@@ -130,10 +134,11 @@ export default {
       this.total = this.renderList.length;
       // console.log(this.choosedList)
     },
-    //选择物料
+    //选择区域
     chooseItem(item) {
-      console.log(this.choosedList);
+      // console.log(this.choosedList);
       this.$set(item, "checked", !item.checked);
+      // console.log(this.choosedList)
       let choosedBuilding = [];
       this.choosedList.map((cItem) => {
         if (item.id === cItem.id) {
@@ -142,6 +147,8 @@ export default {
         cItem.checked && choosedBuilding.push(cItem);
       });
       this.$store.commit("getChoosedBuilding", choosedBuilding);
+      this.searchName();
+      console.log(this.choosedBuilding)
     },
   },
 };

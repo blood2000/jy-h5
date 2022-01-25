@@ -521,6 +521,30 @@
           "bounce": "none"
         }
       }
+    },
+		{
+      "path": "pages/manage/v1/certifyInfo",
+      "style": {
+        "navigationBarTitleText": "凭证信息",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+		{
+      "path": "pages/manage/v1/scanResult",
+      "style": {
+        "navigationBarTitleText": "扫码结果",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
     }
 	],
 	"globalStyle": {

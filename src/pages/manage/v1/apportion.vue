@@ -51,7 +51,7 @@
       >
         <div class="manage-box-title">
           <div class="manage-box-title-item">
-            <div class="manage-title2">凭证信息 ({{ index * 1 + 1 }})</div>
+            <div class="manage-title2">凭证信息</div>
           </div>
           <div class="manage-delete-box" @click="deleteTime(index)">
             <uni-icons type="trash" size="15" color="#F95757"></uni-icons>
@@ -124,6 +124,7 @@
               class="manage-input"
               type="number"
               placeholder="请输入车次"
+              @input="numberFilter($event, index)"
               v-model="item.vehicleNums"
             />
           </div>
@@ -133,7 +134,13 @@
       <div class="add-time" @click="addCertify">新增凭证</div>
     </div>
     <div class="manage-btn-box">
-      <div class="manage-btn manage-btn-confirm" @click="submit">保存</div>
+      <div
+        class="manage-btn manage-btn-confirm"
+        :class="isSubmit ? '' : 'manage-btn-disabled'"
+        @click="submit"
+      >
+        保存
+      </div>
     </div>
   </div>
 </template>
@@ -158,13 +165,14 @@ export default {
       endDate: "",
       ruleExcludeDates: [], //排除日期
       isExpand: false,
-      jyzCode: "62baa47ae922439fbf3c102774722e40",
+      jyzCode: "",
       tenantList: [],
       goodsList: [],
       // goodsBigType: "",
       dispatchList: [],
       buildingList: [],
       curIndex: 0,
+      isSubmit: true,
     };
   },
 
@@ -181,6 +189,7 @@ export default {
   },
 
   onLoad(option) {
+    this.jyzCode = uni.getStorageSync("jyzCode");
     let params = JSON.parse(option.params);
     this.code = params.code;
     this.choiceDate = params.choiceDate;
@@ -232,7 +241,7 @@ export default {
         url: "getTenantInfo",
         header: this.headerInfo,
         querys: {
-          jyzCode: "03520ce23946491fbe3eb689e60cfc66",
+          jyzCode: this.jyzCode,
         },
       };
       buildingRequest(config).then((res) => {
@@ -301,6 +310,11 @@ export default {
           });
         });
         if (this.reserveNums * 1 < usedNums) {
+          uni.showToast({
+            title: "已超出总票数",
+            icon: "none",
+            duration: 1500,
+          });
           this.restNums = 0;
         } else {
           this.restNums = this.reserveNums * 1 - usedNums;
@@ -320,8 +334,10 @@ export default {
         }
       });
       if (leap) {
+        this.isSubmit = true;
         this.getDispatch();
       } else {
+        this.isSubmit = false;
         uni.showToast({
           title: "排除日期无派号记录!",
           icon: "none",
@@ -404,9 +420,18 @@ export default {
     },
 
     numberFilter(e, index) {
+      // console.log(12)
       setTimeout(() => {
         let value = e.detail.value;
         this.dispatchList[index].vehicleNums = formFilter.numberFilter(value);
+        this.$set(this.dispatchList, index, this.dispatchList[index]);
+      }, 0);
+    },
+    numberInput(e, index) {
+      setTimeout(() => {
+        let value = e.detail.value;
+        this.dispatchList[index].vehicleNums = Math.abs(value * 1);
+        this.$set(this.dispatchList, index, this.dispatchList[index]);
       }, 0);
     },
     addCertify() {
@@ -471,6 +496,17 @@ export default {
           break;
         }
       }
+      this.ruleExcludeDates.map((item) => {
+        if (this.choiceDate === item.excludeDate) {
+          leap = false;
+          uni.showToast({
+            title: "排除日期不能派号!",
+            icon: "none",
+            duration: 1500,
+          });
+        }
+      });
+
       return leap;
     },
 
@@ -541,6 +577,11 @@ export default {
 }
 .manage-btn-confirm {
   width: 100%;
+}
+
+.manage-btn-disabled {
+  color: #333;
+  background: #ddd;
 }
 
 .manage-delete-box {

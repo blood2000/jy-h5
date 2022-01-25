@@ -73,7 +73,10 @@
           />
           <view class="enter" @click="searchDriver"></view>
         </div>
-        <div class="scan-code">
+        <div class="scan-code" @click="scanOrder">
+          <!-- <view>
+            <mumu-get-qrcode @success="qrcodeSucess" />
+          </view> -->
           <img src="../../../../static/manage/code.png" alt="" />
           <div class="scan-code-name">出入场扫码</div>
         </div>
@@ -135,11 +138,12 @@ import buildingRequest from "../../../../config/buildingRequest";
 import format from "../../../../utils/format";
 import ReserveCard from "./ReserveCard.vue";
 import PickerModal from "./PickerModal.vue";
+// import mumuGetQrcode from "@/uni_modules/mumu-getQrcode/components/mumu-getQrcode/mumu-getQrcode.vue";
 export default {
   mixins: [ZPagingMixin], // 使用mixin
   data() {
     return {
-      jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
+      jyzCode: "",
       searchKey: "",
       pickerData: [
         { name: "今日预约调号", url: "jryyth" },
@@ -175,6 +179,8 @@ export default {
     },
   },
 
+  // components: {mumuGetQrcode,},
+
   // watch: {
   //   isScroll(val) {
   //     console.log(val)
@@ -186,6 +192,7 @@ export default {
 
   created() {
     console.log("workbench load");
+    this.jyzCode = uni.getStorageSync("jyzCode");
     this.getStatistics();
   },
 
@@ -282,6 +289,9 @@ export default {
           this.noData = false;
         }
       });
+    },
+    scanOrder() {
+      this.$emit('scanOrder');
     },
   },
 };
