@@ -319,7 +319,7 @@
 			},
 			// 货品列表
 			getGoodsList(){
-				goodsList({},this.headerInfo).then(res => {
+				goodsList({pageNum:1,pageSize:999},this.headerInfo).then(res => {
 					this.originList = res.data.list
 					this.form.id && this.goodsChange(this.form.tenantGoodsId)
 					this.goodsList = res.data.list.map(item => {
