@@ -22,7 +22,7 @@
 				<!-- 列表项 -->
 				<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltolower="scrolltolower">
 					<view v-for="(item, index) in dataList" :key="index" class="list-box-item ly-flex ly-flex-pack-justify">
-						<view class="name g-single-row">
+						<view class="name g-single-row ellipsis">
 							<image v-if="!!checkMap[item.code]" class="icon-check" src="~@/static/capacity/check.png" @click="handleCheck(item)"></image>
 							<image v-else class="icon-check" src="~@/static/capacity/check_none.png" @click="handleCheck(item)"></image>
 							{{ (isFilter&&item.isTeamFreeze==1?'(已禁用)':'')+item.name }}
