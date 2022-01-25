@@ -16,7 +16,7 @@
         :fixed="false"
         :loading-more-enabled="false"
         :hide-empty-view="true"
-        :auto="true"
+        :auto="false"
         :show-loading-more-no-more-line="false"
       >
         <div v-if="noData" class="no-data">暂无预约规则</div>
@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       title: "预约规则设置",
-      jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
+      jyzCode: "",
       total: 0,
       ruleData: [],
       noData: false,
@@ -64,6 +64,10 @@ export default {
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
+  },
+
+  onLoad() {
+    this.jyzCode = uni.getStorageSync('jyzCode');
   },
 
   onShow() {

@@ -35,6 +35,9 @@ const apiUrl = {
   getBuildingInfo: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/getBuildingInfo',   //获取场区列表
   getGoodsInfo: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/getGoodsRelInfo',   //获取场区列表
   addCertify: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/insert',   //添加凭证
+  disableCertify: (id) => {
+    return `/zjz1-jyz-service/rcyy/subscribeRuleVoucher/disable/${id}`
+  },   //禁用预约凭证
   deleteCertify: (id) => {
     return `/zjz1-jyz-service/rcyy/subscribeRuleVoucher/del/${id}`
   },   //删除预约凭证

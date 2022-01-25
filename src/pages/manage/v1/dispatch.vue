@@ -121,16 +121,17 @@ import format from "../../../utils/format";
 export default {
   data() {
     return {
-      title: "今日预约调号",
+      title: "调号",
       barStyle: {
         background: "#3a65ff",
         color: "#fff",
       },
       code: "",
-      jyzCode: "03520ce23946491fbe3eb689e60cfc66",
+      jyzCode: "",
       detail: {},
       changeNums: 0,
       arrangeMode: 0, //0: +, 1: -
+      showPrompt: true,
     };
   },
 
@@ -152,6 +153,7 @@ export default {
   onLoad(option) {
     this.code = option.code;
     console.log(option);
+    this.jyzCode = uni.getStorageSync("jyzCode");
     this.getDetail();
   },
 
@@ -177,16 +179,40 @@ export default {
       });
     },
     switchType(type) {
+      this.showPrompt = true;
       if (type === "minus") {
         this.arrangeMode = 1;
+        if (this.changeNums > this.restNumber) {
+          this.changeNums = this.restNumber;
+          uni.showToast({
+            title: "减号不能超出剩余车次!",
+            icon: "none",
+            duration: 1500,
+          });
+        }
       } else {
         this.arrangeMode = 0;
       }
     },
     plus() {
-      this.changeNums++;
+      if (!this.showPrompt) return;
+      if (this.arrangeMode === 0 || this.changeNums < this.restNumber) {
+        this.changeNums++;
+      }
+      if (this.arrangeMode === 1 && this.changeNums === this.restNumber) {
+        uni.showToast({
+          title: "减号不能超出剩余车次!",
+          icon: "none",
+          duration: 1500,
+        });
+        this.showPrompt = false;
+        setTimeout(() => {
+          this.showPrompt = true;
+        }, 1500);
+      }
     },
     minus() {
+      this.showPrompt = true;
       if (this.changeNums > 0) {
         this.changeNums--;
       }
@@ -195,7 +221,7 @@ export default {
       let data = {
         id: this.detail.id,
         reserveNumber: this.changeNums,
-        remark: this.remark,
+        remark: this.detail.remark,
         arrangeMode: this.arrangeMode,
         code: this.code,
       };
@@ -385,6 +411,7 @@ export default {
 }
 
 .building-body-box {
+  margin-bottom: 6rpx;
   box-shadow: none;
 }
 </style>

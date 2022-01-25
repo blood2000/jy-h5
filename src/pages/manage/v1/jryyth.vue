@@ -120,7 +120,7 @@ export default {
         background: "#3a65ff",
         color: "#fff",
       },
-      jyzCode: "03520ce23946491fbe3eb689e60cfc66",
+      jyzCode: "",
       remark: "",
       todayTimes: [],
       total: 0,
@@ -146,6 +146,7 @@ export default {
   onLoad() {
     this.$store.commit("getChoosedBuilding", []);
     this.today = format.dateFormat(new Date(), "{y}-{m}-{d}");
+    this.jyzCode = uni.getStorageSync('jyzCode');
     // this.getData();
   },
 

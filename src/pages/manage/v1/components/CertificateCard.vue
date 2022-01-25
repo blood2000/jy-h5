@@ -8,11 +8,11 @@
           <uni-icons type="map-filled" size="20" color="#3a65ff"></uni-icons>
         </div>
         <div class="card-title-sub">
-          <div class="card-title-sub-value">{{restNumber}}</div>
+          <div class="card-title-sub-value">{{ restNumber }}</div>
           <div class="card-title-sub-name">剩余</div>
         </div>
         <div class="card-title-sub">
-          <div class="card-title-sub-value">{{cardData.reserveNumber}}</div>
+          <div class="card-title-sub-value">{{ cardData.reserveNumber }}</div>
           <div class="card-title-sub-name">总数</div>
         </div>
       </div>
@@ -21,7 +21,7 @@
     <div class="card-line">
       <div class="card-line-item">
         <div class="card-line-value">入场区域:</div>
-        <div class="manage-title2 card-line-text">{{buildingName}}</div>
+        <div class="manage-title2 card-line-text">{{ buildingName }}</div>
       </div>
     </div>
     <div class="card-line card-bg-line1">
@@ -33,57 +33,61 @@
             alt=""
           />
         </div>
-        <div class="manage-title2 card-line-text card-line-text1">{{cardData.goodsName}}</div>
+        <div class="manage-title2 card-line-text card-line-text1">
+          {{ cardData.goodsName }}
+        </div>
       </div>
       <div class="card-line-item">
-        <div class="manage-title2 card-line-value1">{{cardData.number || 0}}</div>
+        <div class="manage-title2 card-line-value1">
+          {{ cardData.number || 0 }}
+        </div>
         <div class="manage-title5">吨/方</div>
       </div>
     </div>
 
     <div class="card-line-one">
       <div class="card-line-value">有效日期</div>
-      <div class="manage-title2 card-line-one-value">{{cardData.effectiveDate}} 至 {{cardData.expirationDate}}</div>
+      <div class="manage-title2 card-line-one-value">
+        {{ cardData.effectiveDate }} 至 {{ cardData.expirationDate }}
+      </div>
     </div>
 
     <div class="card-line-one">
       <div class="card-line-value">备注信息</div>
       <div class="manage-title2 card-line-one-value">
-        {{cardData.remark || '无'}}
+        {{ cardData.remark || "无" }}
       </div>
     </div>
 
-    <div class="card-line" >
-      <div class="card-line-date">{{cardData.createTime}}</div>
+    <div class="card-line">
+      <div class="card-line-date">{{ cardData.createTime }}</div>
     </div>
 
     <div class="card-line card-bg-line" v-if="status === 1">
       <div class="card-line-item">
         <div class="card-line-value">预约总量:</div>
-        <div class="manage-title2 card-line-text">{{cardData.useNumber}}</div>
+        <div class="manage-title2 card-line-text">{{ cardData.useNumber }}</div>
       </div>
       <div class="card-line-item">
         <div class="card-line-value">入场车次:</div>
-        <div class="manage-title2 card-line-text">{{cardData.admissionNumber}}</div>
+        <div class="manage-title2 card-line-text">
+          {{ cardData.admissionNumber }}
+        </div>
       </div>
     </div>
 
     <div class="manage-splite-line top-border"></div>
     <div class="card-line" v-if="status === 1">
-      
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="toDetail">
         <uni-icons type="eye" color="#333" size="16"></uni-icons>
         <div class="manage-title2 card-line-item-ml">查看详情</div>
       </div>
       <div class="card-bottom-item" @click="deleteCertify">
         <uni-icons type="trash" color="red" size="16"></uni-icons>
-        <div class="manage-title2 card-line-item-ml  manage-delete">删除</div>
+        <div class="manage-title2 card-line-item-ml manage-delete">删除</div>
       </div>
     </div>
 
-
-    
-    
     <div class="card-line" v-if="status === 0">
       <div class="card-bottom-item" @click="share">
         <div class="card-line-item-icon">
@@ -97,19 +101,17 @@
         </div>
         <div class="manage-title2 card-line-item-ml">调号</div>
       </div>
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="disableCertify">
         <div class="card-line-item-icon">
           <img src="../../../../static/manage/void.png" alt="" />
         </div>
         <div class="manage-title2 card-line-item-ml">作废</div>
       </div>
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="deleteCertify">
         <uni-icons type="trash" color="red" size="16"></uni-icons>
-        <div class="manage-title2 card-line-item-ml  manage-delete">删除</div>
+        <div class="manage-title2 card-line-item-ml manage-delete">删除</div>
       </div>
     </div>
-    
-    
   </div>
 </template>
 
@@ -126,7 +128,6 @@ export default {
       // enterArea: this.pageNum + "站台",
       // licenseNumber: "闽A123123",
       // driver: "辛弃疾",
-
     };
   },
 
@@ -146,16 +147,24 @@ export default {
   computed: {
     buildingName() {
       if (this.cardData.buildingInfoVos) {
-        return this.cardData.buildingInfoVos.buildingName;
+        let name = '';
+        let buildingId = this.cardData.buildingId.split(",");
+        this.cardData.buildingInfoVos.map((item, index) => {
+          buildingId.map((itm) => {
+            if (itm == item.id) {
+              name += item.buildingName + ','
+            }
+          });
+        });
+        name = name.slice(0, -1);
+        return name;
       } else {
-        return '暂无';
+        return "暂无";
       }
-  
     },
     restNumber() {
       return this.cardData.reserveNumber - this.cardData.useNumber;
     },
-    
   },
 
   // mounted() {
@@ -170,17 +179,30 @@ export default {
         content: "确认删除该凭证?",
         success: (res) => {
           if (res.confirm) {
-            this.$emit('deleteCertify', this.cardData.id);
+            this.$emit("deleteCertify", this.cardData.id);
           }
         },
       });
-      
     },
     toDispatch() {
-      this.$emit('toDispatch', this.cardData.code);
+      this.$emit("toDispatch", this.cardData.code);
     },
     share() {
-      this.$emit('share', this.cardData.code);
+      this.$emit("share", this.cardData.code);
+    },
+    toDetail() {
+      this.$emit("toDetail", this.cardData.code);
+    },
+    disableCertify() {
+      uni.showModal({
+        title: "提示",
+        content: "确认作废该凭证?",
+        success: (res) => {
+          if (res.confirm) {
+            this.$emit("disableCertify", this.cardData.id);
+          }
+        },
+      });
     },
   },
 };
