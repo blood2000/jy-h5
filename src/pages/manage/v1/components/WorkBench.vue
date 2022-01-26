@@ -111,7 +111,11 @@
         >
           <div v-if="noData" class="no-data">暂无记录</div>
           <block v-for="(item, index) in reserveData" :key="index">
-            <reserve-card :cardData="item"></reserve-card>
+            <reserve-card
+              :cardData="item"
+              @changeStatus="changeStatus"
+              @disableRecord="disableRecord"
+            ></reserve-card>
           </block>
         </z-paging>
       </div>
@@ -119,7 +123,11 @@
       <div class="work-main-content" v-else>
         <div v-if="noData" class="no-data">暂无记录</div>
         <block v-for="(item, index) in reserveData" :key="index">
-          <reserve-card :cardData="item"></reserve-card>
+          <reserve-card
+            :cardData="item"
+            @changeStatus="changeStatus"
+            @disableRecord="disableRecord"
+          ></reserve-card>
         </block>
       </div>
     </div>
@@ -264,6 +272,59 @@ export default {
       this.pageNum = pageNum || 1;
       this.getRecord();
     },
+    changeStatus(params) {
+      console.log(params)
+      const config = {
+        url: "changeStatus",
+        method: "PUT",
+        header: this.headerInfo,
+        data: params,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("标记出入场", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              if (this.isScroll) {
+                this.query();
+              } else {
+                this.$refs.paging.reload();
+              }
+            }
+          },
+        });
+      });
+    },
+    disableRecord(id) {
+      const config = {
+        url: "disableDriverRecord",
+        method: "PUT",
+        header: this.headerInfo,
+        params: id
+      };
+      buildingRequest(config).then((res) => {
+        console.log("废止出入场", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              if (this.isScroll) {
+                this.query();
+              } else {
+                this.$refs.paging.reload();
+              }
+            }
+          },
+        });
+      });
+    },
     getRecord() {
       let data = {
         pageNum: this.pageNum,
@@ -291,7 +352,7 @@ export default {
       });
     },
     scanOrder() {
-      this.$emit('scanOrder');
+      this.$emit("scanOrder");
     },
   },
 };

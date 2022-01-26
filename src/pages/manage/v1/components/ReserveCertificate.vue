@@ -224,12 +224,12 @@ export default {
       });
     },
     saveQrcode() {
-      this.$refs.uQRCode.save({
-        success: (res) => {
-          console.log(res);
-          // this.cancelModal();
-        },
-      });
+      // this.$refs.uQRCode.save({
+      //   success: (res) => {
+      //     console.log(res);
+      //     // this.cancelModal();
+      //   },
+      // });
     },
   },
 };

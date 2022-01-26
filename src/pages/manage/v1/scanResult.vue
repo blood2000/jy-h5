@@ -99,7 +99,7 @@ import format from "../../../utils/format";
 export default {
   data() {
     return {
-      title: "调号",
+      title: "扫码结果",
       barStyle: {
         background: "#3a65ff",
         color: "#fff",

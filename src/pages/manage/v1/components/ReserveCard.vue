@@ -11,12 +11,12 @@
     <div class="manage-splite-line"></div>
     <div class="card-line">
       <div class="card-line-item">
-        <div class="card-line-value">货品类型:</div>
-        <div class="manage-title2">{{ cardData.goodsType }}</div>
+        <div class="card-line-value">货品:</div>
+        <div class="manage-title2">{{ cardData.goodsName }}</div>
       </div>
       <div class="card-line-item">
         <div class="card-line-value">入场区域:</div>
-        <div class="manage-title2 card-line-text">{{ cardData.enterArea }}</div>
+        <div class="manage-title2 card-line-text">{{ buildingName }}</div>
       </div>
     </div>
     <div class="card-line card-bg-line">
@@ -24,10 +24,12 @@
         <div class="card-line-item-icon card-line-item-mr">
           <img src="../../../../static/manage/car.png" alt="" />
         </div>
-        <div class="manage-title2">{{ cardData.licenseNumber }}</div>
+        <div class="manage-title2">
+          {{ cardData.licenseNumber || "暂无车牌号" }}
+        </div>
       </div>
       <div class="card-line-item">
-        <div class="manage-title2">{{ cardData.nickName }}</div>
+        <div class="manage-title2">{{ cardData.nickName || "无" }}</div>
         <div class="card-line-item-icon card-line-item-ml">
           <img src="../../../../static/manage/tel.png" alt="" />
         </div>
@@ -41,35 +43,39 @@
     </div>
     <div class="manage-splite-line top-border"></div>
     <div class="card-line" v-if="cardData.reservationStatus === 0">
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click='changeStatus(1)'>
         <div class="card-line-item-icon">
           <img src="../../../../static/manage/enter.png" alt="" />
         </div>
-        <div class="manage-title2 card-line-item-ml">已入场</div>
+        <div class="manage-title2 card-line-item-ml">标记入场</div>
       </div>
-      <div class="card-bottom-item">
+      <div class="card-bottom-item" @click="disableRecord">
         <div class="card-line-item-icon">
           <img src="../../../../static/manage/void.png" alt="" />
         </div>
         <div class="manage-title2 card-line-item-ml">废号</div>
       </div>
     </div>
-    <div class="card-line" v-if="cardData.status === 1">
-      <div class="card-bottom-item">
+    <div class="card-line" v-if="cardData.reservationStatus === 1">
+      <div class="card-bottom-item" @click="changeStatus(2)">
         <div class="card-line-item-icon">
           <img src="../../../../static/manage/enter.png" alt="" />
         </div>
         <div class="manage-title2 card-line-item-ml">标记出场</div>
       </div>
     </div>
-    <div class="card-line" v-if="cardData.status === 2">
+    <div class="card-line" v-if="cardData.reservationStatus === 2">
       <div class="card-date-item">
         <div class="card-line-value">入场时间:</div>
-        <div class="manage-title2 card-line-text">{{ cardData.admissionTime }}</div>
+        <div class="manage-title2 card-line-text">
+          {{ cardData.admissionTime }}
+        </div>
       </div>
       <div class="card-date-item">
         <div class="card-line-value">出场时间:</div>
-        <div class="manage-title2 card-line-text">{{ cardData.appearanceTime }}</div>
+        <div class="manage-title2 card-line-text">
+          {{ cardData.appearanceTime }}
+        </div>
       </div>
     </div>
   </div>
@@ -100,13 +106,44 @@ export default {
 
   components: {},
 
-  computed: {},
-
+  computed: {
+    buildingName() {
+      if (this.cardData.buildingInfoVos) {
+        let name = "";
+        let buildingId = this.cardData.buildingId.split(",");
+        this.cardData.buildingInfoVos.map((item, index) => {
+          buildingId.map((itm) => {
+            if (itm == item.id) {
+              name += item.buildingName + ",";
+            }
+          });
+        });
+        name = name.slice(0, -1);
+        return name;
+      } else {
+        return "暂无";
+      }
+    },
+  },
   // mounted() {
   //   console.log("Card Show");
   // },
 
-  methods: {},
+  methods: {
+    changeStatus(status) {
+      let params = {
+        id: this.cardData.id,
+        reservationStatus: status
+      }
+      this.$emit('changeStatus', params);
+    },
+    disableRecord() {
+      let id = this.cardData.id;
+      this.$emit('disableRecord', id);
+    },
+
+
+  },
 };
 </script>
 <style lang='scss' scoped>
@@ -142,6 +179,7 @@ export default {
     color: #878787;
     font-size: 28rpx;
     margin-right: 10rpx;
+    min-width: 124rpx;
   }
 
   &-date {
