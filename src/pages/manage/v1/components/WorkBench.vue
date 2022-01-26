@@ -73,7 +73,10 @@
           />
           <view class="enter" @click="searchDriver"></view>
         </div>
-        <div class="scan-code">
+        <div class="scan-code" @click="scanOrder">
+          <!-- <view>
+            <mumu-get-qrcode @success="qrcodeSucess" />
+          </view> -->
           <img src="../../../../static/manage/code.png" alt="" />
           <div class="scan-code-name">出入场扫码</div>
         </div>
@@ -108,7 +111,11 @@
         >
           <div v-if="noData" class="no-data">暂无记录</div>
           <block v-for="(item, index) in reserveData" :key="index">
-            <reserve-card :cardData="item"></reserve-card>
+            <reserve-card
+              :cardData="item"
+              @changeStatus="changeStatus"
+              @disableRecord="disableRecord"
+            ></reserve-card>
           </block>
         </z-paging>
       </div>
@@ -116,7 +123,11 @@
       <div class="work-main-content" v-else>
         <div v-if="noData" class="no-data">暂无记录</div>
         <block v-for="(item, index) in reserveData" :key="index">
-          <reserve-card :cardData="item"></reserve-card>
+          <reserve-card
+            :cardData="item"
+            @changeStatus="changeStatus"
+            @disableRecord="disableRecord"
+          ></reserve-card>
         </block>
       </div>
     </div>
@@ -135,11 +146,12 @@ import buildingRequest from "../../../../config/buildingRequest";
 import format from "../../../../utils/format";
 import ReserveCard from "./ReserveCard.vue";
 import PickerModal from "./PickerModal.vue";
+// import mumuGetQrcode from "@/uni_modules/mumu-getQrcode/components/mumu-getQrcode/mumu-getQrcode.vue";
 export default {
   mixins: [ZPagingMixin], // 使用mixin
   data() {
     return {
-      jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
+      jyzCode: "",
       searchKey: "",
       pickerData: [
         { name: "今日预约调号", url: "jryyth" },
@@ -175,6 +187,8 @@ export default {
     },
   },
 
+  // components: {mumuGetQrcode,},
+
   // watch: {
   //   isScroll(val) {
   //     console.log(val)
@@ -186,6 +200,7 @@ export default {
 
   created() {
     console.log("workbench load");
+    this.jyzCode = uni.getStorageSync("jyzCode");
     this.getStatistics();
   },
 
@@ -257,6 +272,59 @@ export default {
       this.pageNum = pageNum || 1;
       this.getRecord();
     },
+    changeStatus(params) {
+      console.log(params)
+      const config = {
+        url: "changeStatus",
+        method: "PUT",
+        header: this.headerInfo,
+        data: params,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("标记出入场", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              if (this.isScroll) {
+                this.query();
+              } else {
+                this.$refs.paging.reload();
+              }
+            }
+          },
+        });
+      });
+    },
+    disableRecord(id) {
+      const config = {
+        url: "disableDriverRecord",
+        method: "PUT",
+        header: this.headerInfo,
+        params: id
+      };
+      buildingRequest(config).then((res) => {
+        console.log("废止出入场", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              if (this.isScroll) {
+                this.query();
+              } else {
+                this.$refs.paging.reload();
+              }
+            }
+          },
+        });
+      });
+    },
     getRecord() {
       let data = {
         pageNum: this.pageNum,
@@ -282,6 +350,9 @@ export default {
           this.noData = false;
         }
       });
+    },
+    scanOrder() {
+      this.$emit("scanOrder");
     },
   },
 };

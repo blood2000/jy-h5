@@ -17,6 +17,10 @@ const apiUrl = {
   // 管理端相关接口
   getStatistics: '/zjz1-jyz-service/rcyy/homePage/statistics',   //获取首页信息
   getDriverRecord: '/zjz1-jyz-service/rcyy//driverReservationRecord/getDriverReservationRecord',   //获取首页司机入场记录
+  changeStatus: '/zjz1-jyz-service/rcyy/driverReservationRecord/reservationStatus',   //标记出入场
+  disableDriverRecord: (id) => {
+    return `/zjz1-jyz-service/rcyy/driverReservationRecord/disable/${id}`
+  }, //废止出入场记录
   getThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/getCapacityVehicleThreshold',   //获取场区阈值
   setThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/insertOrUpdate',   //场区阈值设置
   getRules: '/zjz1-jyz-service/rcyy/subscribeRule/getSubscribeRules',   //获取预约规则
@@ -35,6 +39,9 @@ const apiUrl = {
   getBuildingInfo: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/getBuildingInfo',   //获取场区列表
   getGoodsInfo: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/getGoodsRelInfo',   //获取场区列表
   addCertify: '/zjz1-jyz-service/rcyy/subscribeRuleVoucher/insert',   //添加凭证
+  disableCertify: (id) => {
+    return `/zjz1-jyz-service/rcyy/subscribeRuleVoucher/disable/${id}`
+  },   //禁用预约凭证
   deleteCertify: (id) => {
     return `/zjz1-jyz-service/rcyy/subscribeRuleVoucher/del/${id}`
   },   //删除预约凭证

@@ -165,7 +165,7 @@ export default {
   data() {
     return {
       title: "创建预约规则",
-      jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
+      jyzCode: "",
       ruleName: "",
       effDate: "", //生效日期
       invalidDate: "", //失效日期
@@ -203,6 +203,7 @@ export default {
     } else {
       this.isEdit = false;
     }
+    this.jyzCode = uni.getStorageSync('jyzCode');
   },
 
   methods: {

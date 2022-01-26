@@ -37,7 +37,7 @@ export default {
       reason: "",
       threshold: "",
       id: '',
-      jyzCode: "7f913f1fbf454c9f85e19eadac059d8f",
+      jyzCode: "",
       tempThreshold: "",
     };
   },
@@ -51,6 +51,10 @@ export default {
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
+  },
+
+  onLoad() {
+    this.jyzCode = uni.getStorageSync('jyzCode');
   },
 
   onShow() {

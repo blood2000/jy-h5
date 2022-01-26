@@ -33,16 +33,18 @@
           <certificate-card
             :cardData="item"
             :status="tabIndex"
+            @toDetail="toDetail"
             @deleteCertify="deleteCertify"
             @toDispatch="toDispatch"
             @share="share"
+            @disableCertify="disableCertify"
           ></certificate-card>
         </block>
       </z-paging>
     </div>
     <div v-if="showQrcode" class="manage-modal" @click="cancelModal">
-      <div class="qrcode-box" @click.stop="saveQrcode">
-        <div class="qrcode-content">
+      <div class="qrcode-box" >
+        <div class="qrcode-content" @click.stop="saveQrcode">
           <uqrcode ref="uQRCode" :text="qrcodeUrl" :size="qrcodeSize" />
         </div>
         <div class="qrcode-text">扫描二维码前往至简集运司机端小程序</div>
@@ -60,7 +62,7 @@ export default {
   mixins: [ZPagingMixin], // 使用mixin
   data() {
     return {
-      jyzCode: "62baa47ae922439fbf3c102774722e40",
+      jyzCode: "",
       total: 0,
       tabs: [
         { name: "已生效", status: 0 },
@@ -89,6 +91,7 @@ export default {
   },
   created() {
     // this.query();
+    this.jyzCode = uni.getStorageSync("jyzCode");
   },
 
   mounted() {
@@ -165,8 +168,37 @@ export default {
         url: "./dispatch?code=" + code,
       });
     },
+
+    toDetail(code) {
+      uni.navigateTo({
+        url: "./certifyInfo?code=" + code,
+      });
+    },
+
     cancelModal() {
       this.showQrcode = false;
+    },
+    disableCertify(id) {
+      const config = {
+        url: "disableCertify",
+        method: "PUT",
+        header: this.headerInfo,
+        params: id,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("作废请求", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              this.$refs.paging.reload();
+            }
+          },
+        });
+      });
     },
     share(code) {
       const config = {
@@ -183,8 +215,21 @@ export default {
         this.showQrcode = true;
       });
     },
+    toTempFilePath() {
+      console.log(111);
+      this.$refs.uQRCode.toTempFilePath({
+        success: (res) => {
+          console.log(res);
+        },
+      });
+    },
     saveQrcode() {
-      
+      // this.$refs.uQRCode.save({
+      //   success: (res) => {
+      //     console.log(res);
+      //     // this.cancelModal();
+      //   },
+      // });
     },
   },
 };
