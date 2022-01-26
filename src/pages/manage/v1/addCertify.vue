@@ -107,7 +107,7 @@
           <div class="manage-input-box">
             <input
               class="manage-input"
-              type="text"
+              type="number"
               placeholder="请输入车次"
               @input="numberFilter"
               v-model="vehicleNums"
@@ -173,6 +173,7 @@ export default {
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
       choosedBuilding: (state) => state.manage.choosedBuilding,
+      isFresh: (state) => state.manage.isFresh,
     }),
   },
 
@@ -268,7 +269,16 @@ export default {
         let value = e.detail.value;
         this.vehicleNums = formFilter.numberFilter(value);
       }, 0);
+      
     },
+    // numberFilter(e) {
+    //   // console.log(12)
+    //   setTimeout(() => {
+    //     let value = e.detail.value;
+    //     this.dispatchList[index].vehicleNums = formFilter.numberFilter(value);
+    //     this.$set(this.dispatchList, index, this.dispatchList[index]);
+    //   }, 0);
+    // },
     formValid() {
       if (!this.tenantCode) {
         uni.showToast({
@@ -359,6 +369,7 @@ export default {
               uni.navigateBack({
                 delta: 1,
               });
+              this.$store.commit('setFresh', true);
             }
           },
         });

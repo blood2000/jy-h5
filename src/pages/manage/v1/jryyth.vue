@@ -31,7 +31,7 @@
         >
           <div class="card-line">
             <div class="manage-title3">
-              {{ item.startTime }} -{{ item.endTime }}
+              {{ item.startTime }}-{{ item.endTime }}
             </div>
             <div class="card-line-value">
               现剩余号数 {{ item.surplusLargesse }}
@@ -299,6 +299,7 @@ export default {
           success: (res) => {
             if (res.confirm) {
               //点击确认
+              this.$store.commit('setFresh', true);
               uni.navigateBack({
                 delta: 1,
               });

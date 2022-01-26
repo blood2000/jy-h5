@@ -141,6 +141,7 @@
                 class="manage-input"
                 type="number"
                 placeholder="请输入放号量"
+                @input="numberFilter($event, index)"
                 v-model="item.largesse"
               />
             </div>
@@ -291,6 +292,15 @@ export default {
             this.enterTimeArr[index].num = this.temInput;
           }
         }
+      }, 0);
+    },
+    numberFilter(e, index) {
+      console.log(12)
+      setTimeout(() => {
+        let value = Math.abs(e.detail.value);
+        this.enterTimeArr[index].num = formFilter.numberFilter(value);
+        this.$set(this.enterTimeArr, index, this.enterTimeArr[index]);
+        console.log(this.enterTimeArr[index].num)
       }, 0);
     },
 

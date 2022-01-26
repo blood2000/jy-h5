@@ -43,7 +43,7 @@
       </z-paging>
     </div>
     <div v-if="showQrcode" class="manage-modal" @click="cancelModal">
-      <div class="qrcode-box" >
+      <div class="qrcode-box">
         <div class="qrcode-content" @click.stop="saveQrcode">
           <uqrcode ref="uQRCode" :text="qrcodeUrl" :size="qrcodeSize" />
         </div>
@@ -87,7 +87,15 @@ export default {
       isAndroid: (state) => state.header.isAndroid,
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
+      isFresh: (state) => state.manage.isFresh,
     }),
+  },
+  watch: {
+    isFresh(val) {
+      console.log("isFresh", val);
+      if (!val) return;
+      this.query();
+    },
   },
   created() {
     // this.query();
@@ -106,6 +114,7 @@ export default {
     },
     query(pageNum, pageSize) {
       console.log(pageNum, pageSize);
+      this.$store.commit("setFresh", false);
       this.noData = false;
       this.pageNum = pageNum || 1;
       let data = {

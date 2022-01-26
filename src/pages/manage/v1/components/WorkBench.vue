@@ -55,7 +55,7 @@
           <img src="../../../../static/manage/car.png" alt="" />
           <div class="manage-title2">{{ item.licenseNumber }}</div>
           <div class="work-item-name3">{{ item.nickName }}</div>
-          <div class="work-date">{{ item.appearanceTime }}</div>
+          <div class="work-date">{{ item.appearanceTime | dateFilter1 }}</div>
         </div>
       </div>
     </div>
@@ -90,6 +90,14 @@
           @click="changeTab(index)"
         >
           {{ item.name }}
+        </div>
+        <div class="manage-tab-date">
+          <picker mode="date" :value="createTime" @change="changeDate">
+            <view class="picker-btn">
+              {{ createTime }} 
+              <uni-icons type="bottom" color="#3a65ff" size="14"></uni-icons>
+            </view>
+          </picker>
         </div>
         <div
           class="manage-tab-slider"
@@ -173,7 +181,7 @@ export default {
       tabIndex: 0,
       total: 0,
       reserveData: [],
-
+      createTime: "",
       pageNum: 1,
       pageSize: 10,
       noData: false,
@@ -198,9 +206,16 @@ export default {
   //   }
   // },
 
+  filters: {
+    dateFilter1: (n) => {
+      return format.dateFormat(new Date(n), "{m}-{d} {h}:{i}");
+    },
+  },
+
   created() {
     console.log("workbench load");
     this.jyzCode = uni.getStorageSync("jyzCode");
+    this.createTime = format.dateFormat(new Date(), "{y}-{m}-{d}");
     this.getStatistics();
   },
 
@@ -218,7 +233,22 @@ export default {
       isAndroid: (state) => state.header.isAndroid,
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
+      isFresh: (state) => state.manage.isFresh,
     }),
+  },
+
+  watch: {
+    isFresh(val) {
+      console.log("isFresh", val);
+      if (!val) return;
+      if (this.isScroll) {
+        this.reserveData = [];
+        this.query();
+      } else {
+        this.$refs.paging.reload();
+      }
+      this.getStatistics();
+    },
   },
 
   methods: {
@@ -256,6 +286,17 @@ export default {
       }
     },
 
+    //切换日期
+    changeDate(e) {
+      this.createTime = e.detail.value;
+      if (this.isScroll) {
+        this.reserveData = [];
+        this.query();
+      } else {
+        this.$refs.paging.reload();
+      }
+    },
+
     changeTab(index) {
       if (index === this.tabIndex) return;
       this.tabIndex = index;
@@ -268,12 +309,14 @@ export default {
     },
     query(pageNum, pageSize) {
       console.log(pageNum, pageSize, this.isScroll);
+      this.$store.commit("setFresh", false);
       this.noData = false;
       this.pageNum = pageNum || 1;
       this.getRecord();
     },
+    //标记出入场
     changeStatus(params) {
-      console.log(params)
+      console.log(params);
       const config = {
         url: "changeStatus",
         method: "PUT",
@@ -294,6 +337,7 @@ export default {
               } else {
                 this.$refs.paging.reload();
               }
+              this.getStatistics();
             }
           },
         });
@@ -304,7 +348,7 @@ export default {
         url: "disableDriverRecord",
         method: "PUT",
         header: this.headerInfo,
-        params: id
+        params: id,
       };
       buildingRequest(config).then((res) => {
         console.log("废止出入场", res);
@@ -320,6 +364,7 @@ export default {
               } else {
                 this.$refs.paging.reload();
               }
+              this.getStatistics();
             }
           },
         });
@@ -332,6 +377,7 @@ export default {
         jyzCode: this.jyzCode,
         keyWord: this.searchKey,
         reservationStatus: this.tabIndex,
+        createTime: this.createTime,
       };
       const config = {
         url: "getDriverRecord",
@@ -368,13 +414,14 @@ export default {
     // background: url('../../../../static/manage/header-bg.png') no-repeat center;
   }
   &-line {
-    padding: 10rpx 4% 0;
+    padding: 10rpx 4% 10rpx;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-items: center;
     &-item {
       box-sizing: border-box;
       width: 30%;
+      margin-right: 5%;
       padding: 20rpx 20rpx;
       border-radius: 12rpx;
       background: #fff;
@@ -385,6 +432,10 @@ export default {
       }
     }
   }
+}
+
+.work-header-line-item:last-child {
+  margin-right: 0;
 }
 
 .work-title-line {
@@ -479,6 +530,13 @@ export default {
   background: #f5f5f5;
 }
 
+.manage-tab-date {
+  flex: 1;
+  padding-right: 20rpx;
+  text-align: right;
+  color: #3a65ff;
+}
+
 .work-hidden {
   padding: 0;
   height: 0;
@@ -519,6 +577,7 @@ export default {
   height: 6rpx;
   border-top: 4rpx solid #999;
   border-bottom: 4rpx solid #999;
+  transform: translateX(-50%);
 }
 
 .search-box {

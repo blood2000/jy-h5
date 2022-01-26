@@ -21,6 +21,10 @@ const apiUrl = {
   disableDriverRecord: (id) => {
     return `/zjz1-jyz-service/rcyy/driverReservationRecord/disable/${id}`
   }, //废止出入场记录
+  getScanDetail: '/rcyy/driverReservationRecord/getDriverReservationRecordDetails',   //微信扫码获取详情
+
+
+
   getThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/getCapacityVehicleThreshold',   //获取场区阈值
   setThreshold: '/zjz1-jyz-service/rcyy/fieldThreshold/insertOrUpdate',   //场区阈值设置
   getRules: '/zjz1-jyz-service/rcyy/subscribeRule/getSubscribeRules',   //获取预约规则
