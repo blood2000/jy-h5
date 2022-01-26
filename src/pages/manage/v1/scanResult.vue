@@ -73,13 +73,15 @@
           </div>
         </div>
         <div class="dispatch-box dispatch-bottom-box" v-if="!result">
-          <div class="manage-title4" >失败原因</div>
-          <div class="scan-fail-text manage-title3">{{detail.fail}}</div>
+          <div class="manage-title4">失败原因</div>
+          <div class="scan-fail-text manage-title3">{{ detail.fail }}</div>
         </div>
         <div class="dispatch-split-line" v-if="result"></div>
         <div class="scan-btn-box" v-if="result">
-          <div class="scan-btn scan-btn-confirm">确认入场</div>
-          <div class="scan-btn scan-btn-cancel">废号</div>
+          <div class="scan-btn scan-btn-confirm" @click="submit">确认入场</div>
+          <div class="scan-btn scan-btn-cancel" @click="disableRecord">
+            废号
+          </div>
         </div>
       </div>
     </div>
@@ -104,6 +106,7 @@ export default {
         background: "#3a65ff",
         color: "#fff",
       },
+      code: '',
       detail: {},
       result: true,
     };
@@ -117,12 +120,14 @@ export default {
       isAndroid: (state) => state.header.isAndroid,
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
+      isFresh: (state) => state.manage.isFresh,
       // choosedBuilding: (state) => state.manage.choosedBuilding,
     }),
   },
 
   onLoad(option) {
     this.detail = JSON.parse(option.detail);
+    // this.getDetail();
   },
 
   methods: {
@@ -131,23 +136,87 @@ export default {
         delta: 1,
       });
     },
-    // getDetail() {
-    //   const config = {
-    //     url: "getCertifyDetail",
-    //     header: this.headerInfo,
-    //     querys: {
-    //       code: this.code,
-    //     },
-    //   };
-    //   buildingRequest(config).then((res) => {
-    //     console.log("获取凭证详情", res);
-    //     if (res.code === 200) {
-    //       this.detail = res.data;
-    //     }
-    //   });
-    // },
+    getDetail() {
+      const config = {
+        url: "getScanDetail",
+        header: this.headerInfo,
+        querys: {
+          code: this.code,
+        },
+      };
+      buildingRequest(config).then((res) => {
+        console.log("获取微信扫码详情", res);
+        if (res.code === 200) {
+          this.detail = res.data;
+        }
+      });
+    },
 
-    submit() {},
+    disableRecord() {
+      uni.showModal({
+        title: "提示",
+        content: "确认废号?",
+        success: (res) => {
+          if (res.confirm) {
+            const config = {
+              url: "disableDriverRecord",
+              method: "PUT",
+              header: this.headerInfo,
+              params: this.detail.id,
+            };
+            buildingRequest(config).then((res) => {
+              console.log("废止出入场", res);
+              uni.showModal({
+                title: "提示",
+                content: res.msg,
+                showCancel: false,
+                success: (res) => {
+                  if (res.confirm) {
+                    //点击确认
+                    if (this.isScroll) {
+                      this.query();
+                    } else {
+                      this.$refs.paging.reload();
+                    }
+                    this.getStatistics();
+                  }
+                },
+              });
+            });
+          }
+        },
+      });
+    },
+
+    submit() {
+      let params = {
+        id: this.detail.id,
+        reservationStatus: 1,
+      };
+      const config = {
+        url: "changeStatus",
+        method: "PUT",
+        header: this.headerInfo,
+        data: params,
+      };
+      buildingRequest(config).then((res) => {
+        console.log("标记入场", res);
+        uni.showModal({
+          title: "提示",
+          content: res.msg,
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              //点击确认
+              uni.navigateBack({
+                delta: 1,
+              });
+              this.$store.commit("setFresh", true);
+            }
+          },
+        });
+      });
+    },
   },
 };
 </script>
@@ -358,13 +427,13 @@ export default {
   }
 
   .scan-btn-confirm {
-    background: #3A65FF;
+    background: #3a65ff;
     color: #fff;
   }
 
   .scan-btn-cancel {
-    border: 1rpx solid #3A65FF;
-    color: #3A65FF;
+    border: 1rpx solid #3a65ff;
+    color: #3a65ff;
   }
 }
 

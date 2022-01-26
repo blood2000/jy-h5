@@ -131,7 +131,7 @@
         </div>
       </div>
 
-      <div class="add-time" @click="addCertify">新增凭证</div>
+      <div class="add-time" v-if="isSubmit" @click="addCertify">新增凭证</div>
     </div>
     <div class="manage-btn-box">
       <div
@@ -338,6 +338,7 @@ export default {
         this.getDispatch();
       } else {
         this.isSubmit = false;
+        this.getDispatch();
         uni.showToast({
           title: "排除日期无派号记录!",
           icon: "none",
@@ -448,6 +449,7 @@ export default {
     },
 
     formValid() {
+      if (!this.isSubmit) return;
       if (this.dispatchList.length === 0) {
         uni.showToast({
           title: "请添加凭证",
@@ -457,44 +459,57 @@ export default {
         return false;
       }
       let leap = true;
+      let len = 0;
       for (let i = 0; i < this.dispatchList.length; i++) {
         // || !this.dispatchList[i].goodsType || this.dispatchList[i].choosedBuilding
-        if (!this.dispatchList[i].tenantCode) {
-          leap = false;
-          uni.showToast({
-            title: "请选择货主名称",
-            icon: "none",
-            duration: 1500,
-          });
-          break;
+
+        if (!this.dispatchList[i].isDelete) {
+          len++;
+          if (!this.dispatchList[i].tenantCode) {
+            leap = false;
+            uni.showToast({
+              title: "请选择货主名称",
+              icon: "none",
+              duration: 1500,
+            });
+            break;
+          }
+          if (!this.dispatchList[i].goodsType) {
+            leap = false;
+            uni.showToast({
+              title: "请选择货品类型",
+              icon: "none",
+              duration: 1500,
+            });
+            break;
+          }
+          if (this.dispatchList[i].choosedBuilding.length === 0) {
+            leap = false;
+            uni.showToast({
+              title: "请选择入场区域",
+              icon: "none",
+              duration: 1500,
+            });
+            break;
+          }
+          if (!this.dispatchList[i].vehicleNums) {
+            leap = false;
+            uni.showToast({
+              title: "请输入车次",
+              icon: "none",
+              duration: 1500,
+            });
+            break;
+          }
         }
-        if (!this.dispatchList[i].goodsType) {
-          leap = false;
-          uni.showToast({
-            title: "请选择货品类型",
-            icon: "none",
-            duration: 1500,
-          });
-          break;
-        }
-        if (this.dispatchList[i].choosedBuilding.length === 0) {
-          leap = false;
-          uni.showToast({
-            title: "请选择入场区域",
-            icon: "none",
-            duration: 1500,
-          });
-          break;
-        }
-        if (!this.dispatchList[i].vehicleNums) {
-          leap = false;
-          uni.showToast({
-            title: "请输入车次",
-            icon: "none",
-            duration: 1500,
-          });
-          break;
-        }
+      }
+      if (len === 0) {
+        uni.showToast({
+          title: "请添加凭证",
+          icon: "none",
+          duration: 1500,
+        });
+        return false;
       }
       this.ruleExcludeDates.map((item) => {
         if (this.choiceDate === item.excludeDate) {
@@ -506,7 +521,7 @@ export default {
           });
         }
       });
-
+      console.log("验证参数结果", leap);
       return leap;
     },
 

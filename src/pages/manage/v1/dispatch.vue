@@ -143,6 +143,7 @@ export default {
       isAndroid: (state) => state.header.isAndroid,
       isiOS: (state) => state.header.isiOS,
       statusBarHeight: (state) => state.header.statusBarHeight,
+      isFresh: (state) => state.manage.isFresh,
       // choosedBuilding: (state) => state.manage.choosedBuilding,
     }),
     restNumber() {
@@ -241,9 +242,11 @@ export default {
           success: (res) => {
             if (res.confirm) {
               //点击确认
+              
               uni.navigateBack({
                 delta: 1,
               });
+              this.$store.commit('setFresh', true);
             }
           },
         });

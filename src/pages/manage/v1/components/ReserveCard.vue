@@ -43,7 +43,7 @@
     </div>
     <div class="manage-splite-line top-border"></div>
     <div class="card-line" v-if="cardData.reservationStatus === 0">
-      <div class="card-bottom-item" @click='changeStatus(1)'>
+      <div class="card-bottom-item" @click="changeStatus(1)">
         <div class="card-line-item-icon">
           <img src="../../../../static/manage/enter.png" alt="" />
         </div>
@@ -68,13 +68,13 @@
       <div class="card-date-item">
         <div class="card-line-value">入场时间:</div>
         <div class="manage-title2 card-line-text">
-          {{ cardData.admissionTime }}
+          {{ cardData.admissionTime | dateFilter1 }}
         </div>
       </div>
       <div class="card-date-item">
         <div class="card-line-value">出场时间:</div>
         <div class="manage-title2 card-line-text">
-          {{ cardData.appearanceTime }}
+          {{ cardData.appearanceTime | dateFilter1 }}
         </div>
       </div>
     </div>
@@ -106,6 +106,12 @@ export default {
 
   components: {},
 
+  filters: {
+    dateFilter1: (n) => {
+      return format.dateFormat(new Date(n),'{m}-{d} {h}:{i}')
+    }
+  },
+
   computed: {
     buildingName() {
       if (this.cardData.buildingInfoVos) {
@@ -131,18 +137,38 @@ export default {
 
   methods: {
     changeStatus(status) {
-      let params = {
-        id: this.cardData.id,
-        reservationStatus: status
+      let content = "";
+      if (status === 1) {
+        content = "标记入场?";
+      } else if (status === 2) {
+        content = "标记出场?";
       }
-      this.$emit('changeStatus', params);
+      uni.showModal({
+        title: "提示",
+        content: content,
+        success: (res) => {
+          if (res.confirm) {
+            let params = {
+              id: this.cardData.id,
+              reservationStatus: status,
+            };
+            this.$emit("changeStatus", params);
+          }
+        },
+      });
     },
     disableRecord() {
-      let id = this.cardData.id;
-      this.$emit('disableRecord', id);
+      uni.showModal({
+        title: "提示",
+        content: "确认作废该条记录?",
+        success: (res) => {
+          if (res.confirm) {
+            let id = this.cardData.id;
+            this.$emit("disableRecord", id);
+          }
+        },
+      });
     },
-
-
   },
 };
 </script>
@@ -179,7 +205,7 @@ export default {
     color: #878787;
     font-size: 28rpx;
     margin-right: 10rpx;
-    min-width: 124rpx;
+    // min-width: 124rpx;
   }
 
   &-date {
