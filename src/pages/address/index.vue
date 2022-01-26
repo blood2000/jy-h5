@@ -197,6 +197,10 @@
 					position: absolute;
 					top:20rpx;
 					right: 20rpx;
+					.checked{
+						border: none;
+						font-weight: normal;
+					}
 					.switch-sex{
 						transform:scale(0.8)
 					}
