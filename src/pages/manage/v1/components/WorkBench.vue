@@ -60,7 +60,13 @@
       </div>
     </div>
     <div class="work-main" :class="isScroll ? '' : 'work-main-padding'">
-      <div v-show="!isScroll" class="showTop" @click="showTop"></div>
+      <div v-show="!isScroll" class="showTop" @click="showTop">
+        <uni-icons type="top" size="16"></uni-icons>
+        
+      </div>
+      <!-- <div v-show="!isScroll" class="manage-expand-splite" @click="showTop">
+        <uni-icons type="top" size="16"></uni-icons>
+      </div> -->
       <div class="search-box">
         <div class="search-input-box">
           <input
@@ -94,7 +100,7 @@
         <div class="manage-tab-date">
           <picker mode="date" :value="createTime" @change="changeDate">
             <view class="picker-btn">
-              {{ createTime }} 
+              {{ createTime }}
               <uni-icons type="bottom" color="#3a65ff" size="14"></uni-icons>
             </view>
           </picker>
@@ -566,19 +572,28 @@ export default {
   width: 100%;
   height: 30rpx;
   background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // &-line {
+  //   flex: 1;
+  //   height: 2rpx;
+  //   background-image: linear-gradient(to bottom, #ddd, transparent);
+  //   transform: scaleY(.5);
+  // }
 }
 
-.showTop::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 40rpx;
-  height: 6rpx;
-  border-top: 4rpx solid #999;
-  border-bottom: 4rpx solid #999;
-  transform: translateX(-50%);
-}
+// .showTop::after {
+//   content: "";
+//   position: absolute;
+//   bottom: 0;
+//   left: 50%;
+//   width: 40rpx;
+//   height: 6rpx;
+//   border-top: 4rpx solid #999;
+//   border-bottom: 4rpx solid #999;
+//   transform: translateX(-50%);
+// }
 
 .search-box {
   box-sizing: border-box;
@@ -617,4 +632,6 @@ export default {
   padding: 20rpx 30rpx;
   // background: #f5f5f5;
 }
+
+
 </style>

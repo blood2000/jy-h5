@@ -57,8 +57,17 @@
                 <div class="manage-number-minus" @click="minus(item, index)">
                   <span></span>
                 </div>
-                <div class="manage-number-text">
+                <!-- <div class="manage-number-text">
                   {{ item.calNum }}
+                </div> -->
+                <div class="manage-number-input">
+                  <input
+                    class="manage-input"
+                    type="number"
+                    placeholder="号量"
+                    @input="numberFilter($event, index)"
+                    v-model="item.calNum"
+                  />
                 </div>
                 <div class="manage-number-plus" @click="plus(item, index)">
                   <uni-icons
@@ -74,7 +83,7 @@
             <img src="../../../static/manage/prompt.png" alt="" />
             <div>
               {{ item.type === "plus" ? "+" : "-" }}
-              <span>{{ item.calNum }}</span> 个号码, 本号段还剩余
+              <span>{{ item.calNum || 0 }}</span> 个号码, 本号段还剩余
               <span>
                 {{
                   item.type === "plus"
@@ -146,7 +155,7 @@ export default {
   onLoad() {
     this.$store.commit("getChoosedBuilding", []);
     this.today = format.dateFormat(new Date(), "{y}-{m}-{d}");
-    this.jyzCode = uni.getStorageSync('jyzCode');
+    this.jyzCode = uni.getStorageSync("jyzCode");
     // this.getData();
   },
 
@@ -212,6 +221,27 @@ export default {
       this.changeNums = changeNums;
     },
 
+    numberFilter(e, index) {
+      setTimeout(() => {
+        let value = e.detail.value;
+        let item = this.todayTimes[index];
+        item.calNum = formFilter.numberFilter(value);
+        if (item.type === "minus") {
+          if (item.calNum > item.surplusLargesse) {
+            item.calNum = item.surplusLargesse;
+          }
+        }
+        this.$set(this.todayTimes, index, item);
+
+        let changeNums = 0;
+        this.todayTimes.map((itm) => {
+          itm.type === "minus" && (changeNums -= itm.calNum);
+          itm.type === "plus" && (changeNums += itm.calNum);
+        });
+        this.changeNums = changeNums;
+      }, 0);
+    },
+
     minus(item, index) {
       //加号操作
       // if (item.type === "minus") {
@@ -260,6 +290,14 @@ export default {
     },
 
     submit() {
+      if (!this.remark) {
+        uni.showToast({
+          title: "请添加备注",
+          icon: "none",
+          duration: 1500,
+        });
+        return;
+      }
       this.overviewData.sumLargesse = this.total + this.changeNums;
       this.overviewData.remark = this.remark;
 
@@ -299,7 +337,7 @@ export default {
           success: (res) => {
             if (res.confirm) {
               //点击确认
-              this.$store.commit('setFresh', true);
+              this.$store.commit("setFresh", true);
               uni.navigateBack({
                 delta: 1,
               });
@@ -314,7 +352,7 @@ export default {
 <style lang='scss' scoped>
 .manage-main {
   position: relative;
-  padding-top: 140rpx;
+  padding: 140rpx 0 120rpx;
 }
 
 .manage-box {

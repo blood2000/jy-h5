@@ -95,7 +95,7 @@
           </picker>
         </div>
         <div class="building-input-item">
-          <div class="building-title1">请选择入场区域</div>
+          <div class="building-title1">入场区域<span class="require">*</span></div>
           <div class="placeholder" @click="toChooseBuilding(index)">
             请选择
             <uni-icons type="forward" size="14"></uni-icons>
