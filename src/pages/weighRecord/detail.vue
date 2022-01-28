@@ -200,102 +200,38 @@ export default {
             return item && item.trim();
           }),
         };
-        let obj = {};
-        console.log("zz", this.imgs);
-        if (this.detailInfo.completeFlag == 1) {
-          // 已完成过磅，取最后一个过磅类型相关信息
-          if (this.detailInfo.weighingType == 1) {
-            obj.deviceName = this.detailInfo.grossDeviceName;
-            obj.userName = this.detailInfo.grossUserName;
-            obj.weight = this.detailInfo.grossWeight;
-            obj.weightTime = this.detailInfo.grossTime;
-          } else {
-            obj.deviceName = this.detailInfo.tareDeviceName;
-            obj.userName = this.detailInfo.tareUserName;
-            obj.weight = this.detailInfo.tareWeight;
-            obj.weightTime = this.detailInfo.tareTime;
-          }
-        } else {
-          if (this.detailInfo.weighingType == 1) {
-            obj.deviceName = this.detailInfo.tareDeviceName;
-            obj.userName = this.detailInfo.tareUserName;
-            obj.weight = this.detailInfo.tareWeight;
-            obj.weightTime = this.detailInfo.tareTime;
-          } else {
-            obj.deviceName = this.detailInfo.grossDeviceName;
-            obj.userName = this.detailInfo.grossUserName;
-            obj.weight = this.detailInfo.grossWeight;
-            obj.weightTime = this.detailInfo.grossTime;
-          }
-        }
-        this.detailInfo = {
-          ...this.detailInfo,
-          ...obj,
-        };
+        const weightList = [{
+          weightType: 1,
+          weight: this.detailInfo.tareWeight,
+          userName: this.detailInfo.tareUserName,
+          time: this.detailInfo.tareTime,
+          deviceName: this.detailInfo.tareDeviceName,
+          imgs: [
+            res.rows[0].tareImgs,
+            res.rows[0].mineImgs,
+            res.rows[0].receiptImgs,
+          ].filter((item) => {
+            return item && item.trim();
+          }),
+        }, {
+          weightType: 2,
+          weight: this.detailInfo.grossWeight,
+          userName: this.detailInfo.grossUserName,
+          time: this.detailInfo.grossTime,
+          deviceName: this.detailInfo.grossDeviceName,
+          imgs: [
+            res.rows[0].grossImgs,
+            res.rows[0].mineImgs,
+            res.rows[0].receiptImgs,
+          ].filter((item) => {
+            return item && item.trim();
+          }),
+        }];
         if (this.detailInfo.receiveType == 1) {
-          this.detailInfo.weightList = [
-            {
-              weightType: 2,
-              weight: this.detailInfo.grossWeight,
-              userName: this.detailInfo.grossUserName,
-              time: this.detailInfo.grossTime,
-              deviceName: this.detailInfo.grossDeviceName,
-              imgs: [
-                res.rows[0].grossImgs,
-                res.rows[0].mineImgs,
-                res.rows[0].receiptImgs,
-              ].filter((item) => {
-                return item && item.trim();
-              }),
-            },
-            {
-              weightType: 1,
-              weight: this.detailInfo.tareWeight,
-              userName: this.detailInfo.tareUserName,
-              time: this.detailInfo.tareTime,
-              deviceName: this.detailInfo.tareDeviceName,
-              imgs: [
-                res.rows[0].tareImgs,
-                res.rows[0].mineImgs,
-                res.rows[0].receiptImgs,
-              ].filter((item) => {
-                return item && item.trim();
-              }),
-            },
-          ];
+          this.detailInfo.weightList = weightList.reverse();
         } else {
-          this.detailInfo.weightList = [
-            {
-              weightType: 1,
-              weight: this.detailInfo.tareWeight,
-              userName: this.detailInfo.tareUserName,
-              time: this.detailInfo.tareTime,
-              deviceName: this.detailInfo.tareDeviceName,
-              imgs: [
-                res.rows[0].tareImgs,
-                res.rows[0].mineImgs,
-                res.rows[0].receiptImgs,
-              ].filter((item) => {
-                return item && item.trim();
-              }),
-            },
-            {
-              weightType: 2,
-              weight: this.detailInfo.grossWeight,
-              userName: this.detailInfo.grossUserName,
-              time: this.detailInfo.grossTime,
-              deviceName: this.detailInfo.grossDeviceName,
-              imgs: [
-                res.rows[0].grossImgs,
-                res.rows[0].mineImgs,
-                res.rows[0].receiptImgs,
-              ].filter((item) => {
-                return item && item.trim();
-              }),
-            },
-          ];
+          this.detailInfo.weightList = this.detailInfo.weightList = weightList;
         }
-        console.log("weightList ", this.detailInfo.weightList);
       });
     },
   },

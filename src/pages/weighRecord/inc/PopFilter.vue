@@ -7,8 +7,10 @@
         v-show="!isShowMoreCompany && !isShowMoretransportPlan"
       >
         <view class="pop-filter-title">
-          <text>选择筛选条件</text>
-          <i class="icon-close" @click="closePopFilter()"></i>
+          <view class="pop-filter-title-inner">
+            <text>选择筛选条件</text>
+            <i class="icon-close" @click="closePopFilter()"></i>
+          </view>
         </view>
         <view class="pop-filter-content">
           <view class="form-group">
@@ -393,17 +395,33 @@ $label-color: $gray-2;
   &-title {
     text-align: center;
     font-size: 33upx;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 36upx;
+    background-color: #fff;
+    height: 80upx;
+    line-height: 80upx;
+    z-index: 9999;
+    &-inner {
+      position: relative;
+      width: 100%;
+    }
     .icon-close {
       position: absolute;
       right: 0;
-      top: 0;
+      top: 50%;
+      transform: translateY(-50%);
       width: 32upx;
       height: 32upx;
       background: url(@/static/weighRecord/icon_close.png) no-repeat;
       background-size: contain;
       display: block;
     }
+  }
+  &-content {
+    margin-top: 42upx;
   }
   .form-group {
     .form-item {

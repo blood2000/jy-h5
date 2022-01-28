@@ -247,36 +247,24 @@ export default {
             this.dataList = [...this.dataList, ...res.rows];
           }
           this.dataList.forEach((element) => {
+            const weightList = [
+              {
+                weightType: 1,
+                weight: element.tareWeight,
+                userName: element.tareUserName,
+                time: element.tareTime,
+              },
+              {
+                weightType: 2,
+                weight: element.grossWeight,
+                userName: element.grossUserName,
+                time: element.grossTime,
+              },
+            ];
             if (element.receiveType == 1) {
-              element.weightList = [
-                {
-                  weightType: 2,
-                  weight: element.grossWeight,
-                  userName: element.grossUserName,
-                  time: element.grossTime,
-                },
-                {
-                  weightType: 1,
-                  weight: element.tareWeight,
-                  userName: element.tareUserName,
-                  time: element.tareTime,
-                },
-              ];
+              element.weightList = weightList.reverse();
             } else {
-              element.weightList = [
-                {
-                  weightType: 1,
-                  weight: element.tareWeight,
-                  userName: element.tareUserName,
-                  time: element.tareTime,
-                },
-                {
-                  weightType: 2,
-                  weight: element.grossWeight,
-                  userName: element.grossUserName,
-                  time: element.grossTime,
-                },
-              ];
+              element.weightList = weightList;
             }
           });
         }
