@@ -167,6 +167,7 @@ export default {
     return {
       jyzCode: "",
       searchKey: "",
+      today: '',
       pickerData: [
         { name: "今日预约调号", url: "jryyth" },
         { name: "场区阈值设置", url: "cqyzsz" },
@@ -221,6 +222,7 @@ export default {
   created() {
     console.log("workbench load");
     this.jyzCode = uni.getStorageSync("jyzCode");
+    this.today = format.dateFormat(new Date(), "{y}-{m}-{d}");
     this.createTime = format.dateFormat(new Date(), "{y}-{m}-{d}");
     this.getStatistics();
   },
