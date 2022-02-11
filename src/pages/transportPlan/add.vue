@@ -159,7 +159,13 @@
 					<pickers v-model="form.planFreightId" :range="planFreightIdOption" placeholder='请选择实重计算公式'></pickers>
 				</uni-forms-item>
 			</view>
-
+			<view class="ly-form-card form-whetherFixed-card">
+				<uni-forms-item name="whetherFixed" label="" class="border-bottom">
+					<u-checkbox-group v-model="whetherFixed" @change="onChangeWhetherFixed">
+						<u-checkbox size='14' label='固定皮重' name="" labelSize='24upx'></u-checkbox>
+					</u-checkbox-group>
+				</uni-forms-item>
+			</view>
 
 		</uni-forms>
 		<view class="ly-form-button ly-flex ly-flex-pack-justify ly-flex-align-center">
@@ -216,7 +222,7 @@
 				teamCodes:[],
 				description: '收货企业为本集运站，自动采用地磅称重数据作为卸货凭证',
 
-
+				whetherFixed: [],
 				form: {
 					name: undefined,
 					effectiveDate: [], // 转成 开始时间 和 结束时间
@@ -241,8 +247,8 @@
 					planFreightId: undefined,
 					receiveType: this.sOr,
 					status: '0',
-
-					type: 0
+					type: 0,
+					whetherFixed: 0
 				},
 
 				rules: {
@@ -471,7 +477,7 @@
 
 				this.teamCodes = this.cbData.teamCodeList?.map(e=> e.objCode) || []
 				this.changeTeamCodes(this.teamCodes)
-
+				this.whetherFixed = this.cbData.whetherFixed === 1 ? ['']: [];
 				this.form = {
 					...this.form,
 					...this.cbData,
@@ -978,9 +984,12 @@
 				} else {
 					this.$set(this.form, 'aliasName', res.companyAbbreviation);
 				}
-			}
+			},
 
 			//
+			onChangeWhetherFixed(data) {
+				this.$set(this.form, 'whetherFixed', data.length === 1 ? 1 : 0);
+			}
 
 		}
 	}
@@ -1003,5 +1012,16 @@
 	.yangiwiss{
 		margin-left: 13upx;
 	}
-		
+	.form-whetherFixed-card {
+		/deep/ .uni-forms-item__inner {
+			padding: 0 !important;
+		}
+		/deep/ .uni-forms-item__content {
+			display: flex;
+			align-items: center;
+		}
+		/deep/ .u-checkbox__icon-wrap {
+			font-weight: 700;
+		}
+	}
 </style>
