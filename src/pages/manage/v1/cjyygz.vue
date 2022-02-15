@@ -85,7 +85,7 @@
       </div>
       <!-- 入场时段 -->
       <block v-for="(item, index) in enterTimeArr" :key="index">
-        <div class="manage-box" v-if='!isEdit || !item.deleted'>
+        <div class="manage-box" v-if="!isEdit || !item.deleted">
           <div class="manage-box-title">
             <div class="manage-box-title-item">
               <div class="manage-title2">入场时段 ({{ index * 1 + 1 }})</div>
@@ -204,7 +204,7 @@ export default {
     } else {
       this.isEdit = false;
     }
-    this.jyzCode = uni.getStorageSync('jyzCode');
+    this.jyzCode = uni.getStorageSync("jyzCode");
   },
 
   methods: {
@@ -237,7 +237,16 @@ export default {
     changeDate(e, type) {
       this[type] = e.detail.value;
       if (type === "outDate") {
-        this.outDateArr.push({ excludeDate: e.detail.value });
+        let leap = true;
+        this.outDateArr.map((item) => {
+          if (item.excludeDate === e.detail.value) {
+            leap = false;
+          }
+        });
+        // console.log(leap,  '<----')
+        if (leap) {
+          this.outDateArr.push({ excludeDate: e.detail.value });
+        }
       }
     },
 
@@ -261,13 +270,12 @@ export default {
         success: (res) => {
           if (res.confirm) {
             //编辑状态下删除的时段只存id传给后端
-            let id =  this.enterTimeArr[index].id;
+            let id = this.enterTimeArr[index].id;
             if (this.isEdit && id) {
-              this.$set(this.enterTimeArr, index, {id, deleted: true});
+              this.$set(this.enterTimeArr, index, { id, deleted: true });
             } else {
               this.enterTimeArr.splice(index, 1);
             }
-            
           }
         },
       });
@@ -295,12 +303,12 @@ export default {
       }, 0);
     },
     numberFilter(e, index) {
-      console.log(12)
+      console.log(12);
       setTimeout(() => {
         let value = Math.abs(e.detail.value);
         this.enterTimeArr[index].num = formFilter.numberFilter(value);
         this.$set(this.enterTimeArr, index, this.enterTimeArr[index]);
-        console.log(this.enterTimeArr[index].num)
+        console.log(this.enterTimeArr[index].num);
       }, 0);
     },
 
@@ -371,13 +379,13 @@ export default {
       let config = {};
       if (this.isEdit) {
         let enterArr = [];
-        this.enterTimeArr.map(item => {
+        this.enterTimeArr.map((item) => {
           if (item.deleted) {
-            enterArr.push({id: item.id})
+            enterArr.push({ id: item.id });
           } else {
-            enterArr.push(item)
+            enterArr.push(item);
           }
-        })
+        });
         data.ruleAdmissionTimeIntervalUpdateBos = enterArr;
         data.id = this.editData.id;
         data.code = this.editData.code;

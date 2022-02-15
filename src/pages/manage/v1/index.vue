@@ -1,7 +1,7 @@
 <!-- 管理端TAB页面 -->
 <template>
   <div class="manage-content">
-    <HeaderBar :title="title" @back="back"></HeaderBar>
+    <HeaderBar :title="title" @back="back" :showBar="tabIndex !== 2"></HeaderBar>
     <!-- 工作台组件 -->
     <mumu-get-qrcode v-if="showScan" @success="qrcodeSucess"></mumu-get-qrcode>
     <scroll-view
@@ -27,6 +27,11 @@
       <reserve-certificate></reserve-certificate>
     </div>
 
+    <!-- 预约统计组件 -->
+    <div class="manage-main" v-if="tabIndex === 2">
+      <reserve-statistics></reserve-statistics>
+    </div>
+
     <div class="manage-tabBar">
       <div
         class="manage-tabBar-item"
@@ -48,6 +53,7 @@
 import { mapState } from "vuex";
 import HeaderBar from "../../../components/Building/HeaderBar.vue";
 import ReserveCertificate from "./components/ReserveCertificate.vue";
+import ReserveStatistics from "./components/ReserveStatistics.vue";
 import WorkBench from "./components/WorkBench.vue";
 import { queryUserInfo } from "@/config/service/user/index.js";
 import mumuGetQrcode from "@/uni_modules/mumu-getQrcode/components/mumu-getQrcode/mumu-getQrcode.vue";
@@ -80,11 +86,12 @@ export default {
         },
       ],
       tabIndex: 0,
+      showBar: true,
       showScan: false,
     };
   },
 
-  components: { HeaderBar, WorkBench, ReserveCertificate, mumuGetQrcode },
+  components: { HeaderBar, WorkBench, ReserveCertificate, ReserveStatistics, mumuGetQrcode },
 
   computed: {
     ...mapState({

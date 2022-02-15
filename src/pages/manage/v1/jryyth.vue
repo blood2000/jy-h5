@@ -94,7 +94,7 @@
             </div>
           </div>
         </div>
-        <div class="building-body-box">
+        <div class="building-body-box" v-if="isSubmit">
           <div class="building-title1">备注信息</div>
           <div class="textarea-box">
             <textarea
@@ -105,9 +105,10 @@
             />
           </div>
         </div>
+        
       </z-paging>
     </div>
-    <div class="manage-btn-box">
+    <div class="manage-btn-box" v-if="isSubmit">
       <div class="manage-btn manage-btn-confirm" @click="submit">保存</div>
     </div>
   </div>
@@ -130,6 +131,7 @@ export default {
         color: "#fff",
       },
       jyzCode: "",
+      isSubmit: false,
       remark: "",
       todayTimes: [],
       total: 0,
@@ -171,6 +173,7 @@ export default {
       };
       buildingRequest(config).then((res) => {
         console.log("获取今日预约调号", res);
+        this.isSubmit = true;
         this.remark = res.data.remark;
         this.total = res.data.sumLargesse;
         this.restNums = res.data.sumLargesse;

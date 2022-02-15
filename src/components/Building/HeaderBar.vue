@@ -6,6 +6,7 @@
       :style="{ height: statusBarHeight * 2 + 'rpx', background: barStyle.background}"
     ></view>
     <uni-nav-bar
+      v-if="showBar"
       left-icon="arrowleft"
       :color="barStyle.color"
       :title="title"
@@ -31,6 +32,10 @@ export default {
       default: "",
     },
 		border: {
+			type: Boolean,
+			default: true
+		},
+		showBar: {
 			type: Boolean,
 			default: true
 		},

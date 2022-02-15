@@ -55,6 +55,9 @@ const apiUrl = {
 
   getTodayRecord: '/zjz1-jyz-service/rcyy/todaySubscribeRuleRecord/getTodaySubscribeRuleRecord',   //获取今日预约调号
   setTodayRecord: '/zjz1-jyz-service/rcyy/todaySubscribeRuleRecord/reservationNumberAdjustment',   //设置今日预约调号
+  
+  // 统计相关接口
+  getStatisticsInfo: '/zjz1-jyz-service/rcyy/appointmentStatistics/getAppointmentStatistics',   //统计首页信息获取
 }
 
 export default apiUrl

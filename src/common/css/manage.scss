@@ -54,6 +54,11 @@
   color: #b3b3b3;
 }
 
+.manage-title-more {
+  font-size: 24rpx;
+  color: #6986EF;
+}
+
 .manage-ml {
   margin-left: 20rpx;
 }
@@ -352,6 +357,10 @@
   left: 400rpx;
 }
 
+.manage-slider3 {
+  left: 580rpx;
+}
+
 .manage-tab {
   position: relative;
   width: 180rpx;
@@ -533,4 +542,8 @@
 
 .qrcode-box {
   position: fixed;
+}
+
+.picker-btn-disabled {
+  color: #aaa;
 }
