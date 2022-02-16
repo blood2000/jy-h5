@@ -1,7 +1,11 @@
 <template>
 	<view class="u-page" style="height: 100%;">
 
-		<HeaderBar title="运输计划" @back="navigateBack"></HeaderBar>
+		<HeaderBar title="运输计划" @back="navigateBack">
+			<u-checkbox-group v-model="listStatus" slot="right" @change="onChangeListStatus">
+				<u-checkbox size='14' label='只看启用的' name="" labelSize='24upx'></u-checkbox>
+			</u-checkbox-group>
+		</HeaderBar>
 
 		<view class="ly-flex-pack-around">
 			<view class="sendPlan box-comm" @click="receivePlan">
@@ -23,9 +27,12 @@
 				</view>
 			</view>
 		</view>
+		<view class="input-search-wrap">
+			<input type="text"  placeholder="输入运输计划名称搜索" class="input-search" v-model="queryParams.planName" @input="onInputSearchKey"/>
+		</view>
 		<template v-if="cardList && cardList.length > 0">
 			<view v-for="(item,index) in cardList" :key="index">
-				<TransportCard v-model="cardList[index]" @share='share(item)' @handlerClick="handlerClick(item)"></TransportCard>
+				<TransportCard v-model="cardList[index]" @share='share(item)' @handlerClick="handlerClick(item)" @updateStatus="updateStatus"></TransportCard>
 			</view>
 		</template>
 
@@ -83,7 +90,8 @@
 	import TransportCard from './components/TransportCard.vue'
 	import { pathToBase64, base64ToPath } from 'image-tools'
 	import { saveHeadImgFile } from '@/common/js/saveHeadImgFile'
-	import { orderPlanInfoList as getList, buildQrCode} from '@/config/service/transportPlan/transportationPlan.js'
+	import { orderPlanInfoList as getList, buildQrCode, orderPlanInfoUpdateStatus } from '@/config/service/transportPlan/transportationPlan.js'
+	import { DebounceFun } from "@/utils/ddc";
 	export default {
 		components: {
 			TransportCard,
@@ -116,6 +124,8 @@
 				queryParams: { // 请求参数
 					pageNum: 1,
 					pageSize: 10,
+					planName: '',
+					status: ''
 				},
 
 				// 二维码配置
@@ -137,9 +147,9 @@
 				},
 
 				filePath:'', // 海报地址
-				logoBase64:''
-
-
+				logoBase64:'',
+				planName: '',
+				listStatus: []
 			}
 		},
 
@@ -158,7 +168,7 @@
 			// 是否无数据了
 			this.isEnd = false,
 			this.status = 'more',
-			await this.getList('2')
+			await this.getList(true)
 			console.log('下拉刷新关闭');
 			uni.stopPullDownRefresh();
 
@@ -185,7 +195,7 @@
 				// 是否无数据了
 				this.isEnd = false,
 				this.status = 'more',
-				await this.getList('2')
+				await this.getList(true)
 			}
 		},
 
@@ -219,13 +229,32 @@
 				this.queryParams.pageNum = 1
 				this.isEnd = false,
 				this.status = 'more',
-				this.getList('2')
+				this.getList(true)
 			}
+		},
+		onReady() {
+			this.DebounceSearch = DebounceFun(() => {
+				this.queryParams.pageNum = 1;
+				this.isEnd = false;
+				this.status = 'more';
+				this.getList(true);
+			}, 1000);
 		},
 
 		methods: {
+			/**
+			 * 重置分页数据
+			 */
+			resetLoadMoreData() {
+				this.isEnd = false;
+				this.queryParams.pageNum = 1;
+				this.cardList = [];
+			},
 			// s= 请求列表数据(固定字段名)
-			getList(index) {
+			getList(isRefresh = false) {
+				if (isRefresh) {
+					this.resetLoadMoreData();
+				}
 				this.status = 'loading';
 				uni.showLoading();
 				this.loading = true;
@@ -242,7 +271,7 @@
 					}
 
 					this.total = res.data.total || 0;
-					if(index==='2'){
+					if (isRefresh) {
 						this.cardList = res.data.list
 					} else {
 						this.cardList = [...this.cardList, ...res.data.list];
@@ -361,6 +390,19 @@
 						data: obj
 					}
 				});
+			},
+			onInputSearchKey() {
+				this.DebounceSearch();
+			},
+			updateStatus(status, id) {
+				orderPlanInfoUpdateStatus({
+					id: [id],
+					status
+				}, this.headerInfo)
+			},
+			onChangeListStatus(data) {
+				this.queryParams.status = data.length > 0 ? 0 : '';
+				this.getList(true);
 			}
 			// e=
 		}
@@ -523,5 +565,20 @@
 
 	.mt10 {
 		margin-top: 20rpx;
+	}
+	.input-search-wrap {
+		padding: 0 20rpx;
+		margin-top: 20rpx;
+	}
+	.input-search {
+		border: 2rpx solid #eee;
+		background-color: #fff;
+		padding: 0 20rpx;
+		height: 80rpx;
+		font-size: 28rpx;
+	}
+	/deep/ .uni-navbar__header-btns-right {
+		width: max-content;
+		font-size: 24rpx;
 	}
 </style>

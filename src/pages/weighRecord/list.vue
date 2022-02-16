@@ -80,7 +80,7 @@ import {
   getOrderPlanInfoList,
 } from "@/config/service/weighRecord/index.js";
 import { queryUserInfo } from "@/config/service/user/index.js";
-import { DebounceFun, ThrottleFun } from "@/utils/ddc";
+import { DebounceFun } from "@/utils/ddc";
 export default {
   components: {
     HeaderBar,

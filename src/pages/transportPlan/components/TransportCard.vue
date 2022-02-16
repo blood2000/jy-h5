@@ -11,12 +11,9 @@
 							{{ _cardList.name }}
 						</view>
 					</view>
-				</view>
-				<view class="share-box ly-flex-align-center" @click.stop="$emit('share', value )">
-					<view class="share-box-text">
-						分享接单码
+					<view>
+						<switch :checked="_cardList.status == 0" @change="(data) => switchChange(data, _cardList.id)" @click.stop="" />
 					</view>
-					<image class="share-img" src="@/static/transportPlan/qr.png" mode=""></image>
 				</view>
 			</view>
 			<view class="scompanyName-box ly-flex-pack-justify ly-flex-align-center">
@@ -50,6 +47,14 @@
 					<text v-else><text>{{ _cardList.loadedWeight? _cardList.loadedWeight + '/': '0/' }}</text>{{ _cardList.weight }}<text class="unit">吨</text></text>
 				</view>
 			</view>
+			<view class="share-wrap">
+				<view class="share-box ly-flex-align-center" @click.stop="$emit('share', value )">
+					<view class="share-box-text">
+						分享接单码
+					</view>
+					<image class="share-img" src="@/static/transportPlan/qr.png" mode=""></image>
+				</view>
+			</view>
 		</view>
 
 	</view>
@@ -76,6 +81,12 @@
 				set(val) {
 					this.$emit('input', val)
 				}
+			}
+		},
+		methods: {
+			switchChange(data, id) {
+				const status = data.detail.value ? 0 : 1;
+				this.$emit('updateStatus', status, id);
 			}
 		}
 	}
@@ -184,5 +195,15 @@
 			}
 		}
 	}
-
+	.ly-form-card {
+		padding: 0;
+	}
+	.share-wrap {
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 20rpx;
+	}
+	uni-switch::after, uni-switch::before {
+		display: none;
+	}
 </style>

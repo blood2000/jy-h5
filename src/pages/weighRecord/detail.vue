@@ -122,7 +122,6 @@
 <script>
 import HeaderBar from "@/components/Building/HeaderBar2.vue";
 import {
-  getWaybillInfoByDeviceNo,
   findList,
 } from "@/config/service/weighRecord/index.js";
 import { mapState } from "vuex";
@@ -230,7 +229,7 @@ export default {
         if (this.detailInfo.receiveType == 1) {
           this.detailInfo.weightList = weightList.reverse();
         } else {
-          this.detailInfo.weightList = this.detailInfo.weightList = weightList;
+          this.detailInfo.weightList = weightList;
         }
       });
     },
