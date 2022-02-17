@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="dispatch-split-line"></div>
-        <div class="dispatch-box dispatch-bottom-box" v-if="result">
+        <div class="dispatch-box dispatch-bottom-box " v-if="result">
           <div class="manage-title3">闽A112245</div>
           <div class="card-line">
             <div class="card-line-item">
@@ -69,6 +69,12 @@
               <div class="scan-text">
                 {{ detail.startTime }} - {{ detail.endTime }}
               </div>
+            </div>
+          </div>
+          <div class="card-line">
+            <div class="card-line-item">
+              <div class="dispatch-box-line-name">预约单号:</div>
+              <div class="manage-title0">{{ detail.reservationNumber }}</div>
             </div>
           </div>
         </div>
@@ -263,7 +269,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10rpx;
+  margin-bottom: 0;
   &-item {
     display: flex;
     align-items: center;
@@ -320,7 +326,7 @@ export default {
 }
 
 .dispatch-bottom-box {
-  padding: 30rpx 40rpx;
+  padding: 30rpx 40rpx 0;
   background: #e7ecff;
 }
 

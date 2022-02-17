@@ -180,6 +180,7 @@ export default {
         startTime: "08:00",
         endTime: "10:00",
         fail: "凭证已作废",
+        reservationNumber: '5486132154ef321'
       };
       uni.navigateTo({
         url: `./scanResult?detail=${JSON.stringify(data)}`,

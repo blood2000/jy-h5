@@ -58,6 +58,9 @@
             <div>删除</div>
           </div>
         </div>
+        <div class="manage-box-warning" v-if="item.isExistence > 0">
+          <div class="manage-warning" >该场次已被预约, 预约数: {{item.isExistence}}</div>
+        </div>
         <div class="manage-box-line">
           <div class="manage-title2">货主 <span class="require">*</span></div>
           <picker
@@ -133,6 +136,7 @@
             />
           </div>
         </div>
+
       </div>
 
       <div class="add-time" v-if="isSubmit" @click="addCertify">新增凭证</div>
@@ -448,8 +452,15 @@ export default {
       setTimeout(() => {
         let value = e.detail.value;
         this.dispatchList[index].vehicleNums = formFilter.numberFilter(value);
+        // let vehicleNums = formFilter.numberFilter(value);
+        // console.log(vehicleNums)
+        // this.$set(this.dispatchList[index], 'vehicleNums',vehicleNums)
+        // this.dispatchList[index].vehicleNums = parseInt(value);
+        if (value <  this.dispatchList[index].isExistence) {
+          this.dispatchList[index].vehicleNums = this.dispatchList[index].isExistence;
+        }
         this.$set(this.dispatchList, index, this.dispatchList[index]);
-      }, 0);
+      }, 1);
     },
     numberInput(e, index) {
       setTimeout(() => {

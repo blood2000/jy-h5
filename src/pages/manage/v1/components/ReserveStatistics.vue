@@ -18,21 +18,21 @@
         ></div>
       </div>
       <div class="statistics-header-box">
-        <div class="statistics-header-item">
+        <div class="statistics-header-item" @click="toDetail('shipper')">
           <div class="statistics-name">
             货主(家)
             <uni-icons type="forward" size="12" color="#7D849F"></uni-icons>
           </div>
           <div class="statistics-value">{{ overviewData.cargoOwner || 0 }}</div>
         </div>
-        <div class="statistics-header-item">
+        <div class="statistics-header-item" @click="toDetail('goods')">
           <div class="statistics-name">
             货品(类)
             <uni-icons type="forward" size="12" color="#7D849F"></uni-icons>
           </div>
           <div class="statistics-value">{{ overviewData.goods || 0 }}</div>
         </div>
-        <div class="statistics-header-item">
+        <div class="statistics-header-item" @click="toDetail('vehicle')">
           <div class="statistics-name">
             车次(辆)
             <uni-icons type="forward" size="12" color="#7D849F"></uni-icons>
@@ -41,7 +41,7 @@
             {{ overviewData.trainNumber || 0 }}
           </div>
         </div>
-        <div class="statistics-header-item">
+        <div class="statistics-header-item" @click="toInoutDetail(0)">
           <div class="statistics-name">
             已预约
             <uni-icons type="forward" size="12" color="#B1C2FF"></uni-icons>
@@ -50,7 +50,7 @@
             {{ overviewData.reservedCount || 0 }}
           </div>
         </div>
-        <div class="statistics-header-item">
+        <div class="statistics-header-item" @click="toInoutDetail(1)">
           <div class="statistics-name">
             已入场
             <uni-icons type="forward" size="12" color="#B1C2FF"></uni-icons>
@@ -59,7 +59,7 @@
             {{ overviewData.enteredCount || 0 }}
           </div>
         </div>
-        <div class="statistics-header-item">
+        <div class="statistics-header-item" @click="toInoutDetail(2)">
           <div class="statistics-name">
             已出场
             <uni-icons type="forward" size="12" color="#B1C2FF"></uni-icons>
@@ -85,7 +85,7 @@
         <div class="statistics-card">
           <div class="statistics-card-title">
             <div class="manage-title3">货品统计</div>
-            <div class="manage-title-more" >
+            <div class="manage-title-more" @click="toDetail('goods')">
               查看更多
               <uni-icons type="forward" size="12" color="#6986EF"></uni-icons>
             </div>
@@ -117,7 +117,7 @@
         <div class="statistics-card">
           <div class="statistics-card-title">
             <div class="manage-title3">车次统计</div>
-            <div class="manage-title-more">
+            <div class="manage-title-more" @click="toDetail('vehicle')">
               查看更多
               <uni-icons type="forward" size="12" color="#6986EF"></uni-icons>
             </div>
@@ -162,6 +162,7 @@ import buildingRequest from "../../../../config/buildingRequest";
 import Echarts from "@/components/echarts/echarts.vue";
 import EchartsEl from "@/components/echarts/echarts-el.vue";
 import Graph from "../../../../utils/graph";
+import format from "../../../../utils/format";
 export default {
   mixins: [ZPagingMixin], // 使用mixin
   data() {
@@ -180,6 +181,7 @@ export default {
       goodsTopData: [], //货品统计
       trainTopData: [], //车次统计
       echartOption: {},
+      dateRange: [],
     };
   },
 
@@ -224,6 +226,7 @@ export default {
         let resData = res.data;
         this.$refs.paging.complete(res.data.subscribeStatisticsVos);
         this.getEchartOption(res.data.subscribeStatisticsVos);
+        this.getDateRange(res.data.subscribeStatisticsVos);
         this.overviewData = {
           cargoOwner: resData.cargoOwner,
           goods: resData.goods,
@@ -235,6 +238,22 @@ export default {
         this.goodsTopData = res.data.goodsStatisticsVos;
         this.trainTopData = res.data.trainNumberStatisticsVos;
       });
+    },
+    getDateRange(data) {
+      if (this.tabIndex === 0) {
+        let today = format.dateFormat(new Date(), "{y}-{m}-{d}");
+        this.dateRange[0] = today;
+        this.dateRange[1] = today;
+      } else if (this.tabIndex === 1) {
+        let yesterDatyTimes = new Date().getTime() - 24 * 3600 * 1000;
+        let yesterday = format.dateFormat(new Date(yesterDatyTimes), "{y}-{m}-{d}");
+        this.dateRange[0] = yesterday;
+        this.dateRange[1] = yesterday;
+      } else {
+        this.dateRange[0] = data[0].createTime;
+        this.dateRange[1] = data[data.length-1].createTime;
+      }
+      console.log(this.dateRange)
     },
     getEchartOption(data) {
       let graph = new Graph();
@@ -269,6 +288,25 @@ export default {
       graph.updateSeriesData(2, alreadyAppearedCount);
       graph.updateLegend(["已预约", "已入场", "已出场"]);
       this.echartOption = graph.option;
+    },
+    toDetail(type) {
+      console.log(type)
+      let data = {
+        type: type,
+        dateRange: this.dateRange
+      }
+      uni.navigateTo({
+        url: `./statisticsDetail?params=${JSON.stringify(data)}`,
+      });
+    },
+    toInoutDetail(type) {
+      let data = {
+        type: type,
+        dateRange: this.dateRange
+      }
+      uni.navigateTo({
+        url: `./inoutDetail?params=${JSON.stringify(data)}`,
+      });
     },
   },
 };
@@ -322,12 +360,12 @@ export default {
 
 .statistics-name {
   font-size: 24rpx;
-  color: #7D849F;
+  color: #7d849f;
 }
 
 .statistics-value {
   font-size: 42rpx;
-  color: #2C3350;
+  color: #2c3350;
   font-weight: bold;
 }
 

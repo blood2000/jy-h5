@@ -2,7 +2,10 @@
 <template>
   <div class="manage-box card-box">
     <div class="card-line">
-      <div class="manage-title3">{{ cardData.companyName }}</div>
+      <div>
+        <div class="manage-title3">{{ cardData.companyName }}</div>
+        <div class="manage-title4"> 预约单号: {{cardData.reservationNumber || '无'}} </div>
+      </div>
       <div class="card-title-time">
         <img src="../../../../static/manage/time.png" alt="" />
         <span>{{ cardData.startTime }}</span>

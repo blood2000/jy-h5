@@ -545,6 +545,30 @@
           "bounce": "none"
         }
       }
+    },
+		{
+      "path": "pages/manage/v1/statisticsDetail",
+      "style": {
+        "navigationBarTitleText": "统计",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+		{
+      "path": "pages/manage/v1/inoutDetail",
+      "style": {
+        "navigationBarTitleText": "进出明细",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#3A65FF",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
     }
 	],
 	"globalStyle": {

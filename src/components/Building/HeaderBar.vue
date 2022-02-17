@@ -14,6 +14,7 @@
       @clickLeft="back"
     >
       <view class="nav-right" slot="right" @click="jump"> {{rightText}} </view>
+      <div class="nav-right-icon" slot="right" @click="handleRight" v-if="showNavIcon"></div>
     </uni-nav-bar>
   </div>
 </template>
@@ -40,6 +41,10 @@ export default {
 			default: true
 		},
 		fixed: {
+			type: Boolean,
+			default: false
+		},
+		showNavIcon: {
 			type: Boolean,
 			default: false
 		},
@@ -70,6 +75,9 @@ export default {
     jump() {
       this.$emit('jump');
     },
+    handleRight() {
+      this.$emit('handleRight');
+    },
   },
 };
 </script>
@@ -85,6 +93,15 @@ export default {
   color: #3A65FF;
   transform: translateY(-50%);
 }
-
+.nav-right-icon {
+  position: absolute;
+  top: 50%;
+  right: 26rpx;
+  width: 34rpx;
+  height: 34rpx;
+  background: url('../../static/manage/statistics-nav.png') no-repeat center;
+  background-size: 100% 100%;
+  transform: translateY(-50%);
+}
 </style>
 
