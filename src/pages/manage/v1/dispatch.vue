@@ -82,7 +82,16 @@
             <div class="manage-number-minus" @click="minus">
               <span></span>
             </div>
-            <div class="manage-number-text">{{ changeNums }}</div>
+            <!-- <div class="manage-number-text">{{ changeNums }}</div> -->
+            <div class="manage-number-input">
+              <input
+                class="manage-input"
+                type="number"
+                
+                @input="numberFilter"
+                v-model="changeNums"
+              />
+            </div>
             <div class="manage-number-plus" @click="plus">
               <uni-icons
                 type="plus-filled"
@@ -101,7 +110,7 @@
             class="building-remark"
             maxlength="255"
             v-model="detail.remark"
-            placeholder="添加原因"
+            placeholder="调号原因"
           />
         </div>
       </div>
@@ -195,6 +204,15 @@ export default {
         this.arrangeMode = 0;
       }
     },
+    numberFilter(e) {
+      setTimeout(() => {
+        let value = e.detail.value;
+        this.changeNums = formFilter.numberFilter(value);
+        if (this.changeNums > this.restNumber && this.arrangeMode === 1) {
+          this.changeNums = this.restNumber;
+        }
+      }, 0);
+    },
     plus() {
       if (!this.showPrompt) return;
       if (this.arrangeMode === 0 || this.changeNums < this.restNumber) {
@@ -219,6 +237,14 @@ export default {
       }
     },
     submit() {
+      if (!this.detail.remark) {
+        uni.showToast({
+          title: "请输入调号原因",
+          icon: "none",
+          duration: 1500,
+        });
+        return;
+      }
       let data = {
         id: this.detail.id,
         reserveNumber: this.changeNums,
@@ -242,11 +268,11 @@ export default {
           success: (res) => {
             if (res.confirm) {
               //点击确认
-              
+
               uni.navigateBack({
                 delta: 1,
               });
-              this.$store.commit('setFresh', true);
+              this.$store.commit("setFresh", true);
             }
           },
         });

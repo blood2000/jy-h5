@@ -58,15 +58,19 @@
             <div>删除</div>
           </div>
         </div>
+        <div class="manage-box-warning" v-if="item.isExistence > 0">
+          <div class="manage-warning" >该场次已被预约, 预约数: {{item.isExistence}}</div>
+        </div>
         <div class="manage-box-line">
           <div class="manage-title2">货主 <span class="require">*</span></div>
           <picker
             mode="selector"
             :range="tenantList"
             range-key="companyName"
+            :disabled="item.isExistence !== undefined"
             @change="change($event, 'tenant', index)"
           >
-            <view class="picker-btn" v-if="item.tenantIndex > -1">
+            <view class="picker-btn" :class="item.isExistence !== undefined ? 'picker-btn-disabled' : ''" v-if="item.tenantIndex > -1">
               {{ tenantList[item.tenantIndex].companyName }}</view
             >
             <view class="picker-btn" v-else>
@@ -83,9 +87,10 @@
             mode="selector"
             :range="goodsList"
             range-key="goodsName"
+            :disabled="item.isExistence > 0"
             @change="change($event, 'goods', index)"
           >
-            <view class="picker-btn" v-if="item.goodsIndex > -1">
+            <view class="picker-btn" :class="item.isExistence > 0 ? 'picker-btn-disabled' : ''" v-if="item.goodsIndex > -1">
               {{ goodsList[item.goodsIndex].goodsName }}</view
             >
             <view class="picker-btn" v-else>
@@ -95,7 +100,9 @@
           </picker>
         </div>
         <div class="building-input-item">
-          <div class="building-title1">请选择入场区域</div>
+          <div class="building-title1">
+            入场区域<span class="require">*</span>
+          </div>
           <div class="placeholder" @click="toChooseBuilding(index)">
             请选择
             <uni-icons type="forward" size="14"></uni-icons>
@@ -129,6 +136,7 @@
             />
           </div>
         </div>
+
       </div>
 
       <div class="add-time" v-if="isSubmit" @click="addCertify">新增凭证</div>
@@ -196,9 +204,10 @@ export default {
     this.reserveNums = params.reserveNums;
     console.log(params);
     this.$store.commit("getChoosedBuilding", []);
-    this.getTenantInfo();
-    this.getGoodsInfo();
+    // this.getTenantInfo();
+    // this.getGoodsInfo();
     this.getBuildingInfo(this.getDispatch);
+    // this.getDispatch();
   },
 
   onShow() {
@@ -236,7 +245,7 @@ export default {
         }
       });
     },
-    getTenantInfo() {
+    getTenantInfo(fun) {
       const config = {
         url: "getTenantInfo",
         header: this.headerInfo,
@@ -247,9 +256,10 @@ export default {
       buildingRequest(config).then((res) => {
         console.log("租户列表", res);
         this.tenantList = res.data;
+        fun();
       });
     },
-    getGoodsInfo() {
+    getGoodsInfo(fun) {
       const config = {
         url: "getGoodsInfo",
         header: this.headerInfo,
@@ -260,6 +270,7 @@ export default {
       buildingRequest(config).then((res) => {
         console.log("货品列表", res);
         this.goodsList = res.data;
+        fun();
       });
     },
     getDispatch() {
@@ -279,24 +290,8 @@ export default {
         this.dispatchList = res.data.subscribeRuleVoucherVos;
         let usedNums = 0;
         this.dispatchList.map((item) => {
-          // item.tenantIndex = -1;
-          // item.tenantCode = "";
-          // item.goodsIndex = -1;
-          // item.goodsType = '';
-          // item.goodsBigType = '';
           item.vehicleNums = item.reserveNumber || 0;
           usedNums += item.vehicleNums * 1;
-          this.tenantList.map((tItem, tIndex) => {
-            if (item.tenantCode === tItem.code) {
-              item.tenantIndex = tIndex;
-            }
-          });
-          this.goodsList.map((gItem, gIndex) => {
-            if (item.goodsType === gItem.goodsType) {
-              item.goodsIndex = gIndex;
-              item.goodsBigType = gItem.goodsBigType;
-            }
-          });
 
           let buildingId = item.buildingId.split(",");
           console.log(this.buildingList);
@@ -319,6 +314,38 @@ export default {
         } else {
           this.restNums = this.reserveNums * 1 - usedNums;
         }
+        // this.getBuildingInfo(() => {});
+        this.getTenantInfo(() => {
+          console.log("123", this.tenantList);
+          this.dispatchList.map((item) => {
+            this.tenantList.map((tItem, tIndex) => {
+              // if (item.tenantCode === tItem.code) {
+              if (item.companyName === tItem.companyName) {
+                item.tenantIndex = tIndex;
+              }
+            });
+          });
+        });
+        this.getGoodsInfo(() => {
+          this.dispatchList.map((item) => {
+            this.goodsList.map((gItem, gIndex) => {
+              if (item.goodsType === gItem.goodsType) {
+                item.goodsIndex = gIndex;
+                item.goodsBigType = gItem.goodsBigType;
+              }
+            });
+          });
+        });
+        // this.dispatchList.map((item) => {
+        //   // item.tenantIndex = -1;
+        //   // item.tenantCode = "";
+        //   // item.goodsIndex = -1;
+        //   // item.goodsType = '';
+        //   // item.goodsBigType = '';
+        //   item.vehicleNums = item.reserveNumber || 0;
+        //   usedNums += item.vehicleNums * 1;
+
+        // });
       });
     },
     expandCalendar() {
@@ -425,8 +452,15 @@ export default {
       setTimeout(() => {
         let value = e.detail.value;
         this.dispatchList[index].vehicleNums = formFilter.numberFilter(value);
+        // let vehicleNums = formFilter.numberFilter(value);
+        // console.log(vehicleNums)
+        // this.$set(this.dispatchList[index], 'vehicleNums',vehicleNums)
+        // this.dispatchList[index].vehicleNums = parseInt(value);
+        if (value <  this.dispatchList[index].isExistence) {
+          this.dispatchList[index].vehicleNums = this.dispatchList[index].isExistence;
+        }
         this.$set(this.dispatchList, index, this.dispatchList[index]);
-      }, 0);
+      }, 1);
     },
     numberInput(e, index) {
       setTimeout(() => {

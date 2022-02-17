@@ -54,12 +54,22 @@
   color: #b3b3b3;
 }
 
+.manage-title-more {
+  font-size: 24rpx;
+  color: #6986ef;
+}
+
 .manage-ml {
   margin-left: 20rpx;
 }
 
 .manage-delete {
   color: red;
+}
+
+.manage-warning {
+  font-size: 28rpx;
+  color: #f95757;
 }
 
 .manage-total {
@@ -199,20 +209,20 @@
     font-weight: bold;
   }
   &-splite::before {
-    content: '';
+    content: "";
     position: absolute;
     width: 310rpx;
     height: 1rpx;
-    background-image: linear-gradient(to bottom, #f0f0f0,transparent);
+    background-image: linear-gradient(to bottom, #f0f0f0, transparent);
     top: 50%;
     right: 40rpx;
   }
   &-splite::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 310rpx;
     height: 1rpx;
-    background-image: linear-gradient(to bottom, #f0f0f0,transparent);
+    background-image: linear-gradient(to bottom, #f0f0f0, transparent);
     top: 50%;
     left: 40rpx;
   }
@@ -230,11 +240,11 @@
     padding: 0 20rpx;
     height: 66rpx;
     font-size: 32rpx;
-    color: #2F3034;
+    color: #2f3034;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #F7F7F7;
+    background: #f7f7f7;
     border-radius: 8rpx;
   }
   &-curdate {
@@ -255,7 +265,7 @@
 
 .calendar-box {
   height: 0;
-  transition: height .25s linear;
+  transition: height 0.25s linear;
 }
 
 .expand {
@@ -352,6 +362,10 @@
   left: 400rpx;
 }
 
+.manage-slider3 {
+  left: 580rpx;
+}
+
 .manage-tab {
   position: relative;
   width: 180rpx;
@@ -392,6 +406,14 @@
       rgba(58, 101, 255, 0.12) 0%,
       rgba(58, 101, 255, 0) 99%
     );
+  }
+  &-warning {
+    height: 64rpx;
+    margin: 0 -20rpx;
+    padding: 0 20rpx;
+    background: #fff0f0;
+    display: flex;
+    align-items: center;
   }
   &-line {
     box-sizing: border-box;
@@ -452,6 +474,11 @@
   font-weight: bold;
   color: #333;
   margin: 0 20rpx;
+}
+
+.manage-number-input {
+  padding: 0 10rpx;
+  max-width: 80rpx;
 }
 
 .manage-input-box {
@@ -524,8 +551,10 @@
   font-weight: bold;
 }
 
-
-
 .qrcode-box {
   position: fixed;
+}
+
+.picker-btn-disabled {
+  color: #aaa;
 }

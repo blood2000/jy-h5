@@ -55,6 +55,13 @@ const apiUrl = {
 
   getTodayRecord: '/zjz1-jyz-service/rcyy/todaySubscribeRuleRecord/getTodaySubscribeRuleRecord',   //获取今日预约调号
   setTodayRecord: '/zjz1-jyz-service/rcyy/todaySubscribeRuleRecord/reservationNumberAdjustment',   //设置今日预约调号
+  
+  // 统计相关接口
+  getStatisticsInfo: '/zjz1-jyz-service/rcyy/appointmentStatistics/getAppointmentStatistics',   //统计首页信息获取
+  getShipperInfo: '/zjz1-jyz-service/rcyy/appointmentStatistics/getCargoOwnerStatistics',   //货主统计
+  getGoodsStatistics: '/zjz1-jyz-service/rcyy/appointmentStatistics/getGoodsStatistics',   //货品统计
+  getVehicleStatistics: '/zjz1-jyz-service/rcyy/appointmentStatistics/getTrainNumberStatistics',   //车次统计
+  getSubscribeStatisticsDetail: '/zjz1-jyz-service/rcyy/appointmentStatistics/getSubscribeStatisticsDetail',   //进出明细
 }
 
 export default apiUrl
