@@ -262,9 +262,10 @@ export default {
     },
 
     confirm() {
-      this.$refs.paging.reload();
+      
       this.goodsName = this.goodsSearchName;
       this.showModal = false;
+      this.$refs.paging.reload();
     },
 
     clear() {
