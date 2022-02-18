@@ -11,9 +11,6 @@
 							{{ _cardList.name }}
 						</view>
 					</view>
-					<view>
-						<switch :checked="_cardList.status == 0" @change="(data) => switchChange(data, _cardList.id)" @click.stop="" />
-					</view>
 				</view>
 			</view>
 			<view class="scompanyName-box ly-flex-pack-justify ly-flex-align-center">
@@ -48,6 +45,9 @@
 				</view>
 			</view>
 			<view class="share-wrap">
+				<view>
+					<switch :checked="_cardList.status == 0" @change="(data) => switchChange(data, _cardList.id)" @click.stop="" />
+				</view>
 				<view class="share-box ly-flex-align-center" @click.stop="$emit('share', value )">
 					<view class="share-box-text">
 						分享接单码
@@ -200,10 +200,43 @@
 	}
 	.share-wrap {
 		display: flex;
-		justify-content: flex-end;
+		justify-content: space-between;
 		margin-top: 20rpx;
 	}
 	uni-switch::after, uni-switch::before {
 		display: none;
+	}
+	/deep/ .uni-switch-input {
+		width: 87rpx;
+		height: 40rpx;
+		&::before {
+			content: '禁用';
+			display: block;
+			position: absolute;
+			left: 38rpx;
+			font-size: 20rpx;
+			background: transparent;
+			color: #B5B5B5;
+			width: max-content;
+			display: flex;
+			align-items: center;
+			height: 40rpx;
+		}
+		&::after {
+			width: 26rpx;
+			height: 26rpx;
+			left: 8rpx;
+		}
+		&.uni-switch-input-checked {
+			&::after {
+				left: 60rpx;
+			}
+			&::before {
+				content: '启动';
+				left: 8rpx;
+				color: #fff;
+				transform: scale(1);
+			}
+		}
 	}
 </style>
