@@ -11,7 +11,7 @@
 						placeholder="请输入计划名称" />
 				</uni-forms-item>
 
-				<uni-forms-item required name="effectiveDate" label-width='100' label="计划有效期">
+				<uni-forms-item required name="effectiveDate" label-width='95' label="计划有效期">
 					<uni-datetime-picker 
 					:key='oldDatePicker1' 
 					ref='datepick' 
@@ -1024,6 +1024,17 @@
 		}
 		/deep/ .u-checkbox__icon-wrap {
 			font-weight: 700;
+		}
+	}
+	/deep/ .uni-date__x-input {
+		.uni-input-input {
+			text-align: left;
+		}
+	}
+	/deep/ .uni-date-editor--x {
+		.uni-date__icon-clear {
+			right: -20upx;
+			top: 4upx;
 		}
 	}
 </style>
