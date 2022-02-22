@@ -37,7 +37,7 @@
 				<uni-forms-item required name="orderPlanTeanRelList" label="指定调度者">
 					<view v-if="form.orderPlanTeanRelList && form.orderPlanTeanRelList.length > 0" style="width:100% ;flex-direction: row-reverse;" class="ly-flex-align-center picker-input text-right" @click="teamListShow = true">
 						<u-icon name="arrow-down-fill" size='7' color="#999999" class="yangiwiss"></u-icon>
-						<view class="g-single-row" style="width: 250upx;">{{ form.orderPlanTeanRelList.map(e=>e.name+(e.isTeamFreeze==1?'(已禁用)':'')).join(',') }}</view>
+						<view class="g-single-row" style="width: 360upx;line-height:1.2;">{{ form.orderPlanTeanRelList.map(e=>e.name+(e.isTeamFreeze==1?'(已禁用)':'')).join(',') }}</view>
 					</view>
 					<view v-else style="width:100%; flex-direction: row-reverse;" class="ly-flex-align-center picker-placeholder text-right" @click="teamListShow = true">
 						<u-icon name="arrow-down-fill" size='7' color="#999999" class="yangiwiss"></u-icon>
