@@ -394,9 +394,11 @@
 					if(!(val && Array.isArray(val))) return
 					if(val.length>0){
 						this.$refs.datepick.clear()
+						this.$set(this.rules.effectiveDate.rules[0], 'required', false)
 						// 要去掉验证
 					} else {
 						this.$set(this.form, 'effectiveDate', this.oldDatePicker)
+						this.$set(this.rules.effectiveDate.rules[0], 'required', true)
 						this.oldDatePicker1 = Date.now()
 					}
 				},
