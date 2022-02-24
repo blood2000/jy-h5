@@ -62,7 +62,6 @@
     <div class="work-main" :class="isScroll ? '' : 'work-main-padding'">
       <div v-show="!isScroll" class="showTop" @click="showTop">
         <uni-icons type="top" size="16"></uni-icons>
-        
       </div>
       <!-- <div v-show="!isScroll" class="manage-expand-splite" @click="showTop">
         <uni-icons type="top" size="16"></uni-icons>
@@ -167,7 +166,7 @@ export default {
     return {
       jyzCode: "",
       searchKey: "",
-      today: '',
+      today: "",
       pickerData: [
         { name: "今日预约调号", url: "jryyth" },
         { name: "场区阈值设置", url: "cqyzsz" },
@@ -232,6 +231,7 @@ export default {
 
     this.query();
   },
+
 
   components: { ReserveCard, PickerModal },
 
@@ -634,6 +634,4 @@ export default {
   padding: 20rpx 30rpx;
   // background: #f5f5f5;
 }
-
-
 </style>
