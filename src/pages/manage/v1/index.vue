@@ -129,9 +129,9 @@ export default {
     uni.setStorageSync("jyzCode", jyzCode);
     // console.log('集运站CODE', this.jyzCode)
     this._freshing = false;
-    setTimeout(() => {
-      this.triggered = true; //触发onRefresh来加载自己的数据，如果不用这种方式，不要在此改变triggered的值
-    }, 1000);
+    // setTimeout(() => {
+    //   this.triggered = true; //触发onRefresh来加载自己的数据，如果不用这种方式，不要在此改变triggered的值
+    // }, 1000);
   },
 
   methods: {
