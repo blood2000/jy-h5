@@ -490,6 +490,22 @@ export default {
         transId: {
           rules: [{ required: true, errorMessage: "请选择运输公司" }],
         },
+        intervalStarTime: {
+          rules: [
+            {
+              required: false,
+              errorMessage: "请输入装货预估最小时间",
+            },
+          ],
+        },
+        intervalEndTime: {
+          rules: [
+            {
+              required: false,
+              errorMessage: "请输入装货预估最大时间",
+            },
+          ],
+        },
         orderPlanTeanRelList: {
           rules: [
             { type: "array", required: true, errorMessage: "请输入指定调度者" },
@@ -558,23 +574,7 @@ export default {
         },
         planFreightId: {
           rules: [{ required: true, errorMessage: "请选择实重计算公式" }],
-        },
-        intervalStarTime: {
-          rules: [
-            {
-              required: false,
-              errorMessage: "请输入装货预估最小时间",
-            },
-          ],
-        },
-        intervalEndTime: {
-          rules: [
-            {
-              required: false,
-              errorMessage: "请输入装货预估最大时间",
-            },
-          ],
-        },
+        }
       },
       // s= 其他数据
       oldDatePicker: [],
