@@ -70,7 +70,7 @@
             type="text"
             placeholder="请输入公司名称"
             confirm-type="search"
-            v-model="companyName"
+            v-model="companySearchName"
           />
         </view>
         <div class="inout-input-title manage-title2">预约单号</div>
@@ -81,7 +81,7 @@
             type="text"
             placeholder="请输入预约单号"
             confirm-type="search"
-            v-model="reservationNumber"
+            v-model="reservationSearchNumber"
           />
         </view>
         <div class="inout-input-title manage-title2">商品选择</div>
@@ -134,7 +134,9 @@ export default {
       goodsName: "",
       goodsSearchName: '', //商品搜索名称
       companyName: "",
+      companySearchName: '',  //公司搜索名称
       reservationNumber: "", //预约号
+      reservationSearchNumber: '',  //搜索预约号
       showModal: false,
       goodsSearchList: [],
     };
@@ -253,6 +255,8 @@ export default {
       console.log("handleright");
       this.showModal = true;
       this.goodsSearchName = this.goodsName;
+      this.companySearchName = this.companyName;
+      this.reservationSearchNumber = this.reservationNumber;
     },
     closeModal() {
       this.showModal = false;
@@ -264,15 +268,17 @@ export default {
     confirm() {
       
       this.goodsName = this.goodsSearchName;
+      this.companyName = this.companySearchName;
+      this.reservationNumber = this.reservationSearchNumber;
       this.showModal = false;
       this.$refs.paging.reload();
     },
 
     clear() {
       this.goodsSearchName = '';
-      this.goodsName = '';
-      this.reservationNumber = '';
-      this.companyName = '';
+      // this.goodsName = '';
+      this.reservationSearchNumber = '';
+      this.companySearchName = '';
     },
   },
 };

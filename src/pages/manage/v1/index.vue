@@ -1,7 +1,7 @@
 <!-- 管理端TAB页面 -->
 <template>
   <div class="manage-content">
-    <HeaderBar :title="title" @back="back" :showBar="tabIndex !== 2"></HeaderBar>
+    <HeaderBar :title="title" @back="back"></HeaderBar>
     <!-- 工作台组件 -->
     <mumu-get-qrcode v-if="showScan" @success="qrcodeSucess"></mumu-get-qrcode>
     <scroll-view
@@ -19,7 +19,6 @@
         :isScroll="isScroll"
         @showTop="showTop"
         @scanOrder="scanOrder"
-
       ></work-bench>
     </scroll-view>
     <!-- 预约凭证组件 -->
@@ -57,6 +56,7 @@ import ReserveStatistics from "./components/ReserveStatistics.vue";
 import WorkBench from "./components/WorkBench.vue";
 import { queryUserInfo } from "@/config/service/user/index.js";
 import mumuGetQrcode from "@/uni_modules/mumu-getQrcode/components/mumu-getQrcode/mumu-getQrcode.vue";
+
 export default {
   data() {
     return {
@@ -91,7 +91,13 @@ export default {
     };
   },
 
-  components: { HeaderBar, WorkBench, ReserveCertificate, ReserveStatistics, mumuGetQrcode },
+  components: {
+    HeaderBar,
+    WorkBench,
+    ReserveCertificate,
+    ReserveStatistics,
+    mumuGetQrcode,
+  },
 
   computed: {
     ...mapState({
@@ -104,10 +110,12 @@ export default {
   },
 
   async onLoad(option) {
+    // console.log(JSON.stringify(option), "option");
     this.$store.dispatch("getLoginInfoAction", {
       Authorization: option.token,
       statusBarHeight: option.statusBarHeight,
     });
+
     // this.headerInfo["App-Code"] = 'f3209f6c7353414e8dbb94dd23cf8b91'
     // const res = uni.getSystemInfoSync()
     // this.system = res.platform;
@@ -121,9 +129,9 @@ export default {
     uni.setStorageSync("jyzCode", jyzCode);
     // console.log('集运站CODE', this.jyzCode)
     this._freshing = false;
-    setTimeout(() => {
-      this.triggered = true; //触发onRefresh来加载自己的数据，如果不用这种方式，不要在此改变triggered的值
-    }, 1000);
+    // setTimeout(() => {
+    //   this.triggered = true; //触发onRefresh来加载自己的数据，如果不用这种方式，不要在此改变triggered的值
+    // }, 1000);
   },
 
   methods: {
@@ -132,7 +140,7 @@ export default {
     },
     onRefresh() {
       console.log("首页下拉刷新");
-      this.$store.commit('setFresh', true);
+      this.$store.commit("setFresh", true);
       if (this._freshing) return;
       this._freshing = true;
       if (!this.triggered)
@@ -166,6 +174,16 @@ export default {
     },
     scanOrder() {
       // this.showScan = true;
+      console.log(uni.webView);
+      uni.webView.getEnv(function (res) {
+        console.log("当前环境：" + JSON.stringify(res));
+      });
+      // uni.webView.postMessage({
+      //   data: {
+      //     message: 111,
+      //   },
+      // });
+
       let data = {
         jyzName: "至简",
         goodsName: "原煤",
@@ -180,7 +198,7 @@ export default {
         startTime: "08:00",
         endTime: "10:00",
         fail: "凭证已作废",
-        reservationNumber: '5486132154ef321'
+        reservationNumber: "5486132154ef321",
       };
       uni.navigateTo({
         url: `./scanResult?detail=${JSON.stringify(data)}`,
@@ -198,6 +216,8 @@ export default {
   },
 };
 </script>
+
+
 <style lang='scss' scoped>
 .manage-content {
   padding-bottom: 120rpx;

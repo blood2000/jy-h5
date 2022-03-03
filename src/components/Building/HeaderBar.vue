@@ -62,11 +62,16 @@ export default {
       },
     },
   },
+ 
 
   computed: {
     ...mapState({
-      statusBarHeight: (state) => state.header.statusBarHeight,
+      headerInfo: (state) => state.header.headerInfo,
+      // statusBarHeight: (state) => state.header.statusBarHeight,
     }),
+    statusBarHeight() {
+      return this.headerInfo.statusBarHeight
+    },
   },
   methods: {
     back() {
