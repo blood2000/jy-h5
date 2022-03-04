@@ -59,7 +59,9 @@
           </div>
         </div>
         <div class="manage-box-warning" v-if="item.isExistence > 0">
-          <div class="manage-warning" >该场次已被预约, 预约数: {{item.isExistence}}</div>
+          <div class="manage-warning">
+            该场次已被预约, 预约数: {{ item.isExistence }}
+          </div>
         </div>
         <div class="manage-box-line">
           <div class="manage-title2">货主 <span class="require">*</span></div>
@@ -70,7 +72,13 @@
             :disabled="item.isExistence !== undefined"
             @change="change($event, 'tenant', index)"
           >
-            <view class="picker-btn" :class="item.isExistence !== undefined ? 'picker-btn-disabled' : ''" v-if="item.tenantIndex > -1">
+            <view
+              class="picker-btn"
+              :class="
+                item.isExistence !== undefined ? 'picker-btn-disabled' : ''
+              "
+              v-if="item.tenantIndex > -1"
+            >
               {{ tenantList[item.tenantIndex].companyName }}</view
             >
             <view class="picker-btn" v-else>
@@ -85,15 +93,32 @@
           </div>
           <picker
             mode="selector"
-            :range="goodsList"
+            :range="item.goodsList"
             range-key="goodsName"
-            :disabled="item.isExistence > 0"
+            :disabled="item.isExistence > 0 || !item.tenantCode"
             @change="change($event, 'goods', index)"
           >
-            <view class="picker-btn" :class="item.isExistence > 0 ? 'picker-btn-disabled' : ''" v-if="item.goodsIndex > -1">
-              {{ goodsList[item.goodsIndex].goodsName }}</view
+            <view
+              class="picker-btn"
+              :class="(item.isExistence > 0 || !item.tenantCode) ? 'picker-btn-disabled' : ''"
+              v-if="item.goodsIndex > -1"
             >
-            <view class="picker-btn" v-else>
+              {{ item.goodsList[item.goodsIndex].goodsName }}</view
+            >
+            <div
+              class="picker-btn"
+              :class="(item.isExistence > 0 || !item.tenantCode) ? 'picker-btn-disabled' : ''"
+              v-if="item.goodsType && item.goodsIndex === undefined"
+              @click="getGoodsList(index, item.tenantCode)"
+            >
+              {{ item.goodsName }}
+            </div>
+            <view
+              class="picker-btn"
+              :class="(item.isExistence > 0 || !item.tenantCode) ? 'picker-btn-disabled' : ''"
+              @click="getGoodsList(index, item.tenantCode)"
+              v-if="item.goodsIndex === -1 && !item.goodsType"
+            >
               请选择货品种类
               <uni-icons type="forward" size="14"></uni-icons>
             </view>
@@ -136,7 +161,6 @@
             />
           </div>
         </div>
-
       </div>
 
       <div class="add-time" v-if="isSubmit" @click="addCertify">新增凭证</div>
@@ -165,6 +189,7 @@ export default {
   data() {
     return {
       title: "派号",
+      // tenantCode: '',  //租户code
       code: "",
       reserveNums: "", //总票数
       restNums: "", //剩余票数
@@ -259,18 +284,26 @@ export default {
         fun();
       });
     },
-    getGoodsInfo(fun) {
+    getGoodsInfo(tenantCode, fun) {
       const config = {
         url: "getGoodsInfo",
         header: this.headerInfo,
         querys: {
           jyzCode: this.jyzCode,
+          tenantCode: tenantCode,
         },
       };
       buildingRequest(config).then((res) => {
         console.log("货品列表", res);
         this.goodsList = res.data;
-        fun();
+        fun(res.data);
+      });
+    },
+    getGoodsList(index, tenantCode) {
+      console.log(index, tenantCode);
+      this.getGoodsInfo(tenantCode, (data) => {
+        this.dispatchList[index].goodsList = data;
+        this.$set(this.dispatchList,index, this.dispatchList[index]);
       });
     },
     getDispatch() {
@@ -326,25 +359,15 @@ export default {
             });
           });
         });
-        this.getGoodsInfo(() => {
-          this.dispatchList.map((item) => {
-            this.goodsList.map((gItem, gIndex) => {
-              if (item.goodsType === gItem.goodsType) {
-                item.goodsIndex = gIndex;
-                item.goodsBigType = gItem.goodsBigType;
-              }
-            });
-          });
-        });
-        // this.dispatchList.map((item) => {
-        //   // item.tenantIndex = -1;
-        //   // item.tenantCode = "";
-        //   // item.goodsIndex = -1;
-        //   // item.goodsType = '';
-        //   // item.goodsBigType = '';
-        //   item.vehicleNums = item.reserveNumber || 0;
-        //   usedNums += item.vehicleNums * 1;
-
+        // this.getGoodsInfo(() => {
+        //   this.dispatchList.map((item) => {
+        //     this.goodsList.map((gItem, gIndex) => {
+        //       if (item.goodsType === gItem.goodsType) {
+        //         item.goodsIndex = gIndex;
+        //         item.goodsBigType = gItem.goodsBigType;
+        //       }
+        //     });
+        //   });
         // });
       });
     },
@@ -389,7 +412,7 @@ export default {
       });
     },
     //上拉列表选择
-    change(e, type, index) {
+    change(e, type, index, tenantCode) {
       let that = this;
       let item = this.dispatchList[index];
       const changeValue = {
@@ -401,8 +424,9 @@ export default {
         goods: () => {
           let dIndex = e.detail.value * 1;
           let leap = true;
+          let curGoodsType = item.goodsList[dIndex].goodsType;
           for (let i = 0; i < this.dispatchList.length; i++) {
-            if (this.dispatchList[i].goodsIndex === dIndex) {
+            if (this.dispatchList[i].goodsType === curGoodsType) {
               leap = false;
               // item.goodsIndex = -1;
               // item.goodsType = '';
@@ -416,11 +440,11 @@ export default {
             }
           }
           if (!leap) return;
-          console.log(item);
+          // console.log(item);
           item.goodsIndex = dIndex;
-          item.goodsType = this.goodsList[dIndex].goodsType;
-          item.goodsBigType = this.goodsList[dIndex].goodsBigType;
-          item.goodsName = this.goodsList[dIndex].goodsName;
+          item.goodsType = item.goodsList[dIndex].goodsType;
+          item.goodsBigType = item.goodsList[dIndex].goodsBigType;
+          item.goodsName = item.goodsList[dIndex].goodsName;
           this.$set(this.dispatchList, index, item);
         },
       };
@@ -456,8 +480,9 @@ export default {
         // console.log(vehicleNums)
         // this.$set(this.dispatchList[index], 'vehicleNums',vehicleNums)
         // this.dispatchList[index].vehicleNums = parseInt(value);
-        if (value <  this.dispatchList[index].isExistence) {
-          this.dispatchList[index].vehicleNums = this.dispatchList[index].isExistence;
+        if (value < this.dispatchList[index].isExistence) {
+          this.dispatchList[index].vehicleNums =
+            this.dispatchList[index].isExistence;
         }
         this.$set(this.dispatchList, index, this.dispatchList[index]);
       }, 1);

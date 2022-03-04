@@ -181,7 +181,7 @@ export default {
     //获取场区信息
     getBuildingInfo() {
       const config = {
-        url: "getBuildingInfo",
+        url: "getBuildingMsg",
         header: this.headerInfo,
         params: this.bid,
       };

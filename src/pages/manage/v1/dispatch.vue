@@ -109,7 +109,7 @@
           <textarea
             class="building-remark"
             maxlength="255"
-            v-model="detail.remark"
+            v-model="detail.voucherAdjustmentRecordRemark"
             placeholder="调号原因"
           />
         </div>
@@ -237,9 +237,17 @@ export default {
       }
     },
     submit() {
-      if (!this.detail.remark) {
+      if (!this.detail.voucherAdjustmentRecordRemark) {
         uni.showToast({
           title: "请输入调号原因",
+          icon: "none",
+          duration: 1500,
+        });
+        return;
+      }
+      if (this.changeNums === '') {
+        uni.showToast({
+          title: "调号数量未填写",
           icon: "none",
           duration: 1500,
         });

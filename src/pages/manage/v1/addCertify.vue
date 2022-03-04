@@ -48,6 +48,7 @@
           </div>
           <picker
             mode="selector"
+            :disabled="!isChooseCompany"
             :range="goodsList"
             range-key="goodsName"
             @change="change($event, 'goods')"
@@ -144,6 +145,7 @@ export default {
     return {
       title: "添加凭证",
       // jyzCode: "62baa47ae922439fbf3c102774722e40",
+      
       jyzCode: "",
       tenantList: [],
       tenantIndex: -1,
@@ -175,6 +177,12 @@ export default {
       choosedBuilding: (state) => state.manage.choosedBuilding,
       isFresh: (state) => state.manage.isFresh,
     }),
+    isChooseCompany() {
+      if (this.tenantCode) {
+        return true;
+      }
+      return false;
+    }
   },
 
   onLoad() {
@@ -184,7 +192,7 @@ export default {
 
   onShow() {
     this.getTenantInfo();
-    this.getGoodsInfo();
+    // this.getGoodsInfo();
   },
 
   methods: {
@@ -212,6 +220,7 @@ export default {
         header: this.headerInfo,
         querys: {
           jyzCode: this.jyzCode,
+          tenantCode: this.tenantCode
         },
       };
       buildingRequest(config).then((res) => {
@@ -238,6 +247,7 @@ export default {
           this.tenantIndex = e.detail.value * 1;
           this.tenantCode = this.tenantList[this.tenantIndex].code;
           console.log(this.tenantCode);
+          this.getGoodsInfo();
         },
         goods: () => {
           this.goodsIndex = e.detail.value * 1;

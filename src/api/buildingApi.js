@@ -9,7 +9,7 @@ const apiUrl = {
   delAddedGoods: (id) => {
     return `/zjz1-jyz-service/jyz-building/delJyzGoods/${id}`
   },//删除可选项物料
-  getBuildingInfo: (id) => {
+  getBuildingMsg: (id) => {
     return `/zjz1-jyz-service/jyz-building/getById/${id}`
   }, //获取场区信息
   editBuilding: '/zjz1-jyz-service/jyz-building/updateStorage',//编辑场区分类

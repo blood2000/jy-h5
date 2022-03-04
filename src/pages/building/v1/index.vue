@@ -90,9 +90,14 @@ export default {
       statusBarHeight: (state) => state.header.statusBarHeight,
     }),
   },
-  onLoad(option) {
+  async onLoad(option) {
     // await this.$onLaunched;
-    this.$store.commit("getLoginInfoAction", {
+    console.log(option, 'option building')
+    // this.$store.commit("getLoginInfoAction", {
+    //   Authorization: option.token,
+    //   statusBarHeight: option.statusBarHeight,
+    // });
+    this.$store.dispatch("getLoginInfoAction", {
       Authorization: option.token,
       statusBarHeight: option.statusBarHeight,
     });

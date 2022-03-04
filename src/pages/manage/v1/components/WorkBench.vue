@@ -232,7 +232,6 @@ export default {
     this.query();
   },
 
-
   components: { ReserveCard, PickerModal },
 
   computed: {
@@ -410,6 +409,7 @@ export default {
     },
   },
 };
+
 </script>
 <style lang='scss' scoped>
 .work-header {

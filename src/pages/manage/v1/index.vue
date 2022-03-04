@@ -174,15 +174,16 @@ export default {
     },
     scanOrder() {
       // this.showScan = true;
+
       console.log(uni.webView);
       uni.webView.getEnv(function (res) {
         console.log("当前环境：" + JSON.stringify(res));
       });
-      // uni.webView.postMessage({
-      //   data: {
-      //     message: 111,
-      //   },
-      // });
+      uni.webView.postMessage({
+        data: {
+          message: 111,
+        },
+      });
 
       let data = {
         jyzName: "至简",
@@ -215,6 +216,7 @@ export default {
     },
   },
 };
+
 </script>
 
 

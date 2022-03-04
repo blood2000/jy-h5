@@ -200,6 +200,7 @@ export default {
     if (option.code) {
       this.editData.code = option.code;
       this.isEdit = true;
+      this.title = '编辑预约规则';
       this.getDetail();
     } else {
       this.isEdit = false;
