@@ -105,7 +105,6 @@
             />
           </div>
         </div>
-        
       </z-paging>
     </div>
     <div class="manage-btn-box" v-if="isSubmit">
@@ -301,6 +300,7 @@ export default {
         });
         return;
       }
+
       this.overviewData.sumLargesse = this.total + this.changeNums;
       this.overviewData.remark = this.remark;
 
@@ -323,6 +323,31 @@ export default {
         };
         todaySubscribeRuleTimes.push(obj);
       });
+      // todaySubscribeRuleTimes.map((item) => {
+      //   if (item.calNum === "") {
+      //     uni.showToast({
+      //       title: "调号数量未填写",
+      //       icon: "none",
+      //       duration: 1500,
+      //     });
+      //     return;
+      //   }
+      // });
+      let calLeap = true;
+      for(let i = 0; i < todaySubscribeRuleTimes.length; i++) {
+        if (todaySubscribeRuleTimes[i].number === "") {
+          uni.showToast({
+            title: "调号数量未填写",
+            icon: "none",
+            duration: 1500,
+          });
+          calLeap = false;
+          break;
+        }
+      }
+      if (!calLeap) {
+        return;
+      }
       this.overviewData.todaySubscribeRuleTimes = todaySubscribeRuleTimes;
       console.log(this.overviewData);
       const config = {

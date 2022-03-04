@@ -19,6 +19,8 @@
         :isScroll="isScroll"
         @showTop="showTop"
         @scanOrder="scanOrder"
+        @cancelPickerModal="cancelPickerModal"
+        @openSet="openSet"
       ></work-bench>
     </scroll-view>
     <!-- 预约凭证组件 -->
@@ -31,7 +33,7 @@
       <reserve-statistics></reserve-statistics>
     </div>
 
-    <div class="manage-tabBar">
+    <div class="manage-tabBar" v-show="showTabbar">
       <div
         class="manage-tabBar-item"
         :class="index === tabIndex ? 'manage-active-item' : ''"
@@ -68,6 +70,7 @@ export default {
       isScroll: true,
       triggered: false,
       _freshing: false,
+      showTabbar: true,
       tabs: [
         {
           path: "../../../static/manage/home.png",
@@ -88,6 +91,7 @@ export default {
       tabIndex: 0,
       showBar: true,
       showScan: false,
+      
     };
   },
 
@@ -168,6 +172,12 @@ export default {
       if (scroll > 1) {
         this.isScroll = false;
       }
+    },
+    openSet() {
+      this.showTabbar = false;
+    },
+    cancelPickerModal() {
+      this.showTabbar = true;
     },
     showTop() {
       this.isScroll = true;

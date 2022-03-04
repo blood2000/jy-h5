@@ -78,13 +78,10 @@
           />
           <view class="enter" @click="searchDriver"></view>
         </div>
-        <div class="scan-code" @click="scanOrder">
-          <!-- <view>
-            <mumu-get-qrcode @success="qrcodeSucess" />
-          </view> -->
+        <!-- <div class="scan-code" @click="scanOrder">
           <img src="../../../../static/manage/code.png" alt="" />
           <div class="scan-code-name">出入场扫码</div>
-        </div>
+        </div> -->
       </div>
       <div class="manage-tab-box">
         <div
@@ -263,9 +260,11 @@ export default {
     openSet() {
       console.log("set");
       this.showPickerModal = true;
+      this.$emit('openSet', true)
     },
     cancelPickerModal() {
       this.showPickerModal = false;
+      this.$emit("cancelPickerModal", false);
     },
     showTop() {
       this.$emit("showTop");
