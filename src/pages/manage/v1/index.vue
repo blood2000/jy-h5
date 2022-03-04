@@ -33,7 +33,7 @@
       <reserve-statistics></reserve-statistics>
     </div>
 
-    <div class="manage-tabBar" v-show="showTabbar">
+    <div class="manage-tabBar">
       <div
         class="manage-tabBar-item"
         :class="index === tabIndex ? 'manage-active-item' : ''"
