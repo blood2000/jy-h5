@@ -1,6 +1,6 @@
 <!-- 工作台 -->
 <template>
-  <div :class="isScroll ? '' : 'components-main'">
+  <div :class="isScroll ? 'work-div' : 'components-main'">
     <div class="work-header" :class="isScroll ? '' : 'work-hidden'">
       <div class="manage-box work-header-box">
         <div class="work-title-line">

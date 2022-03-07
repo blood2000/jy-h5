@@ -324,7 +324,9 @@
 //   flex-direction: column;
 //   overflow: hidden;
 // }
-
+.work-div {
+  min-height: 100%;
+}
 .components-main {
   box-sizing: border-box;
   height: 100%;
