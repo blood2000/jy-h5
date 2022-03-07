@@ -19,8 +19,7 @@
         :isScroll="isScroll"
         @showTop="showTop"
         @scanOrder="scanOrder"
-        @cancelPickerModal="cancelPickerModal"
-        @openSet="openSet"
+        
       ></work-bench>
     </scroll-view>
     <!-- 预约凭证组件 -->

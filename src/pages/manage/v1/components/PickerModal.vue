@@ -1,6 +1,6 @@
 <!-- 上拉选择器组件 -->
 <template>
-  <div>
+  <div class="picker-div" :class="showModal ? 'show-picker-div' : ''">
     <div class="manage-modal" v-if="showModal" @click="cancelModal"></div>
     <div class="picker-modal-box" :class="showModal ? 'show-modal' : ''">
       <div class="picker-modal-box-title">
@@ -61,11 +61,19 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+.show-picker-div {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  z-index: 101;
+}
 .picker-modal-box {
   position: fixed;
   left: 0;
-  // bottom: 0;
-  bottom: var(--window-bottom,0);
+  bottom: 0;
+  // bottom: var(--window-bottom,0);
   width: 100%;
   height: 0;
   background: #ffffff;

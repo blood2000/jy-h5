@@ -260,11 +260,11 @@ export default {
     openSet() {
       console.log("set");
       this.showPickerModal = true;
-      this.$emit('openSet', true)
+      // this.$emit('openSet', true)
     },
     cancelPickerModal() {
       this.showPickerModal = false;
-      this.$emit("cancelPickerModal", false);
+      // this.$emit("cancelPickerModal", false);
     },
     showTop() {
       this.$emit("showTop");
