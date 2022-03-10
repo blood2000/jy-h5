@@ -126,7 +126,7 @@
         </div>
         <div class="building-input-item">
           <div class="building-title1">
-            入场区域<span class="require">*</span>
+            入场区域
           </div>
           <div class="placeholder" @click="toChooseBuilding(index)">
             请选择
@@ -301,6 +301,7 @@ export default {
     },
     getGoodsList(index, tenantCode) {
       console.log(index, tenantCode);
+      if (!tenantCode) return;
       this.getGoodsInfo(tenantCode, (data) => {
         this.dispatchList[index].goodsList = data;
         this.$set(this.dispatchList,index, this.dispatchList[index]);
@@ -542,15 +543,15 @@ export default {
             });
             break;
           }
-          if (this.dispatchList[i].choosedBuilding.length === 0) {
-            leap = false;
-            uni.showToast({
-              title: "请选择入场区域",
-              icon: "none",
-              duration: 1500,
-            });
-            break;
-          }
+          // if (this.dispatchList[i].choosedBuilding.length === 0) {
+          //   leap = false;
+          //   uni.showToast({
+          //     title: "请选择入场区域",
+          //     icon: "none",
+          //     duration: 1500,
+          //   });
+          //   break;
+          // }
           if (!this.dispatchList[i].vehicleNums) {
             leap = false;
             uni.showToast({
