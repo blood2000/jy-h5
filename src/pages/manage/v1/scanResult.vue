@@ -135,7 +135,7 @@ export default {
     this.detail = JSON.parse(option.detail);
     // this.getDetail();
   },
-  
+   
 
   methods: {
     back() {

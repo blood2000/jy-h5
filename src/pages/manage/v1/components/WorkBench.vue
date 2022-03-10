@@ -211,6 +211,7 @@ export default {
 
   filters: {
     dateFilter1: (n) => {
+      n = n.replace(/-/g, '/');
       return format.dateFormat(new Date(n), "{m}-{d} {h}:{i}");
     },
   },
