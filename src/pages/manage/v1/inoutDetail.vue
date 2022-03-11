@@ -84,7 +84,7 @@
             v-model="reservationSearchNumber"
           />
         </view>
-        <div class="inout-input-title manage-title2">商品选择</div>
+        <!-- <div class="inout-input-title manage-title2">商品选择</div>
         <div class="inout-modal-main">
           <div class="inout-modal-main-box">
             <div
@@ -97,7 +97,7 @@
               {{ item.goodsName }}
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="inout-modal-btn-box">
           <div class="inout-btn inout-clear-btn" @click="clear">清空</div>
           <div class="inout-btn inout-confirm-btn" @click="confirm">确定</div>
@@ -175,7 +175,7 @@ export default {
         this.cardTitle = "已出场";
         break;
     }
-    this.getGoodsInfo();
+    // this.getGoodsInfo();
   },
 
   methods: {
@@ -361,7 +361,8 @@ export default {
 }
 
 .inout-modal-show {
-  height: 1040rpx;
+  // height: 1040rpx;
+  height: 540rpx;
 }
 
 .inout-modal-box-content {

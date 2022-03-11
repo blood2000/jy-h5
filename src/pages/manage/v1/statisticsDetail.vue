@@ -13,7 +13,8 @@
           @change="dateChange"
         />
       </div>
-      <div class="search-box" v-if="this.type !== 'goods'">
+      <!-- v-if="this.type !== 'goods'" -->
+      <div class="search-box" >
         <div class="search-input-box">
           <input
             class="search-input"
@@ -27,7 +28,7 @@
         </div>
       </div>
       <!-- 商品类型 -->
-      <div class="statistics-picker" v-else>
+      <!-- <div class="statistics-picker" v-else>
         <picker
           mode="selector"
           :range="goodsList"
@@ -37,8 +38,8 @@
           <view class="picker-btn" v-if="goodsIndex > -1">
             {{ goodsList[goodsIndex].goodsName }}</view
           >
-          <view class="picker-btn" v-else
-            >商品选择
+          <view class="picker-btn" v-else>
+            商品选择
             <uni-icons type="bottom" size="12"></uni-icons>
           </view>
         </picker>
@@ -48,7 +49,7 @@
           size="12"
           @click="clearGoods"
         ></uni-icons>
-      </div>
+      </div> -->
     </div>
     <div class="manage-main">
       <z-paging
@@ -68,7 +69,11 @@
           :key="index"
         >
           <div
-            class="statistics-detail-card-title manage-title2 statistics-shipper "
+            class="
+              statistics-detail-card-title
+              manage-title2
+              statistics-shipper
+            "
             v-if="type === 'shipper'"
           >
             {{ item.companyName }}
@@ -80,10 +85,14 @@
             {{ item.goodsName }}
           </div>
           <div
-            class="statistics-detail-card-title manage-title2 statistics-vehicle"
+            class="
+              statistics-detail-card-title
+              manage-title2
+              statistics-vehicle
+            "
             v-if="type === 'vehicle'"
           >
-            {{ item.licenseNumber }}({{item.nickName}})
+            {{ item.licenseNumber }}({{ item.nickName }})
           </div>
           <div class="statistics-detail-card-main">
             <div class="statistics-detail-card-main-item">
@@ -163,7 +172,8 @@ export default {
         break;
       case "goods":
         this.title = "货品统计";
-        this.getGoodsInfo();
+        this.placeholder = "货品名称";
+        // this.getGoodsInfo();
         break;
       case "vehicle":
         this.title = "车次统计";
@@ -247,7 +257,8 @@ export default {
         jyzCode: this.jyzCode,
         bigCreateTime: this.dateRange[0],
         endCreateTime: this.dateRange[1],
-        goodsName: this.goodsName,
+        // goodsName: this.goodsName,
+        goodsName: this.searchKey,
       };
       const config = {
         url: "getGoodsStatistics",

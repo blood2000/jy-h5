@@ -561,3 +561,31 @@
 .picker-btn-disabled {
   color: #aaa;
 }
+
+
+// toolip
+
+
+.manage-toolip {
+  position: absolute;
+  box-sizing: border-box;
+  top: 50rpx;
+  right: 0;
+  max-width: 200rpx;
+  padding: 4rpx 10rpx;
+  border-radius: 6rpx;
+  background: #000;
+  font-size: 24rpx;
+  color: #fff;
+  z-index: 10;
+}
+.manage-toolip::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 8rpx solid transparent;
+  border-bottom: 8rpx solid #000;
+  top: -16rpx;
+  right: 16rpx;
+}

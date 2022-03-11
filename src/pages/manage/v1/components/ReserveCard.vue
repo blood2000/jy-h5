@@ -1,6 +1,6 @@
 <!-- 预约记录卡片组件 -->
 <template>
-  <div class="manage-box card-box">
+  <div class="manage-box card-box" @click="closeToolip">
     <div class="card-line">
       <div>
         <div class="manage-title3">{{ cardData.companyName }}</div>
@@ -34,8 +34,10 @@
       <div class="card-line-item">
         <div class="manage-title2">{{ cardData.nickName || "无" }}</div>
         <div class="card-line-item-icon card-line-item-ml">
-          <img src="../../../../static/manage/tel.png" alt="" />
+          <img src="../../../../static/manage/tel.png" alt="" @click.stop="showPhonenumber"/>
+          <div class="manage-toolip" v-show="showToolip"> {{cardData.phonenumber}} </div>
         </div>
+        
       </div>
     </div>
     <div class="card-line" v-if="cardData.reservationStatus === 0">
@@ -89,6 +91,7 @@ import format from "../../../../utils/format";
 export default {
   data() {
     return {
+      showToolip: false,
       // company: "山西华汇通商贸有限公司",
       // goodsType: "石渣土",
       // status: this.tabIndex,
@@ -173,6 +176,16 @@ export default {
         },
       });
     },
+    showPhonenumber() {
+      this.showToolip = true;
+      setTimeout(() => {
+        this.showToolip = false;
+      }, 5000);
+    },
+    closeToolip() {
+      console.log(112233);
+      this.showToolip = false;
+    },
   },
 };
 </script>
@@ -186,9 +199,11 @@ export default {
   align-items: center;
   margin-bottom: 20rpx;
   &-item {
+    
     display: flex;
     align-items: center;
     &-icon {
+      position: relative;
       width: 40rpx;
       height: 40rpx;
 
